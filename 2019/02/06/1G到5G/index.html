@@ -1,0 +1,970 @@
+
+<!doctype html>
+<html class="theme-next use-motion theme-next-mala">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="思绪来的快去的也快，偶尔在这里停留" />
+
+
+
+  <meta name="keywords" content="5G," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="无线通信：从1G到5G原创： 老和山下的小学僧  最近太邪乎，先引用一个马克思政治经济学的观点来避避邪： 生产力决定生产关系。把这个理论套用到全球来看，人类生产力发展到今天，新的生产关系正在逐渐浮现，这就是全球化。只要生产力发展是必然的，全球化趋势就是必然的。反全球化就是一群卫道士的自我安慰，就像项羽恢复分封制、袁世凯恢复帝制的结局一样。——献给正遭美帝围剿的华为5G 各位没走错片场，下面才是正文">
+<meta name="keywords" content="5G">
+<meta property="og:type" content="article">
+<meta property="og:title" content="无线通信：从1G到5G">
+<meta property="og:url" content="http://oneyearago.me/2019/02/06/1G到5G/index.html">
+<meta property="og:site_name" content="changan&#39;s blog">
+<meta property="og:description" content="无线通信：从1G到5G原创： 老和山下的小学僧  最近太邪乎，先引用一个马克思政治经济学的观点来避避邪： 生产力决定生产关系。把这个理论套用到全球来看，人类生产力发展到今天，新的生产关系正在逐渐浮现，这就是全球化。只要生产力发展是必然的，全球化趋势就是必然的。反全球化就是一群卫道士的自我安慰，就像项羽恢复分封制、袁世凯恢复帝制的结局一样。——献给正遭美帝围剿的华为5G 各位没走错片场，下面才是正文">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://oss01-1251969284.cosgz.myqcloud.com/640.webp">
+<meta property="og:image" content="http://oss01-1251969284.cosgz.myqcloud.com/wave640.gif">
+<meta property="og:image" content="http://oss01-1251969284.cosgz.myqcloud.com/640_3.webp">
+<meta property="og:image" content="http://oss01-1251969284.cosgz.myqcloud.com/640_4.webp">
+<meta property="og:image" content="http://oss01-1251969284.cosgz.myqcloud.com/640_5.webp">
+<meta property="og:image" content="http://oss01-1251969284.cosgz.myqcloud.com/640_6.webp">
+<meta property="og:image" content="http://oss01-1251969284.cosgz.myqcloud.com/640_7.webp">
+<meta property="og:image" content="http://oss01-1251969284.cosgz.myqcloud.com/640_8.webp">
+<meta property="og:image" content="http://oss01-1251969284.cosgz.myqcloud.com/640_9.webp">
+<meta property="og:updated_time" content="2019-02-06T04:26:29.623Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="无线通信：从1G到5G">
+<meta name="twitter:description" content="无线通信：从1G到5G原创： 老和山下的小学僧  最近太邪乎，先引用一个马克思政治经济学的观点来避避邪： 生产力决定生产关系。把这个理论套用到全球来看，人类生产力发展到今天，新的生产关系正在逐渐浮现，这就是全球化。只要生产力发展是必然的，全球化趋势就是必然的。反全球化就是一群卫道士的自我安慰，就像项羽恢复分封制、袁世凯恢复帝制的结局一样。——献给正遭美帝围剿的华为5G 各位没走错片场，下面才是正文">
+<meta name="twitter:image" content="http://oss01-1251969284.cosgz.myqcloud.com/640.webp">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mala',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 无线通信：从1G到5G | changan's blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">changan's blog</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            About
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    
+      
+
+      
+        <style type="text/css">
+
+    .circle {
+        width: 40px;
+        height: 40px;
+        background: #555 no-repeat;
+        cursor: move;
+    }
+
+    .assist-btn {
+        position: fixed;
+        top: 50％;
+        left: 10px;
+        -moz-border-radius: 50px;
+        -webkit-border-radius: 50px;
+        border-radius: 50px;
+        outline: none;
+        border: none;
+        color: #87daff;
+    }
+
+</style>
+
+<script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+<script type="text/javascript">
+    // 浮动圆点展开与收缩
+    /*
+    $(function () {
+        var assist_box = $('.assist-box');
+        $('#assist_btn').hover(function () {
+            assist_box.stop().show(300);
+        }, function () {
+            assist_box.stop().hide(150);
+        })
+    });
+    */  
+    //浮动圆点拖动
+    $(function () {
+        var box = document.getElementById('assist_btn');
+        box.onmousedown = function (event) {
+            var e = event || window.event,
+                t = e.target || e.srcElement,
+                // 鼠标按下时的坐标x1,y1
+                x1 = e.clientX,
+                y1 = e.clientY,
+                //鼠标按下时的左右偏移量
+                dragLeft = this.offsetLeft,
+                dragTop = this.offsetTop;
+
+            document.onmousemove = function (event) {
+                var e = event || window.event,
+                    t = e.target || e.srcElement,
+                    // 鼠标移动时的动态坐标
+                    x2 = e.clientX,
+                    y2 = e.clientY,
+                    // 鼠标移动时的坐标的变化量
+                    x = x2 - x1,
+                    y = y2 - y1;
+                box.style.left = (dragLeft + x) + 'px';
+                box.style.top = (dragTop + y) + 'px';
+            }
+
+            document.onmouseup = function () {
+                this.onmousemove = null;
+            }
+        }
+    });
+
+/*
+    $whitesmoke   = #f5f5f5
+    $gainsboro    = #eee
+    $gray-lighter = #ddd
+    $grey-light   = #ccc
+    $grey         = #bbb
+    $grey-dark    = #999
+    $grey-dim     = #666
+    $black-light  = #555
+    $black-deep   = #222
+    $red          = #ff2a2a
+    $blue-bright  = #87daff
+    $blue         = #0684bd
+    $blue-deep    = #262a30
+*/
+    // white theme
+    var body = {color: "#555", background: "white"};
+    var a_tag = {color: "#222"};
+    var header = { background: "#f5f5f5"};
+    var logo_line_i = {background: "#222"};
+    // var post_code = {background: "#eee", color: "#222"};
+
+    function switch_theme() {
+        $("body").css(body);
+        $("a:not('.links-of-author-item a, .site-state-item a, .site-state-posts a, .feed-link a, .motion-element a, .post-tags a, .show-commit-cls a, #donate_board a')").css(a_tag);
+        $(".header, .footer").css(header);
+        $(".logo-line-before i, .logo-line-after i").css(logo_line_i);
+        //$(".post code").css(post_code);
+        $("#idhyt-surprise-ball #idhyt-surprise-ball-animation .drag").css(a_tag);
+        $(".post-title-link, .posts-expand .post-meta, .post-comments-count, .disqus-comment-count, .post-category a, .post-nav-next a, .post-nav-item a").css(a_tag);
+        
+        // $("code").css({color: '#c5c8c6', background: '#1d1f21'});
+        $("#assist_btn").hide(1500);
+    }
+
+    $(function () {
+        $("#assist_btn").dblclick(function() {
+            switch_theme();
+        });
+    });
+
+</script>
+
+<div>
+
+    <button class="assist-btn circle" id="assist_btn" title="双击切换">
+        亮
+    </button>
+
+</div>
+
+
+
+
+
+
+
+
+
+      
+
+    
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              无线通信：从1G到5G
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2019-02-06T12:08:45+08:00" content="2019-02-06">
+            2019-02-06
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/5G/" itemprop="url" rel="index">
+                  <span itemprop="name">5G</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h3 id="无线通信：从1G到5G"><a href="#无线通信：从1G到5G" class="headerlink" title="无线通信：从1G到5G"></a>无线通信：从1G到5G</h3><p>原创： 老和山下的小学僧 </p>
+<p>最近太邪乎，先引用一个马克思政治经济学的观点来避避邪：</p>
+<p>生产力决定生产关系。把这个理论套用到全球来看，人类生产力发展到今天，新的生产关系正在逐渐浮现，这就是全球化。只要生产力发展是必然的，全球化趋势就是必然的。反全球化就是一群卫道士的自我安慰，就像项羽恢复分封制、袁世凯恢复帝制的结局一样。——献给正遭美帝围剿的华为5G<br><img src="http://oss01-1251969284.cosgz.myqcloud.com/640.webp" alt="image"></p>
+<p>各位没走错片场，下面才是正文。</p>
+<h3 id="电磁波"><a href="#电磁波" class="headerlink" title="电磁波"></a>电磁波</h3><p>要说5G，不懂点电磁波是不行的。提问：仙人掌能防电脑辐射吗？知道答案的大盆友直接看后半篇，下面这段写给小盆友。</p>
+<p>日常生活中，除了原子电子之外，剩下的几乎全是电磁波，红外线、紫外线、太阳光、电灯光、wifi信号、手机信号、电脑辐射、核辐射，等等。只要是波，就逃不过三个参数：波速、波长、振幅。电磁波的速度是恒定的光速，因此只需考虑：波长(或频率)、振幅(不考虑方向)，其中频率对于电磁波来说，尤为重要。</p>
+<p><img src="http://oss01-1251969284.cosgz.myqcloud.com/wave640.gif" alt="image"></p>
+<p>频率越高，对应着电磁波的波长越短，能量越高，衰减越快，穿透性越差，散射越少，对人体伤害越大。就着这个原则，咱从头到尾捋一遍。</p>
+<p>长的电磁波波长能到1亿米，频率3Hz，1秒钟三个波，如果用来通信的话，等你一句话说完，就可以过年了。</p>
+<p>稍微正常点的电磁波，波长几万米，用这通信，就一个字：稳！江河大山都挡不住，甚至能穿透几十米深的海水(海水导电，是电磁波的克星)。不过就这点频率，只能勉强携带点信息，发一个hello，大概需要半小时，也就比写信稍微强点。因为超长波实在是稳，一般用在岸台向潜艇单向发送命令。</p>
+<p>再短点，几十米波长的电磁波，频率就到了百万赫兹MHz级别，能携带的信息就很可观了，一句话至少能说利索了。而且照样还能跑很远，几百公里不在话下，所以收音机广播、电报、业余无线电一般用这个频段。</p>
+<p>说点有用的，假如你困在荒岛上，有个飞机路过，赶紧用121.5MHz呼救，这是民用紧急通信频率，还有个军用紧急通信频率243MHz，这些都是不加密的公共频率。上次解放军和台军战机对峙，双方用这个频率对话，结果被无线电爱好者录下来放网上了，吃瓜群众喜闻乐见之余，又担心我军通信太容易被破解，真是阿弥陀佛了。</p>
+<p>波长再短点，到了1米~1厘米，就有意思了。一方面，虽然衰减已经很明显了，但一口气还能跑个百十公里，够用；另一方面，频率到了GHz级别，能携带足够多的信息，不但话能说利索了，还有多余功夫让你加个密什么的。所以这个波段是通信的焦点，什么1G2G3G4G，什么卫星通信雷达通信，全在这，统称微波通信。</p>
+<p>到了毫米级，电磁波就跑不了多远了，虽然毫米波不太发散，但很容易被周边物质吸收或反射，几乎没啥穿透性，用来通信很鸡肋，不过用在导弹导引雷达或微波炉上棒棒的。但，毕竟频率超过了30GHz，携带的信息量实在太馋人，要不还是试试吧！于是，5G来了。</p>
+<p>5G同志先等等，继续往下数，来到微米级。毫无疑问，能携带的信息量继续倍增，但波长0.7微米的电磁波就已经是可见光了。可见光都见过吧，别说穿墙了，一张纸都够呛，想接着按照7G8G9G的套路肯定走不通啊。然后，就有了激光通信，发射端和接收端必须瞄得准准的，中间还不能有阻挡，这优缺点自个儿体会体会。</p>
+<p>波长到了0.3微米，也就是300纳米，先别管频率的事了，这玩意儿就是我们熟知的紫外线，终于对人体有害了。太阳光里的紫外线大约占了4%，如果你一天能晒上半小时太阳的话，那么前面提到的那些电磁波辐射基本可以无视了(不要钻电磁共振的牛角尖，咱只说普遍情况)。</p>
+<p>波长200纳米的紫外线，在太阳光中几乎是没有的，所以在阳光太强时，紫外线通信就成了激光通信很好的补充，不但隐蔽性更好，还不用对得那么准，在几公里的距离上非常好用，是近些年军事通信的研究热点。</p>
+<p>接下来就和通信无关了，波长到了纳米级就成了X光，就是在医院见到的那种，这么说的话，X光其实也能叫纳米技术(这是玩笑)。</p>
+<p>最后，波长短到了0.01纳米以下，这就是闻之色变的伽马射线，来自核辐射，全宇宙最强的能量形式之一！若是要毁灭一个星系，伽马射线是不二之选。实际上，科学家一直怀疑，超新星爆炸产生的伽马射线爆已经毁灭了绝大部分的宇宙文明，好在太阳系处于比较角落的地带，周边恒星不多。</p>
+<p>终于说完了波长频率，那振幅呢？连仙人掌能不能防辐射都不知道，也就没必要了解振幅的含义了，直接跳过。</p>
+<h3 id="1和0"><a href="#1和0" class="headerlink" title="1和0"></a>1和0</h3><p>回到微波通信。</p>
+<p>为什么频率越高，能携带的信息就越多？以数字信号为例，信息就是一串串的1和0，所以先搞清楚怎样用电磁波表示1和0。</p>
+<p>第一种方法叫“调幅”，基本思路是调整电磁波的振幅，振幅大的表示1，振幅小的表示0，如下图。收音机的AM就是调幅，缺点颇多。</p>
+<p><img src="http://oss01-1251969284.cosgz.myqcloud.com/640_3.webp" alt="image"></p>
+<p>第二种方法叫“调频”，基本思路是调整频率来表示1和0，比如，用密集的波形表示1，疏松的波形表示0。收音机的FM就是调频，优点多多的。</p>
+<p><img src="http://oss01-1251969284.cosgz.myqcloud.com/640_4.webp" alt="image"></p>
+<p>很显然，在单位时间内，发出的波越多，能表示的1和0就越多，换句话说，频率越高能携带的信息就越多。</p>
+<p>这样算起来，频率800MHz意味着每秒产生800万个波，都用来表示1和0的话，1秒钟可以传输100M数据，这速度很快啊！为啥我们感觉不到呢？</p>
+<p>古语有云，重要的事情说三遍，通信也是如此。无线电拔山涉水，弄丢几个1,0太正常了，防止走丢的土办法就是抱团。比如，用一万个连续的1表示一个1，哪怕路上走丢了两千个1，最后咱还能认得这是1。</p>
+<p>这种傻办法只能用在民用通信，因为特征太明显，很容易被破解。还记得北斗民用信号被破解的新闻吧，原因就在此。</p>
+<p>民用信号只要能和其他信号区分开就行，不会弄得太复杂，不然传输效率太低。按2G技术那样，800MHz的频率，传输数据大不过每秒几十K。</p>
+<p>军用就两码事了，为了防止被破解，要用很复杂的组合来表示1和0，中间说不定还有很多无效信息，各种跳频技术扩频技术，还不停变换组合，总之越花哨越好。所以同样一句话，军事通信要用掉更多的1,0，因此为了保证传输效率，军用频率就比民用高很多。</p>
+<p>就目前来说，顶级破解技术还干不过顶级加密技术，这里不包括尚未成熟的量子通信。</p>
+<p>军事对抗是无止境的，干不过也不能认怂！那怎办？既然弄不清楚你的1,0，那我就索性再送你一堆1,0，把你原有的组合搞乱，让你自己人都懵逼。这就是电子对抗的环节，跑题了，还是说回5G。</p>
+<h3 id="关键技术"><a href="#关键技术" class="headerlink" title="关键技术"></a>关键技术</h3><p>前面说的，都是不值钱的原理，下面看看值钱的技术。5G关键技术有一堆说法，咱给粗暴地归个类。</p>
+<p>振荡电路插个天线就可以产生电磁波，用特定方法改变电磁波的频率或振幅，变成各种复杂的组合，这个过程叫调制。对应的，竖个天线就能收到空中的电磁波，按预定方法变回1,0，这个过程叫解调。</p>
+<p>把电磁波发到空中，或者把空中的电磁波收下来，都需要天线，别以为现在手机光溜溜的就不需要天线了。手机与手机是无法直接通信的，而是通过周边的基站与别的手机联系。于是，问题来了，5G使用的毫米波在空气中衰减非常严重，但又不能无限制提高发射功率，怎么办呢？只能在天线上做文章了。</p>
+<p>5G的第一个关键技术：大规模多天线阵列。大白话就是，增加天线的数量，不是增加一个两个，而是几百个。这个思路很好理解，但是呢，用那么多天线发射同一个信号，稍不留神就乱成一锅粥。</p>
+<p>多天线加毫米波，对比原先的少天线加厘米波，无线电传播的物理特征肯定不一样，得重新建立信道模型。那信道模型怎么建立呢？相信我，你不会感兴趣的。</p>
+<p>天线一多，不但能解决毫米波衰减的问题，传输效率、抗干扰等性能也是蹭蹭涨，算是5G必须课。</p>
+<p>曾与华为齐名的大唐电信于2015年率先发布了256大规模天线，引爆全球通信业，一时风光无限！可惜后来突然闪崩，沦落到卖科研大楼求生，令人唏嘘！</p>
+<p><img src="http://oss01-1251969284.cosgz.myqcloud.com/640_5.webp" alt="image"></p>
+<p>基站天线搞定，下面就轮到终端机的天线了，这货也有术语：全双工技术。</p>
+<p>一般手机的通信天线只有一个，收发信号交替进行，费劲的很！全双工技术，就是把发信号的天线和收信号的天线分开，收发信号同时进行，优点就不说了。不过，这很难吗？</p>
+<p>你想想，把话筒和音响挨在一起，还要求两者能正常工作，你说难吗？大体上分两个思路，其一，物理方法，比如在俩天线之间加屏蔽材料；其二，信号处理，比如无源模拟对消等。</p>
+<p>2016年4月华为宣布已于成都5G外场率先完成第一阶段5G关键技术验证，测试结果完全达到预期。其中两个重要验证就是大规模天线技术和全双工技术。</p>
+<p>天线搞定了，再来就是”新多址接入技术”，这词听着真拗口，别急，马上就顺了！</p>
+<p>举个例子(数字是胡诌的)：</p>
+<p>假设手机基站用100Hz表示1，105Hz表示0，这时又接进一个新电话，那新电话的1可以用110Hz，0用115Hz，如果再来新电话，依次类推。这就是1G的思路，简称FDMA。</p>
+<p>这样2个电话就用掉了从100Hz到115Hz的频段，占用的15Hz就叫带宽。外行也看出来了，这路子太费带宽了。好在那会的手机只是传个语音，数据量不大，但也架不住手机数量的增加，很快就不够用了！</p>
+<p>换个思路，大家都用100Hz表示1，105Hz表示0，但是第1秒给甲用，第2秒给乙用，第3秒给丙用，只要轮换的好，5Hz的带宽就够3个手机用，就是延时严重点而已。这就是2G的思路，简称TDMA。</p>
+<p>再到后来，数据量越来越大，2G也玩不转了。不过，只要有需求，就不怕没套路：在各自的信号前面加上序列码，再揉成一串发送，接收端按序列号只接受自己的信号。就好像快递员一次性送了一叠信过来，大家按照信封上的名字打开各自的信。这就是3G的思路，简称CDMA。本僧这把年纪的人，应该都被联通的CDMA广告轰炸过吧？</p>
+<p>再发展就是正交频分多址技术，把2个互不干扰的正交信号揉成一串发送。所谓正交信号，和量子力学的叠加态有点类似。把信号叠在一起发送，就是4G的思路，简称OFDMA。</p>
+<p>每个终端在网络上都有一个地址，所以这种让很多手机一起打电话的技术，从1G到4G，统称：多址接入技术。咱5G特别时髦，叫“新多址接入技术”，这货怎么个“新”法呢？</p>
+<p><img src="http://oss01-1251969284.cosgz.myqcloud.com/640_6.webp" alt="image"></p>
+<p>稀疏码多址接入、非正交多址接入、图分多址接入……好吧，我承认有点云里雾里了，总体思路就是叠加更多信号或者把前面的技术混到一起，这里涉及大量的数学知识，奉劝各位好自为之吧！</p>
+<p>暂时就说这么多吧，5G要实现10Gb/秒的峰值速率、1百万的连接数密度、1毫秒的时延，必须要先解决这三大关键技术。</p>
+<p>2016年4月，华为的第一阶段“关键技术验证”，主要也是验证这仨技术。新多址接入采用滤波正交频分复用、稀疏码多址接入、极化码，结合大规模天线，吞吐率提升10倍以上，在100MHz带宽下，平均吞吐量达到3.6Gb/秒；全双工采用了无源模拟对消、有源模拟对消和数字对消三重对消框架，可以实现113dB的自干扰消除能力，获得了90%以上的吞吐率增益。</p>
+<p>2017年6月，华为完成第二阶段“多种关键技术融合测试及单基站性能测试”，在200MHz带宽下，单用户下行吞吐率超过6Gb/秒，小区峰值超过18Gb/秒，配套业内首个小型化5G测试终端，单个5G基站可同时支持上百路超高清4K视频。</p>
+<p>2018年9月，华为完成第三阶段“基于独立组网的5G核心网关键技术与业务流程测试”。</p>
+<p>这三个阶段测试，华为均以100%通过率顺利完成。</p>
+<p>除了三大关键技术之外，无数用户要组成网络，事情自然少不了。比如，分配传输资源和指挥交通一样让人头大，一条道路分配不合理，半个城市就得跟着瘫痪，所以，华为完成关键技术验证后，又花了2年时间才进行独立组网测试。再比如，能耗不能太离谱，价格不能高上天，诸如此类的基本要求。</p>
+<h3 id="又是芯片"><a href="#又是芯片" class="headerlink" title="又是芯片"></a>又是芯片</h3><p>可以看到，5G要处理的数据量远大于4G，所谓数据就是1,0，但凡涉及1,0的东西，基本都用芯片。控制电磁波发射要用射频芯片，编码解码要用基带芯片，等等，这些也属于5G核心关键技术。</p>
+<p>2019年1月24日，华为发布了全球首款5G基站核心芯片：天罡，以及，全球首款单芯片多模5G基带芯片：巴龙5000。既然是世界首款，免不了拿下N个全球第一。</p>
+<p><img src="http://oss01-1251969284.cosgz.myqcloud.com/640_7.webp" alt="image"></p>
+<p>把条件放宽到调制解调芯片，玩家就比较多了。5G的主流频率是28GHz，有能力处理这个频段的芯片，目前是4家。</p>
+<p><img src="http://oss01-1251969284.cosgz.myqcloud.com/640_8.webp" alt="image"></p>
+<p>高通是最早的，三星是唯一做到39GHz的，华为是工艺最先进的，英特尔是哪里都不掉队的，台湾联发科据说马上也要来了。</p>
+<p>多说一句，华为2018年2月发布的这款巴龙5G01芯片，因块头太大无法用在手机上，2019年1月就推出了手机使用的巴龙5000，同时还没耽误手机处理器芯片麒麟和服务器芯片鲲鹏，这进展还是不错的！</p>
+<h3 id="标准"><a href="#标准" class="headerlink" title="标准"></a>标准</h3><p>5G涉及的技术实在太多太杂，得订个规矩。立规矩的重要性不比技术研发低，待会你看看欧萌就明白了。</p>
+<p>5G标准第一阶段的第一部分已于2018年6月完成并发布，标志着首个真正完整意义的国际5G标准出炉，剩余部分陆续到2020年才能完工。</p>
+<p>这次标准发布一共有50家公司参与，中国有中国电信、中国移动、中国联通、华为、中兴、大唐电信等16家，美国8家，欧洲8家，日本13家，韩国5家。</p>
+<p>从数量上看，咱还是不错的。从质量上看，咱应该也还是不错的。举个例子：</p>
+<p>在信道编码问题上，欧萌一直用Turbo码，美帝高通习惯用LDPC码，华为擅长用Polar码。于是，第一回合欧萌就被干掉了，不但积累的Turbo技术打了水漂，还得重新学LDPC和Polar。</p>
+<p>华为和高通继续交锋了两轮。</p>
+<p>信道编码分“控制信道编码”和“数据信道编码”，高通的方案是两者都用LDPC码，华为的方案是数据信道用你家的LDPC码，控制信道用Polar码。</p>
+<p>然后，联想对华为的方案投了反对票……</p>
+<p>当然，联想的投票对结局毫无影响。因为分歧过大，当天只确定数据信道用LDPC码，至于控制信道择日再议。</p>
+<p>等择好日，再次投票时，高通、三星、英特尔、爱立信等巨头搜罗了31家公司组成阵营，要求全部用LDPC码，华为则组织了包括联想在内的55家公司力争。最终，华为Polar成为控制信道编码，高通LDPC成为数据信道编码，大家平分秋色。</p>
+<p>这事被翻出来后，联想引起众怒，但华为很贴心地帮着解围。</p>
+<p>顺便说个常识：行业标准都还没全出来，5G离全面成熟应用还是有一段路的。</p>
+<h3 id="场景和意义"><a href="#场景和意义" class="headerlink" title="场景和意义"></a>场景和意义</h3><p>因为担心小盆友的想象力不够，所以国际电信联盟召开的ITU-RWP5D第22次会议，确定了5G的三个应用场景：</p>
+<p><img src="http://oss01-1251969284.cosgz.myqcloud.com/640_9.webp" alt="image"></p>
+<p>这图画得实在太差，解释一下：三个角上的三句话是5G的三大功能特点，蓝色小块是应用场景，小块越靠近哪个角就说明对这个功能的依赖越大。后来，这三个角又改成了四个：连续广域覆盖、热点高容量、低功耗大连接、低时延高可靠……</p>
+<p>说晕了，还是本僧用大白话总结一下吧。</p>
+<p>就技术而言，5G就三句话：网速快、信号广、延时少。但技术带来的改变却超越了想象力，5G是全信息化的基石，完全可以实现当年物联网吹过的牛：万物互联。</p>
+<p>如果非要找个参考的话，可以想象一下：把2G3G4G去掉，回到大哥大时代……不认识大哥大的00后小盆友，可以问问身边的80后老爷爷。</p>
+<p>我觉着，5G与4G的差异，比得上4G和1G的差异。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/5G/" rel="tag">#5G</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/02/09/happy_rode/" rel="prev">《长乐路》</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/24/about_marriage/" rel="next">男人与婚姻</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div>
+      
+        <style type="text/css">
+
+    .donate_bar {
+        text-align: center;
+        margin-top : 5%;
+    }
+
+    .donate_bar.hidden {
+        display:none;
+    }
+/*
+    .donate_bar a.btn_donate {
+        display: inline-block;
+        width: 82px;
+        height: 82px;
+        margin-left:auto;
+        margin-right:auto;
+
+        background: url("http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif") no-repeat;
+        _background: url("http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif") no-repeat; 
+
+        -webkit-transition: background 0s;
+        -moz-transition: background 0s;
+        -o-transition: background 0s;
+        -ms-transition: background 0s;
+        transition: background 0s;
+    }
+*/
+    .donate_bar a.btn_donate:hover { 
+        // background-position: 0px -82px;
+        color: #87daff
+    }
+
+    .donate_bar .donate_txt {
+        display: block;
+        color: #9d9d9d;
+        font: 14px/2 "Microsoft Yahei";
+    }
+
+    .bold { 
+        font-weight: bold; 
+    }
+
+    .post-donate a {
+        border-bottom: 0px;
+    }
+
+    #donate_guide table {
+        border: none;
+    }
+
+    #donate_guide td {
+        border-bottom: none;
+        border-right: none;
+        background: #333333;
+        valign: top;
+    }
+
+</style>
+
+
+
+    
+
+    <div class ="post-donate">
+        <div id="donate_board" class="donate_bar center">
+              <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏">赏</a>
+              <span id="donate_txt" class="donate_txt">
+                   
+                        请我喝杯咖啡
+                   
+              </span>
+            <br>
+        </div>  
+  
+        <div id="donate_guide" class="donate_bar center hidden">
+            <!--
+              
+
+            
+                <a href="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="微信打赏" class="fancybox" rel="article0"
+                    style="margin-right:30%">
+                    <img src="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="" height="164px" width="164px">
+                </a>
+            
+            -->
+            <table>
+                <tr>
+                    <td>
+                         
+                    </td>
+                    <td>
+                        
+                            <a href="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="微信打赏" class="fancybox" rel="article0"
+                                style="margin-right:30%">
+                                <img src="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="" height="164px" width="164px">
+                            </a>
+                        
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+        <script type="text/javascript">
+            document.getElementById('btn_donate').onclick = function() {
+                $('#donate_board').addClass('hidden');
+                // $('#donate_guide').removeClass('hidden');
+                $('#donate_guide').show(2000);
+            }
+
+        </script>
+    </div>
+
+    
+
+
+      
+    </div>
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+          <div class="comments" id="comments">
+            
+            -->
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table Of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="changan" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">changan</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">思绪来的快去的也快，偶尔在这里停留</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">53</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">34</span>
+              <span class="site-state-item-name">categories</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">33</span>
+              <span class="site-state-item-name">tags</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://github.com/changan29" target="_blank">GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/zhaochanganplus" target="_blank">ZhiHu</a>
+              </span>
+            
+          
+        </div>
+
+        <div class="links-of-friendly motion-element">
+          
+        </div>
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#无线通信：从1G到5G"><span class="nav-number">1.</span> <span class="nav-text">无线通信：从1G到5G</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#电磁波"><span class="nav-number">2.</span> <span class="nav-text">电磁波</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1和0"><span class="nav-number">3.</span> <span class="nav-text">1和0</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关键技术"><span class="nav-number">4.</span> <span class="nav-text">关键技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#又是芯片"><span class="nav-number">5.</span> <span class="nav-text">又是芯片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#标准"><span class="nav-number">6.</span> <span class="nav-text">标准</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#场景和意义"><span class="nav-number">7.</span> <span class="nav-text">场景和意义</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2018 - 
+  <span itemprop="copyrightYear">2019
+  </span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changan
+  </span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme by <a class="theme-link" href="http://blog.idhyt.com">idhyt</a>.<a class="theme-link" href="https://github.com/idhyt/hexo-theme-next/tree/magiclamp">Mala</a>
+</div>
+
+<!-- busuanzi -->
+
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

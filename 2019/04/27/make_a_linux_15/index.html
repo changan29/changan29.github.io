@@ -1,0 +1,898 @@
+
+<!doctype html>
+<html class="theme-next use-motion theme-next-mala">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="思绪来的快去的也快，偶尔在这里停留" />
+
+
+
+  <meta name="keywords" content="OS,kernel," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="内存管理初步物理内存认为的先规划成两部分，用户的物理内存和内核的物理内存，专项专用，内核有方法去占用用户的内存，但是规定两部分内存是专用的，内核只使用自己的物理内存。 物理内存的内核、用户部分分别用 bitmap 来统计管理。 虚拟内存首先，虚拟内存也是需要管理的，毕竟程序要申请堆上的内存，假定我们只支持512M物理内存，那么我们只要用 4* 4K 就能 记录这512M。  备注: 把位图的地址放">
+<meta name="keywords" content="OS,kernel">
+<meta property="og:type" content="article">
+<meta property="og:title" content="写一个操作系统_15 内存管理初步">
+<meta property="og:url" content="http://oneyearago.me/2019/04/27/make_a_linux_15/index.html">
+<meta property="og:site_name" content="changan&#39;s blog">
+<meta property="og:description" content="内存管理初步物理内存认为的先规划成两部分，用户的物理内存和内核的物理内存，专项专用，内核有方法去占用用户的内存，但是规定两部分内存是专用的，内核只使用自己的物理内存。 物理内存的内核、用户部分分别用 bitmap 来统计管理。 虚拟内存首先，虚拟内存也是需要管理的，毕竟程序要申请堆上的内存，假定我们只支持512M物理内存，那么我们只要用 4* 4K 就能 记录这512M。  备注: 把位图的地址放">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://201906-1251969284.cossh.myqcloud.com/bmp_kernel.png">
+<meta property="og:updated_time" content="2019-06-04T15:18:00.717Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="写一个操作系统_15 内存管理初步">
+<meta name="twitter:description" content="内存管理初步物理内存认为的先规划成两部分，用户的物理内存和内核的物理内存，专项专用，内核有方法去占用用户的内存，但是规定两部分内存是专用的，内核只使用自己的物理内存。 物理内存的内核、用户部分分别用 bitmap 来统计管理。 虚拟内存首先，虚拟内存也是需要管理的，毕竟程序要申请堆上的内存，假定我们只支持512M物理内存，那么我们只要用 4* 4K 就能 记录这512M。  备注: 把位图的地址放">
+<meta name="twitter:image" content="http://201906-1251969284.cossh.myqcloud.com/bmp_kernel.png">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mala',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 写一个操作系统_15 内存管理初步 | changan's blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">changan's blog</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            About
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    
+      
+
+      
+        <style type="text/css">
+
+    .circle {
+        width: 40px;
+        height: 40px;
+        background: #555 no-repeat;
+        cursor: move;
+    }
+
+    .assist-btn {
+        position: fixed;
+        top: 50％;
+        left: 10px;
+        -moz-border-radius: 50px;
+        -webkit-border-radius: 50px;
+        border-radius: 50px;
+        outline: none;
+        border: none;
+        color: #87daff;
+    }
+
+</style>
+
+<script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+<script type="text/javascript">
+    // 浮动圆点展开与收缩
+    /*
+    $(function () {
+        var assist_box = $('.assist-box');
+        $('#assist_btn').hover(function () {
+            assist_box.stop().show(300);
+        }, function () {
+            assist_box.stop().hide(150);
+        })
+    });
+    */  
+    //浮动圆点拖动
+    $(function () {
+        var box = document.getElementById('assist_btn');
+        box.onmousedown = function (event) {
+            var e = event || window.event,
+                t = e.target || e.srcElement,
+                // 鼠标按下时的坐标x1,y1
+                x1 = e.clientX,
+                y1 = e.clientY,
+                //鼠标按下时的左右偏移量
+                dragLeft = this.offsetLeft,
+                dragTop = this.offsetTop;
+
+            document.onmousemove = function (event) {
+                var e = event || window.event,
+                    t = e.target || e.srcElement,
+                    // 鼠标移动时的动态坐标
+                    x2 = e.clientX,
+                    y2 = e.clientY,
+                    // 鼠标移动时的坐标的变化量
+                    x = x2 - x1,
+                    y = y2 - y1;
+                box.style.left = (dragLeft + x) + 'px';
+                box.style.top = (dragTop + y) + 'px';
+            }
+
+            document.onmouseup = function () {
+                this.onmousemove = null;
+            }
+        }
+    });
+
+/*
+    $whitesmoke   = #f5f5f5
+    $gainsboro    = #eee
+    $gray-lighter = #ddd
+    $grey-light   = #ccc
+    $grey         = #bbb
+    $grey-dark    = #999
+    $grey-dim     = #666
+    $black-light  = #555
+    $black-deep   = #222
+    $red          = #ff2a2a
+    $blue-bright  = #87daff
+    $blue         = #0684bd
+    $blue-deep    = #262a30
+*/
+    // white theme
+    var body = {color: "#555", background: "white"};
+    var a_tag = {color: "#222"};
+    var header = { background: "#f5f5f5"};
+    var logo_line_i = {background: "#222"};
+    // var post_code = {background: "#eee", color: "#222"};
+
+    function switch_theme() {
+        $("body").css(body);
+        $("a:not('.links-of-author-item a, .site-state-item a, .site-state-posts a, .feed-link a, .motion-element a, .post-tags a, .show-commit-cls a, #donate_board a')").css(a_tag);
+        $(".header, .footer").css(header);
+        $(".logo-line-before i, .logo-line-after i").css(logo_line_i);
+        //$(".post code").css(post_code);
+        $("#idhyt-surprise-ball #idhyt-surprise-ball-animation .drag").css(a_tag);
+        $(".post-title-link, .posts-expand .post-meta, .post-comments-count, .disqus-comment-count, .post-category a, .post-nav-next a, .post-nav-item a").css(a_tag);
+        
+        // $("code").css({color: '#c5c8c6', background: '#1d1f21'});
+        $("#assist_btn").hide(1500);
+    }
+
+    $(function () {
+        $("#assist_btn").dblclick(function() {
+            switch_theme();
+        });
+    });
+
+</script>
+
+<div>
+
+    <button class="assist-btn circle" id="assist_btn" title="双击切换">
+        亮
+    </button>
+
+</div>
+
+
+
+
+
+
+
+
+
+      
+
+    
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              写一个操作系统_15 内存管理初步
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2019-04-27T21:08:45+08:00" content="2019-04-27">
+            2019-04-27
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/kernel/" itemprop="url" rel="index">
+                  <span itemprop="name">kernel</span>
+                </a>
+              </span>
+
+              
+              
+                , 
+              
+
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/kernel/OS/" itemprop="url" rel="index">
+                  <span itemprop="name">OS</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h3 id="内存管理初步"><a href="#内存管理初步" class="headerlink" title="内存管理初步"></a>内存管理初步</h3><h4 id="物理内存"><a href="#物理内存" class="headerlink" title="物理内存"></a>物理内存</h4><p>认为的先规划成两部分，用户的物理内存和内核的物理内存，专项专用，内核有方法去占用用户的内存，但是规定两部分内存是专用的，内核只使用自己的物理内存。</p>
+<p>物理内存的内核、用户部分分别用 bitmap 来统计管理。</p>
+<h4 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h4><p>首先，虚拟内存也是需要管理的，毕竟程序要申请堆上的内存，假定我们只支持512M物理内存，那么我们只要用 4* 4K 就能 记录这512M。</p>
+<p><img src="http://201906-1251969284.cossh.myqcloud.com/bmp_kernel.png" alt="image"></p>
+<p>备注: 把位图的地址放在这个地方是人为选择，也可以选其他地方</p>
+<p>同样，我们把 内核堆 开始地址 放到 0xc0100000，当然你也可以放到更远。另外，注意到我们的页表就在物理地址1M以上，我们需要把页表的内存算作已经使用的内存。</p>
+<p>/<em> 0xc0000000是内核从虚拟地址3G起. 0x100000意指跨过低端1M内存,使虚拟地址在逻辑上连续 </em>/</p>
+<p>#define K_HEAP_START 0xc0100000</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">/* 初始化内存池 */</span><br><span class="line">static void mem_pool_init(uint32_t all_mem) &#123;</span><br><span class="line">   put_str(&quot;   mem_pool_init start\n&quot;);</span><br><span class="line">   uint32_t page_table_size = PG_SIZE * 256;	  // 页表大小= 1页的页目录表+第0和第768个页目录项指向同一个页表+</span><br><span class="line">                                                  // 第769~1022个页目录项共指向254个页表,共256个页框</span><br><span class="line">   uint32_t used_mem = page_table_size + 0x100000;	  // 0x100000为低端1M内存</span><br><span class="line">   uint32_t free_mem = all_mem - used_mem;</span><br><span class="line">   uint16_t all_free_pages = free_mem / PG_SIZE;		  // 1页为4k,不管总内存是不是4k的倍数,</span><br><span class="line">								  // 对于以页为单位的内存分配策略，不足1页的内存不用考虑了。</span><br><span class="line">   uint16_t kernel_free_pages = all_free_pages / 2;</span><br><span class="line">   uint16_t user_free_pages = all_free_pages - kernel_free_pages;</span><br><span class="line"></span><br><span class="line">/* 为简化位图操作，余数不处理，坏处是这样做会丢内存。</span><br><span class="line">好处是不用做内存的越界检查,因为位图表示的内存少于实际物理内存*/</span><br><span class="line">   uint32_t kbm_length = kernel_free_pages / 8;			  // Kernel BitMap的长度,位图中的一位表示一页,以字节为单位</span><br><span class="line">   uint32_t ubm_length = user_free_pages / 8;			  // User BitMap的长度.</span><br><span class="line"></span><br><span class="line">   uint32_t kp_start = used_mem;				  // Kernel Pool start,内核内存池的起始地址</span><br><span class="line">   uint32_t up_start = kp_start + kernel_free_pages * PG_SIZE;	  // User Pool start,用户内存池的起始地址</span><br><span class="line"></span><br><span class="line">   kernel_pool.phy_addr_start = kp_start;</span><br><span class="line">   user_pool.phy_addr_start   = up_start;</span><br><span class="line"></span><br><span class="line">   kernel_pool.pool_size = kernel_free_pages * PG_SIZE;</span><br><span class="line">   user_pool.pool_size	 = user_free_pages * PG_SIZE;</span><br><span class="line"></span><br><span class="line">   kernel_pool.pool_bitmap.btmp_bytes_len = kbm_length;</span><br><span class="line">   user_pool.pool_bitmap.btmp_bytes_len	  = ubm_length;</span><br><span class="line"></span><br><span class="line">/*********    内核内存池和用户内存池位图   ***********</span><br><span class="line"> *   位图是全局的数据，长度不固定。</span><br><span class="line"> *   全局或静态的数组需要在编译时知道其长度，</span><br><span class="line"> *   而我们需要根据总内存大小算出需要多少字节。</span><br><span class="line"> *   所以改为指定一块内存来生成位图.</span><br><span class="line"> *   ************************************************/</span><br><span class="line">// 内核使用的最高地址是0xc009f000,这是主线程的栈地址.(内核的大小预计为70K左右)</span><br><span class="line">// 32M内存占用的位图是2k.内核内存池的位图先定在MEM_BITMAP_BASE(0xc009a000)处.</span><br><span class="line">   kernel_pool.pool_bitmap.bits = (void*)MEM_BITMAP_BASE;</span><br><span class="line">							       </span><br><span class="line">/* 用户内存池的位图紧跟在内核内存池位图之后 */</span><br><span class="line">   user_pool.pool_bitmap.bits = (void*)(MEM_BITMAP_BASE + kbm_length);</span><br><span class="line">   </span><br><span class="line"> /* 将位图置0*/</span><br><span class="line">   bitmap_init(&amp;kernel_pool.pool_bitmap);</span><br><span class="line">   bitmap_init(&amp;user_pool.pool_bitmap);</span><br><span class="line"></span><br><span class="line">   /* 下面初始化内核虚拟地址的位图,按实际物理内存大小生成数组。*/</span><br><span class="line">   kernel_vaddr.vaddr_bitmap.btmp_bytes_len = kbm_length;      // 用于维护内核堆的虚拟地址,所以要和内核内存池大小一致</span><br><span class="line"></span><br><span class="line">  /* 位图的数组指向一块未使用的内存,目前定位在内核内存池和用户内存池之外*/</span><br><span class="line">   kernel_vaddr.vaddr_bitmap.bits = (void*)(MEM_BITMAP_BASE + kbm_length + ubm_length);</span><br><span class="line"></span><br><span class="line">   kernel_vaddr.vaddr_start = K_HEAP_START;</span><br><span class="line">   bitmap_init(&amp;kernel_vaddr.vaddr_bitmap);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="分配物理内存"><a href="#分配物理内存" class="headerlink" title="分配物理内存"></a>分配物理内存</h4><p>malloc分配了虚拟地址，也会为该虚拟地址物理内存。linux的实现上，分配物理地址不是实时的，这里先假设是实时的，并且每次分配是按照页为单位。 关键的一点，分配的物理内存和分配的虚拟内存 要通过 页表 关联上。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">/* 分配pg_cnt个页空间,成功则返回起始虚拟地址,失败时返回NULL */</span><br><span class="line">void* malloc_page(enum pool_flags pf, uint32_t pg_cnt) &#123;</span><br><span class="line">   ASSERT(pg_cnt &gt; 0 &amp;&amp; pg_cnt &lt; 3840);</span><br><span class="line">/***********   malloc_page的原理是三个动作的合成:   ***********</span><br><span class="line">      1通过vaddr_get在虚拟内存池中申请虚拟地址</span><br><span class="line">      2通过palloc在物理内存池中申请物理页</span><br><span class="line">      3通过page_table_add将以上得到的虚拟地址和物理地址在页表中完成映射</span><br><span class="line">***************************************************************/</span><br><span class="line">   void* vaddr_start = vaddr_get(pf, pg_cnt);</span><br><span class="line">   if (vaddr_start == NULL) &#123;</span><br><span class="line">      return NULL;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   uint32_t vaddr = (uint32_t)vaddr_start, cnt = pg_cnt;</span><br><span class="line">   struct pool* mem_pool = pf &amp; PF_KERNEL ? &amp;kernel_pool : &amp;user_pool;</span><br><span class="line"></span><br><span class="line">   /* 因为虚拟地址是连续的,但物理地址可以是不连续的,所以逐个做映射*/</span><br><span class="line">   while (cnt-- &gt; 0) &#123;</span><br><span class="line">      void* page_phyaddr = palloc(mem_pool);</span><br><span class="line">      if (page_phyaddr == NULL) &#123;  // 失败时要将曾经已申请的虚拟地址和物理页全部回滚，在将来完成内存回收时再补充</span><br><span class="line">	 return NULL;</span><br><span class="line">      &#125;</span><br><span class="line">      page_table_add((void*)vaddr, page_phyaddr); // 在页表中做映射 </span><br><span class="line">      vaddr += PG_SIZE;		 // 下一个虚拟页</span><br><span class="line">   &#125;</span><br><span class="line">   return vaddr_start;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/OS/" rel="tag">#OS</a>
+          
+            <a href="/tags/kernel/" rel="tag">#kernel</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/05/25/algorithm_sort/" rel="prev">排序与突破O(n2)</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/04/24/make_a_linux_14/" rel="next">写一个操作系统_14 C 链接与系统调用</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div>
+      
+        <style type="text/css">
+
+    .donate_bar {
+        text-align: center;
+        margin-top : 5%;
+    }
+
+    .donate_bar.hidden {
+        display:none;
+    }
+/*
+    .donate_bar a.btn_donate {
+        display: inline-block;
+        width: 82px;
+        height: 82px;
+        margin-left:auto;
+        margin-right:auto;
+
+        background: url("http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif") no-repeat;
+        _background: url("http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif") no-repeat; 
+
+        -webkit-transition: background 0s;
+        -moz-transition: background 0s;
+        -o-transition: background 0s;
+        -ms-transition: background 0s;
+        transition: background 0s;
+    }
+*/
+    .donate_bar a.btn_donate:hover { 
+        // background-position: 0px -82px;
+        color: #87daff
+    }
+
+    .donate_bar .donate_txt {
+        display: block;
+        color: #9d9d9d;
+        font: 14px/2 "Microsoft Yahei";
+    }
+
+    .bold { 
+        font-weight: bold; 
+    }
+
+    .post-donate a {
+        border-bottom: 0px;
+    }
+
+    #donate_guide table {
+        border: none;
+    }
+
+    #donate_guide td {
+        border-bottom: none;
+        border-right: none;
+        background: #333333;
+        valign: top;
+    }
+
+</style>
+
+
+
+    
+
+    <div class ="post-donate">
+        <div id="donate_board" class="donate_bar center">
+              <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏">赏</a>
+              <span id="donate_txt" class="donate_txt">
+                   
+                        请我喝杯咖啡
+                   
+              </span>
+            <br>
+        </div>  
+  
+        <div id="donate_guide" class="donate_bar center hidden">
+            <!--
+              
+
+            
+                <a href="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="微信打赏" class="fancybox" rel="article0"
+                    style="margin-right:30%">
+                    <img src="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="" height="164px" width="164px">
+                </a>
+            
+            -->
+            <table>
+                <tr>
+                    <td>
+                         
+                    </td>
+                    <td>
+                        
+                            <a href="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="微信打赏" class="fancybox" rel="article0"
+                                style="margin-right:30%">
+                                <img src="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="" height="164px" width="164px">
+                            </a>
+                        
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+        <script type="text/javascript">
+            document.getElementById('btn_donate').onclick = function() {
+                $('#donate_board').addClass('hidden');
+                // $('#donate_guide').removeClass('hidden');
+                $('#donate_guide').show(2000);
+            }
+
+        </script>
+    </div>
+
+    
+
+
+      
+    </div>
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+          <div class="comments" id="comments">
+            
+            -->
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table Of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="changan" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">changan</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">思绪来的快去的也快，偶尔在这里停留</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">53</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">34</span>
+              <span class="site-state-item-name">categories</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">33</span>
+              <span class="site-state-item-name">tags</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://github.com/changan29" target="_blank">GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/zhaochanganplus" target="_blank">ZhiHu</a>
+              </span>
+            
+          
+        </div>
+
+        <div class="links-of-friendly motion-element">
+          
+        </div>
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#内存管理初步"><span class="nav-number">1.</span> <span class="nav-text">内存管理初步</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#物理内存"><span class="nav-number">1.1.</span> <span class="nav-text">物理内存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#虚拟内存"><span class="nav-number">1.2.</span> <span class="nav-text">虚拟内存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分配物理内存"><span class="nav-number">1.3.</span> <span class="nav-text">分配物理内存</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2018 - 
+  <span itemprop="copyrightYear">2019
+  </span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changan
+  </span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme by <a class="theme-link" href="http://blog.idhyt.com">idhyt</a>.<a class="theme-link" href="https://github.com/idhyt/hexo-theme-next/tree/magiclamp">Mala</a>
+</div>
+
+<!-- busuanzi -->
+
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,942 @@
+
+<!doctype html>
+<html class="theme-next use-motion theme-next-mala">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="思绪来的快去的也快，偶尔在这里停留" />
+
+
+
+  <meta name="keywords" content="protobuf," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="引用 一个golang 网友的思考(http://www.cnblogs.com/wolfred7464/p/4673908.html)：  1、我用二进制传输消息意义在哪？      当然就是字节少，传输成本小。  2、二进制不可读啊，怎么解码呢？      调用Unmarshal函数，把对应类型的对象传入，会自动把二进制解码到传入的对象。  3、拿到一大坨二进制数据，怎么知道能解码到哪个类呢？">
+<meta name="keywords" content="protobuf">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习protobuf">
+<meta property="og:url" content="http://oneyearago.me/2018/06/04/protobuf_0.0.1/index.html">
+<meta property="og:site_name" content="changan&#39;s blog">
+<meta property="og:description" content="引用 一个golang 网友的思考(http://www.cnblogs.com/wolfred7464/p/4673908.html)：  1、我用二进制传输消息意义在哪？      当然就是字节少，传输成本小。  2、二进制不可读啊，怎么解码呢？      调用Unmarshal函数，把对应类型的对象传入，会自动把二进制解码到传入的对象。  3、拿到一大坨二进制数据，怎么知道能解码到哪个类呢？">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-06-04T16:16:11.897Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="学习protobuf">
+<meta name="twitter:description" content="引用 一个golang 网友的思考(http://www.cnblogs.com/wolfred7464/p/4673908.html)：  1、我用二进制传输消息意义在哪？      当然就是字节少，传输成本小。  2、二进制不可读啊，怎么解码呢？      调用Unmarshal函数，把对应类型的对象传入，会自动把二进制解码到传入的对象。  3、拿到一大坨二进制数据，怎么知道能解码到哪个类呢？">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mala',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 学习protobuf | changan's blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">changan's blog</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            About
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    
+      
+
+      
+        <style type="text/css">
+
+    .circle {
+        width: 40px;
+        height: 40px;
+        background: #555 no-repeat;
+        cursor: move;
+    }
+
+    .assist-btn {
+        position: fixed;
+        top: 50％;
+        left: 10px;
+        -moz-border-radius: 50px;
+        -webkit-border-radius: 50px;
+        border-radius: 50px;
+        outline: none;
+        border: none;
+        color: #87daff;
+    }
+
+</style>
+
+<script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+<script type="text/javascript">
+    // 浮动圆点展开与收缩
+    /*
+    $(function () {
+        var assist_box = $('.assist-box');
+        $('#assist_btn').hover(function () {
+            assist_box.stop().show(300);
+        }, function () {
+            assist_box.stop().hide(150);
+        })
+    });
+    */  
+    //浮动圆点拖动
+    $(function () {
+        var box = document.getElementById('assist_btn');
+        box.onmousedown = function (event) {
+            var e = event || window.event,
+                t = e.target || e.srcElement,
+                // 鼠标按下时的坐标x1,y1
+                x1 = e.clientX,
+                y1 = e.clientY,
+                //鼠标按下时的左右偏移量
+                dragLeft = this.offsetLeft,
+                dragTop = this.offsetTop;
+
+            document.onmousemove = function (event) {
+                var e = event || window.event,
+                    t = e.target || e.srcElement,
+                    // 鼠标移动时的动态坐标
+                    x2 = e.clientX,
+                    y2 = e.clientY,
+                    // 鼠标移动时的坐标的变化量
+                    x = x2 - x1,
+                    y = y2 - y1;
+                box.style.left = (dragLeft + x) + 'px';
+                box.style.top = (dragTop + y) + 'px';
+            }
+
+            document.onmouseup = function () {
+                this.onmousemove = null;
+            }
+        }
+    });
+
+/*
+    $whitesmoke   = #f5f5f5
+    $gainsboro    = #eee
+    $gray-lighter = #ddd
+    $grey-light   = #ccc
+    $grey         = #bbb
+    $grey-dark    = #999
+    $grey-dim     = #666
+    $black-light  = #555
+    $black-deep   = #222
+    $red          = #ff2a2a
+    $blue-bright  = #87daff
+    $blue         = #0684bd
+    $blue-deep    = #262a30
+*/
+    // white theme
+    var body = {color: "#555", background: "white"};
+    var a_tag = {color: "#222"};
+    var header = { background: "#f5f5f5"};
+    var logo_line_i = {background: "#222"};
+    // var post_code = {background: "#eee", color: "#222"};
+
+    function switch_theme() {
+        $("body").css(body);
+        $("a:not('.links-of-author-item a, .site-state-item a, .site-state-posts a, .feed-link a, .motion-element a, .post-tags a, .show-commit-cls a, #donate_board a')").css(a_tag);
+        $(".header, .footer").css(header);
+        $(".logo-line-before i, .logo-line-after i").css(logo_line_i);
+        //$(".post code").css(post_code);
+        $("#idhyt-surprise-ball #idhyt-surprise-ball-animation .drag").css(a_tag);
+        $(".post-title-link, .posts-expand .post-meta, .post-comments-count, .disqus-comment-count, .post-category a, .post-nav-next a, .post-nav-item a").css(a_tag);
+        
+        // $("code").css({color: '#c5c8c6', background: '#1d1f21'});
+        $("#assist_btn").hide(1500);
+    }
+
+    $(function () {
+        $("#assist_btn").dblclick(function() {
+            switch_theme();
+        });
+    });
+
+</script>
+
+<div>
+
+    <button class="assist-btn circle" id="assist_btn" title="双击切换">
+        亮
+    </button>
+
+</div>
+
+
+
+
+
+
+
+
+
+      
+
+    
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              学习protobuf
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2018-06-04T01:07:39+08:00" content="2018-06-04">
+            2018-06-04
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/protobuf/" itemprop="url" rel="index">
+                  <span itemprop="name">protobuf</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><blockquote>
+<p>一个golang 网友的思考(<a href="http://www.cnblogs.com/wolfred7464/p/4673908.html)：" target="_blank" rel="noopener">http://www.cnblogs.com/wolfred7464/p/4673908.html)：</a></p>
+</blockquote>
+<pre><code>1、我用二进制传输消息意义在哪？
+
+    当然就是字节少，传输成本小。
+
+2、二进制不可读啊，怎么解码呢？
+
+    调用Unmarshal函数，把对应类型的对象传入，会自动把二进制解码到传入的对象。
+
+3、拿到一大坨二进制数据，怎么知道能解码到哪个类呢？
+
+    我仍然认为数据头加上类型ID是比较好的做法。
+    官方C++版本中可以通过协议名称得到一个协议类型，
+    优势是不需要我们自己维护一份switch case的代码。但是类型名称一般不如ID字节少。
+    在网游使用可以把ID多级分类，例如按照背包、好友、帮派分类，
+    背包中再分为装备和物品，然后依次细分，这样每次增删协议对其他部分影响较少。
+</code></pre><p>我觉得他在使用的过程中是有自己的思考的，第三点我也是这么认为，如果两者通信，不可能只给二级制，也得给一些附加数据让对方解析这些二进制吧，带一个cmdId 给对方然后两方约定这个 id 对应的类型 应该是一种好的选择</p>
+<h3 id="Standard-Message-Methods"><a href="#Standard-Message-Methods" class="headerlink" title="Standard Message Methods"></a>Standard Message Methods</h3><p>每个消息类还包含许多其他方法，可以检查或处理整个消息。</p>
+<ul>
+<li>bool IsInitialized() const;           检查是否设置了所有必需的字段</li>
+<li>string DebugString() const;           返回消息的人类可读表示，特别用于调试。</li>
+<li>void CopyFrom(const Person&amp; from);    用给定消息的值覆盖消息</li>
+<li>void Clear();                         清除所有元素返回空状态</li>
+</ul>
+<h3 id="Parsing-and-Serialization"><a href="#Parsing-and-Serialization" class="headerlink" title="Parsing and Serialization"></a>Parsing and Serialization</h3><p>每个协议缓冲类都有用于通过二进制形式编写和读取所选类型消息的方法</p>
+<ul>
+<li>bool SerializeToString(string* output) const; 该消息序列化和存储的字节在给定的字符串。</li>
+<li>bool ParseFromString(const string&amp; data);: parses a message from the given string.</li>
+<li>bool SerializeToOstream(ostream* output) const;   将消息写入给定的C ++ ostream</li>
+<li>bool ParseFromIstream(istream* input); parses a message from the given C++ istream</li>
+</ul>
+<h3 id="Advanced-Usage"><a href="#Advanced-Usage" class="headerlink" title="Advanced Usage"></a>Advanced Usage</h3><p>协议消息类提供的一个关键特性是反射。您可以迭代消息的字段并操作它们的值，而无需针对任何特定消息类型编写代码。<br>使用反射的一个非常有用的方法是将协议消息转换为其他编码（例如XML或JSON）以及从其他编码转换。更高级的反射使用可能是找到两个相同类型的消息之间的差异，或者开发一种“协议消息的正则表达式”，在其中可以编写匹配特定消息内容的表达式。如果您使用自己的想象力，可以将Protocol Buffers应用于比您最初期望的更广泛的问题！</p>
+<h3 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h3><p>官网的教程是 写和读，加了一个修改的操作</p>
+<p>code: <a href="https://github.com/changan29/playcpp/tree/master/protobuf" target="_blank" rel="noopener">https://github.com/changan29/playcpp/tree/master/protobuf</a></p>
+<p>demo:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">[root@VM_80_251_centos pb]# g++ reader.cpp addressbook.pb.cc -o rr -lprotobuf</span><br><span class="line">[root@VM_80_251_centos pb]# ./rr test</span><br><span class="line">--- before modify</span><br><span class="line">Person ID: 1</span><br><span class="line">  Name: changan</span><br><span class="line">  E-mail address: 909@163.com</span><br><span class="line">  Mobile phone #: 186</span><br><span class="line">  Home phone #: 147</span><br><span class="line">Person ID: 2</span><br><span class="line">  Name: cc</span><br><span class="line">  E-mail address: 678</span><br><span class="line">  Home phone #: 123</span><br><span class="line">Person ID: 4</span><br><span class="line">  Name: 123</span><br><span class="line">  E-mail address: 123456</span><br><span class="line">  Work phone #: 123456</span><br><span class="line">--- after modify</span><br><span class="line">Person ID: 666</span><br><span class="line">  Name: changan</span><br><span class="line">  E-mail address: another.email</span><br><span class="line">  Home phone #: 987654321</span><br><span class="line">  Home phone #: 987654321</span><br><span class="line">Person ID: 666</span><br><span class="line">  Name: cc</span><br><span class="line">  E-mail address: another.email</span><br><span class="line">  Home phone #: 987654321</span><br><span class="line">Person ID: 666</span><br><span class="line">  Name: 123</span><br><span class="line">  E-mail address: another.email</span><br><span class="line">  Home phone #: 987654321</span><br></pre></td></tr></table></figure></p>
+<h3 id="proto-2-3-的差别"><a href="#proto-2-3-的差别" class="headerlink" title="proto 2/3 的差别"></a>proto 2/3 的差别</h3><ul>
+<li>版本<br>proto文件中的第一行非空白非注释行</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">syntax = &quot;proto3&quot;</span><br><span class="line">表示使用proto3的语法，否则默认使用proto2的语法</span><br></pre></td></tr></table></figure>
+<ul>
+<li>字段</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">移除required，将optional改名为singular。</span><br><span class="line">如果不加repeated，默认就是singular的。</span><br></pre></td></tr></table></figure>
+<ul>
+<li>语言</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">增加了Go,Ruby,JavaNano等的支持</span><br><span class="line">未来还计划支持PHP等</span><br></pre></td></tr></table></figure>
+<ul>
+<li>移除了default选项</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">在proto2中，可使用default为field指定默认值。</span><br><span class="line">在proto3中，field的默认值只依赖于field的类型，不再能够被指定。</span><br><span class="line">当field的value为默认值时，该field不会被序列化，可节省空间。</span><br><span class="line">不要依赖于字段的默认值的行为，因为无法区分是指定为默认值，还是未定义值。</span><br></pre></td></tr></table></figure>
+<ul>
+<li>枚举类型的第一个枚举值必须是0</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">proto3中必须提供一个枚举值为0作为枚举的默认值。</span><br><span class="line">为了和proto2兼容（proto2使用第一个枚举值作为默认值），因此规定一个枚举值为0。</span><br></pre></td></tr></table></figure>
+<ul>
+<li>不再支持Extension，新增Any关键字</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Any 类型是用来替代 proto2 中的扩展的。目前还在开发中。</span><br><span class="line"></span><br><span class="line">proto2 中的扩展特性很像 Swift 语言中的扩展。</span><br><span class="line">理解起来有点困难，使用起来更是会带来不少混乱。</span><br><span class="line"></span><br><span class="line">相比之下，proto3 中新增的 Any 类型有点像 C/C++ 中的 void*</span><br><span class="line">，好理解，使用起来逻辑也更清晰。</span><br></pre></td></tr></table></figure>
+<ul>
+<li>增加了 JSON 映射特性</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">语言的活力来自于与时俱进。当前，JSON 的流行有其充分的理由。</span><br><span class="line">很多『现代化』的语言都内置了对 JSON 的支持，比如 Go、PHP 等。</span><br></pre></td></tr></table></figure>
+<h3 id="Reflection"><a href="#Reflection" class="headerlink" title="Reflection"></a>Reflection</h3><ul>
+<li>TODO</li>
+</ul>
+<hr>
+<p>@Mon Jun  4 01:10:30 CST 2018</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/protobuf/" rel="tag">#protobuf</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/11/cmake学习/" rel="prev">learn_cmake</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/01/How-to-become-a-good-engineer/" rel="next">如何成为一个优秀的工程师？--陆奇</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div>
+      
+        <style type="text/css">
+
+    .donate_bar {
+        text-align: center;
+        margin-top : 5%;
+    }
+
+    .donate_bar.hidden {
+        display:none;
+    }
+/*
+    .donate_bar a.btn_donate {
+        display: inline-block;
+        width: 82px;
+        height: 82px;
+        margin-left:auto;
+        margin-right:auto;
+
+        background: url("http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif") no-repeat;
+        _background: url("http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif") no-repeat; 
+
+        -webkit-transition: background 0s;
+        -moz-transition: background 0s;
+        -o-transition: background 0s;
+        -ms-transition: background 0s;
+        transition: background 0s;
+    }
+*/
+    .donate_bar a.btn_donate:hover { 
+        // background-position: 0px -82px;
+        color: #87daff
+    }
+
+    .donate_bar .donate_txt {
+        display: block;
+        color: #9d9d9d;
+        font: 14px/2 "Microsoft Yahei";
+    }
+
+    .bold { 
+        font-weight: bold; 
+    }
+
+    .post-donate a {
+        border-bottom: 0px;
+    }
+
+    #donate_guide table {
+        border: none;
+    }
+
+    #donate_guide td {
+        border-bottom: none;
+        border-right: none;
+        background: #333333;
+        valign: top;
+    }
+
+</style>
+
+
+
+    
+
+    <div class ="post-donate">
+        <div id="donate_board" class="donate_bar center">
+              <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏">赏</a>
+              <span id="donate_txt" class="donate_txt">
+                   
+                        请我喝杯咖啡
+                   
+              </span>
+            <br>
+        </div>  
+  
+        <div id="donate_guide" class="donate_bar center hidden">
+            <!--
+              
+
+            
+                <a href="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="微信打赏" class="fancybox" rel="article0"
+                    style="margin-right:30%">
+                    <img src="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="" height="164px" width="164px">
+                </a>
+            
+            -->
+            <table>
+                <tr>
+                    <td>
+                         
+                    </td>
+                    <td>
+                        
+                            <a href="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="微信打赏" class="fancybox" rel="article0"
+                                style="margin-right:30%">
+                                <img src="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="" height="164px" width="164px">
+                            </a>
+                        
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+        <script type="text/javascript">
+            document.getElementById('btn_donate').onclick = function() {
+                $('#donate_board').addClass('hidden');
+                // $('#donate_guide').removeClass('hidden');
+                $('#donate_guide').show(2000);
+            }
+
+        </script>
+    </div>
+
+    
+
+
+      
+    </div>
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+          <div class="comments" id="comments">
+            
+            -->
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table Of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="changan" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">changan</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">思绪来的快去的也快，偶尔在这里停留</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">53</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">34</span>
+              <span class="site-state-item-name">categories</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">33</span>
+              <span class="site-state-item-name">tags</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://github.com/changan29" target="_blank">GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/zhaochanganplus" target="_blank">ZhiHu</a>
+              </span>
+            
+          
+        </div>
+
+        <div class="links-of-friendly motion-element">
+          
+        </div>
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#引用"><span class="nav-number">1.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Standard-Message-Methods"><span class="nav-number">2.</span> <span class="nav-text">Standard Message Methods</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Parsing-and-Serialization"><span class="nav-number">3.</span> <span class="nav-text">Parsing and Serialization</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Advanced-Usage"><span class="nav-number">4.</span> <span class="nav-text">Advanced Usage</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一个例子"><span class="nav-number">5.</span> <span class="nav-text">一个例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proto-2-3-的差别"><span class="nav-number">6.</span> <span class="nav-text">proto 2/3 的差别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reflection"><span class="nav-number">7.</span> <span class="nav-text">Reflection</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2018 - 
+  <span itemprop="copyrightYear">2019
+  </span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changan
+  </span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme by <a class="theme-link" href="http://blog.idhyt.com">idhyt</a>.<a class="theme-link" href="https://github.com/idhyt/hexo-theme-next/tree/magiclamp">Mala</a>
+</div>
+
+<!-- busuanzi -->
+
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

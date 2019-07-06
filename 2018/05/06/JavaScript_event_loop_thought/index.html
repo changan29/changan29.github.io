@@ -1,0 +1,919 @@
+
+<!doctype html>
+<html class="theme-next use-motion theme-next-mala">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="思绪来的快去的也快，偶尔在这里停留" />
+
+
+
+  <meta name="keywords" content="web,javascript," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="问题起因最近想学习下web前端，原因是这样的，当前中国(公元2018年)的网络环境，表现形式基本是web+移动端，像微信的小程序只要写js应该就可以了，移动端的app很多也是以web的形式展示，应用程序内是html+css+js，不仅方便发布，而且做起来也快，写完页面样式，更新资源，就好了，类似热更 问题javascript是怎么捕获到鼠标点击事件的？ js有很多事件，鼠标的、页面加载完成的、点击">
+<meta name="keywords" content="web,javascript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript事件随想">
+<meta property="og:url" content="http://oneyearago.me/2018/05/06/JavaScript_event_loop_thought/index.html">
+<meta property="og:site_name" content="changan&#39;s blog">
+<meta property="og:description" content="问题起因最近想学习下web前端，原因是这样的，当前中国(公元2018年)的网络环境，表现形式基本是web+移动端，像微信的小程序只要写js应该就可以了，移动端的app很多也是以web的形式展示，应用程序内是html+css+js，不仅方便发布，而且做起来也快，写完页面样式，更新资源，就好了，类似热更 问题javascript是怎么捕获到鼠标点击事件的？ js有很多事件，鼠标的、页面加载完成的、点击">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://otc9g6h5k.bkt.clouddn.com/Windows_event.jpg">
+<meta property="og:image" content="http://otc9g6h5k.bkt.clouddn.com/Windows_event2.gif">
+<meta property="og:image" content="http://otc9g6h5k.bkt.clouddn.com/browser-event.png">
+<meta property="og:updated_time" content="2018-05-05T17:03:36.072Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript事件随想">
+<meta name="twitter:description" content="问题起因最近想学习下web前端，原因是这样的，当前中国(公元2018年)的网络环境，表现形式基本是web+移动端，像微信的小程序只要写js应该就可以了，移动端的app很多也是以web的形式展示，应用程序内是html+css+js，不仅方便发布，而且做起来也快，写完页面样式，更新资源，就好了，类似热更 问题javascript是怎么捕获到鼠标点击事件的？ js有很多事件，鼠标的、页面加载完成的、点击">
+<meta name="twitter:image" content="http://otc9g6h5k.bkt.clouddn.com/Windows_event.jpg">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mala',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> JavaScript事件随想 | changan's blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">changan's blog</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            About
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    
+      
+
+      
+        <style type="text/css">
+
+    .circle {
+        width: 40px;
+        height: 40px;
+        background: #555 no-repeat;
+        cursor: move;
+    }
+
+    .assist-btn {
+        position: fixed;
+        top: 50％;
+        left: 10px;
+        -moz-border-radius: 50px;
+        -webkit-border-radius: 50px;
+        border-radius: 50px;
+        outline: none;
+        border: none;
+        color: #87daff;
+    }
+
+</style>
+
+<script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+<script type="text/javascript">
+    // 浮动圆点展开与收缩
+    /*
+    $(function () {
+        var assist_box = $('.assist-box');
+        $('#assist_btn').hover(function () {
+            assist_box.stop().show(300);
+        }, function () {
+            assist_box.stop().hide(150);
+        })
+    });
+    */  
+    //浮动圆点拖动
+    $(function () {
+        var box = document.getElementById('assist_btn');
+        box.onmousedown = function (event) {
+            var e = event || window.event,
+                t = e.target || e.srcElement,
+                // 鼠标按下时的坐标x1,y1
+                x1 = e.clientX,
+                y1 = e.clientY,
+                //鼠标按下时的左右偏移量
+                dragLeft = this.offsetLeft,
+                dragTop = this.offsetTop;
+
+            document.onmousemove = function (event) {
+                var e = event || window.event,
+                    t = e.target || e.srcElement,
+                    // 鼠标移动时的动态坐标
+                    x2 = e.clientX,
+                    y2 = e.clientY,
+                    // 鼠标移动时的坐标的变化量
+                    x = x2 - x1,
+                    y = y2 - y1;
+                box.style.left = (dragLeft + x) + 'px';
+                box.style.top = (dragTop + y) + 'px';
+            }
+
+            document.onmouseup = function () {
+                this.onmousemove = null;
+            }
+        }
+    });
+
+/*
+    $whitesmoke   = #f5f5f5
+    $gainsboro    = #eee
+    $gray-lighter = #ddd
+    $grey-light   = #ccc
+    $grey         = #bbb
+    $grey-dark    = #999
+    $grey-dim     = #666
+    $black-light  = #555
+    $black-deep   = #222
+    $red          = #ff2a2a
+    $blue-bright  = #87daff
+    $blue         = #0684bd
+    $blue-deep    = #262a30
+*/
+    // white theme
+    var body = {color: "#555", background: "white"};
+    var a_tag = {color: "#222"};
+    var header = { background: "#f5f5f5"};
+    var logo_line_i = {background: "#222"};
+    // var post_code = {background: "#eee", color: "#222"};
+
+    function switch_theme() {
+        $("body").css(body);
+        $("a:not('.links-of-author-item a, .site-state-item a, .site-state-posts a, .feed-link a, .motion-element a, .post-tags a, .show-commit-cls a, #donate_board a')").css(a_tag);
+        $(".header, .footer").css(header);
+        $(".logo-line-before i, .logo-line-after i").css(logo_line_i);
+        //$(".post code").css(post_code);
+        $("#idhyt-surprise-ball #idhyt-surprise-ball-animation .drag").css(a_tag);
+        $(".post-title-link, .posts-expand .post-meta, .post-comments-count, .disqus-comment-count, .post-category a, .post-nav-next a, .post-nav-item a").css(a_tag);
+        
+        // $("code").css({color: '#c5c8c6', background: '#1d1f21'});
+        $("#assist_btn").hide(1500);
+    }
+
+    $(function () {
+        $("#assist_btn").dblclick(function() {
+            switch_theme();
+        });
+    });
+
+</script>
+
+<div>
+
+    <button class="assist-btn circle" id="assist_btn" title="双击切换">
+        亮
+    </button>
+
+</div>
+
+
+
+
+
+
+
+
+
+      
+
+    
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              JavaScript事件随想
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2018-05-06T01:30:39+08:00" content="2018-05-06">
+            2018-05-06
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/web/" itemprop="url" rel="index">
+                  <span itemprop="name">web</span>
+                </a>
+              </span>
+
+              
+              
+                , 
+              
+
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/web/javascript-event/" itemprop="url" rel="index">
+                  <span itemprop="name">javascript-event</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h3 id="问题起因"><a href="#问题起因" class="headerlink" title="问题起因"></a>问题起因</h3><p>最近想学习下web前端，原因是这样的，当前中国(公元2018年)的网络环境，表现形式基本是web+移动端，像微信的小程序只要写js应该就可以了，移动端的app很多也是以web的形式展示，应用程序内是html+css+js，不仅方便发布，而且做起来也快，写完页面样式，更新资源，就好了，类似热更</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>javascript是怎么捕获到鼠标点击事件的？</p>
+<p>js有很多事件，鼠标的、页面加载完成的、点击按钮的；etc..</p>
+<h3 id="理清这个思路"><a href="#理清这个思路" class="headerlink" title="理清这个思路"></a>理清这个思路</h3><p>以我 windows环境下 chrome 浏览器为例</p>
+<h5 id="首先几个概念"><a href="#首先几个概念" class="headerlink" title="首先几个概念"></a>首先几个概念</h5><ul>
+<li>鼠标这种硬件产生的信号肯定是操作系统处理，操作系统转发给对应的进程</li>
+<li>在windows中，也有鼠标按下,moveover 这类的消息</li>
+<li>在windows中,一个消息，是系统定义的一个32位的值，他唯一的定义了一个事件，向 Windows发出一个通知，告诉应用程序某个事情发生了。例如，单击鼠标、改变窗口尺寸、按下键盘上的一个键都会使Windows发送一个消息给应用程序的消息队列,然后应用程序再从消息队列中取出消息并进行相应的响应</li>
+<li>Windows操作系统也会给应用程序“发送消息”，而所谓的发送消息——–实际上就是操作系统调用程序中的一个专门负责处理消息的函数，这个函数称为窗口过程(应用程序给出的一个函数)</li>
+<li>消息队列可以分成系统消息队列和线程消息队列。系统消息队列由Windows维护，线程消息队列则由每个GUI线程自己进行维护</li>
+<li>对于队列消息，最常见的是鼠标和键盘触发的消息，例如WM_MOUSERMOVE,WM_CHAR等消息，还有一些其它的消息，例如：WM_PAINT、 WM_TIMER和WM_QUIT。当鼠标、键盘事件被触发后，相应的鼠标或键盘驱动程序就会把这些事件转换成相应的消息，然后输送到系统消息队列，由 Windows系统去进行处理。Windows系统则在适当的时机，从系统消息队列中取出一个消息，根据前面我们所说的MSG消息结构确定消息是要被送往那个窗口，然后把取出的消息送往创建窗口的线程的相应队列，下面的事情就该由线程消息队列操心了，Windows开始忙自己的事情去了。线程看到自己的消息队列中有消息，就从队列中取出来，通过操作系统发送到合适的窗口过程去处理。</li>
+</ul>
+<p><img src="http://otc9g6h5k.bkt.clouddn.com/Windows_event.jpg" alt="image"><br><img src="http://otc9g6h5k.bkt.clouddn.com/Windows_event2.gif" alt="image"></p>
+<h5 id="windows-程序-最基本的窗口"><a href="#windows-程序-最基本的窗口" class="headerlink" title="windows 程序 最基本的窗口"></a>windows 程序 最基本的窗口</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">//一个简单的Win32应用程序</span><br><span class="line">//通过这个简单的实例讲解Windows消息是如何传递的</span><br><span class="line">#include &lt;windows.h&gt;</span><br><span class="line">//声明窗口过程函数</span><br><span class="line">LRESULT CALLBACK WndProc(HWND,UINT,WPARAM,LPARAM);</span><br><span class="line">//定义一个全局变量，作为窗口类名</span><br><span class="line">TCHAR szClassName[] = TEXT(&quot;SimpleWin32&quot;);</span><br><span class="line">//应用程序主函数</span><br><span class="line">int WINAPI WinMain (HINSTANCE hInstance,</span><br><span class="line">                                  HINSTANCE hPrevInstance,</span><br><span class="line">                                  LPSTR szCmdLine,</span><br><span class="line">                                  int iCmdShow)</span><br><span class="line">&#123;</span><br><span class="line">    //****1.设计一个窗口类****</span><br><span class="line">    WNDCLASS wndclass;</span><br><span class="line">    //****2.注册窗口类</span><br><span class="line">    if(!RegisterClass (&amp;wndclass))</span><br><span class="line">    &#123;</span><br><span class="line">           MessageBox (NULL, TEXT (&quot;RegisterClass Fail!&quot;), </span><br><span class="line">                   szClassName, MB_ICONERROR);</span><br><span class="line">           return 0;</span><br><span class="line">    &#125;</span><br><span class="line">    //****3.创建一个窗口</span><br><span class="line">    HWND hwnd;</span><br><span class="line">    hwnd = CreateWindow(szClassName,//窗口类名称</span><br><span class="line">           TEXT (&quot;The Simple Win32 Application&quot;),//窗口标题 </span><br><span class="line">           WS_OVERLAPPEDWINDOW,//窗口风格,即通常我们使用的windows窗口样式</span><br><span class="line">           CW_USEDEFAULT,//指定窗口的初始水平位置,即屏幕坐标系的窗口的左上角的X坐标</span><br><span class="line">           CW_USEDEFAULT,//指定窗口的初始垂直位置,即屏幕坐标系的窗口的左上角的Y坐标</span><br><span class="line">           CW_USEDEFAULT,//窗口的宽度</span><br><span class="line">           CW_USEDEFAULT,//窗口的高度</span><br><span class="line">           NULL,//父窗口句柄</span><br><span class="line">           NULL,//窗口菜单句柄</span><br><span class="line">           hInstance,//实例句柄</span><br><span class="line">           NULL);</span><br><span class="line">    //****4.显示窗口</span><br><span class="line">    ShowWindow(hwnd,iCmdShow);</span><br><span class="line">    //消息循环</span><br><span class="line">    MSG msg;</span><br><span class="line">    while(GetMessage(&amp;msg,NULL,0,0))//从消息队列中取消息 </span><br><span class="line">    &#123;</span><br><span class="line">           TranslateMessage (&amp;msg);              //转换消息</span><br><span class="line">           DispatchMessage (&amp;msg);               //派发消息</span><br><span class="line">    &#125;</span><br><span class="line">    return msg.wParam;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//消息处理函数</span><br><span class="line">//参数:窗口句柄，消息，消息参数，消息参数</span><br><span class="line">LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)</span><br><span class="line">&#123;</span><br><span class="line">    //处理感兴趣的消息</span><br><span class="line">    switch (message)</span><br><span class="line">    &#123;</span><br><span class="line">    case WM_DESTROY:</span><br><span class="line">           //当用户关闭窗口，窗口销毁，程序需结束，发退出消息，以退出消息循环</span><br><span class="line">           PostQuitMessage(0);</span><br><span class="line">           return 0;</span><br><span class="line">    // 鼠标消息</span><br><span class="line">    &#125;</span><br><span class="line">    //其他消息交给由系统提供的缺省处理函数</span><br><span class="line">    return ::DefWindowProc (hwnd, message, wParam, lParam);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="浏览器处理消息"><a href="#浏览器处理消息" class="headerlink" title="浏览器处理消息"></a>浏览器处理消息</h5><p>在Windows上，浏览器作为一个Windows上的应用程序，也会收到鼠标点击的事件，所以收到以后的事件不是 JavaScript 事件，而是浏览器进程和js解释器共同处理的事件</p>
+<p>浏览器访问网页是个网络io,渲染html，css 以及执行 js的操作，有些操作比如说获取远程数据、I/O操作等，他们都很耗时，如果采用同步的方式，那么进程在执行这些操作时就会因为耗时而等待，就像上面那样，下面的任务也只能等待，这样效率并不高。那浏览器是怎么做的呢?</p>
+<p><strong>为了协调事件，用户交互，脚本，渲染，网络等，用户代理必须使用事件循环。</strong><br><strong>事件循环的主要机制就是任务队列机制:</strong></p>
+<ul>
+<li>一个事件循环有一个或者多个任务队列（task queues）。任务队列是task的有序列表，task是调度Events，Parsing，Callbacks，Using a resource，Reacting to DOM manipulation这些任务的算法;</li>
+<li>每个任务都来自一个特定的任务源（task source）(比如鼠标键盘事件)。来自同一个特定任务源且属于特定事件循环的任务必须被加入到同一个任务队列中，来自不同任务源的任务可以放在不同的任务队列中;</li>
+<li>浏览器调用这些队列中的任务时采取这样的做法: 相同队列中的任务按照先进先出的顺序, 不同的队列按照提前设置的队列优先级来调用. 例如，用户代理可以有一个用于鼠标和键盘事件的任务队列（用户交互任务源），另一个用于其他任务。然后，用户代理75%概率调用键盘和鼠标事件任务队列，25%调用其他队列, 这样的话就保持界面响应而且不会饿死其他任务队列. 但是相同队列中的任务要按照先进先出的顺序。也就是说单独的任务队列中的任务总是按先进先出的顺序执行，但是不保证多个任务队列中的任务优先级，具体实现可能会交叉执行</li>
+</ul>
+<p>在调用任务的过程中, 会产生新的任务, 浏览器就会不断执行任务, 因此称为事件循环.</p>
+<p><img src="http://otc9g6h5k.bkt.clouddn.com/browser-event.png" alt="image"></p>
+<h5 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h5><ul>
+<li>[1] <a href="https://segmentfault.com/a/1190000012748907" target="_blank" rel="noopener">https://segmentfault.com/a/1190000012748907</a></li>
+<li>[2] <a href="https://github.com/JaffarL/weeiry/blob/master/2018-2-11/Nodejs%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF.md" target="_blank" rel="noopener">https://github.com/JaffarL/weeiry/blob/master/2018-2-11/Nodejs%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF.md</a></li>
+<li>[3] <a href="https://blog.csdn.net/liulianglin/article/details/14449577" target="_blank" rel="noopener">https://blog.csdn.net/liulianglin/article/details/14449577</a></li>
+</ul>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/web/" rel="tag">#web</a>
+          
+            <a href="/tags/javascript/" rel="tag">#javascript</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/20/linux_file_system/" rel="prev">linux_file_system</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/29/April_in_shenzhen/" rel="next">April_in_shenzhen</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div>
+      
+        <style type="text/css">
+
+    .donate_bar {
+        text-align: center;
+        margin-top : 5%;
+    }
+
+    .donate_bar.hidden {
+        display:none;
+    }
+/*
+    .donate_bar a.btn_donate {
+        display: inline-block;
+        width: 82px;
+        height: 82px;
+        margin-left:auto;
+        margin-right:auto;
+
+        background: url("http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif") no-repeat;
+        _background: url("http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif") no-repeat; 
+
+        -webkit-transition: background 0s;
+        -moz-transition: background 0s;
+        -o-transition: background 0s;
+        -ms-transition: background 0s;
+        transition: background 0s;
+    }
+*/
+    .donate_bar a.btn_donate:hover { 
+        // background-position: 0px -82px;
+        color: #87daff
+    }
+
+    .donate_bar .donate_txt {
+        display: block;
+        color: #9d9d9d;
+        font: 14px/2 "Microsoft Yahei";
+    }
+
+    .bold { 
+        font-weight: bold; 
+    }
+
+    .post-donate a {
+        border-bottom: 0px;
+    }
+
+    #donate_guide table {
+        border: none;
+    }
+
+    #donate_guide td {
+        border-bottom: none;
+        border-right: none;
+        background: #333333;
+        valign: top;
+    }
+
+</style>
+
+
+
+    
+
+    <div class ="post-donate">
+        <div id="donate_board" class="donate_bar center">
+              <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏">赏</a>
+              <span id="donate_txt" class="donate_txt">
+                   
+                        请我喝杯咖啡
+                   
+              </span>
+            <br>
+        </div>  
+  
+        <div id="donate_guide" class="donate_bar center hidden">
+            <!--
+              
+
+            
+                <a href="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="微信打赏" class="fancybox" rel="article0"
+                    style="margin-right:30%">
+                    <img src="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="" height="164px" width="164px">
+                </a>
+            
+            -->
+            <table>
+                <tr>
+                    <td>
+                         
+                    </td>
+                    <td>
+                        
+                            <a href="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="微信打赏" class="fancybox" rel="article0"
+                                style="margin-right:30%">
+                                <img src="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="" height="164px" width="164px">
+                            </a>
+                        
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+        <script type="text/javascript">
+            document.getElementById('btn_donate').onclick = function() {
+                $('#donate_board').addClass('hidden');
+                // $('#donate_guide').removeClass('hidden');
+                $('#donate_guide').show(2000);
+            }
+
+        </script>
+    </div>
+
+    
+
+
+      
+    </div>
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+          <div class="comments" id="comments">
+            
+            -->
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table Of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="changan" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">changan</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">思绪来的快去的也快，偶尔在这里停留</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">53</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">34</span>
+              <span class="site-state-item-name">categories</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">33</span>
+              <span class="site-state-item-name">tags</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://github.com/changan29" target="_blank">GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/zhaochanganplus" target="_blank">ZhiHu</a>
+              </span>
+            
+          
+        </div>
+
+        <div class="links-of-friendly motion-element">
+          
+        </div>
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题起因"><span class="nav-number">1.</span> <span class="nav-text">问题起因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#理清这个思路"><span class="nav-number">3.</span> <span class="nav-text">理清这个思路</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#首先几个概念"><span class="nav-number">3.0.1.</span> <span class="nav-text">首先几个概念</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#windows-程序-最基本的窗口"><span class="nav-number">3.0.2.</span> <span class="nav-text">windows 程序 最基本的窗口</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#浏览器处理消息"><span class="nav-number">3.0.3.</span> <span class="nav-text">浏览器处理消息</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#参考"><span class="nav-number">3.0.4.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2018 - 
+  <span itemprop="copyrightYear">2019
+  </span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changan
+  </span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme by <a class="theme-link" href="http://blog.idhyt.com">idhyt</a>.<a class="theme-link" href="https://github.com/idhyt/hexo-theme-next/tree/magiclamp">Mala</a>
+</div>
+
+<!-- busuanzi -->
+
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
