@@ -1,0 +1,891 @@
+
+<!doctype html>
+<html class="theme-next use-motion theme-next-mala">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="思绪来的快去的也快，偶尔在这里停留" />
+
+
+
+  <meta name="keywords" content="IPC,pipe," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="历史UNIX两大贡献者贝尔实验室和BSD，在进程之间通信侧重不同，前者基于内核对进程之间的通信手段进行了改进，形成了“System V IPC”，而后者则是基于网络形成了套接字。 而POSIX则是IEEE制定的标准，目的是为运行在不同操作系统上的软件提供统一的接口，实现者则是不同的操作系统内核开发人员。 System V 以及POSIX 对信号量、共享内存、消息队列等进程之间共享方式提供了自己的解">
+<meta name="keywords" content="IPC,pipe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="进程通信 &amp; PIPE">
+<meta property="og:url" content="http://oneyearago.me/2019/10/24/IPC_and_pipe/index.html">
+<meta property="og:site_name" content="changan&#39;s blog">
+<meta property="og:description" content="历史UNIX两大贡献者贝尔实验室和BSD，在进程之间通信侧重不同，前者基于内核对进程之间的通信手段进行了改进，形成了“System V IPC”，而后者则是基于网络形成了套接字。 而POSIX则是IEEE制定的标准，目的是为运行在不同操作系统上的软件提供统一的接口，实现者则是不同的操作系统内核开发人员。 System V 以及POSIX 对信号量、共享内存、消息队列等进程之间共享方式提供了自己的解">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://201910-1251969284.cos.ap-shanghai.myqcloud.com/socket_pair_pipe.bmp">
+<meta property="og:updated_time" content="2019-10-24T15:59:17.778Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="进程通信 &amp; PIPE">
+<meta name="twitter:description" content="历史UNIX两大贡献者贝尔实验室和BSD，在进程之间通信侧重不同，前者基于内核对进程之间的通信手段进行了改进，形成了“System V IPC”，而后者则是基于网络形成了套接字。 而POSIX则是IEEE制定的标准，目的是为运行在不同操作系统上的软件提供统一的接口，实现者则是不同的操作系统内核开发人员。 System V 以及POSIX 对信号量、共享内存、消息队列等进程之间共享方式提供了自己的解">
+<meta name="twitter:image" content="https://201910-1251969284.cos.ap-shanghai.myqcloud.com/socket_pair_pipe.bmp">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mala',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 进程通信 & PIPE | changan's blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">changan's blog</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            About
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    
+      
+
+      
+        <style type="text/css">
+
+    .circle {
+        width: 40px;
+        height: 40px;
+        background: #555 no-repeat;
+        cursor: move;
+    }
+
+    .assist-btn {
+        position: fixed;
+        top: 50％;
+        left: 10px;
+        -moz-border-radius: 50px;
+        -webkit-border-radius: 50px;
+        border-radius: 50px;
+        outline: none;
+        border: none;
+        color: #87daff;
+    }
+
+</style>
+
+<script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+<script type="text/javascript">
+    // 浮动圆点展开与收缩
+    /*
+    $(function () {
+        var assist_box = $('.assist-box');
+        $('#assist_btn').hover(function () {
+            assist_box.stop().show(300);
+        }, function () {
+            assist_box.stop().hide(150);
+        })
+    });
+    */  
+    //浮动圆点拖动
+    $(function () {
+        var box = document.getElementById('assist_btn');
+        box.onmousedown = function (event) {
+            var e = event || window.event,
+                t = e.target || e.srcElement,
+                // 鼠标按下时的坐标x1,y1
+                x1 = e.clientX,
+                y1 = e.clientY,
+                //鼠标按下时的左右偏移量
+                dragLeft = this.offsetLeft,
+                dragTop = this.offsetTop;
+
+            document.onmousemove = function (event) {
+                var e = event || window.event,
+                    t = e.target || e.srcElement,
+                    // 鼠标移动时的动态坐标
+                    x2 = e.clientX,
+                    y2 = e.clientY,
+                    // 鼠标移动时的坐标的变化量
+                    x = x2 - x1,
+                    y = y2 - y1;
+                box.style.left = (dragLeft + x) + 'px';
+                box.style.top = (dragTop + y) + 'px';
+            }
+
+            document.onmouseup = function () {
+                this.onmousemove = null;
+            }
+        }
+    });
+
+/*
+    $whitesmoke   = #f5f5f5
+    $gainsboro    = #eee
+    $gray-lighter = #ddd
+    $grey-light   = #ccc
+    $grey         = #bbb
+    $grey-dark    = #999
+    $grey-dim     = #666
+    $black-light  = #555
+    $black-deep   = #222
+    $red          = #ff2a2a
+    $blue-bright  = #87daff
+    $blue         = #0684bd
+    $blue-deep    = #262a30
+*/
+    // white theme
+    var body = {color: "#555", background: "white"};
+    var a_tag = {color: "#222"};
+    var header = { background: "#f5f5f5"};
+    var logo_line_i = {background: "#222"};
+    // var post_code = {background: "#eee", color: "#222"};
+
+    function switch_theme() {
+        $("body").css(body);
+        $("a:not('.links-of-author-item a, .site-state-item a, .site-state-posts a, .feed-link a, .motion-element a, .post-tags a, .show-commit-cls a, #donate_board a')").css(a_tag);
+        $(".header, .footer").css(header);
+        $(".logo-line-before i, .logo-line-after i").css(logo_line_i);
+        //$(".post code").css(post_code);
+        $("#idhyt-surprise-ball #idhyt-surprise-ball-animation .drag").css(a_tag);
+        $(".post-title-link, .posts-expand .post-meta, .post-comments-count, .disqus-comment-count, .post-category a, .post-nav-next a, .post-nav-item a").css(a_tag);
+        
+        // $("code").css({color: '#c5c8c6', background: '#1d1f21'});
+        $("#assist_btn").hide(1500);
+    }
+
+    $(function () {
+        $("#assist_btn").dblclick(function() {
+            switch_theme();
+        });
+    });
+
+</script>
+
+<div>
+
+    <button class="assist-btn circle" id="assist_btn" title="双击切换">
+        亮
+    </button>
+
+</div>
+
+
+
+
+
+
+
+
+
+      
+
+    
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              进程通信 & PIPE
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2019-10-24T23:58:45+08:00" content="2019-10-24">
+            2019-10-24
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/IPC/" itemprop="url" rel="index">
+                  <span itemprop="name">IPC</span>
+                </a>
+              </span>
+
+              
+              
+                , 
+              
+
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/IPC/pipe/" itemprop="url" rel="index">
+                  <span itemprop="name">pipe</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h3 id="历史"><a href="#历史" class="headerlink" title="历史"></a>历史</h3><p>UNIX两大贡献者贝尔实验室和BSD，在进程之间通信侧重不同，前者基于内核对进程之间的通信手段进行了改进，形成了“System V IPC”，而后者则是基于网络形成了套接字。</p>
+<p>而POSIX则是IEEE制定的标准，目的是为运行在不同操作系统上的软件提供统一的接口，实现者则是不同的操作系统内核开发人员。</p>
+<p>System V 以及POSIX 对信号量、共享内存、消息队列等进程之间共享方式提供了自己的解决方案。</p>
+<p>在观察使用进程间通信手段后，会发现在多线程中使用的基本是POSIX标准提供的接口函数，而多进程则是基于System V。</p>
+<h3 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h3><p>pipe和fifo用的不多了，让我们从Nginx那里学一个 全双工的管道: socketpair<br><img src="https://201910-1251969284.cos.ap-shanghai.myqcloud.com/socket_pair_pipe.bmp" alt="image"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;sys/uio.h&gt;</span><br><span class="line">#include &lt;sys/socket.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line">ssize_t</span><br><span class="line">sock_fd_write(int sock, void *buf, ssize_t buflen, int fd)</span><br><span class="line">&#123;</span><br><span class="line">  ssize_t     size;</span><br><span class="line">  struct msghdr   msg;</span><br><span class="line">  struct iovec    iov;</span><br><span class="line">  union &#123;</span><br><span class="line">    struct cmsghdr  cmsghdr;</span><br><span class="line">    char        control[CMSG_SPACE(sizeof (int))];</span><br><span class="line">  &#125; cmsgu;</span><br><span class="line">  struct cmsghdr  *cmsg;</span><br><span class="line"></span><br><span class="line">  iov.iov_base = buf;</span><br><span class="line">  iov.iov_len = buflen;</span><br><span class="line"></span><br><span class="line">  msg.msg_name = NULL;</span><br><span class="line">  msg.msg_namelen = 0;</span><br><span class="line">  msg.msg_iov = &amp;iov;</span><br><span class="line">  msg.msg_iovlen = 1;</span><br><span class="line"></span><br><span class="line">  if (fd != -1) &#123;</span><br><span class="line">    msg.msg_control = cmsgu.control;</span><br><span class="line">    msg.msg_controllen = sizeof(cmsgu.control);</span><br><span class="line"></span><br><span class="line">    cmsg = CMSG_FIRSTHDR(&amp;msg);</span><br><span class="line">    cmsg-&gt;cmsg_len = CMSG_LEN(sizeof (int));</span><br><span class="line">    cmsg-&gt;cmsg_level = SOL_SOCKET;</span><br><span class="line">    cmsg-&gt;cmsg_type = SCM_RIGHTS;</span><br><span class="line"></span><br><span class="line">    printf (&quot;passing fd %d\n&quot;, fd);</span><br><span class="line">    *((int *) CMSG_DATA(cmsg)) = fd;</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    msg.msg_control = NULL;</span><br><span class="line">    msg.msg_controllen = 0;</span><br><span class="line">    printf (&quot;not passing fd\n&quot;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  size = sendmsg(sock, &amp;msg, 0);</span><br><span class="line"></span><br><span class="line">  if (size &lt; 0)</span><br><span class="line">    perror (&quot;sendmsg&quot;);</span><br><span class="line">  return size;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ssize_t</span><br><span class="line">sock_fd_read(int sock, void *buf, ssize_t bufsize, int *fd)</span><br><span class="line">&#123;</span><br><span class="line">  ssize_t     size;</span><br><span class="line"></span><br><span class="line">  if (fd) &#123;</span><br><span class="line">    struct msghdr   msg;</span><br><span class="line">    struct iovec    iov;</span><br><span class="line">    union &#123;</span><br><span class="line">      struct cmsghdr  cmsghdr;</span><br><span class="line">      char        control[CMSG_SPACE(sizeof (int))];</span><br><span class="line">    &#125; cmsgu;</span><br><span class="line">    struct cmsghdr  *cmsg;</span><br><span class="line"></span><br><span class="line">    iov.iov_base = buf;</span><br><span class="line">    iov.iov_len = bufsize;</span><br><span class="line"></span><br><span class="line">    msg.msg_name = NULL;</span><br><span class="line">    msg.msg_namelen = 0;</span><br><span class="line">    msg.msg_iov = &amp;iov;</span><br><span class="line">    msg.msg_iovlen = 1;</span><br><span class="line">    msg.msg_control = cmsgu.control;</span><br><span class="line">    msg.msg_controllen = sizeof(cmsgu.control);</span><br><span class="line">    size = recvmsg (sock, &amp;msg, 0);</span><br><span class="line">    if (size &lt; 0) &#123;</span><br><span class="line">      perror (&quot;recvmsg&quot;);</span><br><span class="line">      exit(1);</span><br><span class="line">    &#125;</span><br><span class="line">    cmsg = CMSG_FIRSTHDR(&amp;msg);</span><br><span class="line">    if (cmsg &amp;&amp; cmsg-&gt;cmsg_len == CMSG_LEN(sizeof(int))) &#123;</span><br><span class="line">      if (cmsg-&gt;cmsg_level != SOL_SOCKET) &#123;</span><br><span class="line">        fprintf (stderr, &quot;invalid cmsg_level %d\n&quot;,</span><br><span class="line">                 cmsg-&gt;cmsg_level);</span><br><span class="line">        exit(1);</span><br><span class="line">      &#125;</span><br><span class="line">      if (cmsg-&gt;cmsg_type != SCM_RIGHTS) &#123;</span><br><span class="line">        fprintf (stderr, &quot;invalid cmsg_type %d\n&quot;,</span><br><span class="line">                 cmsg-&gt;cmsg_type);</span><br><span class="line">        exit(1);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      *fd = *((int *) CMSG_DATA(cmsg));</span><br><span class="line">      printf (&quot;received fd %d\n&quot;, *fd);</span><br><span class="line">    &#125; else</span><br><span class="line">      *fd = -1;</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    size = read (sock, buf, bufsize);</span><br><span class="line">    if (size &lt; 0) &#123;</span><br><span class="line">      perror(&quot;read&quot;);</span><br><span class="line">      exit(1);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  return size;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void</span><br><span class="line">child(int sock)</span><br><span class="line">&#123;</span><br><span class="line">  int fd;</span><br><span class="line">  char    buf[16];</span><br><span class="line">  ssize_t size;</span><br><span class="line"></span><br><span class="line">  sleep(1);</span><br><span class="line">  for (;;) &#123;</span><br><span class="line">    size = sock_fd_read(sock, buf, sizeof(buf), &amp;fd);</span><br><span class="line">    if (size &lt;= 0)</span><br><span class="line">      break;</span><br><span class="line">    printf (&quot;read %d\n&quot;, (int) size);</span><br><span class="line">    if (fd != -1) &#123;</span><br><span class="line">      write(fd, &quot;hello, world\n&quot;, 13);</span><br><span class="line">      close(fd);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void</span><br><span class="line">parent(int sock)</span><br><span class="line">&#123;</span><br><span class="line">  ssize_t size;</span><br><span class="line">  int i;</span><br><span class="line">  int fd;</span><br><span class="line"></span><br><span class="line">  fd = 1;</span><br><span class="line">  size = sock_fd_write(sock, (void *) &quot;1&quot;, 1, 1);</span><br><span class="line">  printf (&quot;wrote %d\n&quot;, (int) size);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int</span><br><span class="line">main(int argc, char **argv)</span><br><span class="line">&#123;</span><br><span class="line">  int sv[2];</span><br><span class="line">  int pid;</span><br><span class="line"></span><br><span class="line">  if (socketpair(AF_UNIX, SOCK_DGRAM, 0, sv) &lt; 0) &#123;</span><br><span class="line">    perror(&quot;socketpair&quot;);</span><br><span class="line">    exit(1);</span><br><span class="line">  &#125;</span><br><span class="line">  switch ((pid = fork())) &#123;</span><br><span class="line">  case 0:</span><br><span class="line">    close(sv[0]);</span><br><span class="line">    child(sv[1]);</span><br><span class="line">    break;</span><br><span class="line">  case -1:</span><br><span class="line">    perror(&quot;fork&quot;);</span><br><span class="line">    exit(1);</span><br><span class="line">  default:</span><br><span class="line">    close(sv[1]);</span><br><span class="line">    parent(sv[0]);</span><br><span class="line">    break;</span><br><span class="line">  &#125;</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/IPC/" rel="tag">#IPC</a>
+          
+            <a href="/tags/pipe/" rel="tag">#pipe</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/14/learn_gwf/" rel="next">G.F.W的原理</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div>
+      
+        <style type="text/css">
+
+    .donate_bar {
+        text-align: center;
+        margin-top : 5%;
+    }
+
+    .donate_bar.hidden {
+        display:none;
+    }
+/*
+    .donate_bar a.btn_donate {
+        display: inline-block;
+        width: 82px;
+        height: 82px;
+        margin-left:auto;
+        margin-right:auto;
+
+        background: url("http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif") no-repeat;
+        _background: url("http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif") no-repeat; 
+
+        -webkit-transition: background 0s;
+        -moz-transition: background 0s;
+        -o-transition: background 0s;
+        -ms-transition: background 0s;
+        transition: background 0s;
+    }
+*/
+    .donate_bar a.btn_donate:hover { 
+        // background-position: 0px -82px;
+        color: #87daff
+    }
+
+    .donate_bar .donate_txt {
+        display: block;
+        color: #9d9d9d;
+        font: 14px/2 "Microsoft Yahei";
+    }
+
+    .bold { 
+        font-weight: bold; 
+    }
+
+    .post-donate a {
+        border-bottom: 0px;
+    }
+
+    #donate_guide table {
+        border: none;
+    }
+
+    #donate_guide td {
+        border-bottom: none;
+        border-right: none;
+        background: #333333;
+        valign: top;
+    }
+
+</style>
+
+
+
+    
+
+    <div class ="post-donate">
+        <div id="donate_board" class="donate_bar center">
+              <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏">赏</a>
+              <span id="donate_txt" class="donate_txt">
+                   
+                        请我喝杯咖啡
+                   
+              </span>
+            <br>
+        </div>  
+  
+        <div id="donate_guide" class="donate_bar center hidden">
+            <!--
+              
+
+            
+                <a href="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="微信打赏" class="fancybox" rel="article0"
+                    style="margin-right:30%">
+                    <img src="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="" height="164px" width="164px">
+                </a>
+            
+            -->
+            <table>
+                <tr>
+                    <td>
+                         
+                    </td>
+                    <td>
+                        
+                            <a href="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="微信打赏" class="fancybox" rel="article0"
+                                style="margin-right:30%">
+                                <img src="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="" height="164px" width="164px">
+                            </a>
+                        
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+        <script type="text/javascript">
+            document.getElementById('btn_donate').onclick = function() {
+                $('#donate_board').addClass('hidden');
+                // $('#donate_guide').removeClass('hidden');
+                $('#donate_guide').show(2000);
+            }
+
+        </script>
+    </div>
+
+    
+
+
+      
+    </div>
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+          <div class="comments" id="comments">
+            
+            -->
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table Of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="changan" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">changan</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">思绪来的快去的也快，偶尔在这里停留</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">54</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-name">categories</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">35</span>
+              <span class="site-state-item-name">tags</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://github.com/changan29" target="_blank">GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/zhaochanganplus" target="_blank">ZhiHu</a>
+              </span>
+            
+          
+        </div>
+
+        <div class="links-of-friendly motion-element">
+          
+        </div>
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#历史"><span class="nav-number">1.</span> <span class="nav-text">历史</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#管道"><span class="nav-number">2.</span> <span class="nav-text">管道</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2018 - 
+  <span itemprop="copyrightYear">2019
+  </span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changan
+  </span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme by <a class="theme-link" href="http://blog.idhyt.com">idhyt</a>.<a class="theme-link" href="https://github.com/idhyt/hexo-theme-next/tree/magiclamp">Mala</a>
+</div>
+
+<!-- busuanzi -->
+
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
