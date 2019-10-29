@@ -31,7 +31,7 @@
 
 
 
-  <meta name="keywords" content="little," />
+  <meta name="keywords" content="shell," />
 
 
 
@@ -40,22 +40,18 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="杂记已来深圳一年，记录下2018年4月一些事情 磨坊百公里 百公里只走到了71km的位置，三签，分析了原因如下:  准备不充分，凡事预则立不预则废，没有带一个坚固的背包，主办方发的包坏了，背起来很费力 前一段40km 走的太猛了，没有带护膝，下坡也没有保护措施，导致膝盖后侧韧带拉伤了，到了三签走不了了 和小伙伴一块走的话，节奏是个问题，提前订方案不太可能，但是走了一段大致要有个位置-时间-休息-走">
-<meta name="keywords" content="little">
+<meta name="description" content="处理流程当使用 awk 命令处理一个或者多个文件时，它会依次读取文件的每一行内容，然后对其进行处理，awk 命令默认从 stdio 标准输入获取文件内容，awk 使用一对单引号来表示一些可执行的脚本代码，在可执行脚本代码里面，使用一对花括号来表示一段可执行代码块，可以同时存在多个代码块。awk 的每个花括号内同时可以有多个指令，每一个指令用分号分隔，awk 其实就是一个脚本编程语言。 格式:  a">
+<meta name="keywords" content="shell">
 <meta property="og:type" content="article">
-<meta property="og:title" content="April_in_shenzhen">
-<meta property="og:url" content="http://oneyearago.me/2018/04/29/April_in_shenzhen/index.html">
+<meta property="og:title" content="awk note">
+<meta property="og:url" content="http://oneyearago.me/2019/10/29/awk/index.html">
 <meta property="og:site_name" content="changan&#39;s blog">
-<meta property="og:description" content="杂记已来深圳一年，记录下2018年4月一些事情 磨坊百公里 百公里只走到了71km的位置，三签，分析了原因如下:  准备不充分，凡事预则立不预则废，没有带一个坚固的背包，主办方发的包坏了，背起来很费力 前一段40km 走的太猛了，没有带护膝，下坡也没有保护措施，导致膝盖后侧韧带拉伤了，到了三签走不了了 和小伙伴一块走的话，节奏是个问题，提前订方案不太可能，但是走了一段大致要有个位置-时间-休息-走">
+<meta property="og:description" content="处理流程当使用 awk 命令处理一个或者多个文件时，它会依次读取文件的每一行内容，然后对其进行处理，awk 命令默认从 stdio 标准输入获取文件内容，awk 使用一对单引号来表示一些可执行的脚本代码，在可执行脚本代码里面，使用一对花括号来表示一段可执行代码块，可以同时存在多个代码块。awk 的每个花括号内同时可以有多个指令，每一个指令用分号分隔，awk 其实就是一个脚本编程语言。 格式:  a">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="http://otc9g6h5k.bkt.clouddn.com/path.jpg">
-<meta property="og:image" content="http://otc9g6h5k.bkt.clouddn.com/Fisher_bar_2.jpg">
-<meta property="og:image" content="http://otc9g6h5k.bkt.clouddn.com/Fisher_bar_3.jpg">
-<meta property="og:updated_time" content="2018-04-29T07:41:42.849Z">
+<meta property="og:updated_time" content="2019-10-29T15:07:50.954Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="April_in_shenzhen">
-<meta name="twitter:description" content="杂记已来深圳一年，记录下2018年4月一些事情 磨坊百公里 百公里只走到了71km的位置，三签，分析了原因如下:  准备不充分，凡事预则立不预则废，没有带一个坚固的背包，主办方发的包坏了，背起来很费力 前一段40km 走的太猛了，没有带护膝，下坡也没有保护措施，导致膝盖后侧韧带拉伤了，到了三签走不了了 和小伙伴一块走的话，节奏是个问题，提前订方案不太可能，但是走了一段大致要有个位置-时间-休息-走">
-<meta name="twitter:image" content="http://otc9g6h5k.bkt.clouddn.com/path.jpg">
+<meta name="twitter:title" content="awk note">
+<meta name="twitter:description" content="处理流程当使用 awk 命令处理一个或者多个文件时，它会依次读取文件的每一行内容，然后对其进行处理，awk 命令默认从 stdio 标准输入获取文件内容，awk 使用一对单引号来表示一些可执行的脚本代码，在可执行脚本代码里面，使用一对花括号来表示一段可执行代码块，可以同时存在多个代码块。awk 的每个花括号内同时可以有多个指令，每一个指令用分号分隔，awk 其实就是一个脚本编程语言。 格式:  a">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -65,7 +61,7 @@
   };
 </script>
 
-  <title> April_in_shenzhen | changan's blog </title>
+  <title> awk note | changan's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -315,7 +311,7 @@
           
           
             
-              April_in_shenzhen
+              awk note
             
           
         </h1>
@@ -324,8 +320,8 @@
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2018-04-29T15:30:39+08:00" content="2018-04-29">
-            2018-04-29
+          <time itemprop="dateCreated" datetime="2019-10-29T17:40:39+08:00" content="2019-10-29">
+            2019-10-29
           </time>
         </span>
 
@@ -334,8 +330,8 @@
             &nbsp; | &nbsp; In
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/little/" itemprop="url" rel="index">
-                  <span itemprop="name">little</span>
+                <a href="/categories/shell/" itemprop="url" rel="index">
+                  <span itemprop="name">shell</span>
                 </a>
               </span>
 
@@ -358,21 +354,115 @@
       
 
       
-        <span itemprop="articleBody"><h3 id="杂记"><a href="#杂记" class="headerlink" title="杂记"></a>杂记</h3><p>已来深圳一年，记录下2018年4月一些事情</p>
-<h3 id="磨坊百公里"><a href="#磨坊百公里" class="headerlink" title="磨坊百公里"></a>磨坊百公里</h3><p><img src="http://otc9g6h5k.bkt.clouddn.com/path.jpg" alt="image"></p>
-<p>百公里只走到了71km的位置，三签，分析了原因如下:</p>
-<ul>
-<li>准备不充分，凡事预则立不预则废，没有带一个坚固的背包，主办方发的包坏了，背起来很费力</li>
-<li>前一段40km 走的太猛了，没有带护膝，下坡也没有保护措施，导致膝盖后侧韧带拉伤了，到了三签走不了了</li>
-<li>和小伙伴一块走的话，节奏是个问题，提前订方案不太可能，但是走了一段大致要有个位置-时间-休息-走 的方案，心中要有数，不能太鲁莽</li>
+        <span itemprop="articleBody"><h3 id="处理流程"><a href="#处理流程" class="headerlink" title="处理流程"></a>处理流程</h3><p>当使用 awk 命令处理一个或者多个文件时，它会依次读取文件的每一行内容，然后对其进行处理，awk 命令默认从 stdio 标准输入获取文件内容，awk 使用一对单引号来表示一些可执行的脚本代码，在可执行脚本代码里面，使用一对花括号来表示一段可执行代码块，可以同时存在多个代码块。awk 的每个花括号内同时可以有多个指令，每一个指令用分号分隔，awk 其实就是一个脚本编程语言。</p>
+<p>格式:  awk ‘condition action’ filename</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk -F &apos;[|:;]&apos; &apos;&#123;if ($1 &gt; &quot;m&quot;) print $1; else print &quot;---&quot;&#125;&apos; /etc/passwd</span><br></pre></td></tr></table></figure>
+<p>脚本化:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#! /bin/awk -f</span><br><span class="line">BEGIN    &#123;print &quot;begin to awk\n&quot;&#125; </span><br><span class="line">$s ~ /beijing/ </span><br><span class="line">END &#123; print &quot;end of awk&quot; &#125;</span><br><span class="line"></span><br><span class="line"># xxx.awk xxx.data</span><br></pre></td></tr></table></figure>
+<h3 id="内置变量"><a href="#内置变量" class="headerlink" title="内置变量"></a>内置变量</h3><table>
+<thead>
+<tr>
+<th>变量</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$0</td>
+<td>行内容</td>
+</tr>
+<tr>
+<td>$1</td>
+<td>第一列字段</td>
+</tr>
+<tr>
+<td>NF</td>
+<td>当前行有多少个字段</td>
+</tr>
+<tr>
+<td>$NF</td>
+<td>最后一个字段</td>
+</tr>
+<tr>
+<td>NR</td>
+<td>当前处理的是第几行</td>
+</tr>
+<tr>
+<td>FILENAME</td>
+<td>当前文件名</td>
+</tr>
+<tr>
+<td>FS</td>
+<td>字段分隔符，默认是空格和制表符。</td>
+</tr>
+<tr>
+<td>RS</td>
+<td>行分隔符，用于分割每一行，默认是换行符。</td>
+</tr>
+<tr>
+<td>OFS</td>
+<td>输出字段的分隔符，用于打印时分隔字段，默认为空格。</td>
+</tr>
+<tr>
+<td>ORS</td>
+<td>输出记录的分隔符，用于打印时分隔记录，默认为换行符。</td>
+</tr>
+<tr>
+<td>OFMT</td>
+<td>数字输出的格式，默认为％.6g。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="内置函数"><a href="#内置函数" class="headerlink" title="内置函数"></a>内置函数</h3><table>
+<thead>
+<tr>
+<th>func</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tolower()</td>
+<td>字符转为小写</td>
+</tr>
+<tr>
+<td>length()</td>
+<td>返回字符串长度</td>
+</tr>
+<tr>
+<td>substr()</td>
+<td>返回子字符串</td>
+</tr>
+<tr>
+<td>sin()</td>
+<td>正弦</td>
+</tr>
+<tr>
+<td>cos()</td>
+<td>余弦</td>
+</tr>
+<tr>
+<td>sqrt()</td>
+<td>平方根</td>
+</tr>
+<tr>
+<td>rand()</td>
+<td>随机数</td>
+</tr>
+</tbody>
+</table>
+<h3 id="组合使用"><a href="#组合使用" class="headerlink" title="组合使用"></a>组合使用</h3><p>使用 awk 过滤 history 输出，找到最常用的命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@centos ~]# history | awk &apos;&#123;a[$4]++&#125;END&#123;for(i in a)&#123;print a[i] &quot; &quot; i&#125;&#125;&apos; | sort -rn | head</span><br><span class="line">267 ll</span><br><span class="line">122 vim</span><br><span class="line">118 cd</span><br><span class="line">54 awk</span><br><span class="line">34 man</span><br><span class="line">28 g++</span><br><span class="line">23 rm</span><br><span class="line">21 cat</span><br><span class="line">16 mkdir</span><br><span class="line">13 gcc</span><br></pre></td></tr></table></figure>
+<p>过滤文件中重复行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;!x[$0]++&apos; &lt;file&gt;</span><br></pre></td></tr></table></figure>
+<p>假设有一个文本，每一行都是一个 int 数值，想要计算这个文件每一行的和</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;&#123;s+=$1&#125; ENG &#123;printf &quot;%.0f&quot;, s&#125;&apos; /path/to/file</span><br></pre></td></tr></table></figure>
+<h3 id="next"><a href="#next" class="headerlink" title="next"></a>next</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">No      Item_Name               Price           Quantity</span><br><span class="line">1       Mangoes                 $3.45              5</span><br><span class="line">2       Apples                  $2.45              25</span><br><span class="line">3       Pineapples              $4.45              55</span><br><span class="line">4       Tomatoes                $3.45              25</span><br><span class="line">5       Onions                  $1.45              15</span><br><span class="line">6       Bananas                 $3.45              30</span><br><span class="line"></span><br><span class="line">awk &apos;$4 &lt;= 20 &#123; printf &quot;%s\t%s\n&quot;, $0,&quot;*&quot; ; &#125; $4 &gt; 20 &#123; print $0 ;&#125; &apos; food_list.txt </span><br><span class="line"></span><br><span class="line">No    Item_Name     Price      Quantity</span><br><span class="line">1     Mangoes       $3.45       5    *</span><br><span class="line">2     Apples        $2.45      25</span><br><span class="line">3     Pineapples    $4.45      55</span><br><span class="line">4     Tomatoes      $3.45      25 </span><br><span class="line">5     Onions        $1.45      15   *</span><br><span class="line">6     Bananas       $3.45      30</span><br></pre></td></tr></table></figure>
+<p>当第一个表达式用{ printf “%s\t%s\n”, $0,”**” ; }命令进行标注的时候在同样的步骤第二个表达式也进行了判断这样就浪费了时间; 这个东西不是 if else; 而是都判断的，不判断后一个，可以 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;$4 &lt;= 20 &#123; printf &quot;%s\t%s\n&quot;, $0,&quot;*&quot; ; next; &#125; $4 &gt; 20 &#123; print $0 ;&#125; &apos; food_list.txt</span><br></pre></td></tr></table></figure>
+<h3 id="REF"><a href="#REF" class="headerlink" title="REF"></a>REF</h3><ul>
+<li><a href="http://einverne.github.io/post/2018/01/awk.html" target="_blank" rel="noopener">awk</a></li>
 </ul>
-<h4 id="get"><a href="#get" class="headerlink" title="get"></a>get</h4><ul>
-<li>下次带护具</li>
-<li>准备充分些，找攻略，教程，熟悉地图，知道尽可能多的信息</li>
-<li>三思而后行</li>
-</ul>
-<h3 id="深圳的海"><a href="#深圳的海" class="headerlink" title="深圳的海"></a>深圳的海</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">一个人到海边跑步或骑行最适合思考事情了，</span><br><span class="line">感觉现在也只有周末有时间，平常自己的时间比较少，</span><br><span class="line">其实时间太多也不好，闲则生非，</span><br><span class="line">非常向往的生活是这样的: 能很拼命的工作几个月，然后有一整个月的时间休假，如此循环</span><br><span class="line">工作的话在哪里都一样，反正是工作嘛</span><br><span class="line">休假的话可以去海边，山里，回家，港口，学校，总之世界上的每个角落</span><br><span class="line">work hard &amp;&amp; easy life</span><br><span class="line">对于工作也想了好多，要改进方式</span><br><span class="line">对于程序员来说，以战养战是很好的状态，不要学完了储蓄等用武之地，</span><br><span class="line">草草的做完一个需求也不好，找最佳实践然后自己去试一把最提升能力</span><br><span class="line">不要怂</span><br><span class="line">要产生价值</span><br><span class="line"></span><br><span class="line">......</span><br><span class="line"></span><br><span class="line">生活的理想是为了理想的生活</span><br><span class="line">想象一下这个场景，写有价值高质量的代码，保持这种状态4个月，</span><br><span class="line">然后接下来的20天，搞一条渔船，在某个港口打渔，想想还是挺爽的，</span><br><span class="line">怎么都是一场说走就走的旅行</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">......</span><br><span class="line">还年轻，想到的多尝试，执行力才是王道</span><br><span class="line">talk is cheap, show me your code ! </span><br><span class="line">加油去试一下 (°ㅂ° ╬)</span><br></pre></td></tr></table></figure>
-<h3 id="渔人码头"><a href="#渔人码头" class="headerlink" title="渔人码头"></a>渔人码头</h3><p><img src="http://otc9g6h5k.bkt.clouddn.com/Fisher_bar_2.jpg" alt="image"><br><img src="http://otc9g6h5k.bkt.clouddn.com/Fisher_bar_3.jpg" alt="image"></p>
 </span>
       
     </div>
@@ -381,7 +471,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/little/" rel="tag">#little</a>
+            <a href="/tags/shell/" rel="tag">#shell</a>
           
         </div>
       
@@ -390,13 +480,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/05/06/JavaScript_event_loop_thought/" rel="prev">JavaScript事件随想</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/04/29/linux_init_and_systemd/" rel="next">linux_init_and_systemd</a>
+              <a href="/2019/10/24/linux_timer/" rel="next">linux定时器时间轮算法</a>
             
           </div>
         </div>
@@ -630,7 +718,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#杂记"><span class="nav-number">1.</span> <span class="nav-text">杂记</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#磨坊百公里"><span class="nav-number">2.</span> <span class="nav-text">磨坊百公里</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#get"><span class="nav-number">2.1.</span> <span class="nav-text">get</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#深圳的海"><span class="nav-number">3.</span> <span class="nav-text">深圳的海</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#渔人码头"><span class="nav-number">4.</span> <span class="nav-text">渔人码头</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#处理流程"><span class="nav-number">1.</span> <span class="nav-text">处理流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内置变量"><span class="nav-number">2.</span> <span class="nav-text">内置变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内置函数"><span class="nav-number">3.</span> <span class="nav-text">内置函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组合使用"><span class="nav-number">4.</span> <span class="nav-text">组合使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#next"><span class="nav-number">5.</span> <span class="nav-text">next</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#REF"><span class="nav-number">6.</span> <span class="nav-text">REF</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
