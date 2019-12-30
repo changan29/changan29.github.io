@@ -3391,6 +3391,97 @@
           
           
             
+              <a class="post-title-link" href="/2019/12/30/linklist_timer/" itemprop="url">
+                一种定时器的实现
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2019-12-30T00:40:39+08:00" content="2019-12-30">
+            2019-12-30
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/timer/" itemprop="url" rel="index">
+                  <span itemprop="name">timer</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            概述一个Timer的实现需要具备以下几个行为:
+
+StartTimer(Interval, ExpiryAction)
+
+注册一个时间间隔为 Interval 后执行 ExpiryAction 的定时器实例，其中，返回 TimerId 以区分在定时器系统中的其他定时器实例。
+
+StopTimer(T
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2019/12/30/linklist_timer/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2019/12/11/socket_api/" itemprop="url">
                 tcp socket api
               </a>
@@ -4018,103 +4109,6 @@ HIT计算机网络
           
           
             
-              <a class="post-title-link" href="/2019/10/24/linux_timer/" itemprop="url">
-                linux定时器时间轮算法
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2019-10-24T23:58:45+08:00" content="2019-10-24">
-            2019-10-24
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/linux/" itemprop="url" rel="index">
-                  <span itemprop="name">linux</span>
-                </a>
-              </span>
-
-              
-              
-                , 
-              
-
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/linux/timer/" itemprop="url" rel="index">
-                  <span itemprop="name">timer</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            时间轮实现Linux定时器分为低精度定时器和高精度定时器两种类型，内核对其均有实现。本文讨论的是我们在应用程序开发中比较常见的低精度定时器。作为常用的基础组件，定时器常用的几种实现方法包括：基于排序链表实现、基于小根堆实现、基于红黑树实现、基于时间轮实现。本文讲解的是时间复杂度最优，也是linux内
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2019/10/24/linux_timer/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
               <a class="post-title-link" href="/2019/10/24/IPC_and_pipe/" itemprop="url">
                 进程通信 & PIPE
               </a>
@@ -4213,8 +4207,8 @@ HIT计算机网络
           
           
             
-              <a class="post-title-link" href="/2019/08/29/fork/" itemprop="url">
-                进程
+              <a class="post-title-link" href="/2019/10/24/linux_timer/" itemprop="url">
+                linux定时器时间轮算法
               </a>
             
           
@@ -4224,8 +4218,8 @@ HIT计算机网络
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2019-08-29T23:58:45+08:00" content="2019-08-29">
-            2019-08-29
+          <time itemprop="dateCreated" datetime="2019-10-24T23:58:45+08:00" content="2019-10-24">
+            2019-10-24
           </time>
         </span>
 
@@ -4234,8 +4228,20 @@ HIT计算机网络
             &nbsp; | &nbsp; In
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/fork/" itemprop="url" rel="index">
-                  <span itemprop="name">fork</span>
+                <a href="/categories/linux/" itemprop="url" rel="index">
+                  <span itemprop="name">linux</span>
+                </a>
+              </span>
+
+              
+              
+                , 
+              
+
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/linux/timer/" itemprop="url" rel="index">
+                  <span itemprop="name">timer</span>
                 </a>
               </span>
 
@@ -4261,12 +4267,11 @@ HIT计算机网络
         
           <span itemprop="articleBody">
             
-            进程环境当内核执行C程序时(使用一个exec程序)，在调用main之前调用一个特殊的启动例程。可执行文件将此可执行例程指定为程序的起始地址–这是由链接器设置的，而连接器是有C编译器调用的。启动例程从内核取得命令行参数和环境变量值，然后按上述方式调用main函数。
-进程控制系统中有一些专用进程，ID为
+            时间轮实现Linux定时器分为低精度定时器和高精度定时器两种类型，内核对其均有实现。本文讨论的是我们在应用程序开发中比较常见的低精度定时器。作为常用的基础组件，定时器常用的几种实现方法包括：基于排序链表实现、基于小根堆实现、基于红黑树实现、基于时间轮实现。本文讲解的是时间复杂度最优，也是linux内
             ...
           </span>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2019/08/29/fork/#more" rel="contents">
+            <a class="btn" href="/2019/10/24/linux_timer/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -4324,14 +4329,14 @@ HIT计算机网络
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">65</span>
+              <span class="site-state-item-count">66</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">46</span>
+              <span class="site-state-item-count">47</span>
               <span class="site-state-item-name">categories</span>
               </a>
           </div>
