@@ -3391,8 +3391,8 @@
           
           
             
-              <a class="post-title-link" href="/2018/09/18/csapp.0/" itemprop="url">
-                csapp.0
+              <a class="post-title-link" href="/2018/05/20/linux_file_system/" itemprop="url">
+                linux_file_system
               </a>
             
           
@@ -3402,8 +3402,8 @@
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2018-09-18T22:45:39+08:00" content="2018-09-18">
-            2018-09-18
+          <time itemprop="dateCreated" datetime="2018-05-20T18:07:39+08:00" content="2018-05-20">
+            2018-05-20
           </time>
         </span>
 
@@ -3412,8 +3412,8 @@
             &nbsp; | &nbsp; In
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/csapp/" itemprop="url" rel="index">
-                  <span itemprop="name">csapp</span>
+                <a href="/categories/linux/" itemprop="url" rel="index">
+                  <span itemprop="name">linux</span>
                 </a>
               </span>
 
@@ -3424,8 +3424,8 @@
 
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/csapp/process/" itemprop="url" rel="index">
-                  <span itemprop="name">process</span>
+                <a href="/categories/linux/filesystem/" itemprop="url" rel="index">
+                  <span itemprop="name">filesystem</span>
                 </a>
               </span>
 
@@ -3451,12 +3451,12 @@
         
           <span itemprop="articleBody">
             
-            计算机系统的硬件组成对基本的硬件组成要有理解，计算机的硬件组成主要有 CPU,内存，磁盘，图像适配器，网络设配器以及某些USB控制器等
-cpu中央处理单元是解释存储在主存中指令的引擎，在任何时刻，程序计数器都指向一条指令，处理器一直取指令，解析指令的位，执行指令的操作，更新下一条指令，可以看做是这样
+            引言在学校的时候泛泛读过一遍 apue,其中的部分知识只是有个大概印象，其实我个人对底层技术还是有热情和追求的 哈哈，打算把经典的书籍结合遇到的场景重读一遍，先拿 Linux 文件系统练习下。代码参考的是Linux早期的代码，没有现代内核的高级特性，VFS这部分只有介绍。
+主要思路写自己的总结之前在
             ...
           </span>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2018/09/18/csapp.0/#more" rel="contents">
+            <a class="btn" href="/2018/05/20/linux_file_system/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -3489,8 +3489,8 @@ cpu中央处理单元是解释存储在主存中指令的引擎，在任何时�
           
           
             
-              <a class="post-title-link" href="/2018/09/16/concurrent_overview/" itemprop="url">
-                concurrent overview
+              <a class="post-title-link" href="/2018/05/06/JavaScript_event_loop_thought/" itemprop="url">
+                JavaScript事件随想
               </a>
             
           
@@ -3500,8 +3500,8 @@ cpu中央处理单元是解释存储在主存中指令的引擎，在任何时�
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2018-09-16T01:01:39+08:00" content="2018-09-16">
-            2018-09-16
+          <time itemprop="dateCreated" datetime="2018-05-06T01:30:39+08:00" content="2018-05-06">
+            2018-05-06
           </time>
         </span>
 
@@ -3510,8 +3510,8 @@ cpu中央处理单元是解释存储在主存中指令的引擎，在任何时�
             &nbsp; | &nbsp; In
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/concurrent/" itemprop="url" rel="index">
-                  <span itemprop="name">concurrent</span>
+                <a href="/categories/web/" itemprop="url" rel="index">
+                  <span itemprop="name">web</span>
                 </a>
               </span>
 
@@ -3522,8 +3522,8 @@ cpu中央处理单元是解释存储在主存中指令的引擎，在任何时�
 
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/concurrent/coroutine/" itemprop="url" rel="index">
-                  <span itemprop="name">coroutine</span>
+                <a href="/categories/web/javascript-event/" itemprop="url" rel="index">
+                  <span itemprop="name">javascript-event</span>
                 </a>
               </span>
 
@@ -3549,18 +3549,11 @@ cpu中央处理单元是解释存储在主存中指令的引擎，在任何时�
         
           <span itemprop="articleBody">
             
-            并发并发模型多进程
-
-简单
-开销比较大
-
-–例子: apache
-
-Apache的server为process-based server ,也就是基于多进程的HTTP服务器，它需要对每个用户请求创建一个子进程进行响应，这样的缺点是，如果并发的请求非常多(在大型门户网站很常见)，就会需要非常多的进程，
+            问题起因最近想学习下web前端，原因是这样的，当前中国(公元2018年)的网络环境，表现形式基本是web+移动端，像微信的小程序只要写js应该就可以了，移动端的app很多也是以web的形式展示，应用程序内是html+css+js，不仅方便发布，而且做起来也快，写完页面样式，更新资源，就好了，类似热更
             ...
           </span>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2018/09/16/concurrent_overview/#more" rel="contents">
+            <a class="btn" href="/2018/05/06/JavaScript_event_loop_thought/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -3593,8 +3586,8 @@ Apache的server为process-based server ,也就是基于多进程的HTTP服务器
           
           
             
-              <a class="post-title-link" href="/2018/09/07/elasticsearch/" itemprop="url">
-                Elasticsearch实践
+              <a class="post-title-link" href="/2018/04/29/linux_init_and_systemd/" itemprop="url">
+                linux_init_and_systemd
               </a>
             
           
@@ -3604,8 +3597,8 @@ Apache的server为process-based server ,也就是基于多进程的HTTP服务器
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2018-09-07T20:54:32+08:00" content="2018-09-07">
-            2018-09-07
+          <time itemprop="dateCreated" datetime="2018-04-29T14:30:39+08:00" content="2018-04-29">
+            2018-04-29
           </time>
         </span>
 
@@ -3614,547 +3607,8 @@ Apache的server为process-based server ,也就是基于多进程的HTTP服务器
             &nbsp; | &nbsp; In
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/Elasticsearch/" itemprop="url" rel="index">
-                  <span itemprop="name">Elasticsearch</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            概览全文搜索属于最常见的需求，开源的 Elasticsearch （以下简称 Elastic）是目前全文搜索引擎的首选。
-它可以快速地储存、搜索和分析海量数据。维基百科、Stack Overflow、Github 都采用它。
-没有写具体的安装过程以及集群，这些资料很多，参考:
-
-全文搜索引擎 Ela
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2018/09/07/elasticsearch/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2018/08/25/weibo_intro/" itemprop="url">
-                大型网站技术架构读书笔记
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2018-08-25T22:11:45+08:00" content="2018-08-25">
-            2018-08-25
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/book/" itemprop="url" rel="index">
-                  <span itemprop="name">book</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            大型网站技术架构概述
-应用服务和数据服务分离
-
-
-使用缓存改善网站性能
-
-网 站 使用 的 缓存 可以 分为 两种： 缓存 在 应用 服务器 上 的 本地 缓存 和缓 存在 专门 的 分布式 缓存 服务器 上 的 远程 缓存。
-
-用服务器集群处理高并发
-
-数据库读写分离
-
-
-目前 大部分 的 主流 
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2018/08/25/weibo_intro/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2018/08/25/weibo_website/" itemprop="url">
-                大型网站技术架构读书笔记 -  微博的发展
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2018-08-25T16:26:45+08:00" content="2018-08-25">
-            2018-08-25
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/book/" itemprop="url" rel="index">
-                  <span itemprop="name">book</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            大型网站技术架构读书笔记 -  微博的发展微博的发展同大 多数 网 站 一样， 新 浪 微 博 也是 从 一个 小 网 站 发展 起来 的。 简单 的 LAMP（ Linux ＋ Apache ＋ MySQL ＋ PHP） 架构， 支撑 起 最初 的 新 浪 微 博， 应用 程序 用 PHP 开发，
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2018/08/25/weibo_website/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2018/08/24/coding_and_other/" itemprop="url">
-                软技能：代码之外的生存指南 读书笔记
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2018-08-24T13:05:45+08:00" content="2018-08-24">
-            2018-08-24
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/book/" itemprop="url" rel="index">
-                  <span itemprop="name">book</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            软技能：代码之外的生存指南
-商业心态
-
-把雇主当作是你的软件开发企业的一个客户吧。当然，你可能只有这么一个客户，你所有的收入都是从这一个客户处得来的，但是这种诠释雇用关系的方式可以将你从仰人鼻息的弱势地位转换成为自我治理和自我引导的主动地位。（事实上，许多真正的公司也就只有一个大客户，这个客户给它带
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2018/08/24/coding_and_other/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2018/08/11/cmake学习/" itemprop="url">
-                learn_cmake
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2018-08-11T15:40:39+08:00" content="2018-08-11">
-            2018-08-11
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/cmake/" itemprop="url" rel="index">
-                  <span itemprop="name">cmake</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            最简单的 cmakelist123456PROJECT (HELLO)# &lt;projectname&gt;_BINARY_DIR  &lt;projectname&gt;_SOURCE_DIRSET(SRC_LIST main.c)MESSAGE(STATUS &quot;This is BI
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2018/08/11/cmake学习/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2018/06/04/protobuf_0.0.1/" itemprop="url">
-                学习protobuf
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2018-06-04T01:07:39+08:00" content="2018-06-04">
-            2018-06-04
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/protobuf/" itemprop="url" rel="index">
-                  <span itemprop="name">protobuf</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            引用
-一个golang 网友的思考(http://www.cnblogs.com/wolfred7464/p/4673908.html)：
-
-1、我用二进制传输消息意义在哪？
-
-    当然就是字节少，传输成本小。
-
-2、二进制不可读啊，怎么解码呢？
-
-    调用Unmarshal函数，把对应类型
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2018/06/04/protobuf_0.0.1/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2018/06/01/How-to-become-a-good-engineer/" itemprop="url">
-                如何成为一个优秀的工程师？--陆奇
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2018-06-01T23:44:39+08:00" content="2018-06-01">
-            2018-06-01
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/essay/" itemprop="url" rel="index">
-                  <span itemprop="name">essay</span>
+                <a href="/categories/linux/" itemprop="url" rel="index">
+                  <span itemprop="name">linux</span>
                 </a>
               </span>
 
@@ -4165,8 +3619,8 @@ Apache的server为process-based server ,也就是基于多进程的HTTP服务器
 
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/essay/engineer/" itemprop="url" rel="index">
-                  <span itemprop="name">engineer</span>
+                <a href="/categories/linux/systemd/" itemprop="url" rel="index">
+                  <span itemprop="name">systemd</span>
                 </a>
               </span>
 
@@ -4192,12 +3646,12 @@ Apache的server为process-based server ,也就是基于多进程的HTTP服务器
         
           <span itemprop="articleBody">
             
-            一位工程师，如何才能称得上优秀？除了写得一手好 Code，什么样的工作态度和方法才是一个优秀工程师的必备？7 月 11 日，陆奇出席百度内部 Engineering Leadership Talk。作为计算机科学博士及优秀的管理者，他提出的五点要求，对每一位（百度）工程师都适用。
-Believe i
+            一个问题今天在重启 nginx 服务的时候，注意到有这样一条输出
+还有在设置 nginx 开机启动，一般的做法是 把脚本放在 /etc/init.d/ 下然后 用 chkconfig 管理不过这些都是”相对过时”做法了，由 service+chkconfig 变成 systemctl，背后是Linu
             ...
           </span>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2018/06/01/How-to-become-a-good-engineer/#more" rel="contents">
+            <a class="btn" href="/2018/04/29/linux_init_and_systemd/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -4230,8 +3684,8 @@ Believe i
           
           
             
-              <a class="post-title-link" href="/2018/05/26/unity3d_from_0_to_0.01/" itemprop="url">
-                unity3d 手游从0到0.01
+              <a class="post-title-link" href="/2018/03/18/hello-world/" itemprop="url">
+                Hello World
               </a>
             
           
@@ -4241,38 +3695,11 @@ Believe i
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2018-05-26T22:21:39+08:00" content="2018-05-26">
-            2018-05-26
+          <time itemprop="dateCreated" datetime="2018-03-18T22:48:30+08:00" content="2018-03-18">
+            2018-03-18
           </time>
         </span>
 
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/unity/" itemprop="url" rel="index">
-                  <span itemprop="name">unity</span>
-                </a>
-              </span>
-
-              
-              
-                , 
-              
-
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/unity/game/" itemprop="url" rel="index">
-                  <span itemprop="name">game</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
         
 
         
@@ -4290,14 +3717,11 @@ Believe i
         
           <span itemprop="articleBody">
             
-            why？为什么要写这个东西，本身对u3d没有特别大的兴趣，但是毕竟在游戏行业，对前端一无所知好尴尬，而且客户端除了图形部分，还有业务逻辑，想要拿到一个客户端的项目能做到下断点调试。
-两天时间不可能对整个引擎了解的特别深入，写了部分个人看法，属于个人理解，过一段时间可能就不这样认为了，涉及如下:
-
-王
+            Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in 
             ...
           </span>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2018/05/26/unity3d_from_0_to_0.01/#more" rel="contents">
+            <a class="btn" href="/2018/03/18/hello-world/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -4323,7 +3747,7 @@ Believe i
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/">&laquo;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/7/">&raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/5/">&laquo;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span>
   </nav>
 
  </div>
@@ -4355,21 +3779,21 @@ Believe i
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">66</span>
+              <span class="site-state-item-count">54</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">47</span>
+              <span class="site-state-item-count">41</span>
               <span class="site-state-item-name">categories</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-count">37</span>
               <span class="site-state-item-name">tags</span>
               </a>
           </div>
@@ -4413,7 +3837,7 @@ Believe i
       <div class="footer-inner"> <div class="copyright" >
   
   &copy; &nbsp;  2018 - 
-  <span itemprop="copyrightYear">2019
+  <span itemprop="copyrightYear">2020
   </span>
   <span class="with-love">
     <i class="icon-next-heart"></i>
