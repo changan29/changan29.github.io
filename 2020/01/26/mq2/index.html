@@ -31,7 +31,7 @@
 
 
 
-  <meta name="keywords" content="concurrent,coroutine," />
+  <meta name="keywords" content="MQ," />
 
 
 
@@ -40,20 +40,18 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="并发并发模型多进程  简单 开销比较大  –例子: apache  Apache的server为process-based server ,也就是基于多进程的HTTP服务器，它需要对每个用户请求创建一个子进程进行响应，这样的缺点是，如果并发的请求非常多(在大型门户网站很常见)，就会需要非常多的进程，从而占用极多的cpu资源和内存。因此对于并发处理不是Apache的强项。  多线程  开销依旧比较大">
-<meta name="keywords" content="concurrent,coroutine">
+<meta name="description" content="作者：ScienJus链接：https://www.zhihu.com/question/34243607/answer/58314162来源：知乎 个人认为消息队列的主要特点是异步处理，主要目的是减少请求响应时间和解耦。所以主要的使用场景就是将比较耗时而且不需要即时（同步）返回结果的操作作为消息放入消息队列。同时由于使用了消息队列，只要保证消息格式不变，消息的发送方和接收方并不需要彼此联系，也不">
+<meta name="keywords" content="MQ">
 <meta property="og:type" content="article">
-<meta property="og:title" content="concurrent overview">
-<meta property="og:url" content="http://oneyearago.me/2018/09/16/concurrent_overview/index.html">
+<meta property="og:title" content="消息队列的使用场景是怎样的？">
+<meta property="og:url" content="http://oneyearago.me/2020/01/26/mq2/index.html">
 <meta property="og:site_name" content="changan&#39;s blog">
-<meta property="og:description" content="并发并发模型多进程  简单 开销比较大  –例子: apache  Apache的server为process-based server ,也就是基于多进程的HTTP服务器，它需要对每个用户请求创建一个子进程进行响应，这样的缺点是，如果并发的请求非常多(在大型门户网站很常见)，就会需要非常多的进程，从而占用极多的cpu资源和内存。因此对于并发处理不是Apache的强项。  多线程  开销依旧比较大">
+<meta property="og:description" content="作者：ScienJus链接：https://www.zhihu.com/question/34243607/answer/58314162来源：知乎 个人认为消息队列的主要特点是异步处理，主要目的是减少请求响应时间和解耦。所以主要的使用场景就是将比较耗时而且不需要即时（同步）返回结果的操作作为消息放入消息队列。同时由于使用了消息队列，只要保证消息格式不变，消息的发送方和接收方并不需要彼此联系，也不">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="http://otc9g6h5k.bkt.clouddn.com/io.png">
-<meta property="og:updated_time" content="2018-09-15T17:02:44.000Z">
+<meta property="og:updated_time" content="2020-01-28T05:14:19.081Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="concurrent overview">
-<meta name="twitter:description" content="并发并发模型多进程  简单 开销比较大  –例子: apache  Apache的server为process-based server ,也就是基于多进程的HTTP服务器，它需要对每个用户请求创建一个子进程进行响应，这样的缺点是，如果并发的请求非常多(在大型门户网站很常见)，就会需要非常多的进程，从而占用极多的cpu资源和内存。因此对于并发处理不是Apache的强项。  多线程  开销依旧比较大">
-<meta name="twitter:image" content="http://otc9g6h5k.bkt.clouddn.com/io.png">
+<meta name="twitter:title" content="消息队列的使用场景是怎样的？">
+<meta name="twitter:description" content="作者：ScienJus链接：https://www.zhihu.com/question/34243607/answer/58314162来源：知乎 个人认为消息队列的主要特点是异步处理，主要目的是减少请求响应时间和解耦。所以主要的使用场景就是将比较耗时而且不需要即时（同步）返回结果的操作作为消息放入消息队列。同时由于使用了消息队列，只要保证消息格式不变，消息的发送方和接收方并不需要彼此联系，也不">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -63,7 +61,7 @@
   };
 </script>
 
-  <title> concurrent overview | changan's blog </title>
+  <title> 消息队列的使用场景是怎样的？ | changan's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -313,7 +311,7 @@
           
           
             
-              concurrent overview
+              消息队列的使用场景是怎样的？
             
           
         </h1>
@@ -322,8 +320,8 @@
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2018-09-16T01:01:39+08:00" content="2018-09-16">
-            2018-09-16
+          <time itemprop="dateCreated" datetime="2020-01-26T22:11:45+08:00" content="2020-01-26">
+            2020-01-26
           </time>
         </span>
 
@@ -332,20 +330,8 @@
             &nbsp; | &nbsp; In
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/concurrent/" itemprop="url" rel="index">
-                  <span itemprop="name">concurrent</span>
-                </a>
-              </span>
-
-              
-              
-                , 
-              
-
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/concurrent/coroutine/" itemprop="url" rel="index">
-                  <span itemprop="name">coroutine</span>
+                <a href="/categories/MQ/" itemprop="url" rel="index">
+                  <span itemprop="name">MQ</span>
                 </a>
               </span>
 
@@ -368,55 +354,11 @@
       
 
       
-        <span itemprop="articleBody"><h3 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h3><h4 id="并发模型"><a href="#并发模型" class="headerlink" title="并发模型"></a>并发模型</h4><p><strong>多进程</strong></p>
-<ul>
-<li>简单</li>
-<li>开销比较大</li>
-</ul>
-<p>–例子: apache</p>
-<blockquote>
-<p>Apache的server为process-based server ,也就是基于多进程的HTTP服务器，它需要对每个用户请求创建一个子进程进行响应，这样的缺点是，如果并发的请求非常多(在大型门户网站很常见)，就会需要非常多的进程，从而占用极多的cpu资源和内存。因此对于并发处理不是Apache的强项。</p>
-</blockquote>
-<p><strong>多线程</strong></p>
-<ul>
-<li>开销依旧比较大</li>
-<li>我本来有一个问题，用多程线了后，现在两个题问了有我 (哈哈哈)</li>
-</ul>
-<p>–例子: MySQL</p>
-<blockquote>
-<p>一个连接一个线程模型：适用场景，连接少，且逻辑复杂。例如mysql采用此模型，一个连接一个线程。模型的一些小变体是线程采用线程池，避免创建销毁线程的开销</p>
-</blockquote>
-<p><strong>基于回调的非阻塞/异步IO</strong></p>
-<blockquote>
-<p>阻塞调用是指调用结果返回之前，当前线程会被挂起。调用线程只有在得到结果之后才会返回。<br>非阻塞调用指在不能立刻得到结果之前，该调用不会阻塞当前线程。</p>
-</blockquote>
-<ul>
-<li>比较难理解，流程是不顺序的</li>
-</ul>
-<p>– 例子: Nginx </p>
-<blockquote>
-<p>Nginx 的Worker进程数一般设置与CPU核数相同,每进来一个request，会有一个worker进程去处理。但不是全程的处理，处理到什么程度呢？处理到可能发生阻塞的地方，比如向上游（后端）服务器转发request，并等待请求返回。那么，这个处理的worker不会这么傻等着，他会在发送完请求后，注册一个事件：“如果upstream返回了，告诉我一声，我再接着干”。于是他就休息去了。此时，如果再有request 进来，他就可以很快再按这种方式处理。而一旦上游服务器返回了，就会触发这个事件，worker才会来接手，这个request才会接着往下走。这是因为webserver刚好属于网络io密集型应用，不算是计算密集型。</p>
-</blockquote>
-<blockquote>
-<p>memcache也是类似的，它的多线程完全是为了利用多个cpu能力.</p>
-</blockquote>
-<h6 id="tips"><a href="#tips" class="headerlink" title="tips:"></a>tips:</h6><p>nginx 使用的 epoll 是非阻塞的，但不是异步IO。<br>glibc 的 aio 有 bug , kernel 的 aio 只能以 O_DIRECT 方式做直接 IO , libeio 也是 beta 阶段。epoll 是成熟的，但是 epoll 本身是同步的。Linux 上目前没有像 IOCP 这样的成熟异步 IO 实现。</p>
-<p><strong>协程</strong></p>
-<ul>
-<li>开销小</li>
-<li>需要自己实现调度器</li>
-</ul>
-<p>全异步模型是性能最好，同时也是开发难度最高的模型。为了追求更好的性能，许多语言例如C++,C#,GO,nodejs,python都尝试简化此模型的编程，推出了支持异步编程的语言特性。</p>
-<p>C++的future，promise</p>
-<p>C#的async/await</p>
-<p>GO的goroutine</p>
-<p>nodejs的Promise=&gt;generator=&gt;async/await</p>
-<p>python的yield</p>
-<p>在这些特性的支持下，全异步编程可以做到与同步编程非常接近，可读性良好。其中GoLang是近年来新推出的语言，专门为高并发设计了goroutine，对此模型的支持最佳，使用体验也最好。</p>
-<p>这里理解是这样的，你自己的用户态进程，如果能自己控制遇到系统调用也不会切换到 内核，而是继续执行你自己的指令；对于语言来说，<strong>==让编译器知道这个函数就是阻塞的==</strong>，在用户态自己调度就好了 参考了轮子哥的观点: <a href="https://www.zhihu.com/question/21896633" target="_blank" rel="noopener">如何深入理解多进程，多线程，非阻塞/异步IO(callback) 以及Coroutine模型？</a></p>
-<h5 id="挖坑"><a href="#挖坑" class="headerlink" title="挖坑"></a>挖坑</h5><p><a href="https://morsmachine.dk/go-scheduler" target="_blank" rel="noopener">golang的调度</a></p>
-<h3 id="附-阻塞非阻塞与同步异步的区别"><a href="#附-阻塞非阻塞与同步异步的区别" class="headerlink" title="附: 阻塞非阻塞与同步异步的区别"></a>附: 阻塞非阻塞与同步异步的区别</h3><h5 id="先说结论"><a href="#先说结论" class="headerlink" title="先说结论"></a>先说结论</h5><p>阻塞非阻塞 都是 同步io  不需要用户态进程任何阻塞的才是 异步IO<br>这里参考 陈硕的回答: <a href="https://www.zhihu.com/question/19732473" target="_blank" rel="noopener">怎样理解阻塞非阻塞与同步异步的区别？</a><br><img src="http://otc9g6h5k.bkt.clouddn.com/io.png" alt="image"></p>
-<p>— @Sun Sep 16 01:02:39 CST 2018        </p>
+        <span itemprop="articleBody"><p>作者：ScienJus<br>链接：<a href="https://www.zhihu.com/question/34243607/answer/58314162" target="_blank" rel="noopener">https://www.zhihu.com/question/34243607/answer/58314162</a><br>来源：知乎</p>
+<p>个人认为消息队列的主要特点是异步处理，主要目的是减少请求响应时间和解耦。所以主要的使用场景就是将比较耗时而且不需要即时（同步）返回结果的操作作为消息放入消息队列。同时由于使用了消息队列，只要保证消息格式不变，消息的发送方和接收方并不需要彼此联系，也不需要受对方的影响，即解耦和。</p>
+<p>使用场景的话，举个例子：假设用户在你的软件中注册，服务端收到用户的注册请求后，它会做这些操作：校验用户名等信息，如果没问题会在数据库中添加一个用户记录如果是用邮箱注册会给你发送一封注册成功的邮件，手机注册则会发送一条短信分析用户的个人信息，以便将来向他推荐一些志同道合的人，或向那些人推荐他发送给用户一个包含操作指南的系统通知等等……但是对于用户来说，注册功能实际只需要第一步，只要服务端将他的账户信息存到数据库中他便可以登录上去做他想做的事情了。至于其他的事情，非要在这一次请求中全部完成么？值得用户浪费时间等你处理这些对他来说无关紧要的事情么？所以实际当第一步做完后，服务端就可以把其他的操作放入对应的消息队列中然后马上返回用户结果，由消息队列异步的进行这些操作。</p>
+<p>或者还有一种情况，同时有大量用户注册你的软件，再高并发情况下注册请求开始出现一些问题，例如邮件接口承受不住，或是分析信息时的大量计算使cpu满载，这将会出现虽然用户数据记录很快的添加到数据库中了，但是却卡在发邮件或分析信息时的情况，导致请求的响应时间大幅增长，甚至出现超时，这就有点不划算了。面对这种情况一般也是将这些操作放入消息队列（生产者消费者模型），消息队列慢慢的进行处理，同时可以很快的完成注册请求，不会影响用户使用其他功能。</p>
+<p>所以在软件的正常功能开发中，并不需要去刻意的寻找消息队列的使用场景，而是当出现性能瓶颈时，去查看业务逻辑是否存在可以异步处理的耗时操作，如果存在的话便可以引入消息队列来解决。否则盲目的使用消息队列可能会增加维护和开发的成本却无法得到可观的性能提升，那就得不偿失了。</p>
 </span>
       
     </div>
@@ -425,9 +367,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/concurrent/" rel="tag">#concurrent</a>
-          
-            <a href="/tags/coroutine/" rel="tag">#coroutine</a>
+            <a href="/tags/MQ/" rel="tag">#MQ</a>
           
         </div>
       
@@ -436,13 +376,13 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/09/18/csapp.0/" rel="prev">csapp.0</a>
+              <a href="/2020/01/28/hello-world/" rel="prev">Hello World</a>
             
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/09/07/elasticsearch/" rel="next">Elasticsearch实践</a>
+              <a href="/2019/12/30/linklist_timer/" rel="next">一种定时器的实现</a>
             
           </div>
         </div>
@@ -676,7 +616,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#并发"><span class="nav-number">1.</span> <span class="nav-text">并发</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#并发模型"><span class="nav-number">1.1.</span> <span class="nav-text">并发模型</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#tips"><span class="nav-number">1.1.0.1.</span> <span class="nav-text">tips:</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#挖坑"><span class="nav-number">1.1.1.</span> <span class="nav-text">挖坑</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#附-阻塞非阻塞与同步异步的区别"><span class="nav-number">2.</span> <span class="nav-text">附: 阻塞非阻塞与同步异步的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#先说结论"><span class="nav-number">2.0.1.</span> <span class="nav-text">先说结论</span></a></li></ol></li></ol></li></ol></div>
+              <p class="post-toc-empty">This post does not have a Table Of Contents</p>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
