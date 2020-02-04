@@ -3391,6 +3391,91 @@
           
           
             
+              <a class="post-title-link" href="/2020/02/04/Thread-safe/" itemprop="url">
+                程序员的自我修养-线程安全
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2020-02-04T20:24:39+08:00" content="2020-02-04">
+            2020-02-04
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/OS/" itemprop="url" rel="index">
+                  <span itemprop="name">OS</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            原子操作自增(++i)操作在多线程环境下出现错误是因为这个操作被编译成的代码不止一条指令，因此在执行的时候可能执行到一半被系统调度打乱，去执行别的代码。我们把单指令的操作称为原子的(atomic),因为无论如何，单条指令的执行时不会被打乱的，为了避免出错，很多体系结构都提供了一些常用操作的原子指令。
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2020/02/04/Thread-safe/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2019/12/30/linklist_timer/" itemprop="url">
                 一种定时器的实现
               </a>
@@ -4109,104 +4194,6 @@ HIT计算机网络
           
           
             
-              <a class="post-title-link" href="/2019/10/24/IPC_and_pipe/" itemprop="url">
-                进程通信 & PIPE
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2019-10-24T23:58:45+08:00" content="2019-10-24">
-            2019-10-24
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/IPC/" itemprop="url" rel="index">
-                  <span itemprop="name">IPC</span>
-                </a>
-              </span>
-
-              
-              
-                , 
-              
-
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/IPC/pipe/" itemprop="url" rel="index">
-                  <span itemprop="name">pipe</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            历史UNIX两大贡献者贝尔实验室和BSD，在进程之间通信侧重不同，前者基于内核对进程之间的通信手段进行了改进，形成了“System V IPC”，而后者则是基于网络形成了套接字。
-而POSIX则是IEEE制定的标准，目的是为运行在不同操作系统上的软件提供统一的接口，实现者则是不同的操作系统内核开发人
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2019/10/24/IPC_and_pipe/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
               <a class="post-title-link" href="/2019/10/24/linux_timer/" itemprop="url">
                 linux定时器时间轮算法
               </a>
@@ -4329,7 +4316,7 @@ HIT计算机网络
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">53</span>
+              <span class="site-state-item-count">54</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -4343,7 +4330,7 @@ HIT计算机网络
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">37</span>
+              <span class="site-state-item-count">38</span>
               <span class="site-state-item-name">tags</span>
               </a>
           </div>
