@@ -3391,6 +3391,106 @@
           
           
             
+              <a class="post-title-link" href="/2019/03/23/make_a_linux_5/" itemprop="url">
+                写一个操作系统_05 调试MBR
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2019-03-23T21:08:45+08:00" content="2019-03-23">
+            2019-03-23
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/kernel/" itemprop="url" rel="index">
+                  <span itemprop="name">kernel</span>
+                </a>
+              </span>
+
+              
+              
+                , 
+              
+
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/kernel/OS/" itemprop="url" rel="index">
+                  <span itemprop="name">OS</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            熟悉MBR引导MBR的512字节里面也是代码，他被BIOS加载执行，自身执行的时候加载操作系统的loader，我们在没有操作系统loader的情况下先写一段测试程序，体验一下。
+实现的功能如下:
+BIOS 加载 MBR中的代码，执行，用BIOS 中断 INT 0x10显示字符串
+MBR的代码1234
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2019/03/23/make_a_linux_5/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2019/03/20/make_a_linux_4/" itemprop="url">
                 写一个操作系统_04 内核调试环境搭建
               </a>
@@ -4215,91 +4315,6 @@ Enjoy :)
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2019/01/21/20thcentury/" itemprop="url">
-                《20世纪简史》
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2019-01-21T20:31:45+08:00" content="2019-01-21">
-            2019-01-21
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/book/" itemprop="url" rel="index">
-                  <span itemprop="name">book</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            工业革命的红利襁褓中的20世纪，为欧洲人带来无数希望，不论他们身在家乡还是遥远的殖民地。欧洲人民前所未有地迫切希望，他们的孩子能接受良好的教育，而十岁童工在农场和作坊里终日劳作的情况也不再寻常。生活质量得到改善，饥荒越来越少，人们的寿命越来越长。尽管在举国欢庆的场合，仍可见大型陆海军游行过街，但是欧
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2019/01/21/20thcentury/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -4336,7 +4351,7 @@ Enjoy :)
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">54</span>
+              <span class="site-state-item-count">55</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>

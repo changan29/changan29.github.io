@@ -31,7 +31,7 @@
 
 
 
-  <meta name="keywords" content="OS,kernel," />
+  <meta name="keywords" content="OS," />
 
 
 
@@ -40,20 +40,23 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="函数调用约定编译器一般使用堆栈实现函数调用，每个进程都有自己的栈，用栈来传递参数，会带来以下问题：  参数存储在栈中，那么谁来负责回收参数所占的栈空间，是调用者？还是被调用者 当参数很多的时候后，主调函数将参数以什么样的顺序传递  高级语言有调用的约定: 举例: 12345678910111213141516int sub(int a , int b)&amp;#123; // 被调    return">
-<meta name="keywords" content="OS,kernel">
+<meta name="description" content="进程的建立从操作系统的角度看，一个进程最关键的特征是它拥有独立的虚拟地址空间，这使得它有别于其他进程，很多时候一个程序程序被执行同时伴随着一个新进程的创建，在有虚拟存储的情况下，创建一个进程，然后加载可执行文件并且执行，需要做三件事：  创建一个独立的虚拟地址空间 读取可执行文件头，并且建立虚拟空间与可执行文件的映射关系 将CPU的指令寄存器设置成可执行文件的入口地址，启动运行  首先是创建虚拟地">
+<meta name="keywords" content="OS">
 <meta property="og:type" content="article">
-<meta property="og:title" content="写一个操作系统_09 C语言和汇编语言">
-<meta property="og:url" content="http://oneyearago.me/2019/04/02/make_a_linux_9/index.html">
+<meta property="og:title" content="程序员的自我修养 - 可执行文件的装载与进程">
+<meta property="og:url" content="http://oneyearago.me/2020/02/15/loader_and_start_process/index.html">
 <meta property="og:site_name" content="changan&#39;s blog">
-<meta property="og:description" content="函数调用约定编译器一般使用堆栈实现函数调用，每个进程都有自己的栈，用栈来传递参数，会带来以下问题：  参数存储在栈中，那么谁来负责回收参数所占的栈空间，是调用者？还是被调用者 当参数很多的时候后，主调函数将参数以什么样的顺序传递  高级语言有调用的约定: 举例: 12345678910111213141516int sub(int a , int b)&amp;#123; // 被调    return">
+<meta property="og:description" content="进程的建立从操作系统的角度看，一个进程最关键的特征是它拥有独立的虚拟地址空间，这使得它有别于其他进程，很多时候一个程序程序被执行同时伴随着一个新进程的创建，在有虚拟存储的情况下，创建一个进程，然后加载可执行文件并且执行，需要做三件事：  创建一个独立的虚拟地址空间 读取可执行文件头，并且建立虚拟空间与可执行文件的映射关系 将CPU的指令寄存器设置成可执行文件的入口地址，启动运行  首先是创建虚拟地">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="http://201904-1251969284.cossh.myqcloud.com/func_call_types.jpg">
-<meta property="og:updated_time" content="2019-04-20T12:08:18.000Z">
+<meta property="og:image" content="https://202002-1251969284.cos.ap-shanghai.myqcloud.com/vma_to_elf.jpg">
+<meta property="og:image" content="https://202002-1251969284.cos.ap-shanghai.myqcloud.com/vma_maps_in_proc">
+<meta property="og:image" content="https://202002-1251969284.cos.ap-shanghai.myqcloud.com/inux-virtual-space-02.png">
+<meta property="og:image" content="https://202002-1251969284.cos.ap-shanghai.myqcloud.com/args_top_stack_main.jpg">
+<meta property="og:updated_time" content="2020-02-15T09:59:31.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="写一个操作系统_09 C语言和汇编语言">
-<meta name="twitter:description" content="函数调用约定编译器一般使用堆栈实现函数调用，每个进程都有自己的栈，用栈来传递参数，会带来以下问题：  参数存储在栈中，那么谁来负责回收参数所占的栈空间，是调用者？还是被调用者 当参数很多的时候后，主调函数将参数以什么样的顺序传递  高级语言有调用的约定: 举例: 12345678910111213141516int sub(int a , int b)&amp;#123; // 被调    return">
-<meta name="twitter:image" content="http://201904-1251969284.cossh.myqcloud.com/func_call_types.jpg">
+<meta name="twitter:title" content="程序员的自我修养 - 可执行文件的装载与进程">
+<meta name="twitter:description" content="进程的建立从操作系统的角度看，一个进程最关键的特征是它拥有独立的虚拟地址空间，这使得它有别于其他进程，很多时候一个程序程序被执行同时伴随着一个新进程的创建，在有虚拟存储的情况下，创建一个进程，然后加载可执行文件并且执行，需要做三件事：  创建一个独立的虚拟地址空间 读取可执行文件头，并且建立虚拟空间与可执行文件的映射关系 将CPU的指令寄存器设置成可执行文件的入口地址，启动运行  首先是创建虚拟地">
+<meta name="twitter:image" content="https://202002-1251969284.cos.ap-shanghai.myqcloud.com/vma_to_elf.jpg">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -63,7 +66,7 @@
   };
 </script>
 
-  <title> 写一个操作系统_09 C语言和汇编语言 | changan's blog </title>
+  <title> 程序员的自我修养 - 可执行文件的装载与进程 | changan's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -313,7 +316,7 @@
           
           
             
-              写一个操作系统_09 C语言和汇编语言
+              程序员的自我修养 - 可执行文件的装载与进程
             
           
         </h1>
@@ -322,8 +325,8 @@
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2019-04-02T21:08:45+08:00" content="2019-04-02">
-            2019-04-02
+          <time itemprop="dateCreated" datetime="2020-02-15T17:58:39+08:00" content="2020-02-15">
+            2020-02-15
           </time>
         </span>
 
@@ -332,19 +335,7 @@
             &nbsp; | &nbsp; In
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/kernel/" itemprop="url" rel="index">
-                  <span itemprop="name">kernel</span>
-                </a>
-              </span>
-
-              
-              
-                , 
-              
-
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/kernel/OS/" itemprop="url" rel="index">
+                <a href="/categories/OS/" itemprop="url" rel="index">
                   <span itemprop="name">OS</span>
                 </a>
               </span>
@@ -368,21 +359,28 @@
       
 
       
-        <span itemprop="articleBody"><h4 id="函数调用约定"><a href="#函数调用约定" class="headerlink" title="函数调用约定"></a>函数调用约定</h4><p>编译器一般使用堆栈实现函数调用，每个进程都有自己的栈，用栈来传递参数，会带来以下问题：</p>
+        <span itemprop="articleBody"><h3 id="进程的建立"><a href="#进程的建立" class="headerlink" title="进程的建立"></a>进程的建立</h3><p>从操作系统的角度看，一个进程最关键的特征是它拥有独立的虚拟地址空间，这使得它有别于其他进程，很多时候一个程序程序被执行同时伴随着一个新进程的创建，在有虚拟存储的情况下，创建一个进程，然后加载可执行文件并且执行，需要做三件事：</p>
 <ul>
-<li>参数存储在栈中，那么谁来负责回收参数所占的栈空间，是调用者？还是被调用者</li>
-<li>当参数很多的时候后，主调函数将参数以什么样的顺序传递</li>
+<li>创建一个独立的虚拟地址空间</li>
+<li>读取可执行文件头，并且建立虚拟空间与可执行文件的映射关系</li>
+<li>将CPU的指令寄存器设置成可执行文件的入口地址，启动运行</li>
 </ul>
-<p>高级语言有调用的约定:<br><img src="http://201904-1251969284.cossh.myqcloud.com/func_call_types.jpg" alt="image"></p>
-<p>举例:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">int sub(int a , int b)&#123; // 被调</span><br><span class="line">    return a-b;</span><br><span class="line">&#125;</span><br><span class="line">int s = sub(3,2);       // 调用</span><br><span class="line"></span><br><span class="line">调用:</span><br><span class="line">push 2</span><br><span class="line">push 3</span><br><span class="line">call sub</span><br><span class="line"></span><br><span class="line">被调:</span><br><span class="line">push ebp</span><br><span class="line">mov ebp,esp</span><br><span class="line">mov eax,[ebp+8]</span><br><span class="line">sub eax,[ebp+12]</span><br><span class="line">pop ebp         // 恢复 ebp</span><br></pre></td></tr></table></figure>
-<h4 id="C-amp-ASM-混合"><a href="#C-amp-ASM-混合" class="headerlink" title="C &amp; ASM 混合"></a>C &amp; ASM 混合</h4><p>C和汇编混合编程有两种方式:</p>
+<h4 id="首先是创建虚拟地址空间"><a href="#首先是创建虚拟地址空间" class="headerlink" title="首先是创建虚拟地址空间"></a>首先是创建虚拟地址空间</h4><p>我们知道虚拟地址空间是有一组页映射函数将虚拟空间的各个页映射到相应的物理空间，那么创建虚拟地址空间并不是创建空间而是创建这个映射结构，在i386下创建虚拟地址空间只要分配一个页目录就可以了，甚至不设置页映射关系，这些映射关系等到后面程序发生页错误的时候设置。页表上有各种标志位，其中可以知道这一块地址是否分配物理地址。</p>
+<h4 id="虚拟空间与文件映射"><a href="#虚拟空间与文件映射" class="headerlink" title="虚拟空间与文件映射"></a>虚拟空间与文件映射</h4><p>上面的那一步映射是虚拟空间到物理内存的映射，当前是虚拟空间到可执行文件的映射。当程序发生页错误的时候，操作系统从物理内存分配一个物理页，然后将缺页从磁盘读到内存，再设置缺页的虚拟页和物理页的映射关系，这样程序继续运行。但是明显的一点是，缺页的时候需要知道缺的页是文件的哪个位置。</p>
+<h4 id="执行可执行文件"><a href="#执行可执行文件" class="headerlink" title="执行可执行文件"></a>执行可执行文件</h4><p>操作系统设置CPU的指令寄存器将控制权交给进程，切换内核对战和CPU运行权限后，跳转到可执行文件的入口地址，即ELF文件头中的入口地址。</p>
+<h3 id="ELF文件映射"><a href="#ELF文件映射" class="headerlink" title="ELF文件映射"></a>ELF文件映射</h3><p>linux中将进程虚拟空间的一个段叫做虚拟内存区域(VMA,virtual memory area)，比如操作系统创建进程后，会在进程的相应数据结构设置一个.text段的VMA,它在虚拟地址空间的地址为0x08048000~0x08049000，它对应的ELF文件的偏移为0的.text，它的属性是只读。<br><img src="https://202002-1251969284.cos.ap-shanghai.myqcloud.com/vma_to_elf.jpg" alt="image"></p>
+<p>在操作系统里面，VMA除了被用来映射可执行文件里面的段，他还有其他的作用，操作系统使用VMA对进程的地址空间进行管理，我们知道进程在执行的时候需要用到栈(stack)、堆(heap)，事实上他们在内存空间也是以VMA的形式存在，比如我们查看nginx的各个VMA:<br><img src="https://202002-1251969284.cos.ap-shanghai.myqcloud.com/vma_maps_in_proc" alt="image"></p>
+<p><img src="https://202002-1251969284.cos.ap-shanghai.myqcloud.com/inux-virtual-space-02.png" alt="image"></p>
+<h3 id="进程栈初始化"><a href="#进程栈初始化" class="headerlink" title="进程栈初始化"></a>进程栈初始化</h3><p>进程刚启动的时候，需要知道一些进程的运行环境，最基本的就是系统环境变量和进程的运行参数。很常见的做法是操作系统在进程启动的时候将这些信息提前保存到进程的虚拟地址空间的栈上(stack VMA)。<br><img src="https://202002-1251969284.cos.ap-shanghai.myqcloud.com/args_top_stack_main.jpg" alt="image"></p>
+<h3 id="linux内核装载ELF过程"><a href="#linux内核装载ELF过程" class="headerlink" title="linux内核装载ELF过程"></a>linux内核装载ELF过程</h3><p>我们在shell下执行一个可执行文件，首先在用户层面，bash进程会调用fork系统调用创建一个新的进程，然后新的进程调用execve()系统调用执行指定的ELF文件，进入exec()系统调用之后，Linux内核就开始真正的装载工作。在内核中，do_exec首先查找被执行文件，如果找到文件，则读取文件的前128字节。为什么这么做，Linux支持的可执行文件不止ELF，前128字节是判断文件格式的，开头的四个字节，称为魔数，通过对魔数的判断可以确定文件的类型和格式。比如ELF的可执行文件前四个字节为0x7F,E,L,F,java的可执行文件头为c,a,f,e.</p>
+<p>这里我们只关心ELF的装载，具体步骤为：</p>
 <ul>
-<li>用汇编和C单独写单独编译，然后链接在一起</li>
-<li>C代码嵌入汇编</li>
+<li>检查ELF的文件格式有效性，比如魔数，段检查</li>
+<li>寻找动态链接的.interp段，设置动态链接库路径</li>
+<li>根据ELF可执行文件的程序头，对ELF文件进行映射</li>
+<li>初始化ELF进程环境，寄存器地址等</li>
+<li>将系统调用的返回修改成ELF可执行文件的入口点，这个入口点取决于链接的方式，对于静态链接，入口是e_entry地址，对于动态链接，程序入口点是动态连接器。</li>
 </ul>
-<p>C代码嵌入汇编:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">char* str = &quot;C &amp; ASM Code\n&quot;;</span><br><span class="line">int count = 0;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    asm(&quot;pusha;\</span><br><span class="line">            movl $4,%eax;\</span><br><span class="line">            movl $1,%ebx;\</span><br><span class="line">            movl str,%ecx;\</span><br><span class="line">            movl $13,%edx;\</span><br><span class="line">            int $0x80;\</span><br><span class="line">            movl %eax,count;\</span><br><span class="line">            popa;\</span><br><span class="line">            &quot;);</span><br><span class="line">&#125;</span><br><span class="line">// gcc -m32 casm.c</span><br></pre></td></tr></table></figure></p>
-<h4 id="内联汇编及其扩展"><a href="#内联汇编及其扩展" class="headerlink" title="内联汇编及其扩展"></a>内联汇编及其扩展</h4><p>上面的例子是内联汇编的一个例子，基本的内敛汇编功能比较薄弱，在此基础上，GCC添加了扩展功能，在C语言里面用扩展汇编真的不舒服，相当于多了一种语言，需要依据其规则。</p>
 </span>
       
     </div>
@@ -393,8 +391,6 @@
           
             <a href="/tags/OS/" rel="tag">#OS</a>
           
-            <a href="/tags/kernel/" rel="tag">#kernel</a>
-          
         </div>
       
 
@@ -402,13 +398,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/04/07/201904/" rel="prev">2019年4月</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/03/30/file_handler_limit/" rel="next">文件描述符限制</a>
+              <a href="/2020/02/04/Thread-safe/" rel="next">程序员的自我修养-线程安全</a>
             
           </div>
         </div>
@@ -642,7 +636,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#函数调用约定"><span class="nav-number">1.</span> <span class="nav-text">函数调用约定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-amp-ASM-混合"><span class="nav-number">2.</span> <span class="nav-text">C &amp; ASM 混合</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内联汇编及其扩展"><span class="nav-number">3.</span> <span class="nav-text">内联汇编及其扩展</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#进程的建立"><span class="nav-number">1.</span> <span class="nav-text">进程的建立</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#首先是创建虚拟地址空间"><span class="nav-number">1.1.</span> <span class="nav-text">首先是创建虚拟地址空间</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#虚拟空间与文件映射"><span class="nav-number">1.2.</span> <span class="nav-text">虚拟空间与文件映射</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#执行可执行文件"><span class="nav-number">1.3.</span> <span class="nav-text">执行可执行文件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ELF文件映射"><span class="nav-number">2.</span> <span class="nav-text">ELF文件映射</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程栈初始化"><span class="nav-number">3.</span> <span class="nav-text">进程栈初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#linux内核装载ELF过程"><span class="nav-number">4.</span> <span class="nav-text">linux内核装载ELF过程</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
