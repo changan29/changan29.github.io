@@ -1,0 +1,926 @@
+
+<!doctype html>
+<html class="theme-next use-motion theme-next-mala">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="思绪来的快去的也快，偶尔在这里停留" />
+
+
+
+  <meta name="keywords" content="game,match," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="概述随着王者荣耀与吃鸡的游戏全民化，匹配也深入人心，对于多人竞技游戏，通常是多个人组成一组对抗对面的多个人，队伍的输赢跟你匹配的队友有密切的关系，也正是由于这种机制，很多人吐槽系统分给自己的队友真的是垃圾，一顿操作猛如虎，一看战绩0-5。一般来说，现在的匹配系统考虑的因素还算全面，之所以遇到垃圾队友，跟自己的关系很大，电子竞技，菜是原罪。 下面的内容是我平常学习到的一些匹配系统的知识整理，参考了一">
+<meta name="keywords" content="game,match">
+<meta property="og:type" content="article">
+<meta property="og:title" content="竞技游戏匹配系统">
+<meta property="og:url" content="http://oneyearago.me/2020/06/10/game_match_making/index.html">
+<meta property="og:site_name" content="changan&#39;s blog">
+<meta property="og:description" content="概述随着王者荣耀与吃鸡的游戏全民化，匹配也深入人心，对于多人竞技游戏，通常是多个人组成一组对抗对面的多个人，队伍的输赢跟你匹配的队友有密切的关系，也正是由于这种机制，很多人吐槽系统分给自己的队友真的是垃圾，一顿操作猛如虎，一看战绩0-5。一般来说，现在的匹配系统考虑的因素还算全面，之所以遇到垃圾队友，跟自己的关系很大，电子竞技，菜是原罪。 下面的内容是我平常学习到的一些匹配系统的知识整理，参考了一">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/elo_calc.png">
+<meta property="og:image" content="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/chiji_elo_calc.png">
+<meta property="og:image" content="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/moba_match_01.jpg">
+<meta property="og:image" content="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/moba_match_uml.png">
+<meta property="og:updated_time" content="2020-06-10T09:35:34.096Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="竞技游戏匹配系统">
+<meta name="twitter:description" content="概述随着王者荣耀与吃鸡的游戏全民化，匹配也深入人心，对于多人竞技游戏，通常是多个人组成一组对抗对面的多个人，队伍的输赢跟你匹配的队友有密切的关系，也正是由于这种机制，很多人吐槽系统分给自己的队友真的是垃圾，一顿操作猛如虎，一看战绩0-5。一般来说，现在的匹配系统考虑的因素还算全面，之所以遇到垃圾队友，跟自己的关系很大，电子竞技，菜是原罪。 下面的内容是我平常学习到的一些匹配系统的知识整理，参考了一">
+<meta name="twitter:image" content="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/elo_calc.png">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mala',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 竞技游戏匹配系统 | changan's blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">changan's blog</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            About
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    
+      
+
+      
+        <style type="text/css">
+
+    .circle {
+        width: 40px;
+        height: 40px;
+        background: #555 no-repeat;
+        cursor: move;
+    }
+
+    .assist-btn {
+        position: fixed;
+        top: 50％;
+        left: 10px;
+        -moz-border-radius: 50px;
+        -webkit-border-radius: 50px;
+        border-radius: 50px;
+        outline: none;
+        border: none;
+        color: #87daff;
+    }
+
+</style>
+
+<script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+<script type="text/javascript">
+    // 浮动圆点展开与收缩
+    /*
+    $(function () {
+        var assist_box = $('.assist-box');
+        $('#assist_btn').hover(function () {
+            assist_box.stop().show(300);
+        }, function () {
+            assist_box.stop().hide(150);
+        })
+    });
+    */  
+    //浮动圆点拖动
+    $(function () {
+        var box = document.getElementById('assist_btn');
+        box.onmousedown = function (event) {
+            var e = event || window.event,
+                t = e.target || e.srcElement,
+                // 鼠标按下时的坐标x1,y1
+                x1 = e.clientX,
+                y1 = e.clientY,
+                //鼠标按下时的左右偏移量
+                dragLeft = this.offsetLeft,
+                dragTop = this.offsetTop;
+
+            document.onmousemove = function (event) {
+                var e = event || window.event,
+                    t = e.target || e.srcElement,
+                    // 鼠标移动时的动态坐标
+                    x2 = e.clientX,
+                    y2 = e.clientY,
+                    // 鼠标移动时的坐标的变化量
+                    x = x2 - x1,
+                    y = y2 - y1;
+                box.style.left = (dragLeft + x) + 'px';
+                box.style.top = (dragTop + y) + 'px';
+            }
+
+            document.onmouseup = function () {
+                this.onmousemove = null;
+            }
+        }
+    });
+
+/*
+    $whitesmoke   = #f5f5f5
+    $gainsboro    = #eee
+    $gray-lighter = #ddd
+    $grey-light   = #ccc
+    $grey         = #bbb
+    $grey-dark    = #999
+    $grey-dim     = #666
+    $black-light  = #555
+    $black-deep   = #222
+    $red          = #ff2a2a
+    $blue-bright  = #87daff
+    $blue         = #0684bd
+    $blue-deep    = #262a30
+*/
+    // white theme
+    var body = {color: "#555", background: "white"};
+    var a_tag = {color: "#222"};
+    var header = { background: "#f5f5f5"};
+    var logo_line_i = {background: "#222"};
+    // var post_code = {background: "#eee", color: "#222"};
+
+    function switch_theme() {
+        $("body").css(body);
+        $("a:not('.links-of-author-item a, .site-state-item a, .site-state-posts a, .feed-link a, .motion-element a, .post-tags a, .show-commit-cls a, #donate_board a')").css(a_tag);
+        $(".header, .footer").css(header);
+        $(".logo-line-before i, .logo-line-after i").css(logo_line_i);
+        //$(".post code").css(post_code);
+        $("#idhyt-surprise-ball #idhyt-surprise-ball-animation .drag").css(a_tag);
+        $(".post-title-link, .posts-expand .post-meta, .post-comments-count, .disqus-comment-count, .post-category a, .post-nav-next a, .post-nav-item a").css(a_tag);
+        
+        // $("code").css({color: '#c5c8c6', background: '#1d1f21'});
+        $("#assist_btn").hide(1500);
+    }
+
+    $(function () {
+        $("#assist_btn").dblclick(function() {
+            switch_theme();
+        });
+    });
+
+</script>
+
+<div>
+
+    <button class="assist-btn circle" id="assist_btn" title="双击切换">
+        亮
+    </button>
+
+</div>
+
+
+
+
+
+
+
+
+
+      
+
+    
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              竞技游戏匹配系统
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2020-06-10T22:40:39+08:00" content="2020-06-10">
+            2020-06-10
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/game/" itemprop="url" rel="index">
+                  <span itemprop="name">game</span>
+                </a>
+              </span>
+
+              
+              
+                , 
+              
+
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/game/match/" itemprop="url" rel="index">
+                  <span itemprop="name">match</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>随着王者荣耀与吃鸡的游戏全民化，匹配也深入人心，对于多人竞技游戏，通常是多个人组成一组对抗对面的多个人，队伍的输赢跟你匹配的队友有密切的关系，也正是由于这种机制，很多人吐槽系统分给自己的队友真的是垃圾，一顿操作猛如虎，一看战绩0-5。一般来说，现在的匹配系统考虑的因素还算全面，之所以遇到垃圾队友，跟自己的关系很大，电子竞技，菜是原罪。</p>
+<p>下面的内容是我平常学习到的一些匹配系统的知识整理，参考了一些内网的资料，主要包括：</p>
+<ul>
+<li>如何评价一个人的强弱？ – Elo rating system </li>
+<li>Moba类游戏比如LOL和王者及吃鸡类 的 强弱评价分数是怎么判断的</li>
+<li>匹配的其他因素以及一个真实匹配系统</li>
+<li>个人的一些奇怪想法</li>
+</ul>
+<h3 id="如何评价一个人的强弱"><a href="#如何评价一个人的强弱" class="headerlink" title="如何评价一个人的强弱"></a>如何评价一个人的强弱</h3><h4 id="匹配分-–-ELO评分机制"><a href="#匹配分-–-ELO评分机制" class="headerlink" title="匹配分 – ELO评分机制"></a>匹配分 – ELO评分机制</h4><p>最初的游戏比如象棋和围棋，有段位的概念，围棋职业选手分为从低到高九个段位等级，九段最高，地位大致相当于象棋界的特级大师；初段最低。ELO等级分制度是基于统计学的一个评估棋手水平的方法。1970年国际棋联正式开始使用等级分制度。</p>
+<p>Elo，并不是一个缩写，而是系统发明者的姓。它本来是个改良的国际象棋积分系统，现在被广泛用于很多类比赛的选手分级。大部分游戏也使用了这套评分算法，比如星际，魔兽争霸3，魔兽世界，dota，LOL，守望先锋等等。</p>
+<h4 id="计分方法"><a href="#计分方法" class="headerlink" title="计分方法"></a>计分方法</h4><p><img src="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/elo_calc.png" alt="image"></p>
+<p>游戏里面，把匹配分作为玩家的一个属性，每次对局结算的时候根据本局玩家的表现，计算玩家的分数，看是加分还是减分，下次匹配的时候，把 匹配分 作为匹配队友和对手的重要指标，匹配旗鼓相当的人。</p>
+<h4 id="游戏的做法"><a href="#游戏的做法" class="headerlink" title="游戏的做法"></a>游戏的做法</h4><h5 id="吃鸡类和Moba游戏的ELO"><a href="#吃鸡类和Moba游戏的ELO" class="headerlink" title="吃鸡类和Moba游戏的ELO"></a>吃鸡类和Moba游戏的ELO</h5><p>我们调取某知名吃鸡手游的单排开局玩家数与吃鸡者击杀玩家数的统计数据：<br><img src="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/chiji_elo_calc.png" alt="image"><br>[参考lionxhli的数据]</p>
+<p>可以看到数据几乎完美的吻合log2(人数)的曲线，从而证明了这个结论是可靠的：吃鸡难度为入局队伍数以2为底的对数。</p>
+<p>取得第N名的难度，总人数M :<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f(N) = \log_2&#123;M&#125; - \log_2&#123;N&#125;</span><br></pre></td></tr></table></figure></p>
+<p>那么根据总人数和排名得到的数字作为计算ELO的重要系数，结合新手加分，跑动，走位，一枪操作等其他条件，确定玩家的本场加减分。</p>
+<p>类似的Moba游戏会参考人头数、推塔数，承受伤害、输出伤害、推塔数、经济等因素，确定符合游戏特点的分数模型。</p>
+<h3 id="匹配的其他因素与实现"><a href="#匹配的其他因素与实现" class="headerlink" title="匹配的其他因素与实现"></a>匹配的其他因素与实现</h3><h4 id="匹配中需要考虑的因素："><a href="#匹配中需要考虑的因素：" class="headerlink" title="匹配中需要考虑的因素："></a>匹配中需要考虑的因素：</h4><ul>
+<li>ELO分数： 要匹配分数相当的人，如果差别过大，太菜的人和太强的人感受都不爽</li>
+<li>模式：   有五人开黑，也有一个人单排，五个人的优先匹配五个人，单人的匹配多个人，多个人的合作意识比单人组成的队伍好太多</li>
+<li>连胜连败：连胜连败的玩家可能是 明显优于/弱于 同档次的人，可能是类似游戏的玩家或者玩小号</li>
+<li>网络因素：形同网络测速的人匹配在一起，网络太好和太差的人一起总有人体验不好</li>
+<li>匹配时间：匹配的人少，相同ELO分数段的人匹配要等太长时间，考虑把 匹配分数有差距但不是很大的人组队</li>
+<li>游戏模式：排位赛、乱斗模式、赛跑模式分开</li>
+<li>职业搭配： 法师、ADC、打野考虑每队都有擅长的</li>
+<li>男女搭配： 增加游戏的趣味性 😂 </li>
+</ul>
+<h4 id="一个实际的匹配服务"><a href="#一个实际的匹配服务" class="headerlink" title="一个实际的匹配服务"></a>一个实际的匹配服务</h4><p>对于一个实际工程中的匹配服务，在要考虑上面的限制因素基础上，要设计合适的数据结构和算法满足玩家组队对局，考虑匹配时间-实力接近-搭配合理-其他逻辑的平衡。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">init();         // 初始化匹配队列       </span><br><span class="line">while(1)</span><br><span class="line">&#123;</span><br><span class="line">    RecvMatchReq();  //  接收匹配请求（取消匹配）  放到对应的匹配池</span><br><span class="line">    HandleMatch();  // 匹配，处理结果</span><br><span class="line">&#125;</span><br><span class="line">finish();</span><br></pre></td></tr></table></figure>
+<p>匹配池是每个游戏类型匹配的基本单位，其中包含一个二维数组，数组的每个元素是一个含有五个元素的子数组，子数组的每个元素是一个队列。 二维数组的划分标准是ELO的大小，每10分一个分段，比如1536分在 arr[1536/10], 子数组是按照 人数划分的，比如 五人组队的在第一个队列，4人组队的在第二个队列……</p>
+<p>匹配过程：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">// 有一个全局模式表，表示匹配的模式及优先级 记为 mode_map</span><br><span class="line">/*</span><br><span class="line">5-5     //五个人组队匹配5个人组队的</span><br><span class="line">4+1 vs 4+1</span><br><span class="line">3+1 vs 3+2</span><br><span class="line">5   vs 3+2 </span><br><span class="line">......</span><br><span class="line">1+1+1+1+1  vs 1+1+1+1+1     // 五个单排的</span><br><span class="line"></span><br><span class="line">*/</span><br><span class="line">HandleMatch()</span><br><span class="line">&#123;</span><br><span class="line">    while(mode_map)</span><br><span class="line">    &#123;</span><br><span class="line">        // 把ELO相同的人 组一队  </span><br><span class="line">        // 处理 搭配等逻辑需求</span><br><span class="line">    &#125;</span><br><span class="line">    // 每次处理 1000个请求，约 1 、2 ms</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/moba_match_01.jpg" alt="image"></p>
+<p><img src="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/moba_match_uml.png" alt="image"></p>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>匹配系统的目标是 寻找两队旗鼓相当的人，从而开始一场体验好的对局。以前有过这样一个想法，现在的人好多都在抱怨找不到女/男朋友，如果类比于游戏，把一个人按照不同的指标换分，根据一个人的颜值、收入、身高、体重、地区、发型、爱好等打一个或者几个分数，按照每个人的需求给每个人匹配一个对应的对象，岂不美哉？<br>那时的我还年轻，考虑问题比较理想化，没有成本和平衡的概念。如果爱情能像游戏一样简单，这个社会会是多么美好💖💖</p>
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E7%AD%89%E7%BA%A7%E5%88%86" target="_blank" rel="noopener">https://zh.wikipedia.org/wiki/%E7%AD%89%E7%BA%A7%E5%88%86</a></li>
+</ul>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/game/" rel="tag">#game</a>
+          
+            <a href="/tags/match/" rel="tag">#match</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/04/Multi-process-pressure-measurement-tool-implementation/" rel="next">多进程游戏压测工具</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div>
+      
+        <style type="text/css">
+
+    .donate_bar {
+        text-align: center;
+        margin-top : 5%;
+    }
+
+    .donate_bar.hidden {
+        display:none;
+    }
+/*
+    .donate_bar a.btn_donate {
+        display: inline-block;
+        width: 82px;
+        height: 82px;
+        margin-left:auto;
+        margin-right:auto;
+
+        background: url("http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif") no-repeat;
+        _background: url("http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif") no-repeat; 
+
+        -webkit-transition: background 0s;
+        -moz-transition: background 0s;
+        -o-transition: background 0s;
+        -ms-transition: background 0s;
+        transition: background 0s;
+    }
+*/
+    .donate_bar a.btn_donate:hover { 
+        // background-position: 0px -82px;
+        color: #87daff
+    }
+
+    .donate_bar .donate_txt {
+        display: block;
+        color: #9d9d9d;
+        font: 14px/2 "Microsoft Yahei";
+    }
+
+    .bold { 
+        font-weight: bold; 
+    }
+
+    .post-donate a {
+        border-bottom: 0px;
+    }
+
+    #donate_guide table {
+        border: none;
+    }
+
+    #donate_guide td {
+        border-bottom: none;
+        border-right: none;
+        background: #333333;
+        valign: top;
+    }
+
+</style>
+
+
+
+    
+
+    <div class ="post-donate">
+        <div id="donate_board" class="donate_bar center">
+              <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏">赏</a>
+              <span id="donate_txt" class="donate_txt">
+                   
+                        请我喝杯咖啡
+                   
+              </span>
+            <br>
+        </div>  
+  
+        <div id="donate_guide" class="donate_bar center hidden">
+            <!--
+              
+
+            
+                <a href="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="微信打赏" class="fancybox" rel="article0"
+                    style="margin-right:30%">
+                    <img src="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="" height="164px" width="164px">
+                </a>
+            
+            -->
+            <table>
+                <tr>
+                    <td>
+                         
+                    </td>
+                    <td>
+                        
+                            <a href="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="微信打赏" class="fancybox" rel="article0"
+                                style="margin-right:30%">
+                                <img src="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="" height="164px" width="164px">
+                            </a>
+                        
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+        <script type="text/javascript">
+            document.getElementById('btn_donate').onclick = function() {
+                $('#donate_board').addClass('hidden');
+                // $('#donate_guide').removeClass('hidden');
+                $('#donate_guide').show(2000);
+            }
+
+        </script>
+    </div>
+
+    
+
+
+      
+    </div>
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+          <div class="comments" id="comments">
+            
+            -->
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table Of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="changan" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">changan</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">思绪来的快去的也快，偶尔在这里停留</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">60</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">47</span>
+              <span class="site-state-item-name">categories</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">tags</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://github.com/changan29" target="_blank">GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/zhaochanganplus" target="_blank">ZhiHu</a>
+              </span>
+            
+          
+        </div>
+
+        <div class="links-of-friendly motion-element">
+          
+        </div>
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何评价一个人的强弱"><span class="nav-number">2.</span> <span class="nav-text">如何评价一个人的强弱</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#匹配分-–-ELO评分机制"><span class="nav-number">2.1.</span> <span class="nav-text">匹配分 – ELO评分机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#计分方法"><span class="nav-number">2.2.</span> <span class="nav-text">计分方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#游戏的做法"><span class="nav-number">2.3.</span> <span class="nav-text">游戏的做法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#吃鸡类和Moba游戏的ELO"><span class="nav-number">2.3.1.</span> <span class="nav-text">吃鸡类和Moba游戏的ELO</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#匹配的其他因素与实现"><span class="nav-number">3.</span> <span class="nav-text">匹配的其他因素与实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#匹配中需要考虑的因素："><span class="nav-number">3.1.</span> <span class="nav-text">匹配中需要考虑的因素：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一个实际的匹配服务"><span class="nav-number">3.2.</span> <span class="nav-text">一个实际的匹配服务</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他"><span class="nav-number">4.</span> <span class="nav-text">其他</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#引用"><span class="nav-number">5.</span> <span class="nav-text">引用</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2018 - 
+  <span itemprop="copyrightYear">2020
+  </span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changan
+  </span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme by <a class="theme-link" href="http://blog.idhyt.com">idhyt</a>.<a class="theme-link" href="https://github.com/idhyt/hexo-theme-next/tree/magiclamp">Mala</a>
+</div>
+
+<!-- busuanzi -->
+
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
