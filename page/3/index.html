@@ -3391,6 +3391,92 @@
           
           
             
+              <a class="post-title-link" href="/2019/08/29/fork/" itemprop="url">
+                进程
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2019-08-29T23:58:45+08:00" content="2019-08-29">
+            2019-08-29
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/fork/" itemprop="url" rel="index">
+                  <span itemprop="name">fork</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            进程环境当内核执行C程序时(使用一个exec程序)，在调用main之前调用一个特殊的启动例程。可执行文件将此可执行例程指定为程序的起始地址–这是由链接器设置的，而连接器是有C编译器调用的。启动例程从内核取得命令行参数和环境变量值，然后按上述方式调用main函数。
+进程控制系统中有一些专用进程，ID为
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2019/08/29/fork/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2019/08/18/Mutex/" itemprop="url">
                 临界区、信号量、互斥锁、自旋锁与原子操作
               </a>
@@ -4231,104 +4317,6 @@ idle进程其pid=0，其前身是系统创建的第一个进程，也是唯一�
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2019/04/11/make_a_linux_11/" itemprop="url">
-                写一个操作系统_11 Linux是怎么实现线程的
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2019-04-11T21:08:45+08:00" content="2019-04-11">
-            2019-04-11
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/kernel/" itemprop="url" rel="index">
-                  <span itemprop="name">kernel</span>
-                </a>
-              </span>
-
-              
-              
-                , 
-              
-
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/kernel/OS/" itemprop="url" rel="index">
-                  <span itemprop="name">OS</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            Linux2.6以前的线程在Linux内核2.6出现之前进程是(最小)可调度的对象，当时的Linux不真正支持线程。Linux 2.4内核中不知道什么是“线程”，只有一个“task_struct”的数据结构，就是进程。
-Linux内核有一个系统调用指令clone()，这个指令产生一个调用调用的进程的
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2019/04/11/make_a_linux_11/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -4365,7 +4353,7 @@ Linux内核有一个系统调用指令clone()，这个指令产生一个调用�
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">62</span>
+              <span class="site-state-item-count">63</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
