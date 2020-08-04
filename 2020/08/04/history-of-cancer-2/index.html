@@ -31,7 +31,7 @@
 
 
 
-  <meta name="keywords" content="OS,kernel," />
+  <meta name="keywords" content="book," />
 
 
 
@@ -40,20 +40,18 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="原始进程Linux下有3个特殊的进程，idle进程(PID = 0), init进程(PID = 1)和kthreadd(PID = 2)  idle进程  由系统自动创建, 运行在内核态 idle进程其pid=0，其前身是系统创建的第一个进程，也是唯一一个没有通过fork或者kernel_thread产生的进程。完成加载系统后，演变为进程调度 调用schedule()函数切换当前进程，在调用该函">
-<meta name="keywords" content="OS,kernel">
+<meta name="description" content="统计癌症为了对显然很模糊的“进展”进行量化，凯恩斯从一部始于“二战”时的陈旧发霉的癌症记录开始，这是一个对各州的癌症相关死亡的统计记录，并按涉及的癌症类型进行了细分。凯斯恩在《科学美国人》（Scientific American）中写道：“这些档案，精确展示了癌症自然史的画面，并且构成了讨论任何治疗的必要的起始点。”他希望通过钻研这些记录，画出癌症的演变，不是几天或几个月，而是几十年间的模样。 凯">
+<meta name="keywords" content="book">
 <meta property="og:type" content="article">
-<meta property="og:title" content="写一个操作系统_12 linux 原始的几个进程">
-<meta property="og:url" content="http://oneyearago.me/2019/04/20/make_a_linux_12/index.html">
+<meta property="og:title" content="《癌症传-2》">
+<meta property="og:url" content="http://oneyearago.me/2020/08/04/history-of-cancer-2/index.html">
 <meta property="og:site_name" content="changan&#39;s blog">
-<meta property="og:description" content="原始进程Linux下有3个特殊的进程，idle进程(PID = 0), init进程(PID = 1)和kthreadd(PID = 2)  idle进程  由系统自动创建, 运行在内核态 idle进程其pid=0，其前身是系统创建的第一个进程，也是唯一一个没有通过fork或者kernel_thread产生的进程。完成加载系统后，演变为进程调度 调用schedule()函数切换当前进程，在调用该函">
+<meta property="og:description" content="统计癌症为了对显然很模糊的“进展”进行量化，凯恩斯从一部始于“二战”时的陈旧发霉的癌症记录开始，这是一个对各州的癌症相关死亡的统计记录，并按涉及的癌症类型进行了细分。凯斯恩在《科学美国人》（Scientific American）中写道：“这些档案，精确展示了癌症自然史的画面，并且构成了讨论任何治疗的必要的起始点。”他希望通过钻研这些记录，画出癌症的演变，不是几天或几个月，而是几十年间的模样。 凯">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="http://201905-1251969284.cossh.myqcloud.com/linux_init.png">
-<meta property="og:updated_time" content="2019-05-23T14:53:08.000Z">
+<meta property="og:updated_time" content="2020-08-04T01:58:31.969Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="写一个操作系统_12 linux 原始的几个进程">
-<meta name="twitter:description" content="原始进程Linux下有3个特殊的进程，idle进程(PID = 0), init进程(PID = 1)和kthreadd(PID = 2)  idle进程  由系统自动创建, 运行在内核态 idle进程其pid=0，其前身是系统创建的第一个进程，也是唯一一个没有通过fork或者kernel_thread产生的进程。完成加载系统后，演变为进程调度 调用schedule()函数切换当前进程，在调用该函">
-<meta name="twitter:image" content="http://201905-1251969284.cossh.myqcloud.com/linux_init.png">
+<meta name="twitter:title" content="《癌症传-2》">
+<meta name="twitter:description" content="统计癌症为了对显然很模糊的“进展”进行量化，凯恩斯从一部始于“二战”时的陈旧发霉的癌症记录开始，这是一个对各州的癌症相关死亡的统计记录，并按涉及的癌症类型进行了细分。凯斯恩在《科学美国人》（Scientific American）中写道：“这些档案，精确展示了癌症自然史的画面，并且构成了讨论任何治疗的必要的起始点。”他希望通过钻研这些记录，画出癌症的演变，不是几天或几个月，而是几十年间的模样。 凯">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -63,7 +61,7 @@
   };
 </script>
 
-  <title> 写一个操作系统_12 linux 原始的几个进程 | changan's blog </title>
+  <title> 《癌症传-2》 | changan's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -313,7 +311,7 @@
           
           
             
-              写一个操作系统_12 linux 原始的几个进程
+              《癌症传-2》
             
           
         </h1>
@@ -322,8 +320,8 @@
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2019-04-20T21:08:45+08:00" content="2019-04-20">
-            2019-04-20
+          <time itemprop="dateCreated" datetime="2020-08-04T01:00:39+08:00" content="2020-08-04">
+            2020-08-04
           </time>
         </span>
 
@@ -332,20 +330,8 @@
             &nbsp; | &nbsp; In
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/kernel/" itemprop="url" rel="index">
-                  <span itemprop="name">kernel</span>
-                </a>
-              </span>
-
-              
-              
-                , 
-              
-
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/kernel/OS/" itemprop="url" rel="index">
-                  <span itemprop="name">OS</span>
+                <a href="/categories/book/" itemprop="url" rel="index">
+                  <span itemprop="name">book</span>
                 </a>
               </span>
 
@@ -368,31 +354,26 @@
       
 
       
-        <span itemprop="articleBody"><h3 id="原始进程"><a href="#原始进程" class="headerlink" title="原始进程"></a>原始进程</h3><p>Linux下有3个特殊的进程，idle进程(PID = 0), init进程(PID = 1)和kthreadd(PID = 2)</p>
-<ul>
-<li>idle进程</li>
-</ul>
-<p>由系统自动创建, 运行在内核态</p>
-<p>idle进程其pid=0，其前身是系统创建的第一个进程，也是唯一一个没有通过fork或者kernel_thread产生的进程。完成加载系统后，演变为进程调度</p>
-<p>调用schedule()函数切换当前进程，在调用该函数之前，Linux系统中只有两个进程，即0号进程init_task和1号进程kernel_init，其中kernel_init进程也是刚刚被创建的。调用该函数后，1号进程kernel_init将会运行！</p>
-<ul>
-<li>init进程</li>
-</ul>
-<p>由idle通过kernel_thread创建，在内核空间完成初始化后, 加载init程序, 并最终转向用户空间，演变为init进程<br>由0进程创建，完成系统的初始化. 是系统中所有其它用户进程的祖先进程</p>
-<ul>
-<li>kthreadd进程</li>
-</ul>
-<p>由idle通过kernel_thread创建，并始终运行在内核空间, 负责所有内核线程的调度和管理</p>
-<p>它的任务就是管理和调度其他内核线程kernel_thread, 会循环执行一个kthread的函数，该函数的作用就是运行kthread_create_list全局链表中维护的kthread, 当我们调用kernel_thread创建的内核线程会被加入到此链表中，因此所有的内核线程都是直接或者间接的以kthreadd为父进程</p>
-<h3 id="启动初始化进程"><a href="#启动初始化进程" class="headerlink" title="启动初始化进程"></a>启动初始化进程</h3><p>内核文件加载以后，就开始运行第一个程序 /sbin/init，它的作用是初始化系统环境。</p>
-<p>由于init是第一个运行的程序，它的进程编号（pid）就是1。其他所有进程都从它衍生，都是它的子进程。</p>
-<h3 id="确定运行级别"><a href="#确定运行级别" class="headerlink" title="确定运行级别"></a>确定运行级别</h3><p>许多程序需要开机启动。它们在Windows叫做”服务”（service），在Linux就叫做”守护进程”（daemon）。</p>
-<p>init进程的一大任务，就是去运行这些开机启动的程序。但是，不同的场合需要启动不同的程序，比如用作服务器时，需要启动Apache，用作桌面就不需要。Linux允许为不同的场合，分配不同的开机启动程序，这就叫做”运行级别”（runlevel）。也就是说，启动时根据”运行级别”，确定要运行哪些程序。</p>
-<p>Linux预置七种运行级别（0-6）。一般来说，0是关机，1是单用户模式（也就是维护模式），6是重启。运行级别2-5，各个发行版不太一样，对于Debian来说，都是同样的多用户模式（也就是正常模式）。</p>
-<p>init进程首先读取文件 /etc/inittab，它是运行级别的设置文件。initdefault的值是2，表明系统启动时的运行级别为2。</p>
-<h3 id="加载开机启动程序"><a href="#加载开机启动程序" class="headerlink" title="加载开机启动程序"></a>加载开机启动程序</h3><p>那么，运行级别2有些什么程序呢，系统怎么知道每个级别应该加载哪些程序呢？……回答是每个运行级别在/etc目录下面，都有一个对应的子目录，指定要加载的程序。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/etc/rc0.d</span><br><span class="line">　　/etc/rc1.d</span><br><span class="line">　　/etc/rc2.d</span><br><span class="line">　　/etc/rc3.d</span><br><span class="line">　　/etc/rc4.d</span><br><span class="line">　　/etc/rc5.d</span><br><span class="line">　　/etc/rc6.d</span><br></pre></td></tr></table></figure>
-<p><img src="http://201905-1251969284.cossh.myqcloud.com/linux_init.png" alt="image"></p>
+        <span itemprop="articleBody"><h3 id="统计癌症"><a href="#统计癌症" class="headerlink" title="统计癌症"></a>统计癌症</h3><p>为了对显然很模糊的“进展”进行量化，凯恩斯从一部始于“二战”时的陈旧发霉的癌症记录开始，这是一个对各州的癌症相关死亡的统计记录，并按涉及的癌症类型进行了细分。凯斯恩在《科学美国人》（Scientific American）中写道：“这些档案，精确展示了癌症自然史的画面，并且构成了讨论任何治疗的必要的起始点。”他希望通过钻研这些记录，画出癌症的演变，不是几天或几个月，而是几十年间的模样。</p>
+<p>凯恩斯并没有因为这个数字太低而感到意外，事实上，他认为，自知自重的流行病学家也应该不感到意外。在医学史上，从没有仅仅依靠治疗方案就摧毁重大疾病的先例。比如，如果一个人绘出肺结核死亡数下降的曲线，就会发现，死亡数下降在新抗生素登场前几十年就已经发生。比灵丹妙药更强有力的，是相对不引人注意的市政设施的变化——更好的饮食起居、居住环境、卫生设施，污水处理系统和通风设备的改善，降低了美国和欧洲的肺结核死亡数。因为疫苗的出现，脊髓灰质炎和天花也逐渐变少。凯恩斯写道：“疟疾、霍乱、伤寒、肺结核、坏血病、糙皮病和过去其他灾祸的死亡数，在美国已经逐渐变小，是因为人类已经学会如何预防这些疾病……把大部分工作都投入到治疗上，就等于否定了先前的成就。”</p>
+<h3 id="预防就是治疗"><a href="#预防就是治疗" class="headerlink" title="预防就是治疗"></a>预防就是治疗</h3><p>量变导致质变。2005年，科学论文大量涌现，不约而同地传递出了同一个信息，美国的癌症面貌发生了微妙但根本性的改变。几乎每一种主要形式的癌症，如肺癌、乳腺癌、结肠癌和前列腺癌的死亡率都实现了连续15年的下降。这并非单一的一次性急剧转变，而是稳定和强大的持续性减少：死亡率每年下降约1％。这个数字听起来很温和，但其累积效应是惊人的：1990年到2005年之间，确实由癌症造成的死亡率下降了近15％，这一降幅在疾病的历史上是空前的。癌症帝国的庞大不容置疑，仅2005年就有超过50万美国人死于癌症，但癌症正在由外籍里地逐渐丧失威力。</p>
+<p>是什么促成了这样稳步的下降？没有单一的答案，这是多种因素构成的。促使肺癌下降的主要原因是预防，加上卫生局局长报告的推波助澜；各种政治运动（如联邦贸易委员会实施了警告标签制度）；别开生面的诉讼（班茨哈夫和西伯隆尼案件）；医学宣传以及反营销（反烟广告），共同导致了吸烟者的减少。而结肠癌和宫颈癌死亡率的下降，几乎可以确定来自二级预防（癌症筛检）的功劳。人们能在结肠癌的早期进化阶段（往往是癌前状态），就发现这种潜在的威胁，从而用较小的手术治疗它。运用巴氏涂片技术筛检子宫颈癌，已被普及到全美各地的初级保健中心，并同结肠癌的癌前病变一样，子宫颈癌可以用相对较小的手术切除。</p>
+<h3 id="旧癌症的新药物"><a href="#旧癌症的新药物" class="headerlink" title="旧癌症的新药物"></a>旧癌症的新药物</h3><p>要针对癌细胞施以新疗法，科学家和医生就需要找到癌症独有的新弱点。20世纪80年代癌症生物学的发现对这些弱点提供了大量细致入微的理论观点。三个新原则的出现，代表癌症三个新的“阿喀琉斯之踵”。</p>
+<p>第一，癌细胞的增长，是因为它们的DNA所累积的突变。这些突变激活了内部的原癌基因并灭活了肿瘤抑制基因，从而失控了在正常细胞分裂时的“油门”和“刹车”。瞄准并打击这些超常活跃的基因，同时释放其受控制的正常细胞前体，可能是一种更有选择地攻击癌细胞的新方式。</p>
+<p>第二，原癌基因和肿瘤抑制基因通常位于细胞信号通路的中枢。癌细胞之所以分裂和生长，是因为它们受驱于这些关键通路发出的“高度活跃”或“不活跃”的信号。这些通路在正常细胞中也存在，但是被严格地管控。潜在的肿瘤细胞依赖于这种永久激活的通路——这是癌细胞的第二个潜在弱点。</p>
+<p>第三，突变、选择和生存不断地循环，创造出在生长失控之外又获得了其他额外特征的癌细胞。这些特征包括抗拒死亡的信号、全身性转移以及刺激血管生长。这些“癌症标志”并不是癌细胞的发明创造，而是由与身体正常生理类似的败坏过程衍生而来的。癌细胞对这些过程的征用和依赖是它的第三个潜在弱点。</p>
+<h3 id="我不是药神-–-格列宁"><a href="#我不是药神-–-格列宁" class="headerlink" title="我不是药神 – 格列宁"></a>我不是药神 – 格列宁</h3><h4 id="深入基因的探索"><a href="#深入基因的探索" class="headerlink" title="深入基因的探索"></a>深入基因的探索</h4><p>1985年夏天，一队来自中国的白血病研究人员抵达法国巴黎圣路易斯医院，同该院长期关注急性早幼粒细胞白血病的血液学家劳伦·迭格斯（Laurent Degos）会面。中国代表团的领队王振义也是一名治疗急性早幼粒细胞白血病的医生，任职于繁忙的市区临床中心上海瑞金医院。</p>
+<p>瑞金医院的发现引人注目：反式视黄酸代表了人们长期追求的分子肿瘤学的梦想——以致癌基因为靶向的抗癌药物。但这一发现的过程却是虚实颠倒的。王振义和迭格斯首先通过灵感的激发猜测出了反式视黄酸，后来才发现这种分子可以直接靶定一个致癌基因。</p>
+<h4 id="格列宁"><a href="#格列宁" class="headerlink" title="格列宁"></a>格列宁</h4><p> 1982年，一组在阿姆斯特丹的荷兰研究人员分离出了第9号染色体上的基因，他们称之为abl。 1984年，又是这个团队同美国马里兰州的合作者共同分离出了abl在第22号染色体上的伙伴，一个名为Bcr的基因。白血病细胞中，由这两个基因融合产生的基因被命名为Bcr-abl。1987年，戴维·巴尔的摩的实验室在波士顿将激活的Bcr-abl基因导入到一只小鼠体内的血细胞中。小鼠产生了充塞脾脏的致命白血病，该病正是一个世纪之前贝内特在苏格兰铺路工身上和魏尔啸在德国厨师身上见到的那种白血病，经证明是Bcr-abl驱动了慢性粒细胞白血病细胞的病理扩散。</p>
+<p> 正像对任何致癌基因的研究一样，该领域的研究也从结构转向功能：Bcr-abl做了什么，才造成白血病？巴尔的摩实验室和欧文·维特（Owen Witte）的实验室研究了异常的Bcr-abl癌基因的功能后发现，它和src一样也是一种激酶，这种蛋白质通过向其他蛋白质添加磷酸基团标签，从而在细胞中释放出一连串的信号。在正常细胞中，Bcr和abl基因各自独立存在，两者在细胞分裂过程中都受到紧密的管控。但在慢性粒细胞白血病细胞中，染色体易位制造了一个新的嵌合体Bcr-abl，这是一种亢奋、过旺的激酶，它激活了迫使细胞不断分裂的通路。</p>
+<p>1993年，美国的一个实验室发现了一种和Bcr-abl有高度结合力的分子，被称为“CGP57148”。</p>
+<p>1993年夏天，德鲁克拿到了CGP57148，把它们加入盛在培养皿里的白血病细胞中，期待着细微的反应带来的心满意足。出乎预料，细胞系很快地发生了回应。一夜之间，施过药的慢性粒细胞白血病细胞都已经死亡，细胞培养瓶中漂满了纷乱的白血病细胞残骸。德鲁克大感惊讶。他把白血病细胞植入小鼠，形成真正的活肿瘤，并且用这种药治疗小鼠。和第一次实验效果相同，肿瘤在数天之内就消退了。这种回应还显示出一个特征：正常的小鼠血细胞安然无恙。德鲁克进行了第三个实验。他从几位慢性粒细胞白血病患者的身体内抽取了骨髓样本，然后放入培养皿中并用CGP57148进行处理。结果骨髓中的白血病细胞立即死亡。在培养皿中剩余的唯一细胞是正常的血细胞。他治愈了培养皿中的白血病！ </p>
+<p>这是肿瘤学终极梦想中的“爱子”——对癌细胞中的致癌基因具有精确专一性的药物。CGP57148的药物名称便是格列卫，我不是药神中的那种药。</p>
+<p>格列卫为癌症治疗推开了新的一扇门。以式构合成的分子（一种特别设计用来灭活致癌基因的药物）杀死癌细胞，正符合了埃尔利希所幻想的“特异亲和性”。分子靶向治疗癌症是可能的，只要研究癌细胞的深度生物学，就能找到这种疗法。</p>
+<h3 id="基因工程"><a href="#基因工程" class="headerlink" title="基因工程"></a>基因工程</h3><p>2003年，“人类基因组计划”（Human Genome Project）完成了测量正常的人类基因组的全序列。随之而来的，是并不为大众熟知但更为复杂的项目——对几种人类癌细胞的基因组进行完整测序。被称作“癌症基因组图谱”（Cancer Genome Atlas）的努力一旦完成，就会令“人类基因组计划”在所涉及的范围上相形见绌。测序工作涉及世界各地的几十个研究团队。参加癌症测疗的初步名单包括脑癌、肺癌、胰腺癌和卵巢癌。“人类基因组计划”将提供正常的基因组，供癌症的异常基因组进行并列对比。</p>
+<p>正如“人类基因组计划”的领导人弗朗西斯·柯林斯（Francis Collins）所描述的那样，其结果将汇编成一部“巨大的图谱”——汇集最常见癌症的每一个基因的突变：“当处理了50种最常见的癌症类型之后，仅是测序的DNA的庞大数量就相当于10 000个“人类基因组计划”。因此这个梦想，必须要以野心配上对新兴科学机遇的实际评估，方能打一场聪明的胜仗。唯一可以适当描述这个项目的比喻是地质学，“癌症基因组图谱”不是一个基因一个基因地理解癌症，而是绘制出癌症的整个领域：通过对几种类型的肿瘤进行全基因组测序，将确定每一个单一的突变基因。</p>
+<p>每一个癌症细胞都拥有一些司机突变和乘客突变。在43岁妇女的乳腺癌样本中有127个突变，只有大约10个和其他肿瘤的实际增长与生存有关，而其余的可能是由于癌细胞中基因复制错误而产生的。这两种形式的突变虽然功能不同，却不容易区分。</p>
+<p>癌症基因组中的山脉就是某种形式的癌症中最常见的基因突变，它们还具有另一种性质：可以组织成主要的癌症通路。在一个癌细胞内究竟有多少条通路失调？福格尔斯坦发现，通常情况下在11到15个之间，平均为13个。 </p>
 </span>
       
     </div>
@@ -401,9 +382,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/OS/" rel="tag">#OS</a>
-          
-            <a href="/tags/kernel/" rel="tag">#kernel</a>
+            <a href="/tags/book/" rel="tag">#book</a>
           
         </div>
       
@@ -412,13 +391,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/04/23/make_a_linux_13/" rel="prev">写一个操作系统_13 内核的宏观视角</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/04/11/make_a_linux_11/" rel="next">写一个操作系统_11 Linux是怎么实现线程的</a>
+              <a href="/2020/08/02/The-histor-of-cancer-1/" rel="next">《癌症传-1》</a>
             
           </div>
         </div>
@@ -652,7 +629,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#原始进程"><span class="nav-number">1.</span> <span class="nav-text">原始进程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动初始化进程"><span class="nav-number">2.</span> <span class="nav-text">启动初始化进程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#确定运行级别"><span class="nav-number">3.</span> <span class="nav-text">确定运行级别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#加载开机启动程序"><span class="nav-number">4.</span> <span class="nav-text">加载开机启动程序</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#统计癌症"><span class="nav-number">1.</span> <span class="nav-text">统计癌症</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#预防就是治疗"><span class="nav-number">2.</span> <span class="nav-text">预防就是治疗</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#旧癌症的新药物"><span class="nav-number">3.</span> <span class="nav-text">旧癌症的新药物</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#我不是药神-–-格列宁"><span class="nav-number">4.</span> <span class="nav-text">我不是药神 – 格列宁</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#深入基因的探索"><span class="nav-number">4.1.</span> <span class="nav-text">深入基因的探索</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#格列宁"><span class="nav-number">4.2.</span> <span class="nav-text">格列宁</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基因工程"><span class="nav-number">5.</span> <span class="nav-text">基因工程</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
