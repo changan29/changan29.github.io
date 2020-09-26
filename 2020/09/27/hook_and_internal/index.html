@@ -1,0 +1,914 @@
+
+<!doctype html>
+<html class="theme-next use-motion theme-next-mala">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="思绪来的快去的也快，偶尔在这里停留" />
+
+
+
+  <meta name="keywords" content="hook,elf," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="编译器支持Function AttributeGNU C 使用attribute 可以设置函数属性（Function Attribute ）、变量属性（Variable Attribute ）和类型属性（Type Attribute ）。 attribute前后都有两个下划线，并且后面会紧跟一对原括弧，括弧里面是相应的attribute参数。 attribute语法格式为：attribute (">
+<meta name="keywords" content="hook,elf">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hook的几种方式及其原理">
+<meta property="og:url" content="http://oneyearago.me/2020/09/27/hook_and_internal/index.html">
+<meta property="og:site_name" content="changan&#39;s blog">
+<meta property="og:description" content="编译器支持Function AttributeGNU C 使用attribute 可以设置函数属性（Function Attribute ）、变量属性（Variable Attribute ）和类型属性（Type Attribute ）。 attribute前后都有两个下划线，并且后面会紧跟一对原括弧，括弧里面是相应的attribute参数。 attribute语法格式为：attribute (">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-09-26T16:20:22.582Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hook的几种方式及其原理">
+<meta name="twitter:description" content="编译器支持Function AttributeGNU C 使用attribute 可以设置函数属性（Function Attribute ）、变量属性（Variable Attribute ）和类型属性（Type Attribute ）。 attribute前后都有两个下划线，并且后面会紧跟一对原括弧，括弧里面是相应的attribute参数。 attribute语法格式为：attribute (">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mala',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> hook的几种方式及其原理 | changan's blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">changan's blog</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            About
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    
+      
+
+      
+        <style type="text/css">
+
+    .circle {
+        width: 40px;
+        height: 40px;
+        background: #555 no-repeat;
+        cursor: move;
+    }
+
+    .assist-btn {
+        position: fixed;
+        top: 50％;
+        left: 10px;
+        -moz-border-radius: 50px;
+        -webkit-border-radius: 50px;
+        border-radius: 50px;
+        outline: none;
+        border: none;
+        color: #87daff;
+    }
+
+</style>
+
+<script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+<script type="text/javascript">
+    // 浮动圆点展开与收缩
+    /*
+    $(function () {
+        var assist_box = $('.assist-box');
+        $('#assist_btn').hover(function () {
+            assist_box.stop().show(300);
+        }, function () {
+            assist_box.stop().hide(150);
+        })
+    });
+    */  
+    //浮动圆点拖动
+    $(function () {
+        var box = document.getElementById('assist_btn');
+        box.onmousedown = function (event) {
+            var e = event || window.event,
+                t = e.target || e.srcElement,
+                // 鼠标按下时的坐标x1,y1
+                x1 = e.clientX,
+                y1 = e.clientY,
+                //鼠标按下时的左右偏移量
+                dragLeft = this.offsetLeft,
+                dragTop = this.offsetTop;
+
+            document.onmousemove = function (event) {
+                var e = event || window.event,
+                    t = e.target || e.srcElement,
+                    // 鼠标移动时的动态坐标
+                    x2 = e.clientX,
+                    y2 = e.clientY,
+                    // 鼠标移动时的坐标的变化量
+                    x = x2 - x1,
+                    y = y2 - y1;
+                box.style.left = (dragLeft + x) + 'px';
+                box.style.top = (dragTop + y) + 'px';
+            }
+
+            document.onmouseup = function () {
+                this.onmousemove = null;
+            }
+        }
+    });
+
+/*
+    $whitesmoke   = #f5f5f5
+    $gainsboro    = #eee
+    $gray-lighter = #ddd
+    $grey-light   = #ccc
+    $grey         = #bbb
+    $grey-dark    = #999
+    $grey-dim     = #666
+    $black-light  = #555
+    $black-deep   = #222
+    $red          = #ff2a2a
+    $blue-bright  = #87daff
+    $blue         = #0684bd
+    $blue-deep    = #262a30
+*/
+    // white theme
+    var body = {color: "#555", background: "white"};
+    var a_tag = {color: "#222"};
+    var header = { background: "#f5f5f5"};
+    var logo_line_i = {background: "#222"};
+    // var post_code = {background: "#eee", color: "#222"};
+
+    function switch_theme() {
+        $("body").css(body);
+        $("a:not('.links-of-author-item a, .site-state-item a, .site-state-posts a, .feed-link a, .motion-element a, .post-tags a, .show-commit-cls a, #donate_board a')").css(a_tag);
+        $(".header, .footer").css(header);
+        $(".logo-line-before i, .logo-line-after i").css(logo_line_i);
+        //$(".post code").css(post_code);
+        $("#idhyt-surprise-ball #idhyt-surprise-ball-animation .drag").css(a_tag);
+        $(".post-title-link, .posts-expand .post-meta, .post-comments-count, .disqus-comment-count, .post-category a, .post-nav-next a, .post-nav-item a").css(a_tag);
+        
+        // $("code").css({color: '#c5c8c6', background: '#1d1f21'});
+        $("#assist_btn").hide(1500);
+    }
+
+    $(function () {
+        $("#assist_btn").dblclick(function() {
+            switch_theme();
+        });
+    });
+
+</script>
+
+<div>
+
+    <button class="assist-btn circle" id="assist_btn" title="双击切换">
+        亮
+    </button>
+
+</div>
+
+
+
+
+
+
+
+
+
+      
+
+    
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              hook的几种方式及其原理
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2020-09-27T01:17:39+08:00" content="2020-09-27">
+            2020-09-27
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/hook/" itemprop="url" rel="index">
+                  <span itemprop="name">hook</span>
+                </a>
+              </span>
+
+              
+              
+                , 
+              
+
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/hook/os/" itemprop="url" rel="index">
+                  <span itemprop="name">os</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h3 id="编译器支持"><a href="#编译器支持" class="headerlink" title="编译器支持"></a>编译器支持</h3><h4 id="Function-Attribute"><a href="#Function-Attribute" class="headerlink" title="Function Attribute"></a>Function Attribute</h4><p>GNU C 使用attribute 可以设置函数属性（Function Attribute ）、变量属性（Variable Attribute ）和类型属性（Type Attribute ）。 <strong>attribute</strong>前后都有两个下划线，并且后面会紧跟一对原括弧，括弧里面是相应的<strong>attribute</strong>参数。</p>
+<p><strong>attribute</strong>语法格式为：<strong>attribute</strong> ( ( attribute-list ) )</p>
+<p>比如常用的constructor属性，则会使函数在main（）函数执行之前被自动的执行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">static int * g_count = NULL;</span><br><span class="line">__attribute__((constructor)) void load_file()</span><br><span class="line">&#123;</span><br><span class="line">    printf(&quot;Constructor is called.\n&quot;);</span><br><span class="line">    g_count = (int *)malloc(sizeof(int));</span><br><span class="line">    if (g_count == NULL)</span><br><span class="line">    &#123;</span><br><span class="line">    fprintf(stderr, &quot;Failed to malloc memory.\n&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">__attribute__((destructor)) void unload_file()</span><br><span class="line">&#123;</span><br><span class="line">    printf(&quot;destructor is called.\n&quot;);</span><br><span class="line">    if (g_count)</span><br><span class="line">    free(g_count);</span><br><span class="line">&#125;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>参考:  <a href="https://gcc.gnu.org/onlinedocs/gcc-4.7.0/gcc/Function-Attributes.html" target="_blank" rel="noopener">https://gcc.gnu.org/onlinedocs/gcc-4.7.0/gcc/Function-Attributes.html</a></p>
+<h3 id="库打桩机制"><a href="#库打桩机制" class="headerlink" title="库打桩机制"></a>库打桩机制</h3><p>linux 链接器支持一个很强大的技术，称为库打桩机制，它允许你截获对共享库函数的调用，取而代之执行自己的代码。使用打桩机制，你可以追踪对某个特殊库函数的调用次数、验证和追踪它的输入和输出，甚至可以把它替换成一个完全不同的实现。</p>
+<h4 id="编译时"><a href="#编译时" class="headerlink" title="编译时"></a>编译时</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">/main.c/</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;malloc.h&gt;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    int*p = malloc(32);</span><br><span class="line"></span><br><span class="line">    free(p);</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/*  malloc.h  */</span><br><span class="line">#define malloc(size) my_malloc(size)</span><br><span class="line">#define free(ptr)    my_free(ptr)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">void * my_malloc(size_t size);</span><br><span class="line">void * my_free(void* ptr);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">/*  my_malloc.c  */</span><br><span class="line">#ifdef COMPILE_TIME</span><br><span class="line"></span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;malloc.h&gt;</span><br><span class="line"></span><br><span class="line">void *my_malloc(size_t size)</span><br><span class="line">&#123;</span><br><span class="line">    printf(&quot;enter my_malloc \n&quot;);</span><br><span class="line">    void * ptr = malloc(size);</span><br><span class="line">    printf(&quot;malloc(%d) = %p \n&quot;, (int ) size , ptr);</span><br><span class="line"></span><br><span class="line">    return ptr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">void my_free( void* ptr )</span><br><span class="line">&#123;</span><br><span class="line">    printf(&quot;enter my_free \n&quot;);</span><br><span class="line">    free(ptr);</span><br><span class="line">    printf(&quot;free (%p) \n&quot; , ptr);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc -DCOMPILE_TIME -c my_malloc.c </span><br><span class="line">gcc -I. -o a.out main.c my_malloc.o</span><br></pre></td></tr></table></figure>
+<p>由于有 I. 参数，所以会进行打桩，它告诉C预处理器，在搜索通常的系统目录之前，现在当前的目录查找malloc.h </p>
+<h4 id="链接时"><a href="#链接时" class="headerlink" title="链接时"></a>链接时</h4><p>linux的静态链接器支持使用 –wrap f标志进行连接时打桩，这个标志告诉链接器，把对符号 f 的引用 解析成 <strong>wrap_f 还要把对符号 </strong>real_f的 引用解析成 f 。 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">/*  link.c  */</span><br><span class="line">#ifdef LINK_TIME</span><br><span class="line"></span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line">void * __real_malloc(size_t size);</span><br><span class="line">void * __real_free(void * ptr);</span><br><span class="line"></span><br><span class="line">void * __wrap_malloc(size_t size)</span><br><span class="line">&#123;</span><br><span class="line">    printf(&quot;enter __wrap_malloc\n&quot;);</span><br><span class="line">    void * ptr = __real_malloc(size);</span><br><span class="line">    printf(&quot;malloc(%d) = %p \n&quot;, (int ) size , ptr);</span><br><span class="line">    return ptr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">void __wrap_free(void *ptr)</span><br><span class="line">&#123;</span><br><span class="line">    printf(&quot;enter __wrap_free\n&quot;);</span><br><span class="line">    __real_free(ptr);</span><br><span class="line">    printf(&quot;free (%p) \n&quot; , ptr);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">gcc -DLINK_TIME -c link.c</span><br><span class="line">gcc -c main.c </span><br><span class="line">gcc -Wl,--wrap,malloc -Wl,--wrap,free -o a.out main.o  link.o</span><br></pre></td></tr></table></figure>
+<h4 id="运行时"><a href="#运行时" class="headerlink" title="运行时"></a>运行时</h4><p>编译时打桩需要能够访问程序的源代码，连接时打桩需要能够访问程序的可重定位文件。不过，有一种机制能够在运行时打桩，只需能够访问可执行目标文件。 运行时打桩基于动态链接器的 LD_PRELOAD 环境变量。</p>
+<p>如果 LD_PRELOAD 环境变量 被设置成为 共享库路径名的列表,当执行和加载程序的时候，当需要解析未定义的引用时，动态链接器会先搜索 LD_PRELOAD 库，然后才搜索其他的库。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">/*random.c   */</span><br><span class="line"></span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;time.h&gt;</span><br><span class="line"></span><br><span class="line">int main()&#123;</span><br><span class="line">  srand(time(NULL));</span><br><span class="line">  int i = 10;</span><br><span class="line">  while(i--) printf(&quot;%d\n&quot;,rand()%100);</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/*unrandom.c */</span><br><span class="line">int rand()&#123;</span><br><span class="line">    return 42; //the most random number in the universe</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc -shared -fPIC unrandom.c -o unrandom.so</span><br><span class="line">export LD_PRELOAD=your_path</span><br></pre></td></tr></table></figure>
+<h3 id="动态库加载特性"><a href="#动态库加载特性" class="headerlink" title="动态库加载特性"></a>动态库加载特性</h3><h4 id="PLT-GOT-修改"><a href="#PLT-GOT-修改" class="headerlink" title="PLT/GOT 修改"></a>PLT/GOT 修改</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line">#include &lt;elf.h&gt;</span><br><span class="line">#include &lt;fcntl.h&gt;</span><br><span class="line">#include &lt;sys/mman.h&gt;</span><br><span class="line">#include &lt;sys/types.h&gt;</span><br><span class="line">#include &lt;assert.h&gt;</span><br><span class="line"></span><br><span class="line">#define MAX_BUF_SIZE 1024</span><br><span class="line">void* get_module_base(pid_t pid, const char* module_name)</span><br><span class="line">&#123;</span><br><span class="line">    FILE* fp;</span><br><span class="line">    long addr = 0;</span><br><span class="line">    char* pch;</span><br><span class="line">    char filename[32];</span><br><span class="line">    char line[MAX_BUF_SIZE];</span><br><span class="line">    </span><br><span class="line">    // 格式化字符串得到 &quot;/proc/pid/maps&quot;</span><br><span class="line">    if(pid &lt; 0)&#123;</span><br><span class="line">        snprintf(filename, sizeof(filename), &quot;/proc/self/maps&quot;);</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        snprintf(filename, sizeof(filename), &quot;/proc/%d/maps&quot;, pid);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 打开文件/proc/pid/maps，获取指定pid进程加载的内存模块信息</span><br><span class="line">    fp = fopen(filename, &quot;r&quot;);</span><br><span class="line">    if(fp != NULL)&#123;</span><br><span class="line">        // 每次一行，读取文件 /proc/pid/maps中内容</span><br><span class="line">        while(fgets(line, sizeof(line), fp))</span><br><span class="line">        &#123;</span><br><span class="line">            printf(&quot;/proc/self/maps: %s \n&quot; , line);</span><br><span class="line">            // 查找指定的so模块</span><br><span class="line">            if(strstr(line, module_name))&#123;</span><br><span class="line">                // 分割字符串</span><br><span class="line">                pch = strtok(line, &quot;-&quot;);</span><br><span class="line">                // 字符串转长整形</span><br><span class="line">                addr = strtoul(pch, NULL, 16);</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    fclose(fp);</span><br><span class="line">    printf(&quot;get_module_base %p\n&quot;, (void*) addr);</span><br><span class="line">    return (void*)addr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">struct rel_info &#123;</span><br><span class="line">    uint64_t rel_plt_addr;</span><br><span class="line">    uint32_t rel_plt_size;</span><br><span class="line">    uint64_t str_tab_addr;</span><br><span class="line">    uint64_t sym_tab_addr;</span><br><span class="line">    uint32_t rel_type;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">struct dynamice_segment &#123;</span><br><span class="line">    Elf64_Dyn *addr;</span><br><span class="line">    uint32_t size;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">static int get_dyn_section(void *base_addr, struct dynamice_segment *dyn);</span><br><span class="line">static void get_rel_info(Elf64_Dyn *dynamic_table, uint32_t dynamic_size, struct rel_info *info);</span><br><span class="line">static void update_entry(uint64_t *addr, uint64_t *old_entry, uint64_t target_entry);</span><br><span class="line"></span><br><span class="line">static int hook_entry (void *base_addr, </span><br><span class="line">                const char *func_name_1,</span><br><span class="line">                uint64_t *old_entry,</span><br><span class="line">                uint64_t target_entry)</span><br><span class="line">&#123;</span><br><span class="line">    struct dynamice_segment dyn;</span><br><span class="line">    struct rel_info info;</span><br><span class="line"></span><br><span class="line">    get_dyn_section(base_addr, &amp;dyn);</span><br><span class="line">    printf(&quot;dyn.addr: %p , dyn.size:%d\n&quot; , dyn.addr , dyn.size);</span><br><span class="line">    get_rel_info(dyn.addr, dyn.size, &amp;info);</span><br><span class="line"></span><br><span class="line">    Elf64_Rela *rel_table = (Elf64_Rela *)info.rel_plt_addr;</span><br><span class="line">    printf(&quot;rel_plt_addr: %p\n&quot; , rel_table);</span><br><span class="line">    Elf64_Sym *sym_table = (Elf64_Sym *)info.sym_tab_addr;</span><br><span class="line">    printf(&quot;sym_table_addr: %p\n&quot; , sym_table);</span><br><span class="line">    char *str_table = (char *)info.str_tab_addr;</span><br><span class="line">    printf(&quot;strtab_addr: %p\n&quot; , str_table);</span><br><span class="line">    for(int i = 0;i &lt; info.rel_plt_size / sizeof(Elf64_Rela);i++)</span><br><span class="line">    &#123;</span><br><span class="line">        uint32_t number = ELF64_R_SYM(rel_table[i].r_info);</span><br><span class="line">        uint32_t index = sym_table[number].st_name;</span><br><span class="line">        char* func_name = &amp;str_table[index];</span><br><span class="line">        printf(&quot;func_name: %s ,\n &quot; , func_name);</span><br><span class="line">        if(strcmp(func_name, func_name_1) == 0)</span><br><span class="line">        &#123;</span><br><span class="line">            //uint64_t *addr = (uint64_t *)(rel_table[i].r_offset + (uint64_t) base_addr);</span><br><span class="line">            uint64_t *addr = (uint64_t *)(rel_table[i].r_offset );</span><br><span class="line">            update_entry(addr, old_entry, target_entry);</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">static int get_dyn_section(void *base_addr, struct dynamice_segment *dyn)</span><br><span class="line">&#123;</span><br><span class="line">    if (base_addr == NULL || dyn == NULL) &#123;</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //计算program header table实际地址</span><br><span class="line">    Elf64_Ehdr *header = (Elf64_Ehdr*)(base_addr);</span><br><span class="line">    if (memcmp(header-&gt;e_ident, &quot;\177ELF&quot;, 4) != 0) &#123;</span><br><span class="line">        printf(&quot;not a program header \n&quot;);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Elf64_Phdr* phdr_table = (Elf64_Phdr*)(( Elf64_Off ) base_addr + header-&gt;e_phoff);</span><br><span class="line">    if (phdr_table == 0) &#123;</span><br><span class="line">        printf(&quot; phdr_table == NULl \n&quot;);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">    size_t phdr_count = header-&gt;e_phnum;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    //遍历program header table，ptype等于PT_DYNAMIC即为dynameic，获取到p_offset</span><br><span class="line">    for (int j = 0; j &lt; phdr_count; j++)</span><br><span class="line">    &#123;</span><br><span class="line">        if (phdr_table[j].p_type == PT_DYNAMIC)</span><br><span class="line">        &#123;</span><br><span class="line">            printf(&quot;dynameic phdr_table[j].p_vaddr: %x base_addr: %x size: %d\n&quot;, phdr_table[j].p_vaddr , base_addr, phdr_table[j].p_memsz);</span><br><span class="line">            //dyn-&gt;addr = (Elf64_Dyn *)(phdr_table[j].p_vaddr + (uint64_t)base_addr);</span><br><span class="line">            dyn-&gt;addr = (Elf64_Dyn *)(phdr_table[j].p_vaddr );</span><br><span class="line">            dyn-&gt;size = phdr_table[j].p_memsz;</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">static void get_rel_info(Elf64_Dyn *dynamic_table, uint32_t dynamic_size, struct rel_info *info)</span><br><span class="line">&#123;</span><br><span class="line">    if (info == NULL) &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for(int i = 0;i &lt; dynamic_size / sizeof(Elf64_Dyn);i ++)</span><br><span class="line">    &#123;</span><br><span class="line">        uint64_t val = dynamic_table[i].d_un.d_val;</span><br><span class="line">        printf(&quot;dynamic_table[%d].d_un.d_val: %ld dynamic_table[i].d_tag: %ld \n&quot; , i , val ,dynamic_table[i].d_tag );</span><br><span class="line">        if (dynamic_table[i].d_tag == DT_JMPREL)</span><br><span class="line">        &#123;</span><br><span class="line">            info-&gt;rel_plt_addr = dynamic_table[i].d_un.d_ptr;</span><br><span class="line">        &#125;</span><br><span class="line">        if (dynamic_table[i].d_tag == DT_STRTAB)</span><br><span class="line">        &#123;</span><br><span class="line">            info-&gt;str_tab_addr = dynamic_table[i].d_un.d_ptr;</span><br><span class="line">        &#125;</span><br><span class="line">        if (dynamic_table[i].d_tag == DT_PLTRELSZ)</span><br><span class="line">        &#123;</span><br><span class="line">            info-&gt;rel_plt_size = dynamic_table[i].d_un.d_val;</span><br><span class="line">        &#125;</span><br><span class="line">        if (dynamic_table[i].d_tag == DT_SYMTAB)</span><br><span class="line">        &#123;</span><br><span class="line">            info-&gt;sym_tab_addr = dynamic_table[i].d_un.d_ptr;</span><br><span class="line">        &#125;</span><br><span class="line">        if (dynamic_table[i].d_tag == DT_PLTREL)</span><br><span class="line">        &#123;</span><br><span class="line">            // DT_RELA = 7</span><br><span class="line">            // DT_REL = 17</span><br><span class="line">            info-&gt;rel_type = dynamic_table[i].d_un.d_val;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">static void update_entry(uint64_t *addr, uint64_t *old_entry, uint64_t target_entry)</span><br><span class="line">&#123;</span><br><span class="line">    // 获取当前内存分页的大小</span><br><span class="line">    uint64_t page_size = getpagesize();</span><br><span class="line">    // 获取内存分页的起始地址（需要内存对齐）</span><br><span class="line">    uint64_t mem_page_start = (uint64_t)addr &amp; (~(page_size - 1));</span><br><span class="line">    mprotect((void *)mem_page_start, page_size, PROT_READ | PROT_WRITE | PROT_EXEC);</span><br><span class="line">    if (old_entry != NULL) &#123;</span><br><span class="line">        *old_entry = *addr;</span><br><span class="line">    &#125;</span><br><span class="line">    *addr = target_entry;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">static int get_exe_name(char *buf, int size)</span><br><span class="line">&#123;</span><br><span class="line">    int count; </span><br><span class="line">    count = readlink( &quot;/proc/self/exe&quot;, buf, size); </span><br><span class="line">    if (count &lt; 0 || count &gt;= size) &#123; </span><br><span class="line">        return -1;</span><br><span class="line">    &#125; </span><br><span class="line"> </span><br><span class="line">    buf[count] = &apos;\0&apos;; </span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">typedef int (*FuncPuts)();</span><br><span class="line">static FuncPuts old_rand = NULL;</span><br><span class="line"></span><br><span class="line">int my_rand()</span><br><span class="line">&#123;</span><br><span class="line">    if (old_rand != NULL) &#123;</span><br><span class="line">        printf(&quot;[fucking pass in fake func :) ]\n &quot;);</span><br><span class="line">        //old_rand();</span><br><span class="line">        return 42;</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(void)</span><br><span class="line">&#123;</span><br><span class="line">    char buf[MAX_BUF_SIZE] = &#123;0&#125;; </span><br><span class="line">    int err = get_exe_name(buf, sizeof(buf));</span><br><span class="line">    assert(err == 0);</span><br><span class="line"></span><br><span class="line">    printf(&quot;exe name: %s\n&quot;, buf);</span><br><span class="line">    void* base_addr = get_module_base(getpid(), buf);</span><br><span class="line">    hook_entry(base_addr, &quot;rand&quot;, (uint64_t *)&amp;old_rand, (uint64_t)my_rand );</span><br><span class="line">    printf(&quot;after hook \n&quot;);</span><br><span class="line">    printf(&quot;main call rand: %d\n&quot; , rand() );</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="内核调试接口"><a href="#内核调试接口" class="headerlink" title="内核调试接口"></a>内核调试接口</h3><ul>
+<li>ptrace  接口</li>
+</ul>
+<h3 id="跳转代码修改"><a href="#跳转代码修改" class="headerlink" title="跳转代码修改"></a>跳转代码修改</h3><ul>
+<li>inline hook </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">void hooker::HookerX64::doHook(void *func,void *newAddr,void **origFunc) const &#123;</span><br><span class="line"></span><br><span class="line">    char *f = (char *)func;</span><br><span class="line">	if (origFunc) &#123;</span><br><span class="line">		// find the return instruction retq: c3</span><br><span class="line">		int index = 0;</span><br><span class="line">		while (true) &#123;</span><br><span class="line">			if (static_cast&lt;uint8_t&gt;(f[index++]) == 0xc3 || index &gt;= 1024) &#123;</span><br><span class="line">				break;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		void *old = malloc(index);</span><br><span class="line">		if (old != nullptr) &#123;</span><br><span class="line">			memcpy(old, func, index);</span><br><span class="line">			changeCodeAttrs(old, CODE_READ_ONLY);</span><br><span class="line">			*origFunc = old;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">    /*</span><br><span class="line">	x64位下使用的跳转是</span><br><span class="line"></span><br><span class="line">	jmp 或者 call模式。</span><br><span class="line"></span><br><span class="line">	jmp共使用14个字节，0xFF2500000000为6个字节，目标地址为00000000`00000000为8字节。</span><br><span class="line"></span><br><span class="line">	call模式</span><br><span class="line"></span><br><span class="line">	0xff1500000002为6个字节，目标地址为00000000`00000000为8字节。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	*/</span><br><span class="line">    *(uint16_t *)&amp;f[0] = 0x25ff;</span><br><span class="line">    *(int *)&amp;f[2] = 0x00000000;</span><br><span class="line">    *(long *)&amp;f[6] = (long)newAddr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><ul>
+<li>基于虚拟机提供能力、Java语言特性、消息hook(特别操作系统支持)等机制，Windows及Android上常用的hook机制。</li>
+<li>Android的 xposed 、 jni hook等</li>
+</ul>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hook/" rel="tag">#hook</a>
+          
+            <a href="/tags/elf/" rel="tag">#elf</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/08/04/history-of-cancer-2/" rel="next">《癌症传-2》</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div>
+      
+        <style type="text/css">
+
+    .donate_bar {
+        text-align: center;
+        margin-top : 5%;
+    }
+
+    .donate_bar.hidden {
+        display:none;
+    }
+/*
+    .donate_bar a.btn_donate {
+        display: inline-block;
+        width: 82px;
+        height: 82px;
+        margin-left:auto;
+        margin-right:auto;
+
+        background: url("http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif") no-repeat;
+        _background: url("http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif") no-repeat; 
+
+        -webkit-transition: background 0s;
+        -moz-transition: background 0s;
+        -o-transition: background 0s;
+        -ms-transition: background 0s;
+        transition: background 0s;
+    }
+*/
+    .donate_bar a.btn_donate:hover { 
+        // background-position: 0px -82px;
+        color: #87daff
+    }
+
+    .donate_bar .donate_txt {
+        display: block;
+        color: #9d9d9d;
+        font: 14px/2 "Microsoft Yahei";
+    }
+
+    .bold { 
+        font-weight: bold; 
+    }
+
+    .post-donate a {
+        border-bottom: 0px;
+    }
+
+    #donate_guide table {
+        border: none;
+    }
+
+    #donate_guide td {
+        border-bottom: none;
+        border-right: none;
+        background: #333333;
+        valign: top;
+    }
+
+</style>
+
+
+
+    
+
+    <div class ="post-donate">
+        <div id="donate_board" class="donate_bar center">
+              <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏">赏</a>
+              <span id="donate_txt" class="donate_txt">
+                   
+                        请我喝杯咖啡
+                   
+              </span>
+            <br>
+        </div>  
+  
+        <div id="donate_guide" class="donate_bar center hidden">
+            <!--
+              
+
+            
+                <a href="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="微信打赏" class="fancybox" rel="article0"
+                    style="margin-right:30%">
+                    <img src="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="" height="164px" width="164px">
+                </a>
+            
+            -->
+            <table>
+                <tr>
+                    <td>
+                         
+                    </td>
+                    <td>
+                        
+                            <a href="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="微信打赏" class="fancybox" rel="article0"
+                                style="margin-right:30%">
+                                <img src="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="" height="164px" width="164px">
+                            </a>
+                        
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+        <script type="text/javascript">
+            document.getElementById('btn_donate').onclick = function() {
+                $('#donate_board').addClass('hidden');
+                // $('#donate_guide').removeClass('hidden');
+                $('#donate_guide').show(2000);
+            }
+
+        </script>
+    </div>
+
+    
+
+
+      
+    </div>
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+          <div class="comments" id="comments">
+            
+            -->
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table Of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="changan" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">changan</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">思绪来的快去的也快，偶尔在这里停留</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">67</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">52</span>
+              <span class="site-state-item-name">categories</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">49</span>
+              <span class="site-state-item-name">tags</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://github.com/changan29" target="_blank">GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/zhaochanganplus" target="_blank">ZhiHu</a>
+              </span>
+            
+          
+        </div>
+
+        <div class="links-of-friendly motion-element">
+          
+        </div>
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#编译器支持"><span class="nav-number">1.</span> <span class="nav-text">编译器支持</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Function-Attribute"><span class="nav-number">1.1.</span> <span class="nav-text">Function Attribute</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#库打桩机制"><span class="nav-number">2.</span> <span class="nav-text">库打桩机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#编译时"><span class="nav-number">2.1.</span> <span class="nav-text">编译时</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#链接时"><span class="nav-number">2.2.</span> <span class="nav-text">链接时</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#运行时"><span class="nav-number">2.3.</span> <span class="nav-text">运行时</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态库加载特性"><span class="nav-number">3.</span> <span class="nav-text">动态库加载特性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PLT-GOT-修改"><span class="nav-number">3.1.</span> <span class="nav-text">PLT/GOT 修改</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内核调试接口"><span class="nav-number">4.</span> <span class="nav-text">内核调试接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#跳转代码修改"><span class="nav-number">5.</span> <span class="nav-text">跳转代码修改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他"><span class="nav-number">6.</span> <span class="nav-text">其他</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2018 - 
+  <span itemprop="copyrightYear">2020
+  </span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changan
+  </span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme by <a class="theme-link" href="http://blog.idhyt.com">idhyt</a>.<a class="theme-link" href="https://github.com/idhyt/hexo-theme-next/tree/magiclamp">Mala</a>
+</div>
+
+<!-- busuanzi -->
+
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

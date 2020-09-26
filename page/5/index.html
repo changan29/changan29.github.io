@@ -3391,6 +3391,104 @@
           
           
             
+              <a class="post-title-link" href="/2019/03/28/make_a_linux_7/" itemprop="url">
+                写一个操作系统_07 设计自己的页表
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2019-03-28T21:08:45+08:00" content="2019-03-28">
+            2019-03-28
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/kernel/" itemprop="url" rel="index">
+                  <span itemprop="name">kernel</span>
+                </a>
+              </span>
+
+              
+              
+                , 
+              
+
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/kernel/OS/" itemprop="url" rel="index">
+                  <span itemprop="name">OS</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            设计自己的页表只针对32位的操作系统，设计一个二级页表，目的是构建一个简易的能跑起来的操作系统。对于4G的地址空间，每个页大小是4K,模仿Linux早期的做法，32位地址的前10位为页目录项，中间10位为页表，后面10位为偏移量。
+12|--目录项----|--页表-----|---地址偏移-||-
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2019/03/28/make_a_linux_7/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2019/03/26/make_a_linux_6/" itemprop="url">
                 写一个操作系统_06 内存寻址
               </a>
@@ -4240,93 +4338,6 @@ Enjoy :)
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2019/02/06/1G╡╜5G/" itemprop="url">
-                无线通信：从1G到5G
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2019-02-06T12:08:45+08:00" content="2019-02-06">
-            2019-02-06
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/5G/" itemprop="url" rel="index">
-                  <span itemprop="name">5G</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            无线通信：从1G到5G原创： 老和山下的小学僧 
-最近太邪乎，先引用一个马克思政治经济学的观点来避避邪：
-生产力决定生产关系。把这个理论套用到全球来看，人类生产力发展到今天，新的生产关系正在逐渐浮现，这就是全球化。只要生产力发展是必然的，全球化趋势就是必然的。反全球化就是一群卫道士的自我安慰，就像项
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2019/02/06/1G╡╜5G/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -4363,21 +4374,21 @@ Enjoy :)
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">66</span>
+              <span class="site-state-item-count">67</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">50</span>
+              <span class="site-state-item-count">52</span>
               <span class="site-state-item-name">categories</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">47</span>
+              <span class="site-state-item-count">49</span>
               <span class="site-state-item-name">tags</span>
               </a>
           </div>
