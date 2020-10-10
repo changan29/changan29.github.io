@@ -3391,302 +3391,6 @@
           
           
             
-              <a class="post-title-link" href="/2019/03/28/make_a_linux_7/" itemprop="url">
-                写一个操作系统_07 设计自己的页表
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2019-03-28T21:08:45+08:00" content="2019-03-28">
-            2019-03-28
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/kernel/" itemprop="url" rel="index">
-                  <span itemprop="name">kernel</span>
-                </a>
-              </span>
-
-              
-              
-                , 
-              
-
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/kernel/OS/" itemprop="url" rel="index">
-                  <span itemprop="name">OS</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            设计自己的页表只针对32位的操作系统，设计一个二级页表，目的是构建一个简易的能跑起来的操作系统。对于4G的地址空间，每个页大小是4K,模仿Linux早期的做法，32位地址的前10位为页目录项，中间10位为页表，后面10位为偏移量。
-12|--目录项----|--页表-----|---地址偏移-||-
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2019/03/28/make_a_linux_7/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2019/03/26/make_a_linux_6/" itemprop="url">
-                写一个操作系统_06 内存寻址
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2019-03-26T21:08:45+08:00" content="2019-03-26">
-            2019-03-26
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/kernel/" itemprop="url" rel="index">
-                  <span itemprop="name">kernel</span>
-                </a>
-              </span>
-
-              
-              
-                , 
-              
-
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/kernel/OS/" itemprop="url" rel="index">
-                  <span itemprop="name">OS</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            保护模式为什么要有保护模式&nbsp;&nbsp;实模式是有很大弊端的，首先，直接操作物理内存，这样的话每次只能运行一个程序，并且不安全；另外，内存最大使用到1M，限制太大。
-&nbsp;&nbsp;保护模式下，程序不能直接访问物理地址，程序的虚拟地址需要被转换为物理地址后再去访问，地址转换是由处理
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2019/03/26/make_a_linux_6/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2019/03/23/make_a_linux_5/" itemprop="url">
-                写一个操作系统_05 调试MBR
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2019-03-23T21:08:45+08:00" content="2019-03-23">
-            2019-03-23
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/kernel/" itemprop="url" rel="index">
-                  <span itemprop="name">kernel</span>
-                </a>
-              </span>
-
-              
-              
-                , 
-              
-
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/kernel/OS/" itemprop="url" rel="index">
-                  <span itemprop="name">OS</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            熟悉MBR引导MBR的512字节里面也是代码，他被BIOS加载执行，自身执行的时候加载操作系统的loader，我们在没有操作系统loader的情况下先写一段测试程序，体验一下。
-实现的功能如下:
-BIOS 加载 MBR中的代码，执行，用BIOS 中断 INT 0x10显示字符串
-MBR的代码1234
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2019/03/23/make_a_linux_5/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
               <a class="post-title-link" href="/2019/03/20/make_a_linux_4/" itemprop="url">
                 写一个操作系统_04 内核调试环境搭建
               </a>
@@ -4078,8 +3782,8 @@ Enjoy :)
           
           
             
-              <a class="post-title-link" href="/2019/03/09/make_a_linux/" itemprop="url">
-                写一个操作系统_01 一个和操作系统有关的故事
+              <a class="post-title-link" href="/2019/01/24/about_marriage/" itemprop="url">
+                男人与婚姻
               </a>
             
           
@@ -4089,8 +3793,8 @@ Enjoy :)
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2019-03-09T16:08:45+08:00" content="2019-03-09">
-            2019-03-09
+          <time itemprop="dateCreated" datetime="2019-01-24T22:08:45+08:00" content="2019-01-24">
+            2019-01-24
           </time>
         </span>
 
@@ -4099,20 +3803,8 @@ Enjoy :)
             &nbsp; | &nbsp; In
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/kernel/" itemprop="url" rel="index">
-                  <span itemprop="name">kernel</span>
-                </a>
-              </span>
-
-              
-              
-                , 
-              
-
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/kernel/OS/" itemprop="url" rel="index">
-                  <span itemprop="name">OS</span>
+                <a href="/categories/life/" itemprop="url" rel="index">
+                  <span itemprop="name">life</span>
                 </a>
               </span>
 
@@ -4138,13 +3830,12 @@ Enjoy :)
         
           <span itemprop="articleBody">
             
-            写一个操作系统一直对系统底层有兴趣，开始自己尝试编写与调试一个小linux内核，为了节省时间，主要参考MIT xv6, 清华的 ucore课程以及下面的这本书，其他没什么好介绍的，《操作系统真象还原》作者的经历真的很励志，鼓励我坚持下去。
-作者简介
-图右为郑刚，毕业于北京大学，前百度运维高级工程师，
+            
+有朋友问到区分激情和爱情，其实很好区分的，当你不见她时茶饭不思，是激情。老想见到她，想和她一起玩，一起上床，一起做白日梦，是激情。每天短信电话多的没完，是激情。为了生日节日费尽心思想浪漫的点子，是激情。当你和她在一起时脑子里不自觉的规划实实在在的将来，是爱情。当你们争吵到很凶，火很大时，也不忍心说
             ...
           </span>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2019/03/09/make_a_linux/#more" rel="contents">
+            <a class="btn" href="/2019/01/24/about_marriage/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -4177,8 +3868,8 @@ Enjoy :)
           
           
             
-              <a class="post-title-link" href="/2019/02/11/jidang/" itemprop="url">
-                《激荡三十年》
+              <a class="post-title-link" href="/2019/01/21/20thcentury/" itemprop="url">
+                《20世纪简史》
               </a>
             
           
@@ -4188,8 +3879,8 @@ Enjoy :)
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2019-02-11T21:35:45+08:00" content="2019-02-11">
-            2019-02-11
+          <time itemprop="dateCreated" datetime="2019-01-21T20:31:45+08:00" content="2019-01-21">
+            2019-01-21
           </time>
         </span>
 
@@ -4225,13 +3916,11 @@ Enjoy :)
         
           <span itemprop="articleBody">
             
-            英雄说来新鲜，我苦于没有英雄可写，尽管当今之世，英雄是迭出不穷，年年有，月月有，报刊上连篇累牍，而后才又发现，他算不得真英雄。 
-拜伦：《唐璜》，第一章第一节   
-父辈的年轻时代在1983年之前，政府明令不允许私人买汽车跑运输，一个今天已经消失的经济犯罪名词——“投机倒把”在当时是一个很严重的罪名
+            工业革命的红利襁褓中的20世纪，为欧洲人带来无数希望，不论他们身在家乡还是遥远的殖民地。欧洲人民前所未有地迫切希望，他们的孩子能接受良好的教育，而十岁童工在农场和作坊里终日劳作的情况也不再寻常。生活质量得到改善，饥荒越来越少，人们的寿命越来越长。尽管在举国欢庆的场合，仍可见大型陆海军游行过街，但是欧
             ...
           </span>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2019/02/11/jidang/#more" rel="contents">
+            <a class="btn" href="/2019/01/21/20thcentury/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -4264,8 +3953,8 @@ Enjoy :)
           
           
             
-              <a class="post-title-link" href="/2019/02/09/happy_rode/" itemprop="url">
-                《长乐路》
+              <a class="post-title-link" href="/2019/01/20/Napoli/" itemprop="url">
+                那不勒斯四部曲--意大利
               </a>
             
           
@@ -4275,8 +3964,8 @@ Enjoy :)
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2019-02-09T14:08:45+08:00" content="2019-02-09">
-            2019-02-09
+          <time itemprop="dateCreated" datetime="2019-01-20T16:08:45+08:00" content="2019-01-20">
+            2019-01-20
           </time>
         </span>
 
@@ -4285,8 +3974,8 @@ Enjoy :)
             &nbsp; | &nbsp; In
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/book/" itemprop="url" rel="index">
-                  <span itemprop="name">book</span>
+                <a href="/categories/little/" itemprop="url" rel="index">
+                  <span itemprop="name">little</span>
                 </a>
               </span>
 
@@ -4312,11 +4001,271 @@ Enjoy :)
         
           <span itemprop="articleBody">
             
-            长乐路长乐路位于上海黄浦区，取名长长久久的快乐之路，作者史明智Rob Schmitz，美MarketPlace驻上海记者，负责中国经济报道。纪实文学，记录了长乐路上的众生相，以及不同世代对于生在中国的人生经历和所思所想，并且以作者自己的考证亲历与理解逻辑，拼接出一幅涉及中国政治经济社会现象的浮世绘。
+            写在前面那不勒斯四部曲这部小说看完我感觉并没有网友推荐的那么惊艳那么有内涵，乏善可陈，不是很懂网友的好评如潮。寻常的成长题材，传统的写作手法，单一化女性视角，一直游离于这个故事之外，无法共鸣，可能是我从没去过意大利？？？
+书中我收获比较大的地方是莉拉和莱农在同一时期怀孕的时候，有女性在怀孕时期的心里
             ...
           </span>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2019/02/09/happy_rode/#more" rel="contents">
+            <a class="btn" href="/2019/01/20/Napoli/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2019/01/04/vmstat/" itemprop="url">
+                vmstat
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2019-01-04T12:31:45+08:00" content="2019-01-04">
+            2019-01-04
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/vmstat/" itemprop="url" rel="index">
+                  <span itemprop="name">vmstat</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            最近遇到了机器特别卡，请求发到服务器收不到响应的情况，总结了下 vmstat 定位系统性能问题的用法
+快速上手1234567[root@VM_80_251_centos ~]# vmstat 1procs -----------memory---------- ---swap-- -----io--
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2019/01/04/vmstat/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2019/01/01/20190101/" itemprop="url">
+                2018年终总结
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2019-01-01T22:08:45+08:00" content="2019-01-01">
+            2019-01-01
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/little/" itemprop="url" rel="index">
+                  <span itemprop="name">little</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            2018年终总结岁月不居，时节如流，当年孔融写这段话已经距今2000年了，从我出生到现在已经25年，对一个文明社会的成年雄性来说，这也许是最好的一段时光吧，即使浪费，也要浪费的有意义一些。。
+列一下自己的反思和计划，每隔一段时间过来看。
+工作大学毕业一年半，很多东西比以前清晰了，至少知道自己想学什么
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2019/01/01/20190101/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2018/12/26/mq/" itemprop="url">
+                消息队列的使用场景是怎样的？
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2018-12-26T22:11:45+08:00" content="2018-12-26">
+            2018-12-26
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/MQ/" itemprop="url" rel="index">
+                  <span itemprop="name">MQ</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            作者：ScienJus链接：https://www.zhihu.com/question/34243607/answer/58314162来源：知乎
+个人认为消息队列的主要特点是异步处理，主要目的是减少请求响应时间和解耦。所以主要的使用场景就是将比较耗时而且不需要即时（同步）返回结果的操作作为消息放
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2018/12/26/mq/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -4342,7 +4291,7 @@ Enjoy :)
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/">&laquo;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/6/">&raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/4/">&laquo;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/">&raquo;</a>
   </nav>
 
  </div>
@@ -4374,21 +4323,21 @@ Enjoy :)
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">67</span>
+              <span class="site-state-item-count">57</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">52</span>
+              <span class="site-state-item-count">44</span>
               <span class="site-state-item-name">categories</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">49</span>
+              <span class="site-state-item-count">43</span>
               <span class="site-state-item-name">tags</span>
               </a>
           </div>
