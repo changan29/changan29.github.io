@@ -1,0 +1,936 @@
+
+<!doctype html>
+<html class="theme-next use-motion theme-next-mala">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="思绪来的快去的也快，偶尔在这里停留" />
+
+
+
+  <meta name="keywords" content="libevent,asio," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="为什么要用 C++ 编写服务端程序？如果说答案是性能，那么肯定有人会满不在乎。觉得性能不够的话， 只要加机器就可以了。 然而更少的机器，意味着更低的能耗，更少的硬件投入，更少的人力资源投入去维护机器。总而言之，更低的成本。 肯定会有人说，C++的开发速度太慢了。然而这并不是绝对的。C++也可以做到非常快速的开发。有句俗语  “脚本一时爽，重构火葬场”  说的正是脚本语言开发的项目进入维护阶段后无穷">
+<meta name="keywords" content="libevent,asio">
+<meta property="og:type" content="article">
+<meta property="og:title" content="那些年我们追过的网络库">
+<meta property="og:url" content="http://oneyearago.me/2020/10/14/c++-network-lib/index.html">
+<meta property="og:site_name" content="changan&#39;s blog">
+<meta property="og:description" content="为什么要用 C++ 编写服务端程序？如果说答案是性能，那么肯定有人会满不在乎。觉得性能不够的话， 只要加机器就可以了。 然而更少的机器，意味着更低的能耗，更少的硬件投入，更少的人力资源投入去维护机器。总而言之，更低的成本。 肯定会有人说，C++的开发速度太慢了。然而这并不是绝对的。C++也可以做到非常快速的开发。有句俗语  “脚本一时爽，重构火葬场”  说的正是脚本语言开发的项目进入维护阶段后无穷">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-10-15T03:01:39.054Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="那些年我们追过的网络库">
+<meta name="twitter:description" content="为什么要用 C++ 编写服务端程序？如果说答案是性能，那么肯定有人会满不在乎。觉得性能不够的话， 只要加机器就可以了。 然而更少的机器，意味着更低的能耗，更少的硬件投入，更少的人力资源投入去维护机器。总而言之，更低的成本。 肯定会有人说，C++的开发速度太慢了。然而这并不是绝对的。C++也可以做到非常快速的开发。有句俗语  “脚本一时爽，重构火葬场”  说的正是脚本语言开发的项目进入维护阶段后无穷">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mala',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 那些年我们追过的网络库 | changan's blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">changan's blog</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            About
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    
+      
+
+      
+        <style type="text/css">
+
+    .circle {
+        width: 40px;
+        height: 40px;
+        background: #555 no-repeat;
+        cursor: move;
+    }
+
+    .assist-btn {
+        position: fixed;
+        top: 50％;
+        left: 10px;
+        -moz-border-radius: 50px;
+        -webkit-border-radius: 50px;
+        border-radius: 50px;
+        outline: none;
+        border: none;
+        color: #87daff;
+    }
+
+</style>
+
+<script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+<script type="text/javascript">
+    // 浮动圆点展开与收缩
+    /*
+    $(function () {
+        var assist_box = $('.assist-box');
+        $('#assist_btn').hover(function () {
+            assist_box.stop().show(300);
+        }, function () {
+            assist_box.stop().hide(150);
+        })
+    });
+    */  
+    //浮动圆点拖动
+    $(function () {
+        var box = document.getElementById('assist_btn');
+        box.onmousedown = function (event) {
+            var e = event || window.event,
+                t = e.target || e.srcElement,
+                // 鼠标按下时的坐标x1,y1
+                x1 = e.clientX,
+                y1 = e.clientY,
+                //鼠标按下时的左右偏移量
+                dragLeft = this.offsetLeft,
+                dragTop = this.offsetTop;
+
+            document.onmousemove = function (event) {
+                var e = event || window.event,
+                    t = e.target || e.srcElement,
+                    // 鼠标移动时的动态坐标
+                    x2 = e.clientX,
+                    y2 = e.clientY,
+                    // 鼠标移动时的坐标的变化量
+                    x = x2 - x1,
+                    y = y2 - y1;
+                box.style.left = (dragLeft + x) + 'px';
+                box.style.top = (dragTop + y) + 'px';
+            }
+
+            document.onmouseup = function () {
+                this.onmousemove = null;
+            }
+        }
+    });
+
+/*
+    $whitesmoke   = #f5f5f5
+    $gainsboro    = #eee
+    $gray-lighter = #ddd
+    $grey-light   = #ccc
+    $grey         = #bbb
+    $grey-dark    = #999
+    $grey-dim     = #666
+    $black-light  = #555
+    $black-deep   = #222
+    $red          = #ff2a2a
+    $blue-bright  = #87daff
+    $blue         = #0684bd
+    $blue-deep    = #262a30
+*/
+    // white theme
+    var body = {color: "#555", background: "white"};
+    var a_tag = {color: "#222"};
+    var header = { background: "#f5f5f5"};
+    var logo_line_i = {background: "#222"};
+    // var post_code = {background: "#eee", color: "#222"};
+
+    function switch_theme() {
+        $("body").css(body);
+        $("a:not('.links-of-author-item a, .site-state-item a, .site-state-posts a, .feed-link a, .motion-element a, .post-tags a, .show-commit-cls a, #donate_board a')").css(a_tag);
+        $(".header, .footer").css(header);
+        $(".logo-line-before i, .logo-line-after i").css(logo_line_i);
+        //$(".post code").css(post_code);
+        $("#idhyt-surprise-ball #idhyt-surprise-ball-animation .drag").css(a_tag);
+        $(".post-title-link, .posts-expand .post-meta, .post-comments-count, .disqus-comment-count, .post-category a, .post-nav-next a, .post-nav-item a").css(a_tag);
+        
+        // $("code").css({color: '#c5c8c6', background: '#1d1f21'});
+        $("#assist_btn").hide(1500);
+    }
+
+    $(function () {
+        $("#assist_btn").dblclick(function() {
+            switch_theme();
+        });
+    });
+
+</script>
+
+<div>
+
+    <button class="assist-btn circle" id="assist_btn" title="双击切换">
+        亮
+    </button>
+
+</div>
+
+
+
+
+
+
+
+
+
+      
+
+    
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              那些年我们追过的网络库
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2020-10-14T20:40:39+08:00" content="2020-10-14">
+            2020-10-14
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/libevent/" itemprop="url" rel="index">
+                  <span itemprop="name">libevent</span>
+                </a>
+              </span>
+
+              
+              
+                , 
+              
+
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/libevent/asio/" itemprop="url" rel="index">
+                  <span itemprop="name">asio</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h3 id="为什么要用-C-编写服务端程序？"><a href="#为什么要用-C-编写服务端程序？" class="headerlink" title="为什么要用 C++ 编写服务端程序？"></a>为什么要用 C++ 编写服务端程序？</h3><p>如果说答案是性能，那么肯定有人会满不在乎。觉得性能不够的话， 只要加机器就可以了。 然而更少的机器，意味着更低的能耗，更少的硬件投入，更少的人力资源投入去维护机器。总而言之，更低的成本。</p>
+<p>肯定会有人说，C++的开发速度太慢了。然而这并不是绝对的。C++也可以做到非常快速的开发。有句俗语 <em> “脚本一时爽，重构火葬场” </em> 说的正是脚本语言开发的项目进入维护阶段后无穷的灾难。而 C++ 经过了几十年的发展, 拥有庞大的工具链. 不管是动态分析还是静态分析都有大量的工具, 能极大的帮助程序员减少错误. c++得益于精良的设计，严格的检查，越是大型的工程，越是能降低开发成本。</p>
+<p>但这并不意味着C++就不适合小型项目了。小型的项目，也可以快速开发。因为 C++11 开始，已经 感觉像是全新的语言了，可以完全以脚本的形式去使用，获得接近甚至超越脚本语言的开发速度，同时得益于编译优化，获得不俗的运行时性能。 C++正是鱼和熊掌得兼的语言。</p>
+<h3 id="为什么要用asio这个库？"><a href="#为什么要用asio这个库？" class="headerlink" title="为什么要用asio这个库？"></a>为什么要用asio这个库？</h3><p>事实上如果使用C++开发服务端程序，你有多得数不清的选择。什么 ACE 啦，libuv 啦，libevent 啦，libev 啦，甚至可以直接使用 epoll/iocp 这样的系统API。 为什么要用 asio 呢？</p>
+<h3 id="那些年我们用过的网络库"><a href="#那些年我们用过的网络库" class="headerlink" title="那些年我们用过的网络库"></a>那些年我们用过的网络库</h3><p>在计算机史前文明时代, 曾经有个世界难题, 叫 “c10k problem”. 这个是继 y2k problem 后的又一个重大攻关项目. 全世界的文艺青年都想拿下解决这个问题的荣誉, 正可谓八仙过海, 各显神通.</p>
+<p>那一年, NPTL 还没有研究出来. 还不能创建成千上万个线程<br>那一年, windows 还在蓝屏中挣扎, 无暇顾及网络.</p>
+<p>然而, 曙光还是有的. 异步的出现带给了人以希望. 古老的UNIX早就想到了, 提供了 select() 系统调用供人驱使. 然而问题还是有的, select 只能支持 1024 个文件描述符, windows 上的 select 更是劣质到只能使用64个. 就算通过修改定义强迫接受一万个文件描述符, 也没有解决实际的问题. select 实在是太慢了.</p>
+<p>在这种背景下, IBM 老大哥带领着MS老弟先搞了 IOCP . 然而开源的人有开源的做法, 在 NIH 综合症的影响下, BSD 的人敢为天下所不齿, 发明了 Kqueue. 同样在 NIH 综合症影响下, Linux 的一群 M* 的猴子捣鼓出了 epoll.</p>
+<p>分裂, 让人头疼.</p>
+<p>然而, 他们都声称自己的新接口对 select 有质的提升, 是破解 c10k 问题的不二法宝. 你用也得用, 不用也得用. 为了让自己编写的网络程序能跨平台, 程序员开始了对3大各自为阵的法宝的膜拜学习.<br>除了需要应对多套互不兼容的 API , 异步本身也需要更高级的抽象, 把程序员从编写异步代码的地狱模式里拯救出来. 于是程序员们急需一个上天入地无所不能的法宝的法宝, 把这3家法宝给统御起来.</p>
+<p>率先站出来悳瑟的是 ACE.</p>
+<h3 id="悳瑟的-ACE"><a href="#悳瑟的-ACE" class="headerlink" title="悳瑟的 ACE"></a>悳瑟的 ACE</h3><p>恰乱世刚过, 天下待定, C++ 委员会的老人们却韬光养晦, 不问世事. 所谓乱世出英雄, 英雄出少年, 欧文大学出了名秀才. 凭借其洋洋洒洒的一片雄文 《Pattern-Oriented Software Architecture》 中举去了首府学城, 并为ACE奠定了无可撼动的地位.</p>
+<p>ACE 的名字, 也许灵感来自 Adaptive Clubbed Rod, 这也是当年一位英雄少年的宝贝. 既是宝贝, 必需如意. 即是后来的葫芦娃都怕了 “如意宝贝”.</p>
+<p>ACE 如意在什么地方呢？如意其一, 支持 IOCP/kqueu/epoll/select/you_name_it 各种接口, 号曰没有不能跨的平台. 如意其二, 支持多种模型。这些模型都在《Pattern-Oriented Software Architecture》有过详细叙述. ACE 本身就是这篇论文的实践，因为他知道, 纸上得来终觉浅 绝知此事要躬行。 如意其三, 接口和模式排列组合下, 多少种, 竟可不修改代码而适应。</p>
+<p>然而 ACE 毕竟嫩了点, 没过几年就失势了. 现在除了一些老程序员还在用, 新生代的程序员已经不再使用 ACE 了. 为什么呢? 陈硕在他的博客里说, ACE 过于复杂，甚至比它试图封装的对象更复杂, 程序员是指望用你的如意宝贝去驾驭另外那三家宝贝的, 结果你比他们还难。ACE 犯了早期 C++ 库都会犯的一个错误，过度设计， 过度java化。所谓 java 化， 就是以对象代替接口， 以虚函数代替回调，以继承代替组合。以虚类代替模板。对象间关系错综复杂，牵一发而动全身。除了作者，已经无人能参与 ACE 的开发了。</p>
+<p>与此同时，C语言的回归却在背后悄然进行。C语言的复辟，带来了几个更为糟糕的替代品， libevent 和 libev，以及 乘着nodejs的盛行东风而来的 libuv。 </p>
+<h3 id="原始的-libevent"><a href="#原始的-libevent" class="headerlink" title="原始的 libevent"></a>原始的 libevent</h3><p>C语言有着顽强的生命力，当然，这并不是因为C语言有多好，在后续的章节了我们还会深入的探讨C++相对C的改进。C语言的顽强和人天生的懒惰和偏见是有一定关系的。这种惰性表现为随遇而安，表现为固执己见。 非要拼命的否定C++，固守 C , 对 C 的缺点视而不见，诋毁C++相对C的改进。固守的结果就是简陋原始的 libevent . 然而因为保守党巨大的人数优势， libevent 应其群众基础良好而获得了空前的广泛使用。</p>
+<p>libevent 就如名字所言，是一个异步事件框架。从 OS 那里获得事件， 然后派发。派发机制就是“回调函数”。异步异步，归根结底就是处理从操作系统获得的事件。iocp也好， epoll也罢，都只是用来获取事件的接口。libevent 去掉了ACE华而不实的包装，保留了异步事件，极大的简化了模型。不得不说软件工程是个糟糕的发明，从来都把简单问题复杂化。libevent把简单问题简单化，让异步网络编程反朴归真，应该来说，本是一个好库。</p>
+<p>然而 libevent 因为设计缺陷，例如使用全局变量，定时器无法处理时间跳变，诸如此类的设计缺陷导致了 libev 的出现。 libev 就是为了克服libevent的缺陷而诞生的。然而，libev 就一定好了吗？</p>
+<h3 id="禁锢的-libev"><a href="#禁锢的-libev" class="headerlink" title="禁锢的 libev"></a>禁锢的 libev</h3><p>libev 带着对 libevent 的怨气出世了。 吸收了 libevent 的所有缺点， 虽然承诺过改进。然而 libev 如何改进的了呢？ libev 已经够原始了，向下改进还不如让人直接使用系统的 api, 向上改进，一是会导致和libevent的重叠，二是很快就碰到了 C 语言强加的禁锢。</p>
+<p>C 语言因其语法简陋简洁而著称。然而，缺乏必要的抽象能力，导致 C 语言编写异步程序，就如同安迪拿着小锤子琢开肖生克监狱的墙壁一样。能，但是要耗费巨大的精力和时间。 编写异步程序， 最需要的2个抽象能力， 其一为协程，其二是函数对象，包括匿名函数对象， 也就是lambda。 C统统没有。函数对象是实现闭包比不可少的，如果没有函数对象， 就只能通过携带 void<em> 指针的形式迂回完整，繁琐不说，还特别容易出错。程序里也到处充满了类型强转。到处是临时定义的类型，就为了传给 void</em> 使用。</p>
+<p>尽管C 有那么多缺点，然而 libev 还未来得及被C的缺点拖累，因为他不支持 IOCP. 于是 libuv 就出来给 libev 擦屁股了。 支持了 iocp 后的 libuv 就真的只有 C 本身的缺点了吗？</p>
+<h3 id="混乱的-libuv"><a href="#混乱的-libuv" class="headerlink" title="混乱的 libuv"></a>混乱的 libuv</h3><p>libuv 可以说是 C 语言的异步库所能达到的最高高度了。完完全全的触碰到了C语言的自身瓶颈，好在 libuv 只是 nodejs 的底层库，上层软件转移到 javascript 语言而逃避了 C 的禁锢。</p>
+<p>真的是这样的吗？ libuv 自身还有什么缺点呢？</p>
+<p>开源社区avplayer的大拿jackarain曾经说过，一个网络库好不好，就看他有没有正确的处理 TCP 关闭， read write 实现的ui不对。 libuv 很遗憾的是，不合格。libuv 的 uv_write 没有返回值，允许空回调。也就是忽略write错误。 网络出错的情况下， libuv 的用户只能稀里糊涂的知道出错了， 至于错在哪？数据到底有没有发出去了? 一概不知道。 把数据交给 uv_write 后，就是一笔糊涂账了，大概 TCP 不可靠的说法就是从这里传出来的吧。</p>
+<h3 id="ASIO-腾空出世"><a href="#ASIO-腾空出世" class="headerlink" title="ASIO 腾空出世"></a>ASIO 腾空出世</h3><p>在地球最大的岛上，另一位少年开始拜读 ACE 的大作。那时候，没有 libuv 没有 libev 更没有 libevent . 有的只是 ACE. 然而这个南方小国的少年没有跟风陷入 ACE 崇拜，他以敏锐的目光察觉到了 ACE 的弊病。 ACE 哪里做的不好？又哪里是值得借鉴的？</p>
+<p>少年在给 c++ 委员会写的一篇上书中说，Proactor 模型乃最优模型。而 Proactor 模型，乃 ACE 提出的 6 个模型之一。根据 IT 界赢者通吃律，一个优秀的网络库，只需要支持 Proactor 模型即可。 支持其他次优模型都是徒劳的。ACE 试图全盘通吃，犯了大忌。</p>
+<p>少年在一次开发者大会的演讲上，再次透露，网络库不宜做成框架，而是要像系统的API那样，作为一个乐高积木。ACE 做成了一个框架，同样不妥。</p>
+<p>你说了那么多 ACE 不好，有本事你弄个好的啊？ 批评者向来都是这么理直气壮。 正如 ACE 的作者实践了 “纸上得来终觉浅 绝知此事要躬行” 一样，这位勇敢的少年也拿出了 ASIO, “实践出真知”，他如是说。</p>
+<p>那还是 SARS 病毒肆虐的年代，几乎没有人注意到，今后颠覆C++的网络世界的 ASIO 悄然出世了。而他的父亲，还只是悉尼的学子。ASIO 并没有显赫的家庭背景，然而英雄不问出处，它注定将有不平凡的一生。</p>
+<p>俗语有云，三岁看老。在 asio 才三岁的时候，它父亲就将 asio 引荐给了 c++ 委员会的老人们。上一次他们这么做的时候，他们接纳了 STL。 ASIO 最终被内定，然后放入 Boost 锻炼, 经过 Boost 十余的锻炼，ASIO 终于在 2017 年进入了 c++ 标准。</p>
+<h4 id="前摄者？为什么是演员"><a href="#前摄者？为什么是演员" class="headerlink" title="前摄者？为什么是演员"></a>前摄者？为什么是演员</h4><p>在给 c++ 老人会的引荐信里，asio 爸爸仔细阐述了asio的设计抉择回答了围绕 asio 的设计提出的很多问题。 为什么 Proactor 会是最佳模型？</p>
+<ul>
+<li>跨平台 许多操作系统都有异步API，即便是没有异步API的Linux, 通过 epoll 也能模拟 Proactor 模式。</li>
+<li>支持回调函数组合 将一系列异步操作进行组合，封装成对外的一个异步调用。这个只有Proactor能做到，Reactor 做不到。意味着如果asio使用Reactor模式，就对不起他“库” 之名。</li>
+<li>相比 Reactor 可以实现 Zero-copy</li>
+<li>和线程解耦 长时间执行的过程总是有系统异步完成，应用程序无需为此开启线程</li>
+</ul>
+<p>Proactor 也并非全无缺点，缺点就是内存占用比 Reactor 大。Proactor 需要先分配内存而后处理IO, 而 Reactor 是先等待 IO 而后分配内存。相对的Proactor却获得了Zero-copy好处。因为内存已经分配好了，因此操作系统可以将接受到的网络数据直接从网络接口拷贝到应用程序内存，而无需经过内核中转。 Proactor 模式需要一个 loop ,这个 loop asio 将其封装为 io_service.他不仅是 asio的核心，更是一切基于asio设计的程序的核心。</p>
+<h4 id="宇宙级异步核心"><a href="#宇宙级异步核心" class="headerlink" title="宇宙级异步核心"></a>宇宙级异步核心</h4><p>io_service 脱胎于 IO 但不仅用于 IO. Christopher Kohlhoff 在给委员会的另一份编号 N3747 的信上上说它是 宇宙级异步模型 Universal Asynchronous Model。在宇宙级异步模型里，一个异步操作由三部分构成</p>
+<ul>
+<li>发起 按照 asio 的编码规范，所有的发起操作都使用 async_ 前缀，使用 async_动词 的形式作为函数名。</li>
+<li>执行 异步过程在发起的时候被executor执行（系统可以是支持 AIO 的内核，不支持 AIO 的系统则是 aiso 用户层模拟）</li>
+<li>完成并回调 在发起 async_* 操作的时候，总是携带一个回调的闭包。asio使用闭包作为异步事件完成的处理回调，没而不是C式的回调函数。asio的宇宙异步模型里，回调总是在执行 io_service::run 的线程里执行。asio绝不会在内部线程里调用回调。</li>
+</ul>
+<p>在回调里发起新的异步操作，一轮套一轮。整个程序就围绕着 io_service::run 运转起来了。 io_service 不仅仅能用于异步 IO ,还可以用来投递任意闭包。实现作为线程池的功能。这一通用型异步模型彻底击败微软 PPL 提案，致使微软转而研究协程。然而微软在协程上同样面临 asio 的绞杀。</p>
+<h4 id="闭包和协程"><a href="#闭包和协程" class="headerlink" title="闭包和协程"></a>闭包和协程</h4><p>宇宙级 asio 使用闭包作为回调，而 C 库只能使用函数+void*, ACE 虽然使用的 C++语言，却不知道闭包为何物，使用的是 虚函数作为回调。需要大量的从 ACE 的对象继承。以闭包为回调，asio更是支持了一种叫“无栈协程”的强悍武器。 asio的无栈协程，仅仅通过库的形式，不论是在性能上，还是易用性上，还是简洁性上，甚至是B格上，都超过了微软易于修改语言而得的 await提案。</p>
+<p>微软，乃至 ACE ，并不是不知道闭包，而是在c++里实现闭包的宇宙级executor —— 也就是 io_service，需要对模板技术的精通。 asio “把困难留给自己，把方便带给大家”，以地球人无法理解的方式硬是在 c++98 上实现了宇宙级异步核心。 当然，如果 c++11 早点出现，如果 c++17 早点出现，实现 asio 的宇宙模型会更加的简单 —— 其实这也是 c++ 的理念，增加语言特性，只是为了让语言用起来更简单。</p>
+<h4 id="缓冲区"><a href="#缓冲区" class="headerlink" title="缓冲区"></a>缓冲区</h4><p>有了闭包的支持，内存管理也变得轻轻松松起来。 ASIO 本身并不管理内存，所有的IO操作，只提交对用户管理的内存的引用，称 Buffers。asio::buffers 引用了用户提交的内存，保持整个 IO 期间，这块内存的有效性是用户的责任。然而这并不难！ 因为回调是一个闭包。通过闭包持有内存，只要 asio 还未回调，闭包就在，闭包在，内存在。asio 在调用完回调后才删除相应的闭包。因此资源管理的责任可以丢给闭包，而闭包可以通过智能指针精确的控制内存。 不是 GC , 胜于 GC 千百倍！益于c++的 RAII机制，再无内存泄漏之忧！</p>
+<h4 id="REF"><a href="#REF" class="headerlink" title="REF"></a>REF</h4><ul>
+<li><a href="https://bbs.avplayer.org/t/topic/654" target="_blank" rel="noopener">https://bbs.avplayer.org/t/topic/654</a></li>
+</ul>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/libevent/" rel="tag">#libevent</a>
+          
+            <a href="/tags/asio/" rel="tag">#asio</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/09/27/hook_and_internal/" rel="next">hook的几种方式及原理学习</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div>
+      
+        <style type="text/css">
+
+    .donate_bar {
+        text-align: center;
+        margin-top : 5%;
+    }
+
+    .donate_bar.hidden {
+        display:none;
+    }
+/*
+    .donate_bar a.btn_donate {
+        display: inline-block;
+        width: 82px;
+        height: 82px;
+        margin-left:auto;
+        margin-right:auto;
+
+        background: url("http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif") no-repeat;
+        _background: url("http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif") no-repeat; 
+
+        -webkit-transition: background 0s;
+        -moz-transition: background 0s;
+        -o-transition: background 0s;
+        -ms-transition: background 0s;
+        transition: background 0s;
+    }
+*/
+    .donate_bar a.btn_donate:hover { 
+        // background-position: 0px -82px;
+        color: #87daff
+    }
+
+    .donate_bar .donate_txt {
+        display: block;
+        color: #9d9d9d;
+        font: 14px/2 "Microsoft Yahei";
+    }
+
+    .bold { 
+        font-weight: bold; 
+    }
+
+    .post-donate a {
+        border-bottom: 0px;
+    }
+
+    #donate_guide table {
+        border: none;
+    }
+
+    #donate_guide td {
+        border-bottom: none;
+        border-right: none;
+        background: #333333;
+        valign: top;
+    }
+
+</style>
+
+
+
+    
+
+    <div class ="post-donate">
+        <div id="donate_board" class="donate_bar center">
+              <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏">赏</a>
+              <span id="donate_txt" class="donate_txt">
+                   
+                        请我喝杯咖啡
+                   
+              </span>
+            <br>
+        </div>  
+  
+        <div id="donate_guide" class="donate_bar center hidden">
+            <!--
+              
+
+            
+                <a href="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="微信打赏" class="fancybox" rel="article0"
+                    style="margin-right:30%">
+                    <img src="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="" height="164px" width="164px">
+                </a>
+            
+            -->
+            <table>
+                <tr>
+                    <td>
+                         
+                    </td>
+                    <td>
+                        
+                            <a href="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="微信打赏" class="fancybox" rel="article0"
+                                style="margin-right:30%">
+                                <img src="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="" height="164px" width="164px">
+                            </a>
+                        
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+        <script type="text/javascript">
+            document.getElementById('btn_donate').onclick = function() {
+                $('#donate_board').addClass('hidden');
+                // $('#donate_guide').removeClass('hidden');
+                $('#donate_guide').show(2000);
+            }
+
+        </script>
+    </div>
+
+    
+
+
+      
+    </div>
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+          <div class="comments" id="comments">
+            
+            -->
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table Of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="changan" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">changan</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">思绪来的快去的也快，偶尔在这里停留</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">58</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">46</span>
+              <span class="site-state-item-name">categories</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">45</span>
+              <span class="site-state-item-name">tags</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://github.com/changan29" target="_blank">GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/zhaochanganplus" target="_blank">ZhiHu</a>
+              </span>
+            
+          
+        </div>
+
+        <div class="links-of-friendly motion-element">
+          
+        </div>
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么要用-C-编写服务端程序？"><span class="nav-number">1.</span> <span class="nav-text">为什么要用 C++ 编写服务端程序？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么要用asio这个库？"><span class="nav-number">2.</span> <span class="nav-text">为什么要用asio这个库？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#那些年我们用过的网络库"><span class="nav-number">3.</span> <span class="nav-text">那些年我们用过的网络库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#悳瑟的-ACE"><span class="nav-number">4.</span> <span class="nav-text">悳瑟的 ACE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原始的-libevent"><span class="nav-number">5.</span> <span class="nav-text">原始的 libevent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#禁锢的-libev"><span class="nav-number">6.</span> <span class="nav-text">禁锢的 libev</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#混乱的-libuv"><span class="nav-number">7.</span> <span class="nav-text">混乱的 libuv</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ASIO-腾空出世"><span class="nav-number">8.</span> <span class="nav-text">ASIO 腾空出世</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#前摄者？为什么是演员"><span class="nav-number">8.1.</span> <span class="nav-text">前摄者？为什么是演员</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#宇宙级异步核心"><span class="nav-number">8.2.</span> <span class="nav-text">宇宙级异步核心</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#闭包和协程"><span class="nav-number">8.3.</span> <span class="nav-text">闭包和协程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#缓冲区"><span class="nav-number">8.4.</span> <span class="nav-text">缓冲区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#REF"><span class="nav-number">8.5.</span> <span class="nav-text">REF</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2018 - 
+  <span itemprop="copyrightYear">2020
+  </span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changan
+  </span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme by <a class="theme-link" href="http://blog.idhyt.com">idhyt</a>.<a class="theme-link" href="https://github.com/idhyt/hexo-theme-next/tree/magiclamp">Mala</a>
+</div>
+
+<!-- busuanzi -->
+
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
