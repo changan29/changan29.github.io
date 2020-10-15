@@ -40,18 +40,20 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="为什么要用 C++ 编写服务端程序？如果说答案是性能，那么肯定有人会满不在乎。觉得性能不够的话， 只要加机器就可以了。 然而更少的机器，意味着更低的能耗，更少的硬件投入，更少的人力资源投入去维护机器。总而言之，更低的成本。 肯定会有人说，C++的开发速度太慢了。然而这并不是绝对的。C++也可以做到非常快速的开发。有句俗语  “脚本一时爽，重构火葬场”  说的正是脚本语言开发的项目进入维护阶段后无穷">
+<meta name="description" content="那些年我们追过的网络库 为什么要用 C++ 编写服务端程序？如果说答案是性能，那么肯定有人会满不在乎。觉得性能不够的话， 只要加机器就可以了。 然而更少的机器，意味着更低的能耗，更少的硬件投入，更少的人力资源投入去维护机器。总而言之，更低的成本。 肯定会有人说，C++的开发速度太慢了。然而这并不是绝对的。C++也可以做到非常快速的开发。有句俗语  “脚本一时爽，重构火葬场”  说的正是脚本语言开发">
 <meta name="keywords" content="libevent,asio">
 <meta property="og:type" content="article">
 <meta property="og:title" content="那些年我们追过的网络库">
 <meta property="og:url" content="http://oneyearago.me/2020/10/14/c++-network-lib/index.html">
 <meta property="og:site_name" content="changan&#39;s blog">
-<meta property="og:description" content="为什么要用 C++ 编写服务端程序？如果说答案是性能，那么肯定有人会满不在乎。觉得性能不够的话， 只要加机器就可以了。 然而更少的机器，意味着更低的能耗，更少的硬件投入，更少的人力资源投入去维护机器。总而言之，更低的成本。 肯定会有人说，C++的开发速度太慢了。然而这并不是绝对的。C++也可以做到非常快速的开发。有句俗语  “脚本一时爽，重构火葬场”  说的正是脚本语言开发的项目进入维护阶段后无穷">
+<meta property="og:description" content="那些年我们追过的网络库 为什么要用 C++ 编写服务端程序？如果说答案是性能，那么肯定有人会满不在乎。觉得性能不够的话， 只要加机器就可以了。 然而更少的机器，意味着更低的能耗，更少的硬件投入，更少的人力资源投入去维护机器。总而言之，更低的成本。 肯定会有人说，C++的开发速度太慢了。然而这并不是绝对的。C++也可以做到非常快速的开发。有句俗语  “脚本一时爽，重构火葬场”  说的正是脚本语言开发">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-10-15T03:01:39.054Z">
+<meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/naxienianwomen.jpeg">
+<meta property="og:updated_time" content="2020-10-15T03:07:41.621Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="那些年我们追过的网络库">
-<meta name="twitter:description" content="为什么要用 C++ 编写服务端程序？如果说答案是性能，那么肯定有人会满不在乎。觉得性能不够的话， 只要加机器就可以了。 然而更少的机器，意味着更低的能耗，更少的硬件投入，更少的人力资源投入去维护机器。总而言之，更低的成本。 肯定会有人说，C++的开发速度太慢了。然而这并不是绝对的。C++也可以做到非常快速的开发。有句俗语  “脚本一时爽，重构火葬场”  说的正是脚本语言开发的项目进入维护阶段后无穷">
+<meta name="twitter:description" content="那些年我们追过的网络库 为什么要用 C++ 编写服务端程序？如果说答案是性能，那么肯定有人会满不在乎。觉得性能不够的话， 只要加机器就可以了。 然而更少的机器，意味着更低的能耗，更少的硬件投入，更少的人力资源投入去维护机器。总而言之，更低的成本。 肯定会有人说，C++的开发速度太慢了。然而这并不是绝对的。C++也可以做到非常快速的开发。有句俗语  “脚本一时爽，重构火葬场”  说的正是脚本语言开发">
+<meta name="twitter:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/naxienianwomen.jpeg">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -366,7 +368,8 @@
       
 
       
-        <span itemprop="articleBody"><h3 id="为什么要用-C-编写服务端程序？"><a href="#为什么要用-C-编写服务端程序？" class="headerlink" title="为什么要用 C++ 编写服务端程序？"></a>为什么要用 C++ 编写服务端程序？</h3><p>如果说答案是性能，那么肯定有人会满不在乎。觉得性能不够的话， 只要加机器就可以了。 然而更少的机器，意味着更低的能耗，更少的硬件投入，更少的人力资源投入去维护机器。总而言之，更低的成本。</p>
+        <span itemprop="articleBody"><h1 id="那些年我们追过的网络库"><a href="#那些年我们追过的网络库" class="headerlink" title="那些年我们追过的网络库"></a>那些年我们追过的网络库</h1><p><img src="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/naxienianwomen.jpeg" alt="image"></p>
+<h3 id="为什么要用-C-编写服务端程序？"><a href="#为什么要用-C-编写服务端程序？" class="headerlink" title="为什么要用 C++ 编写服务端程序？"></a>为什么要用 C++ 编写服务端程序？</h3><p>如果说答案是性能，那么肯定有人会满不在乎。觉得性能不够的话， 只要加机器就可以了。 然而更少的机器，意味着更低的能耗，更少的硬件投入，更少的人力资源投入去维护机器。总而言之，更低的成本。</p>
 <p>肯定会有人说，C++的开发速度太慢了。然而这并不是绝对的。C++也可以做到非常快速的开发。有句俗语 <em> “脚本一时爽，重构火葬场” </em> 说的正是脚本语言开发的项目进入维护阶段后无穷的灾难。而 C++ 经过了几十年的发展, 拥有庞大的工具链. 不管是动态分析还是静态分析都有大量的工具, 能极大的帮助程序员减少错误. c++得益于精良的设计，严格的检查，越是大型的工程，越是能降低开发成本。</p>
 <p>但这并不意味着C++就不适合小型项目了。小型的项目，也可以快速开发。因为 C++11 开始，已经 感觉像是全新的语言了，可以完全以脚本的形式去使用，获得接近甚至超越脚本语言的开发速度，同时得益于编译优化，获得不俗的运行时性能。 C++正是鱼和熊掌得兼的语言。</p>
 <h3 id="为什么要用asio这个库？"><a href="#为什么要用asio这个库？" class="headerlink" title="为什么要用asio这个库？"></a>为什么要用asio这个库？</h3><p>事实上如果使用C++开发服务端程序，你有多得数不清的选择。什么 ACE 啦，libuv 啦，libevent 啦，libev 啦，甚至可以直接使用 epoll/iocp 这样的系统API。 为什么要用 asio 呢？</p>
@@ -675,7 +678,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么要用-C-编写服务端程序？"><span class="nav-number">1.</span> <span class="nav-text">为什么要用 C++ 编写服务端程序？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么要用asio这个库？"><span class="nav-number">2.</span> <span class="nav-text">为什么要用asio这个库？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#那些年我们用过的网络库"><span class="nav-number">3.</span> <span class="nav-text">那些年我们用过的网络库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#悳瑟的-ACE"><span class="nav-number">4.</span> <span class="nav-text">悳瑟的 ACE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原始的-libevent"><span class="nav-number">5.</span> <span class="nav-text">原始的 libevent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#禁锢的-libev"><span class="nav-number">6.</span> <span class="nav-text">禁锢的 libev</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#混乱的-libuv"><span class="nav-number">7.</span> <span class="nav-text">混乱的 libuv</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ASIO-腾空出世"><span class="nav-number">8.</span> <span class="nav-text">ASIO 腾空出世</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#前摄者？为什么是演员"><span class="nav-number">8.1.</span> <span class="nav-text">前摄者？为什么是演员</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#宇宙级异步核心"><span class="nav-number">8.2.</span> <span class="nav-text">宇宙级异步核心</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#闭包和协程"><span class="nav-number">8.3.</span> <span class="nav-text">闭包和协程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#缓冲区"><span class="nav-number">8.4.</span> <span class="nav-text">缓冲区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#REF"><span class="nav-number">8.5.</span> <span class="nav-text">REF</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#那些年我们追过的网络库"><span class="nav-number">1.</span> <span class="nav-text">那些年我们追过的网络库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么要用-C-编写服务端程序？"><span class="nav-number">1.0.1.</span> <span class="nav-text">为什么要用 C++ 编写服务端程序？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么要用asio这个库？"><span class="nav-number">1.0.2.</span> <span class="nav-text">为什么要用asio这个库？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#那些年我们用过的网络库"><span class="nav-number">1.0.3.</span> <span class="nav-text">那些年我们用过的网络库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#悳瑟的-ACE"><span class="nav-number">1.0.4.</span> <span class="nav-text">悳瑟的 ACE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原始的-libevent"><span class="nav-number">1.0.5.</span> <span class="nav-text">原始的 libevent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#禁锢的-libev"><span class="nav-number">1.0.6.</span> <span class="nav-text">禁锢的 libev</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#混乱的-libuv"><span class="nav-number">1.0.7.</span> <span class="nav-text">混乱的 libuv</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ASIO-腾空出世"><span class="nav-number">1.0.8.</span> <span class="nav-text">ASIO 腾空出世</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#前摄者？为什么是演员"><span class="nav-number">1.0.8.1.</span> <span class="nav-text">前摄者？为什么是演员</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#宇宙级异步核心"><span class="nav-number">1.0.8.2.</span> <span class="nav-text">宇宙级异步核心</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#闭包和协程"><span class="nav-number">1.0.8.3.</span> <span class="nav-text">闭包和协程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#缓冲区"><span class="nav-number">1.0.8.4.</span> <span class="nav-text">缓冲区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#REF"><span class="nav-number">1.0.8.5.</span> <span class="nav-text">REF</span></a></li></ol></li></ol></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
