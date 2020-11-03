@@ -1,0 +1,1113 @@
+
+<!doctype html>
+<html class="theme-next use-motion theme-next-mala">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="思绪来的快去的也快，偶尔在这里停留" />
+
+
+
+  <meta name="keywords" content="Hexo,Mala" />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="CSAPP机器级表示汇编 两个抽象  硬件 指令集 ISA 的抽象 虚拟内存  大数组   汇编与高级语言的区别  暴露的可操作  程序计数器  rip 条件寄存器 整数寄存器       ATT 汇编与 intel 汇编区别  intel 省略了 指示大小的后缀 Intel省略了 寄存器前的  %  Intel 有很多不同的方法 描述内存的位置 多个操作数  Intel 列出的操作数 是相反的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="changan&#39;s blog">
+<meta property="og:url" content="http://oneyearago.me/2020/11/03/csapp-3-asm/index.html">
+<meta property="og:site_name" content="changan&#39;s blog">
+<meta property="og:description" content="CSAPP机器级表示汇编 两个抽象  硬件 指令集 ISA 的抽象 虚拟内存  大数组   汇编与高级语言的区别  暴露的可操作  程序计数器  rip 条件寄存器 整数寄存器       ATT 汇编与 intel 汇编区别  intel 省略了 指示大小的后缀 Intel省略了 寄存器前的  %  Intel 有很多不同的方法 描述内存的位置 多个操作数  Intel 列出的操作数 是相反的">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call_register">
+<meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call_op">
+<meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call_stack">
+<meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call_ret">
+<meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call.png">
+<meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call_gdb">
+<meta property="og:updated_time" content="2020-11-03T13:30:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="changan&#39;s blog">
+<meta name="twitter:description" content="CSAPP机器级表示汇编 两个抽象  硬件 指令集 ISA 的抽象 虚拟内存  大数组   汇编与高级语言的区别  暴露的可操作  程序计数器  rip 条件寄存器 整数寄存器       ATT 汇编与 intel 汇编区别  intel 省略了 指示大小的后缀 Intel省略了 寄存器前的  %  Intel 有很多不同的方法 描述内存的位置 多个操作数  Intel 列出的操作数 是相反的">
+<meta name="twitter:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call_register">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mala',
+    sidebar: 'post'
+  };
+</script>
+
+  <title>  | changan's blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">changan's blog</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            About
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    
+      
+
+      
+        <style type="text/css">
+
+    .circle {
+        width: 40px;
+        height: 40px;
+        background: #555 no-repeat;
+        cursor: move;
+    }
+
+    .assist-btn {
+        position: fixed;
+        top: 50％;
+        left: 10px;
+        -moz-border-radius: 50px;
+        -webkit-border-radius: 50px;
+        border-radius: 50px;
+        outline: none;
+        border: none;
+        color: #87daff;
+    }
+
+</style>
+
+<script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+<script type="text/javascript">
+    // 浮动圆点展开与收缩
+    /*
+    $(function () {
+        var assist_box = $('.assist-box');
+        $('#assist_btn').hover(function () {
+            assist_box.stop().show(300);
+        }, function () {
+            assist_box.stop().hide(150);
+        })
+    });
+    */  
+    //浮动圆点拖动
+    $(function () {
+        var box = document.getElementById('assist_btn');
+        box.onmousedown = function (event) {
+            var e = event || window.event,
+                t = e.target || e.srcElement,
+                // 鼠标按下时的坐标x1,y1
+                x1 = e.clientX,
+                y1 = e.clientY,
+                //鼠标按下时的左右偏移量
+                dragLeft = this.offsetLeft,
+                dragTop = this.offsetTop;
+
+            document.onmousemove = function (event) {
+                var e = event || window.event,
+                    t = e.target || e.srcElement,
+                    // 鼠标移动时的动态坐标
+                    x2 = e.clientX,
+                    y2 = e.clientY,
+                    // 鼠标移动时的坐标的变化量
+                    x = x2 - x1,
+                    y = y2 - y1;
+                box.style.left = (dragLeft + x) + 'px';
+                box.style.top = (dragTop + y) + 'px';
+            }
+
+            document.onmouseup = function () {
+                this.onmousemove = null;
+            }
+        }
+    });
+
+/*
+    $whitesmoke   = #f5f5f5
+    $gainsboro    = #eee
+    $gray-lighter = #ddd
+    $grey-light   = #ccc
+    $grey         = #bbb
+    $grey-dark    = #999
+    $grey-dim     = #666
+    $black-light  = #555
+    $black-deep   = #222
+    $red          = #ff2a2a
+    $blue-bright  = #87daff
+    $blue         = #0684bd
+    $blue-deep    = #262a30
+*/
+    // white theme
+    var body = {color: "#555", background: "white"};
+    var a_tag = {color: "#222"};
+    var header = { background: "#f5f5f5"};
+    var logo_line_i = {background: "#222"};
+    // var post_code = {background: "#eee", color: "#222"};
+
+    function switch_theme() {
+        $("body").css(body);
+        $("a:not('.links-of-author-item a, .site-state-item a, .site-state-posts a, .feed-link a, .motion-element a, .post-tags a, .show-commit-cls a, #donate_board a')").css(a_tag);
+        $(".header, .footer").css(header);
+        $(".logo-line-before i, .logo-line-after i").css(logo_line_i);
+        //$(".post code").css(post_code);
+        $("#idhyt-surprise-ball #idhyt-surprise-ball-animation .drag").css(a_tag);
+        $(".post-title-link, .posts-expand .post-meta, .post-comments-count, .disqus-comment-count, .post-category a, .post-nav-next a, .post-nav-item a").css(a_tag);
+        
+        // $("code").css({color: '#c5c8c6', background: '#1d1f21'});
+        $("#assist_btn").hide(1500);
+    }
+
+    $(function () {
+        $("#assist_btn").dblclick(function() {
+            switch_theme();
+        });
+    });
+
+</script>
+
+<div>
+
+    <button class="assist-btn circle" id="assist_btn" title="双击切换">
+        亮
+    </button>
+
+</div>
+
+
+
+
+
+
+
+
+
+      
+
+    
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2020-11-03T21:34:37+08:00" content="2020-11-03">
+            2020-11-03
+          </time>
+        </span>
+
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h1 id="CSAPP"><a href="#CSAPP" class="headerlink" title="CSAPP"></a>CSAPP</h1><h2 id="机器级表示"><a href="#机器级表示" class="headerlink" title="机器级表示"></a>机器级表示</h2><h3 id="汇编"><a href="#汇编" class="headerlink" title="汇编"></a>汇编</h3><ul>
+<li><p>两个抽象</p>
+<ul>
+<li>硬件 指令集 ISA 的抽象</li>
+<li>虚拟内存  大数组</li>
+</ul>
+</li>
+<li><p>汇编与高级语言的区别</p>
+<ul>
+<li><p>暴露的可操作</p>
+<ul>
+<li>程序计数器  rip</li>
+<li>条件寄存器</li>
+<li><p>整数寄存器</p>
+<p><img src="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call_register" alt=""></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>ATT 汇编与 intel 汇编区别</p>
+<ul>
+<li>intel 省略了 指示大小的后缀</li>
+<li>Intel省略了 寄存器前的  % </li>
+<li>Intel 有很多不同的方法 描述内存的位置</li>
+<li>多个操作数  Intel 列出的操作数 是相反的</li>
+</ul>
+</li>
+</ul>
+<h3 id="访问信息"><a href="#访问信息" class="headerlink" title="访问信息"></a>访问信息</h3><ul>
+<li><p>不同类型操作数</p>
+<ul>
+<li>寄存器</li>
+<li>立即数</li>
+<li>内存引用</li>
+<li><p>表              </p>
+<p><img src="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call_op" alt=""></p>
+</li>
+</ul>
+</li>
+<li><p>数据传送</p>
+<ul>
+<li>mov S , D</li>
+</ul>
+</li>
+<li><p>入栈出栈</p>
+<ul>
+<li><p>push</p>
+<ul>
+<li>sub %rsp;   mov xxx  (%rsp)</li>
+</ul>
+</li>
+<li><p>pop</p>
+<ul>
+<li>mov  %rsp xxx ,   add %rsp</li>
+</ul>
+</li>
+<li><p>pic                                                              </p>
+<p><img src="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call_stack" alt=""></p>
+</li>
+</ul>
+</li>
+<li><p>lea</p>
+<ul>
+<li><p>load effective addr</p>
+<ul>
+<li>加载有效地址</li>
+</ul>
+</li>
+<li><p>lea  s  ,  d  -&gt; d=&amp;s  </p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="控制"><a href="#控制" class="headerlink" title="控制"></a>控制</h3><ul>
+<li><p>条件码寄存器</p>
+<ul>
+<li>CF  进位标志</li>
+<li>ZF  零标志</li>
+<li>SF   符号标志</li>
+<li>OF   溢出标志</li>
+</ul>
+</li>
+<li><p>访问条件码</p>
+<ul>
+<li><p>可以依据条件码的某种组合，将一个字节设置成0或1</p>
+<ul>
+<li><p>SET  指令</p>
+<ul>
+<li>setne D  -&gt;  D=~ZF</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>可以条件跳转到程序的其他部分</p>
+</li>
+<li>可以有条件的传送数据</li>
+</ul>
+</li>
+<li><p>跳转指令</p>
+<ul>
+<li><p>无条件跳转</p>
+<ul>
+<li><p>jmp</p>
+<ul>
+<li><p>直接跳转</p>
+<ul>
+<li>跳转目标是作为指令的一部分编码</li>
+</ul>
+</li>
+<li><p>间接跳转</p>
+<ul>
+<li>跳转目标是从寄存器或内存位置读出</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>有条件跳转</p>
+<ul>
+<li><p>例子</p>
+<ul>
+<li>jnz</li>
+<li>jz</li>
+<li>jne</li>
+</ul>
+</li>
+<li><p>条件跳转只能 直接跳转</p>
+</li>
+</ul>
+</li>
+<li><p>跳转指令的编码</p>
+<ul>
+<li><p>跳转指令有几种不同的编码，最常用的是 PC相对的</p>
+<ul>
+<li><p>PC-relative</p>
+<ul>
+<li><p>地址偏移量编码为 1 2 4字节</p>
+<ul>
+<li>指令编码很简洁</li>
+<li>目标代码可以不做改变就移到内存不同的位置</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>绝对地址</p>
+<ul>
+<li>4个字节直接指定目标</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>分支、循环、switch</p>
+</li>
+</ul>
+<h3 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h3><ul>
+<li><p>概念</p>
+<ul>
+<li>用指定的一组参数和可选的返回值实现某种功能</li>
+</ul>
+</li>
+<li><p>转移控制</p>
+<ul>
+<li><p>过程</p>
+<ul>
+<li><p>压栈，设置%rip ; 弹出地址，设置%rip</p>
+<p><img src="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call_ret" alt=""></p>
+</li>
+</ul>
+</li>
+<li><p>跳转</p>
+<ul>
+<li>直接跳转</li>
+<li>间接跳转</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>传递数据</p>
+<ul>
+<li><p>寄存器传参</p>
+<ul>
+<li>rdi  rsi  rdx  rcx  r8 r9</li>
+</ul>
+</li>
+<li><p>超过6个参数</p>
+<ul>
+<li>栈上传参</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>分配和回收内存</p>
+<ul>
+<li><p>栈上的局部存储</p>
+<ul>
+<li>变量取地址</li>
+<li>结构</li>
+</ul>
+</li>
+<li><p>寄存器局部存储</p>
+<ul>
+<li><p>寄存器保存惯例</p>
+<ul>
+<li><p>被调用者保存寄存器</p>
+<ul>
+<li><p>rbp rbx r12~r15</p>
+<ul>
+<li>%rbp 是栈帧指针，用于标识当前栈帧的起始位置</li>
+</ul>
+</li>
+<li><p>leave 指令来实现两条命令</p>
+<ul>
+<li>movq %rbp, %rsp </li>
+<li>popq %rbp</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>实现基础</p>
+<ul>
+<li><p>运行时栈</p>
+<ul>
+<li>过程需要的存储空间超出寄存器大小，在栈上分配的数据称栈帧</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="结构与数组"><a href="#结构与数组" class="headerlink" title="结构与数组"></a>结构与数组</h3><ul>
+<li><p>数组</p>
+<ul>
+<li>movl (%rdx , %rcx , 4) , %rax</li>
+</ul>
+</li>
+<li><p>结构</p>
+<ul>
+<li>通过首地址的相对偏移</li>
+</ul>
+</li>
+</ul>
+<h3 id="过程的详细解释"><a href="#过程的详细解释" class="headerlink" title="过程的详细解释"></a>过程的详细解释</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">void proc(long a1, long*a1p , int a2 , int* a2p, short a3, short* a3p , char a4, char* a4p  )</span><br><span class="line">&#123;</span><br><span class="line">    *a1p += a1;</span><br><span class="line">    *a2p += a2;</span><br><span class="line">    *a2p += a3;</span><br><span class="line">    *a4p += a4;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    long a1 = 0x12345678; </span><br><span class="line">    long*a1p = &amp;a1;</span><br><span class="line">    </span><br><span class="line">    int a2 = 0x66666666; </span><br><span class="line">    int* a2p = &amp;a2;</span><br><span class="line"></span><br><span class="line">    short a3 = 0x3333; </span><br><span class="line">    short* a3p = &amp;a3;</span><br><span class="line">    </span><br><span class="line">    char a4 = 0xFE; </span><br><span class="line">    char* a4p = &amp;a4;</span><br><span class="line">    </span><br><span class="line">    proc( a1 ,a1p , a2, a2p, a3, a3p,a4 , a4p  );</span><br><span class="line">    </span><br><span class="line">    a1 = 0x11112222;</span><br><span class="line">    a2 = 0x66669999;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="栈描述"><a href="#栈描述" class="headerlink" title="栈描述"></a>栈描述</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">  400565:   55                      push   %rbp</span><br><span class="line">  400566:   48 89 e5                mov    %rsp,%rbp</span><br><span class="line">  400569:   48 83 ec 40             sub    $0x40,%rsp</span><br><span class="line">    long a1 = 0x12345678; </span><br><span class="line">  40056d:   48 c7 45 d8 78 56 34    movq   $0x12345678,-0x28(%rbp)</span><br><span class="line">  400574:   12  </span><br><span class="line">    long*a1p = &amp;a1;</span><br><span class="line">  400575:   48 8d 45 d8             lea    -0x28(%rbp),%rax           // 先构造了一些 局部变量</span><br><span class="line">  400579:   48 89 45 f8             mov    %rax,-0x8(%rbp)</span><br><span class="line">    </span><br><span class="line">    int a2 = 0x66666666; </span><br><span class="line">  40057d:   c7 45 d4 66 66 66 66    movl   $0x66666666,-0x2c(%rbp)</span><br><span class="line">    int* a2p = &amp;a2;</span><br><span class="line">  400584:   48 8d 45 d4             lea    -0x2c(%rbp),%rax</span><br><span class="line">  400588:   48 89 45 f0             mov    %rax,-0x10(%rbp)</span><br><span class="line"></span><br><span class="line">    short a3 = 0x3333; </span><br><span class="line">  40058c:   66 c7 45 d2 33 33       movw   $0x3333,-0x2e(%rbp)</span><br><span class="line">    short* a3p = &amp;a3;</span><br><span class="line">  400592:   48 8d 45 d2             lea    -0x2e(%rbp),%rax</span><br><span class="line">  400596:   48 89 45 e8             mov    %rax,-0x18(%rbp)</span><br><span class="line">    </span><br><span class="line">    char a4 = 0xFE; </span><br><span class="line">  40059a:   c6 45 d1 fe             movb   $0xfe,-0x2f(%rbp)</span><br><span class="line">    char* a4p = &amp;a4;</span><br><span class="line">  40059e:   48 8d 45 d1             lea    -0x2f(%rbp),%rax</span><br><span class="line">  4005a2:   48 89 45 e0             mov    %rax,-0x20(%rbp)</span><br><span class="line">    </span><br><span class="line">    proc( a1 ,a1p , a2, a2p, a3, a3p,a4 , a4p  );  </span><br><span class="line">  4005a6:   0f b6 45 d1             movzbl -0x2f(%rbp),%eax       // 通过寄存器和栈 传参</span><br><span class="line">  4005aa:   0f be f8                movsbl %al,%edi</span><br><span class="line">  4005ad:   0f b7 45 d2             movzwl -0x2e(%rbp),%eax</span><br><span class="line">  4005b1:   44 0f bf d0             movswl %ax,%r10d</span><br><span class="line">  4005b5:   8b 55 d4                mov    -0x2c(%rbp),%edx</span><br><span class="line">  4005b8:   48 8b 45 d8             mov    -0x28(%rbp),%rax</span><br><span class="line">  4005bc:   4c 8b 4d e8             mov    -0x18(%rbp),%r9</span><br><span class="line">  4005c0:   48 8b 4d f0             mov    -0x10(%rbp),%rcx</span><br><span class="line">  4005c4:   48 8b 75 f8             mov    -0x8(%rbp),%rsi</span><br><span class="line">  4005c8:   4c 8b 45 e0             mov    -0x20(%rbp),%r8</span><br><span class="line">  4005cc:   4c 89 44 24 08          mov    %r8,0x8(%rsp)</span><br><span class="line">  4005d1:   89 3c 24                mov    %edi,(%rsp)</span><br><span class="line">  4005d4:   45 89 d0                mov    %r10d,%r8d</span><br><span class="line">  4005d7:   48 89 c7                mov    %rax,%rdi</span><br><span class="line">  4005da:   e8 11 ff ff ff          callq  4004f0 &lt;proc&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call.png" alt=""></p>
+<h3 id="gdb-调试"><a href="#gdb-调试" class="headerlink" title="gdb 调试"></a>gdb 调试</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">void proc(long a1, long*a1p , int a2 , int* a2p, short a3, short* a3p , char a4, char* a4p  )</span><br><span class="line">&#123;</span><br><span class="line">  4004f0:   55                      push   %rbp</span><br><span class="line">  4004f1:   48 89 e5                mov    %rsp,%rbp</span><br><span class="line">  4004f4:   48 89 7d f8             mov    %rdi,-0x8(%rbp)</span><br><span class="line">  4004f8:   48 89 75 f0             mov    %rsi,-0x10(%rbp)</span><br><span class="line">  4004fc:   89 55 ec                mov    %edx,-0x14(%rbp)</span><br><span class="line">  4004ff:   48 89 4d e0             mov    %rcx,-0x20(%rbp)</span><br><span class="line">  400503:   44 89 c2                mov    %r8d,%edx</span><br><span class="line">  400506:   4c 89 4d d8             mov    %r9,-0x28(%rbp)</span><br><span class="line">  40050a:   8b 45 10                mov    0x10(%rbp),%eax</span><br><span class="line">  40050d:   66 89 55 e8             mov    %dx,-0x18(%rbp)</span><br><span class="line">  400511:   88 45 d4                mov    %al,-0x2c(%rbp)</span><br><span class="line">    *a1p += a1;</span><br><span class="line">  400514:   48 8b 45 f0             mov    -0x10(%rbp),%rax       // 寄存器 能传递6个参数</span><br><span class="line">  400518:   48 8b 10                mov    (%rax),%rdx</span><br><span class="line">  40051b:   48 8b 45 f8             mov    -0x8(%rbp),%rax        // 其余的参数可以相对 rbp 获取</span><br><span class="line">  40051f:   48 01 c2                add    %rax,%rdx</span><br><span class="line">  400522:   48 8b 45 f0             mov    -0x10(%rbp),%rax</span><br><span class="line">  400526:   48 89 10                mov    %rdx,(%rax)</span><br><span class="line">    *a2p += a2;</span><br><span class="line">  400529:   48 8b 45 e0             mov    -0x20(%rbp),%rax</span><br><span class="line">  40052d:   8b 10                   mov    (%rax),%edx</span><br><span class="line">  40052f:   8b 45 ec                mov    -0x14(%rbp),%eax</span><br><span class="line">  400532:   01 c2                   add    %eax,%edx</span><br><span class="line">  400534:   48 8b 45 e0             mov    -0x20(%rbp),%rax</span><br><span class="line">  400538:   89 10                   mov    %edx,(%rax)</span><br></pre></td></tr></table></figure>
+<p>call proc后, 这个过程会push main的调用地址的下一处，在proc里面也会push rbp, 通过打印内存的值，可以看到 rsp上 存储的变量信息， 选用的数字比较有规则，比如 0x12345678  , 0x 66666666 如下图：</p>
+<p><img src="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call_gdb" alt=""></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/10/14/c++-network-lib/" rel="next">那些年我们追过的...</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div>
+      
+        <style type="text/css">
+
+    .donate_bar {
+        text-align: center;
+        margin-top : 5%;
+    }
+
+    .donate_bar.hidden {
+        display:none;
+    }
+/*
+    .donate_bar a.btn_donate {
+        display: inline-block;
+        width: 82px;
+        height: 82px;
+        margin-left:auto;
+        margin-right:auto;
+
+        background: url("http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif") no-repeat;
+        _background: url("http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif") no-repeat; 
+
+        -webkit-transition: background 0s;
+        -moz-transition: background 0s;
+        -o-transition: background 0s;
+        -ms-transition: background 0s;
+        transition: background 0s;
+    }
+*/
+    .donate_bar a.btn_donate:hover { 
+        // background-position: 0px -82px;
+        color: #87daff
+    }
+
+    .donate_bar .donate_txt {
+        display: block;
+        color: #9d9d9d;
+        font: 14px/2 "Microsoft Yahei";
+    }
+
+    .bold { 
+        font-weight: bold; 
+    }
+
+    .post-donate a {
+        border-bottom: 0px;
+    }
+
+    #donate_guide table {
+        border: none;
+    }
+
+    #donate_guide td {
+        border-bottom: none;
+        border-right: none;
+        background: #333333;
+        valign: top;
+    }
+
+</style>
+
+
+
+    
+
+    <div class ="post-donate">
+        <div id="donate_board" class="donate_bar center">
+              <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏">赏</a>
+              <span id="donate_txt" class="donate_txt">
+                   
+                        请我喝杯咖啡
+                   
+              </span>
+            <br>
+        </div>  
+  
+        <div id="donate_guide" class="donate_bar center hidden">
+            <!--
+              
+
+            
+                <a href="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="微信打赏" class="fancybox" rel="article0"
+                    style="margin-right:30%">
+                    <img src="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="" height="164px" width="164px">
+                </a>
+            
+            -->
+            <table>
+                <tr>
+                    <td>
+                         
+                    </td>
+                    <td>
+                        
+                            <a href="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="微信打赏" class="fancybox" rel="article0"
+                                style="margin-right:30%">
+                                <img src="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="" height="164px" width="164px">
+                            </a>
+                        
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+        <script type="text/javascript">
+            document.getElementById('btn_donate').onclick = function() {
+                $('#donate_board').addClass('hidden');
+                // $('#donate_guide').removeClass('hidden');
+                $('#donate_guide').show(2000);
+            }
+
+        </script>
+    </div>
+
+    
+
+
+      
+    </div>
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+          <div class="comments" id="comments">
+            
+            -->
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table Of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="changan" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">changan</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">思绪来的快去的也快，偶尔在这里停留</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">59</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">46</span>
+              <span class="site-state-item-name">categories</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">45</span>
+              <span class="site-state-item-name">tags</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://github.com/changan29" target="_blank">GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/zhaochanganplus" target="_blank">ZhiHu</a>
+              </span>
+            
+          
+        </div>
+
+        <div class="links-of-friendly motion-element">
+          
+        </div>
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CSAPP"><span class="nav-number">1.</span> <span class="nav-text">CSAPP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#机器级表示"><span class="nav-number">1.1.</span> <span class="nav-text">机器级表示</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#汇编"><span class="nav-number">1.1.1.</span> <span class="nav-text">汇编</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#访问信息"><span class="nav-number">1.1.2.</span> <span class="nav-text">访问信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#控制"><span class="nav-number">1.1.3.</span> <span class="nav-text">控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#过程"><span class="nav-number">1.1.4.</span> <span class="nav-text">过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构与数组"><span class="nav-number">1.1.5.</span> <span class="nav-text">结构与数组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#过程的详细解释"><span class="nav-number">1.1.6.</span> <span class="nav-text">过程的详细解释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#栈描述"><span class="nav-number">1.1.7.</span> <span class="nav-text">栈描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gdb-调试"><span class="nav-number">1.1.8.</span> <span class="nav-text">gdb 调试</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2018 - 
+  <span itemprop="copyrightYear">2020
+  </span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changan
+  </span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme by <a class="theme-link" href="http://blog.idhyt.com">idhyt</a>.<a class="theme-link" href="https://github.com/idhyt/hexo-theme-next/tree/magiclamp">Mala</a>
+</div>
+
+<!-- busuanzi -->
+
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
