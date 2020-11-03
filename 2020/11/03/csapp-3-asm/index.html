@@ -31,7 +31,7 @@
 
 
 
-  <meta name="keywords" content="Hexo,Mala" />
+  <meta name="keywords" content="asm,os," />
 
 
 
@@ -41,8 +41,9 @@
 
 
 <meta name="description" content="CSAPP机器级表示汇编 两个抽象  硬件 指令集 ISA 的抽象 虚拟内存  大数组   汇编与高级语言的区别  暴露的可操作  程序计数器  rip 条件寄存器 整数寄存器       ATT 汇编与 intel 汇编区别  intel 省略了 指示大小的后缀 Intel省略了 寄存器前的  %  Intel 有很多不同的方法 描述内存的位置 多个操作数  Intel 列出的操作数 是相反的">
+<meta name="keywords" content="asm,os">
 <meta property="og:type" content="article">
-<meta property="og:title" content="changan&#39;s blog">
+<meta property="og:title" content="程序的机器级表示">
 <meta property="og:url" content="http://oneyearago.me/2020/11/03/csapp-3-asm/index.html">
 <meta property="og:site_name" content="changan&#39;s blog">
 <meta property="og:description" content="CSAPP机器级表示汇编 两个抽象  硬件 指令集 ISA 的抽象 虚拟内存  大数组   汇编与高级语言的区别  暴露的可操作  程序计数器  rip 条件寄存器 整数寄存器       ATT 汇编与 intel 汇编区别  intel 省略了 指示大小的后缀 Intel省略了 寄存器前的  %  Intel 有很多不同的方法 描述内存的位置 多个操作数  Intel 列出的操作数 是相反的">
@@ -53,9 +54,9 @@
 <meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call_ret">
 <meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call.png">
 <meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call_gdb">
-<meta property="og:updated_time" content="2020-11-03T13:30:10.000Z">
+<meta property="og:updated_time" content="2020-11-03T13:37:05.364Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="changan&#39;s blog">
+<meta name="twitter:title" content="程序的机器级表示">
 <meta name="twitter:description" content="CSAPP机器级表示汇编 两个抽象  硬件 指令集 ISA 的抽象 虚拟内存  大数组   汇编与高级语言的区别  暴露的可操作  程序计数器  rip 条件寄存器 整数寄存器       ATT 汇编与 intel 汇编区别  intel 省略了 指示大小的后缀 Intel省略了 寄存器前的  %  Intel 有很多不同的方法 描述内存的位置 多个操作数  Intel 列出的操作数 是相反的">
 <meta name="twitter:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call_register">
 
@@ -67,7 +68,7 @@
   };
 </script>
 
-  <title>  | changan's blog </title>
+  <title> 程序的机器级表示 | changan's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -317,7 +318,7 @@
           
           
             
-              
+              程序的机器级表示
             
           
         </h1>
@@ -326,11 +327,38 @@
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2020-11-03T21:34:37+08:00" content="2020-11-03">
+          <time itemprop="dateCreated" datetime="2020-11-03T21:33:39+08:00" content="2020-11-03">
             2020-11-03
           </time>
         </span>
 
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/asm/" itemprop="url" rel="index">
+                  <span itemprop="name">asm</span>
+                </a>
+              </span>
+
+              
+              
+                , 
+              
+
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/asm/os/" itemprop="url" rel="index">
+                  <span itemprop="name">os</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
         
 
         
@@ -609,6 +637,14 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/asm/" rel="tag">#asm</a>
+          
+            <a href="/tags/os/" rel="tag">#os</a>
+          
+        </div>
+      
 
       
         <div class="post-nav">
@@ -807,14 +843,14 @@
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">46</span>
+              <span class="site-state-item-count">48</span>
               <span class="site-state-item-name">categories</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">45</span>
+              <span class="site-state-item-count">46</span>
               <span class="site-state-item-name">tags</span>
               </a>
           </div>
