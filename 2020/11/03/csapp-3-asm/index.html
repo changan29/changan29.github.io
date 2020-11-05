@@ -40,25 +40,26 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="CSAPP机器级表示汇编 两个抽象  硬件 指令集 ISA 的抽象 虚拟内存  大数组   汇编与高级语言的区别  暴露的可操作  程序计数器  rip 条件寄存器 整数寄存器       ATT 汇编与 intel 汇编区别  intel 省略了 指示大小的后缀 Intel省略了 寄存器前的  %  Intel 有很多不同的方法 描述内存的位置 多个操作数  Intel 列出的操作数 是相反的">
+<meta name="description" content="CSAPP 机器级表示汇编 两个抽象  硬件 指令集 ISA 的抽象 虚拟内存  大数组   汇编与高级语言的区别  暴露的可操作  程序计数器  rip 条件寄存器 整数寄存器       ATT 汇编与 intel 汇编区别  intel 省略了 指示大小的后缀 Intel省略了 寄存器前的  %  Intel 有很多不同的方法 描述内存的位置 多个操作数  Intel 列出的操作数 是相反的">
 <meta name="keywords" content="asm,os">
 <meta property="og:type" content="article">
 <meta property="og:title" content="程序的机器级表示">
 <meta property="og:url" content="http://oneyearago.me/2020/11/03/csapp-3-asm/index.html">
 <meta property="og:site_name" content="changan&#39;s blog">
-<meta property="og:description" content="CSAPP机器级表示汇编 两个抽象  硬件 指令集 ISA 的抽象 虚拟内存  大数组   汇编与高级语言的区别  暴露的可操作  程序计数器  rip 条件寄存器 整数寄存器       ATT 汇编与 intel 汇编区别  intel 省略了 指示大小的后缀 Intel省略了 寄存器前的  %  Intel 有很多不同的方法 描述内存的位置 多个操作数  Intel 列出的操作数 是相反的">
+<meta property="og:description" content="CSAPP 机器级表示汇编 两个抽象  硬件 指令集 ISA 的抽象 虚拟内存  大数组   汇编与高级语言的区别  暴露的可操作  程序计数器  rip 条件寄存器 整数寄存器       ATT 汇编与 intel 汇编区别  intel 省略了 指示大小的后缀 Intel省略了 寄存器前的  %  Intel 有很多不同的方法 描述内存的位置 多个操作数  Intel 列出的操作数 是相反的">
 <meta property="og:locale" content="en">
+<meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/csapp-3-7.svg">
 <meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call_register">
 <meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call_op">
 <meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call_stack">
 <meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call_ret">
 <meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call.png">
 <meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call_gdb">
-<meta property="og:updated_time" content="2020-11-03T13:37:05.364Z">
+<meta property="og:updated_time" content="2020-11-05T03:50:50.731Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="程序的机器级表示">
-<meta name="twitter:description" content="CSAPP机器级表示汇编 两个抽象  硬件 指令集 ISA 的抽象 虚拟内存  大数组   汇编与高级语言的区别  暴露的可操作  程序计数器  rip 条件寄存器 整数寄存器       ATT 汇编与 intel 汇编区别  intel 省略了 指示大小的后缀 Intel省略了 寄存器前的  %  Intel 有很多不同的方法 描述内存的位置 多个操作数  Intel 列出的操作数 是相反的">
-<meta name="twitter:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call_register">
+<meta name="twitter:description" content="CSAPP 机器级表示汇编 两个抽象  硬件 指令集 ISA 的抽象 虚拟内存  大数组   汇编与高级语言的区别  暴露的可操作  程序计数器  rip 条件寄存器 整数寄存器       ATT 汇编与 intel 汇编区别  intel 省略了 指示大小的后缀 Intel省略了 寄存器前的  %  Intel 有很多不同的方法 描述内存的位置 多个操作数  Intel 列出的操作数 是相反的">
+<meta name="twitter:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/csapp-3-7.svg">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -373,7 +374,8 @@
       
 
       
-        <span itemprop="articleBody"><h1 id="CSAPP"><a href="#CSAPP" class="headerlink" title="CSAPP"></a>CSAPP</h1><h2 id="机器级表示"><a href="#机器级表示" class="headerlink" title="机器级表示"></a>机器级表示</h2><h3 id="汇编"><a href="#汇编" class="headerlink" title="汇编"></a>汇编</h3><ul>
+        <span itemprop="articleBody"><h1 id="CSAPP"><a href="#CSAPP" class="headerlink" title="CSAPP"></a>CSAPP</h1><p><img src="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/csapp-3-7.svg" alt="image"></p>
+<h2 id="机器级表示"><a href="#机器级表示" class="headerlink" title="机器级表示"></a>机器级表示</h2><h3 id="汇编"><a href="#汇编" class="headerlink" title="汇编"></a>汇编</h3><ul>
 <li><p>两个抽象</p>
 <ul>
 <li>硬件 指令集 ISA 的抽象</li>
