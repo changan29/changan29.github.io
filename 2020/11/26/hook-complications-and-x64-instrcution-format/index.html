@@ -1,0 +1,986 @@
+
+<!doctype html>
+<html class="theme-next use-motion theme-next-mala">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="思绪来的快去的也快，偶尔在这里停留" />
+
+
+
+  <meta name="keywords" content="hook," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="hook的并发症可以理解成一个有意思的问题，假如地址 addr1 上有一个函数func1，长度为len, 将这个函数 整体换一个位置，挪到 addr2, 移动之后的函数成为func2 1memcpy(addr2 ,addr1,len ); 原来调用 func1 语法是: 1func1(arg1 , arg2 , arg3); 问:现在用如下的方式调用 func2 是否会发生异常？ 1func2(a">
+<meta name="keywords" content="hook">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从hook的并发症理解x64指令格式">
+<meta property="og:url" content="http://oneyearago.me/2020/11/26/hook-complications-and-x64-instrcution-format/index.html">
+<meta property="og:site_name" content="changan&#39;s blog">
+<meta property="og:description" content="hook的并发症可以理解成一个有意思的问题，假如地址 addr1 上有一个函数func1，长度为len, 将这个函数 整体换一个位置，挪到 addr2, 移动之后的函数成为func2 1memcpy(addr2 ,addr1,len ); 原来调用 func1 语法是: 1func1(arg1 , arg2 , arg3); 问:现在用如下的方式调用 func2 是否会发生异常？ 1func2(a">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/relative_example.png">
+<meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/op-summery.png">
+<meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/intel-instrction-format-x64.png">
+<meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/intel-instruction-format-prefixs.png">
+<meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/Instruction-format-opcode.png">
+<meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/modrm_struct.png">
+<meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/ModRM-and-SIB-Bytes.png">
+<meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/modrm-sib-code.png">
+<meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/64-rex-ext-modrm.png">
+<meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/rex64-ext-modrm.png">
+<meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/rip-relative-x64.png">
+<meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/inline-hook-process.png">
+<meta property="og:updated_time" content="2020-11-26T09:22:49.911Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从hook的并发症理解x64指令格式">
+<meta name="twitter:description" content="hook的并发症可以理解成一个有意思的问题，假如地址 addr1 上有一个函数func1，长度为len, 将这个函数 整体换一个位置，挪到 addr2, 移动之后的函数成为func2 1memcpy(addr2 ,addr1,len ); 原来调用 func1 语法是: 1func1(arg1 , arg2 , arg3); 问:现在用如下的方式调用 func2 是否会发生异常？ 1func2(a">
+<meta name="twitter:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/relative_example.png">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mala',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 从hook的并发症理解x64指令格式 | changan's blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">changan's blog</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            About
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    
+      
+
+      
+        <style type="text/css">
+
+    .circle {
+        width: 40px;
+        height: 40px;
+        background: #555 no-repeat;
+        cursor: move;
+    }
+
+    .assist-btn {
+        position: fixed;
+        top: 50％;
+        left: 10px;
+        -moz-border-radius: 50px;
+        -webkit-border-radius: 50px;
+        border-radius: 50px;
+        outline: none;
+        border: none;
+        color: #87daff;
+    }
+
+</style>
+
+<script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+<script type="text/javascript">
+    // 浮动圆点展开与收缩
+    /*
+    $(function () {
+        var assist_box = $('.assist-box');
+        $('#assist_btn').hover(function () {
+            assist_box.stop().show(300);
+        }, function () {
+            assist_box.stop().hide(150);
+        })
+    });
+    */  
+    //浮动圆点拖动
+    $(function () {
+        var box = document.getElementById('assist_btn');
+        box.onmousedown = function (event) {
+            var e = event || window.event,
+                t = e.target || e.srcElement,
+                // 鼠标按下时的坐标x1,y1
+                x1 = e.clientX,
+                y1 = e.clientY,
+                //鼠标按下时的左右偏移量
+                dragLeft = this.offsetLeft,
+                dragTop = this.offsetTop;
+
+            document.onmousemove = function (event) {
+                var e = event || window.event,
+                    t = e.target || e.srcElement,
+                    // 鼠标移动时的动态坐标
+                    x2 = e.clientX,
+                    y2 = e.clientY,
+                    // 鼠标移动时的坐标的变化量
+                    x = x2 - x1,
+                    y = y2 - y1;
+                box.style.left = (dragLeft + x) + 'px';
+                box.style.top = (dragTop + y) + 'px';
+            }
+
+            document.onmouseup = function () {
+                this.onmousemove = null;
+            }
+        }
+    });
+
+/*
+    $whitesmoke   = #f5f5f5
+    $gainsboro    = #eee
+    $gray-lighter = #ddd
+    $grey-light   = #ccc
+    $grey         = #bbb
+    $grey-dark    = #999
+    $grey-dim     = #666
+    $black-light  = #555
+    $black-deep   = #222
+    $red          = #ff2a2a
+    $blue-bright  = #87daff
+    $blue         = #0684bd
+    $blue-deep    = #262a30
+*/
+    // white theme
+    var body = {color: "#555", background: "white"};
+    var a_tag = {color: "#222"};
+    var header = { background: "#f5f5f5"};
+    var logo_line_i = {background: "#222"};
+    // var post_code = {background: "#eee", color: "#222"};
+
+    function switch_theme() {
+        $("body").css(body);
+        $("a:not('.links-of-author-item a, .site-state-item a, .site-state-posts a, .feed-link a, .motion-element a, .post-tags a, .show-commit-cls a, #donate_board a')").css(a_tag);
+        $(".header, .footer").css(header);
+        $(".logo-line-before i, .logo-line-after i").css(logo_line_i);
+        //$(".post code").css(post_code);
+        $("#idhyt-surprise-ball #idhyt-surprise-ball-animation .drag").css(a_tag);
+        $(".post-title-link, .posts-expand .post-meta, .post-comments-count, .disqus-comment-count, .post-category a, .post-nav-next a, .post-nav-item a").css(a_tag);
+        
+        // $("code").css({color: '#c5c8c6', background: '#1d1f21'});
+        $("#assist_btn").hide(1500);
+    }
+
+    $(function () {
+        $("#assist_btn").dblclick(function() {
+            switch_theme();
+        });
+    });
+
+</script>
+
+<div>
+
+    <button class="assist-btn circle" id="assist_btn" title="双击切换">
+        亮
+    </button>
+
+</div>
+
+
+
+
+
+
+
+
+
+      
+
+    
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              从hook的并发症理解x64指令格式
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2020-11-26T17:22:39+08:00" content="2020-11-26">
+            2020-11-26
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/hook/" itemprop="url" rel="index">
+                  <span itemprop="name">hook</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h3 id="hook的并发症"><a href="#hook的并发症" class="headerlink" title="hook的并发症"></a>hook的并发症</h3><p>可以理解成一个有意思的问题，假如地址 addr1 上有一个函数func1，长度为len, 将这个函数 整体换一个位置，挪到 addr2, 移动之后的函数成为func2</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">memcpy(addr2 ,addr1,len );</span><br></pre></td></tr></table></figure>
+<p>原来调用 func1 语法是:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">func1(arg1 , arg2 , arg3);</span><br></pre></td></tr></table></figure>
+<p>问:<br>现在用如下的方式调用 func2 是否会发生异常？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">func2(arg1 , arg2 , arg3);</span><br></pre></td></tr></table></figure>
+<p>假如把 func1 的开头 修改为特定的 shellcode，改成 跳转 + 目标跳转地址(比如 0xFF2500000000 + func_addr)的格式，就是传统的 inline hook， 但是这种hook将 原来函数的指令 挪了位置，再次调用有的时候会崩溃， 有的时候称这种情况为 hook的 并发症。</p>
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>==以下仅讨论 x64_64的情况，不涉及arm及其他体系结构。==</p>
+<p>函数内部是一条条的指令及其数据，比如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">402e30:   55                      push   %rbp</span><br><span class="line">402e31:   48 89 e5                mov    %rsp,%rbp</span><br><span class="line">402e34:   53                      push   %rbx</span><br><span class="line">402e35:   48 83 ec 48             sub    $0x48,%rsp</span><br><span class="line">402e39:   c6 45 e0 08             movb   $0x8,-0x20(%rbp)</span><br><span class="line">402e3d:   c6 45 e1 31             movb   $0x31,-0x1f(%rbp)</span><br><span class="line">402e41:   c6 45 e2 10             movb   $0x10,-0x1e(%rbp)</span><br><span class="line">402e45:   c6 45 e3 02             movb   $0x2,-0x1d(%rbp)</span><br><span class="line">402e49:   c6 45 e4 1a             movb   $0x1a,-0x1c(%rbp)</span><br><span class="line">402e4d:   c6 45 e5 02             movb   $0x2,-0x1b(%rbp)</span><br><span class="line">402e51:   c6 45 e6 7b             movb   $0x7b,-0x1a(%rbp)</span><br><span class="line">402e55:   c6 45 e7 7d             movb   $0x7d,-0x19(%rbp)</span><br><span class="line">402e59:   48 8d 45 b0             lea    -0x50(%rbp),%rax</span><br><span class="line">402e5d:   48 89 c7                mov    %rax,%rdi</span><br><span class="line">402e60:   e8 81 67 00 00          callq  4095e6 &lt;_ZN19ZoneActRunActCmdReqC1Ev&gt;     &lt;-----  4095e6 is a relative offset by 81 67 00 00 </span><br><span class="line">402e65:   48 8d 4d e0             lea    -0x20(%rbp),%rcx</span><br><span class="line">402e69:   48 8d 45 b0             lea    -0x50(%rbp),%rax</span><br><span class="line">402e6d:   ba 08 00 00 00          mov    $0x8,%edx</span><br><span class="line">402e72:   48 89 ce                mov    %rcx,%rsi</span><br><span class="line">402e75:   48 89 c7                mov    %rax,%rdi</span><br><span class="line">402e78:   e8 23 fd ff ff          callq  402ba0 &lt;_ZN6google8protobuf11MessageLite14ParseFromArrayEPKvi@plt&gt;</span><br></pre></td></tr></table></figure>
+<p>我们把func1整体挪了一个位置，挪到了func2， 还是原来的指令，比如 55 48 49 e5 顺序和值都和原来一样，但是按照 调用func1的方式调用 func2, 程序有的时候会崩溃，在找个例子里，程序会在</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">callq  4095e6 &lt;_ZN19ZoneActRunActCmdReqC1Ev&gt;</span><br></pre></td></tr></table></figure>
+<p>这个地方崩溃。</p>
+<p>其根本原因，是这些程序是 rip relative 的指令，类似于 call lea mov 等指令操作的指令有时候是相对于 PC(rip) 的偏移，CPU 执行 func1的 指令 PC 与 执行 func2的 的PC 是不一样的，也就是 rip寄存器的值 不一样，rip寄存器的值 + 指令指定的偏移 offset ，就是实际的偏移地址。</p>
+<p>上面的例子里面, 0x4095e6 是函数 _ZN19ZoneActRunActCmdReqC1Ev 的地址， 调用 _ZN19ZoneActRunActCmdReqC1Ev 就是 把 rip 转到0x4095e6, 具体到字节是: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">402e60:   e8 81 67 00 00</span><br></pre></td></tr></table></figure>
+<p>我们模拟cpu 执行到当前的位置，(%rip) = 0x402e60, 这条指令有 5 个字节， 其中 e8 是 call 的opcode, 81 67 00 00 这四个字节 是偏移地址，</p>
+<p>下一条指令(rip next)的地址是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">402e65:   48 8d 4d e0             lea    -0x20(%rbp),%rcx</span><br></pre></td></tr></table></figure>
+<p>rip_next = 0x402e65， CPU并不是直接计算出 _ZN19ZoneActRunActCmdReqC1Ev 的地址，而是按照 rip_next  + offset 进行编码 指令中的偏移  :<br><img src="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/relative_example.png" alt="image"></p>
+<p>可以看到，rip 和rip_next 如果挪动了，offset 没变， dest_func_addr 会是一个错误的值; 我们如果把 offset调整为 相对于 func2里面rip相对的 正确的 offset， 那么函数func2 就 跟 func1 一样了，可以正常调用。</p>
+<p>提到的 修正 offset的方式，就是修正 rip relative 的指令的偏移，一般在 inline hook的时候，会有指令的替换和挪动位置，指令调整是 解决这类并发症的一个方式，有成熟的hook库 完成了这类操作，比如polyhook， 其中的一个特性就是 解决了 inline Hook中的 rip relative 的指令的 位移修正。</p>
+<h4 id="那么，如何修正rip-relative指令呢？"><a href="#那么，如何修正rip-relative指令呢？" class="headerlink" title="那么，如何修正rip relative指令呢？"></a>那么，如何修正rip relative指令呢？</h4><ol>
+<li>需要找到 哪些指令会涉及rip relative</li>
+<li>如何找到 rip relative 指令</li>
+<li>rip relative指令中，位移是哪些字段，是8位的还是16位的，还是32位的</li>
+<li>offset 要如何修正到 正确的值</li>
+</ol>
+<p>要解决上面的问题，其中一个很基本的问题 就是要认识 CPU的指令集及其格式，找出要修正的指令，解析格式，找出 offset 进行修正。</p>
+<p>那么，需要学一下 CPU的指令集，参考的东西比较少，主要是Intel的CPU文档。</p>
+<h3 id="指令格式概述"><a href="#指令格式概述" class="headerlink" title="指令格式概述"></a>指令格式概述</h3><p>指令包括可选的指令前缀 (in any order)，主要操作码字节 (up to three bytes)，由ModR / M字节以及有时由SIB（Scale-Index-Base）组成的寻址形式说明符 (if required) ，位移字段 (if required)和立即数据字段 (if required)。</p>
+<p>最基础的 指令结构是这样的：</p>
+<p><img src="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/op-summery.png" alt="image"></p>
+<p>不过现在我们基本都进入64位了，新增了64位的 rex 前缀 扩展，当然 rex prefix 是可选的  不一定有<br><img src="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/intel-instrction-format-x64.png" alt="image"></p>
+<p>我们来具体的看一下 其中的每个部分。</p>
+<h4 id="Instruction-Prefixes"><a href="#Instruction-Prefixes" class="headerlink" title="Instruction Prefixes"></a>Instruction Prefixes</h4><p>指令前缀码，不包括 REX 前缀码部分</p>
+<p><img src="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/intel-instruction-format-prefixs.png" alt="image"></p>
+<h4 id="opcode"><a href="#opcode" class="headerlink" title="opcode"></a>opcode</h4><p><img src="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/Instruction-format-opcode.png" alt="image"></p>
+<h4 id="ModR-M-and-SIB-Bytes"><a href="#ModR-M-and-SIB-Bytes" class="headerlink" title="ModR/M and SIB Bytes"></a>ModR/M and SIB Bytes</h4><p>很多指令都是有操作数的，寻址是个很频繁的操作，操作数可以是立即数、寄存器、内存地址，或者是几种操作数的组合，ModR/M and SIB Bytes 表示的是 寻址模式标识字节，不是特别好理解，通过一个例子看一下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">40c27a:       8b bd c4 62 00 00       mov    0x62c4(%rbp),%edi</span><br><span class="line">40c280:       48 8d 74 24 10          lea    0x10(%rsp),%rsi</span><br><span class="line">40c285:       48 89 54 24 08          mov    %rdx,0x8(%rsp)</span><br><span class="line">40c28a:       e8 31 c8 05 00          callq  468ac0 &lt;tbus_get_msg_timestamp&gt;</span><br><span class="line">40c28f:       89 c1                   mov    %eax,%ecx                        &lt;------看这条</span><br><span class="line">40c291:       48 8b 54 24 08          mov    0x8(%rsp),%rdx</span><br><span class="line">40c296:       b8 fc ff ff ff          mov    $0xfffffffc,%eax</span><br></pre></td></tr></table></figure>
+<p>发现， mov    %eax,%ecx  这条指令 用了两个字节编码，其中，89 是mov 的opcode，可以理解 代表mov, 那么后面的 C1 就代表其操作数了，<br>看一下 C1 :</p>
+<p><img src="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/modrm_struct.png" alt="image"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C1:   11 000 001</span><br></pre></td></tr></table></figure>
+<p>对于使用到 ModR/M表示 寻址操作数的，对用一张 CPU的 寻址表，给出了对应的 表示规则，如图， 可以看到 mov    %eax,%ecx 是怎么表示的。</p>
+<p><img src="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/ModRM-and-SIB-Bytes.png" alt="image"></p>
+<p>某些特定的ModR/M字节需要一个后续字节，称为SIB字节。32位指令的基地址+偏移量，以及 比例*偏移量 的形式的寻址方式需要SIB字节。 SIB字节包括下列信息：</p>
+<ul>
+<li>scale（比例）域指定了放大的比例。</li>
+<li>index（偏移）域指定了用来存放偏移量 的寄存器。</li>
+<li>base （基地址）域用来标识存放基地址的寄存器。</li>
+</ul>
+<p>也是用于操作数操作的，比如 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mov (%ecx*4+%eax) , %edi</span><br></pre></td></tr></table></figure>
+<p>类似这种有放大比例，就需要用到SIB字节来表示。对应的 同样有一个 SIB 编码的表：<br><img src="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/modrm-sib-code.png" alt="image"></p>
+<p>不过我统计了一下，类似这种指令生成的不多，编译器应该偏向于生成 短小易于编解码的 指令，两个短的比一个长的 执行的机器周期短。</p>
+<h4 id="REX-Prefixes-开启64位计算的基石"><a href="#REX-Prefixes-开启64位计算的基石" class="headerlink" title="REX Prefixes 开启64位计算的基石"></a>REX Prefixes 开启64位计算的基石</h4><p>AMD 在x86体系的32位计算扩展为64位计算, AMD64体系的64位计算是这样设计：操作数的Default Operand-Size是32位，而Address-Size是固定为64位的，这里就引发3个问题要解决的：</p>
+<ul>
+<li>问题1：当要访问是64位的寄存器时，那么必须要有一种机制去开启或者说确认访问的寄存器是64位的。</li>
+<li>问题2：而要访问的内存操作数寄存器寻址的话，那么也必须要去开启或确认寄存器是64位的以及访问新增寄存的问题。</li>
+<li>问题3：如何去访问新增加的几个寄存器呢？那么也必须要有方法去访问增加的寄存器？</li>
+</ul>
+<p>那么在64位Long模式下，为什么不将操作数的Default Operand-Size设计为64位呢？那是由于体系限制，本来AMD64就是在x86的基础上扩展为64位的。x86体系当初设计时就没想到有会被扩展到64位的时候。所以在Segment-Descriptor（段描述符）里就没有可以扩展为64位的标志位。DS.D位只有置1时是32位，清0时为16位，这两种情况。<br>　　AMD在保持兼容的大提前下，只好令谋计策，AMD的解决方案是：增加一个64位模式下特有Prefix，以起到扩展访问64位的能力。这就是 REX prefix。
+　　</p>
+<h5 id="REX-prefix-的具体格式及含义"><a href="#REX-prefix-的具体格式及含义" class="headerlink" title="REX prefix 的具体格式及含义"></a>REX prefix 的具体格式及含义</h5><p>REX prefix的取值范围是：40 ~ 4F（0100 0000 ~ 0100 1111），来看下原来opcode取值范围的40 ~ 4F的是什么指令：<br>Opcode为40 ~ 47在x86下是inc eax ~ inc edi　指令，48 ~ 4F在x86下是dec eax ~ dec edi　指令。在64位模式下，40 ~ 4F 就已经不是指令而变身为 prefix了。</p>
+<p><img src="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/64-rex-ext-modrm.png" alt="image"></p>
+<p>如上表:</p>
+<ul>
+<li>REX.W域是设定操作数的大小（Operand-Size），当REX.W为1时，操作数是64位，为0时，操作数的大小是缺省大小（Default Opeand-Size）。这就解决了访问64位寄存器的问题。</li>
+<li>REX.R域是用于扩展ModRM字节中的R（Reg）域，ModRM中的Reg域除了对Opcode的补充外，是用来定义寄存器的编码，即寄存器值。REX.R将原来3位的寄存器ID（000 ~ 111）扩展为4位（0000 ~ 1111），这就解决了访新增寄存器的问题。</li>
+<li>REX.X域是用于扩展SIB字节中的Index域，SIB中的Index域是指明Index 寄存器的编码，即ID值。这就解决了寄存器寻址内存中使用新增寄存器的问题。</li>
+<li>REX.B域是用于扩展ModRM字节中的r/m域和SIB中的Base域，SIB中的Base域指明Base寄存器编码即ID值。这就解决了寄存器寻址内存中使用新增寄存器的问题。</li>
+</ul>
+<p>看个例子: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">40a093:       4c 89 ee                mov    %r13,%rsi</span><br></pre></td></tr></table></figure>
+<p> mov    %r13,%rsi的机器码是: 4c 89 ee, 原来查找寄存器的 ModR/M 字段从 REX的字段上 扩展了 1 bit， 如果用64位的寄存器，查表如下:</p>
+<p><img src="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/rex64-ext-modrm.png" alt="image"></p>
+<p>查询的表格见:<br><a href="https://wiki.osdev.org/X86-64_Instruction_Encoding#Registers" target="_blank" rel="noopener">https://wiki.osdev.org/X86-64_Instruction_Encoding#Registers</a></p>
+<h4 id="RIP-Relative-Addressing"><a href="#RIP-Relative-Addressing" class="headerlink" title="RIP-Relative Addressing"></a>RIP-Relative Addressing</h4><p>一种新的寻址形式，即RIP相对（相对指令指针）寻址，是在64位模式下实现的。通过在下一条指令的64位RIP上添加位移来形成有效地址。</p>
+<p>在IA-32体系结构和兼容模式下，相对于指令指针的寻址仅在控制传递指令中可用。在64位模式下，使用ModR / M寻址的指令可以使用RIP相对寻址。如果没有RIP相对寻址，则所有ModR / M模式都会相对于零寻址存储器。</p>
+<p>在64位模式下，将ModR / M Disp32（32位位移）编码重新定义为RIP + Disp32，而不是仅位移。</p>
+<p><img src="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/rip-relative-x64.png" alt="image"></p>
+<blockquote>
+<p>The ModR/M encoding for RIP-relative addressing does not depend on using a prefix. Specifically, the r/m bit field encoding of 101B (used to select RIP-relative addressing) is not affected by the REX prefix. For example, selecting R13 (REX.B = 1, r/m = 101B) with mod = 00B still results in RIP-relative addressing. The 4-bit r/m field of REX.B combined with ModR/M is not fully decoded. In order to address R13 with no displacement, software must encode R13 + 0 using a 1-byte displacement of zero.</p>
+</blockquote>
+<blockquote>
+<p>RIP-relative addressing is enabled by 64-bit mode, not by a 64-bit address-size. The use of the address-size prefix does not disable RIP-relative addressing. The effect of the address-size prefix is to truncate and zero-extend the computed effective address to 32 bits.</p>
+</blockquote>
+<h3 id="如何识别各种指令格式"><a href="#如何识别各种指令格式" class="headerlink" title="如何识别各种指令格式"></a>如何识别各种指令格式</h3><p>以上介绍了各种指令的格式，目前我们服务器 一般都是用的是 Intel i7 64位的 CPU了， 指令集有几百个，opcode 有一个字节的，两个字节、三个字节的，还有各种前缀后缀， 给出一串二进制判断是什么指令以及操作数 是个查表的过程，已经有 反汇编器帮我们实现了识别的逻辑。</p>
+<h4 id="反汇编器"><a href="#反汇编器" class="headerlink" title="反汇编器"></a>反汇编器</h4><p>常用的反汇编器有很多:</p>
+<ul>
+<li>udis86 </li>
+<li>capstone</li>
+<li>Distorm</li>
+</ul>
+<p><a href="https://awesomeopensource.com/projects/disassembler" target="_blank" rel="noopener">https://awesomeopensource.com/projects/disassembler</a> 网站列出了各种语言的和系统的反汇编器。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@VM_8_16_centos udcli]#        echo &quot;FF 25 00 00 00 00 12 34 56   &quot; | ./udcli -64 -x -att  </span><br><span class="line">0000000000000000 ff2500000000       jmp (%rip)              </span><br><span class="line">0000000000000006 123456             adc (%rsi,%rdx,2), %dh</span><br></pre></td></tr></table></figure>
+<p>回到上面的问题，我们通过反汇编器找到 rip relative相关的指令， 找到 offset后，修改之，就完成了 inline hook 部分指令失效的fix。</p>
+<p>详细可以参考: <a href="https://github.com/stevemk14ebr/PolyHook" target="_blank" rel="noopener">https://github.com/stevemk14ebr/PolyHook</a> </p>
+<h3 id="整体流程"><a href="#整体流程" class="headerlink" title="整体流程"></a>整体流程</h3><p><img src="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/inline-hook-process.png" alt="image"></p>
+<h3 id="REF"><a href="#REF" class="headerlink" title="REF"></a>REF</h3><ul>
+<li><a href="https://en.wikipedia.org/wiki/X86_instruction_listings" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/X86_instruction_listings</a></li>
+<li><a href="https://bbs.pediy.com/thread-77824.htm" target="_blank" rel="noopener">https://bbs.pediy.com/thread-77824.htm</a></li>
+</ul>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hook/" rel="tag">#hook</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/11/18/game-sync-modle/" rel="next">网络游戏同步模型</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div>
+      
+        <style type="text/css">
+
+    .donate_bar {
+        text-align: center;
+        margin-top : 5%;
+    }
+
+    .donate_bar.hidden {
+        display:none;
+    }
+/*
+    .donate_bar a.btn_donate {
+        display: inline-block;
+        width: 82px;
+        height: 82px;
+        margin-left:auto;
+        margin-right:auto;
+
+        background: url("http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif") no-repeat;
+        _background: url("http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif") no-repeat; 
+
+        -webkit-transition: background 0s;
+        -moz-transition: background 0s;
+        -o-transition: background 0s;
+        -ms-transition: background 0s;
+        transition: background 0s;
+    }
+*/
+    .donate_bar a.btn_donate:hover { 
+        // background-position: 0px -82px;
+        color: #87daff
+    }
+
+    .donate_bar .donate_txt {
+        display: block;
+        color: #9d9d9d;
+        font: 14px/2 "Microsoft Yahei";
+    }
+
+    .bold { 
+        font-weight: bold; 
+    }
+
+    .post-donate a {
+        border-bottom: 0px;
+    }
+
+    #donate_guide table {
+        border: none;
+    }
+
+    #donate_guide td {
+        border-bottom: none;
+        border-right: none;
+        background: #333333;
+        valign: top;
+    }
+
+</style>
+
+
+
+    
+
+    <div class ="post-donate">
+        <div id="donate_board" class="donate_bar center">
+              <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏">赏</a>
+              <span id="donate_txt" class="donate_txt">
+                   
+                        请我喝杯咖啡
+                   
+              </span>
+            <br>
+        </div>  
+  
+        <div id="donate_guide" class="donate_bar center hidden">
+            <!--
+              
+
+            
+                <a href="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="微信打赏" class="fancybox" rel="article0"
+                    style="margin-right:30%">
+                    <img src="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="" height="164px" width="164px">
+                </a>
+            
+            -->
+            <table>
+                <tr>
+                    <td>
+                         
+                    </td>
+                    <td>
+                        
+                            <a href="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="微信打赏" class="fancybox" rel="article0"
+                                style="margin-right:30%">
+                                <img src="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="" height="164px" width="164px">
+                            </a>
+                        
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+        <script type="text/javascript">
+            document.getElementById('btn_donate').onclick = function() {
+                $('#donate_board').addClass('hidden');
+                // $('#donate_guide').removeClass('hidden');
+                $('#donate_guide').show(2000);
+            }
+
+        </script>
+    </div>
+
+    
+
+
+      
+    </div>
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+          <div class="comments" id="comments">
+            
+            -->
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table Of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="changan" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">changan</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">思绪来的快去的也快，偶尔在这里停留</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">63</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">51</span>
+              <span class="site-state-item-name">categories</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">47</span>
+              <span class="site-state-item-name">tags</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://github.com/changan29" target="_blank">GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/zhaochanganplus" target="_blank">ZhiHu</a>
+              </span>
+            
+          
+        </div>
+
+        <div class="links-of-friendly motion-element">
+          
+        </div>
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#hook的并发症"><span class="nav-number">1.</span> <span class="nav-text">hook的并发症</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#思路"><span class="nav-number">2.</span> <span class="nav-text">思路</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#那么，如何修正rip-relative指令呢？"><span class="nav-number">2.1.</span> <span class="nav-text">那么，如何修正rip relative指令呢？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#指令格式概述"><span class="nav-number">3.</span> <span class="nav-text">指令格式概述</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Instruction-Prefixes"><span class="nav-number">3.1.</span> <span class="nav-text">Instruction Prefixes</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#opcode"><span class="nav-number">3.2.</span> <span class="nav-text">opcode</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ModR-M-and-SIB-Bytes"><span class="nav-number">3.3.</span> <span class="nav-text">ModR/M and SIB Bytes</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#REX-Prefixes-开启64位计算的基石"><span class="nav-number">3.4.</span> <span class="nav-text">REX Prefixes 开启64位计算的基石</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#REX-prefix-的具体格式及含义"><span class="nav-number">3.4.1.</span> <span class="nav-text">REX prefix 的具体格式及含义</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RIP-Relative-Addressing"><span class="nav-number">3.5.</span> <span class="nav-text">RIP-Relative Addressing</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何识别各种指令格式"><span class="nav-number">4.</span> <span class="nav-text">如何识别各种指令格式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#反汇编器"><span class="nav-number">4.1.</span> <span class="nav-text">反汇编器</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#整体流程"><span class="nav-number">5.</span> <span class="nav-text">整体流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#REF"><span class="nav-number">6.</span> <span class="nav-text">REF</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2018 - 
+  <span itemprop="copyrightYear">2020
+  </span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changan
+  </span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme by <a class="theme-link" href="http://blog.idhyt.com">idhyt</a>.<a class="theme-link" href="https://github.com/idhyt/hexo-theme-next/tree/magiclamp">Mala</a>
+</div>
+
+<!-- busuanzi -->
+
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
