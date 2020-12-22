@@ -31,7 +31,7 @@
 
 
 
-  <meta name="keywords" content="web,javascript," />
+  <meta name="keywords" content="c++," />
 
 
 
@@ -40,22 +40,23 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="问题起因最近想学习下web前端，原因是这样的，当前中国(公元2018年)的网络环境，表现形式基本是web+移动端，像微信的小程序只要写js应该就可以了，移动端的app很多也是以web的形式展示，应用程序内是html+css+js，不仅方便发布，而且做起来也快，写完页面样式，更新资源，就好了，类似热更 问题javascript是怎么捕获到鼠标点击事件的？ js有很多事件，鼠标的、页面加载完成的、点击">
-<meta name="keywords" content="web,javascript">
+<meta name="description" content="概述首先,相较于C语言，C++语言并没有额外增加内存消耗(确切说，在没有虚函数情况下)。 对于一个C++类对象,每个对象有独立的数据成员(非static),但是内存中成员函数只有一份,该类的所有对象共享成员函数。 编译器在编译阶段,进行函数的重构，即将成员函数进行非成员化。通过将this指针作为函数的第一个参数,通过this指针即可以找到对象的数据成员 使用GDB调试 C++ 虚函数1234567">
+<meta name="keywords" content="c++">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JavaScript事件随想">
-<meta property="og:url" content="http://oneyearago.me/2018/05/06/JavaScript_event_loop_thought/index.html">
+<meta property="og:title" content="c++虚函数表">
+<meta property="og:url" content="http://oneyearago.me/2020/12/22/cpp-class-model/index.html">
 <meta property="og:site_name" content="changan&#39;s blog">
-<meta property="og:description" content="问题起因最近想学习下web前端，原因是这样的，当前中国(公元2018年)的网络环境，表现形式基本是web+移动端，像微信的小程序只要写js应该就可以了，移动端的app很多也是以web的形式展示，应用程序内是html+css+js，不仅方便发布，而且做起来也快，写完页面样式，更新资源，就好了，类似热更 问题javascript是怎么捕获到鼠标点击事件的？ js有很多事件，鼠标的、页面加载完成的、点击">
+<meta property="og:description" content="概述首先,相较于C语言，C++语言并没有额外增加内存消耗(确切说，在没有虚函数情况下)。 对于一个C++类对象,每个对象有独立的数据成员(非static),但是内存中成员函数只有一份,该类的所有对象共享成员函数。 编译器在编译阶段,进行函数的重构，即将成员函数进行非成员化。通过将this指针作为函数的第一个参数,通过this指针即可以找到对象的数据成员 使用GDB调试 C++ 虚函数1234567">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="http://otc9g6h5k.bkt.clouddn.com/Windows_event.jpg">
-<meta property="og:image" content="http://otc9g6h5k.bkt.clouddn.com/Windows_event2.gif">
-<meta property="og:image" content="http://otc9g6h5k.bkt.clouddn.com/browser-event.png">
-<meta property="og:updated_time" content="2018-05-05T17:03:38.000Z">
+<meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/post-cpp-no-inherit.png">
+<meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/post-cpp-single-inherit.png">
+<meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/post-cpp-multi-inherit.png">
+<meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/c%2B%2B_class_model.png">
+<meta property="og:updated_time" content="2020-12-22T07:28:49.089Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JavaScript事件随想">
-<meta name="twitter:description" content="问题起因最近想学习下web前端，原因是这样的，当前中国(公元2018年)的网络环境，表现形式基本是web+移动端，像微信的小程序只要写js应该就可以了，移动端的app很多也是以web的形式展示，应用程序内是html+css+js，不仅方便发布，而且做起来也快，写完页面样式，更新资源，就好了，类似热更 问题javascript是怎么捕获到鼠标点击事件的？ js有很多事件，鼠标的、页面加载完成的、点击">
-<meta name="twitter:image" content="http://otc9g6h5k.bkt.clouddn.com/Windows_event.jpg">
+<meta name="twitter:title" content="c++虚函数表">
+<meta name="twitter:description" content="概述首先,相较于C语言，C++语言并没有额外增加内存消耗(确切说，在没有虚函数情况下)。 对于一个C++类对象,每个对象有独立的数据成员(非static),但是内存中成员函数只有一份,该类的所有对象共享成员函数。 编译器在编译阶段,进行函数的重构，即将成员函数进行非成员化。通过将this指针作为函数的第一个参数,通过this指针即可以找到对象的数据成员 使用GDB调试 C++ 虚函数1234567">
+<meta name="twitter:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/post-cpp-no-inherit.png">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -65,7 +66,7 @@
   };
 </script>
 
-  <title> JavaScript事件随想 | changan's blog </title>
+  <title> c++虚函数表 | changan's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -315,7 +316,7 @@
           
           
             
-              JavaScript事件随想
+              c++虚函数表
             
           
         </h1>
@@ -324,8 +325,8 @@
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2018-05-06T01:30:39+08:00" content="2018-05-06">
-            2018-05-06
+          <time itemprop="dateCreated" datetime="2020-12-22T15:40:39+08:00" content="2020-12-22">
+            2020-12-22
           </time>
         </span>
 
@@ -334,20 +335,8 @@
             &nbsp; | &nbsp; In
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/web/" itemprop="url" rel="index">
-                  <span itemprop="name">web</span>
-                </a>
-              </span>
-
-              
-              
-                , 
-              
-
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/web/javascript-event/" itemprop="url" rel="index">
-                  <span itemprop="name">javascript-event</span>
+                <a href="/categories/c/" itemprop="url" rel="index">
+                  <span itemprop="name">c++</span>
                 </a>
               </span>
 
@@ -370,35 +359,21 @@
       
 
       
-        <span itemprop="articleBody"><h3 id="问题起因"><a href="#问题起因" class="headerlink" title="问题起因"></a>问题起因</h3><p>最近想学习下web前端，原因是这样的，当前中国(公元2018年)的网络环境，表现形式基本是web+移动端，像微信的小程序只要写js应该就可以了，移动端的app很多也是以web的形式展示，应用程序内是html+css+js，不仅方便发布，而且做起来也快，写完页面样式，更新资源，就好了，类似热更</p>
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>javascript是怎么捕获到鼠标点击事件的？</p>
-<p>js有很多事件，鼠标的、页面加载完成的、点击按钮的；etc..</p>
-<h3 id="理清这个思路"><a href="#理清这个思路" class="headerlink" title="理清这个思路"></a>理清这个思路</h3><p>以我 windows环境下 chrome 浏览器为例</p>
-<h5 id="首先几个概念"><a href="#首先几个概念" class="headerlink" title="首先几个概念"></a>首先几个概念</h5><ul>
-<li>鼠标这种硬件产生的信号肯定是操作系统处理，操作系统转发给对应的进程</li>
-<li>在windows中，也有鼠标按下,moveover 这类的消息</li>
-<li>在windows中,一个消息，是系统定义的一个32位的值，他唯一的定义了一个事件，向 Windows发出一个通知，告诉应用程序某个事情发生了。例如，单击鼠标、改变窗口尺寸、按下键盘上的一个键都会使Windows发送一个消息给应用程序的消息队列,然后应用程序再从消息队列中取出消息并进行相应的响应</li>
-<li>Windows操作系统也会给应用程序“发送消息”，而所谓的发送消息——–实际上就是操作系统调用程序中的一个专门负责处理消息的函数，这个函数称为窗口过程(应用程序给出的一个函数)</li>
-<li>消息队列可以分成系统消息队列和线程消息队列。系统消息队列由Windows维护，线程消息队列则由每个GUI线程自己进行维护</li>
-<li>对于队列消息，最常见的是鼠标和键盘触发的消息，例如WM_MOUSERMOVE,WM_CHAR等消息，还有一些其它的消息，例如：WM_PAINT、 WM_TIMER和WM_QUIT。当鼠标、键盘事件被触发后，相应的鼠标或键盘驱动程序就会把这些事件转换成相应的消息，然后输送到系统消息队列，由 Windows系统去进行处理。Windows系统则在适当的时机，从系统消息队列中取出一个消息，根据前面我们所说的MSG消息结构确定消息是要被送往那个窗口，然后把取出的消息送往创建窗口的线程的相应队列，下面的事情就该由线程消息队列操心了，Windows开始忙自己的事情去了。线程看到自己的消息队列中有消息，就从队列中取出来，通过操作系统发送到合适的窗口过程去处理。</li>
+        <span itemprop="articleBody"><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>首先,相较于C语言，C++语言并没有额外增加内存消耗(确切说，在没有虚函数情况下)。 对于一个C++类对象,每个对象有独立的数据成员(非static),但是内存中成员函数只有一份,该类的所有对象共享成员函数。</p>
+<p>编译器在编译阶段,进行函数的重构，即将成员函数进行非成员化。通过将this指针作为函数的第一个参数,通过this指针即可以找到对象的数据成员</p>
+<h3 id="使用GDB调试-C-虚函数"><a href="#使用GDB调试-C-虚函数" class="headerlink" title="使用GDB调试 C++ 虚函数"></a>使用GDB调试 C++ 虚函数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">class Base</span><br><span class="line">&#123;</span><br><span class="line">public:</span><br><span class="line">        int a;</span><br><span class="line">        int b;</span><br><span class="line">        virtual void function()&#123;&#125;</span><br><span class="line">        virtual void function001()&#123;&#125;</span><br><span class="line"></span><br><span class="line">        Base()&#123;&#125;</span><br><span class="line">        void NotVirtFunc()&#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">class Derive : public Base</span><br><span class="line">&#123;</span><br><span class="line">public:</span><br><span class="line">    Derive()&#123;&#125;</span><br><span class="line">    int c;</span><br><span class="line">    virtual void function()&#123;&#125;</span><br><span class="line">    virtual void function006()&#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">class Test</span><br><span class="line">&#123;</span><br><span class="line">    public:</span><br><span class="line">    int vv;</span><br><span class="line">    virtual void bar()&#123;&#125;</span><br><span class="line">    virtual void foo()&#123;&#125;</span><br><span class="line"></span><br><span class="line">    Test()&#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">class Derive2 : public Derive, public Test</span><br><span class="line">&#123;</span><br><span class="line">public:</span><br><span class="line">    Derive2()&#123;&#125;</span><br><span class="line">    int d2;</span><br><span class="line">    virtual void function()&#123;&#125;</span><br><span class="line">    virtual void function006()&#123;&#125;</span><br><span class="line">    virtual void bar()&#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    Base b;                         // 没有继承</span><br><span class="line">    b.function();</span><br><span class="line"></span><br><span class="line">    Derive d;                       // 继承</span><br><span class="line">    d.function();</span><br><span class="line"></span><br><span class="line">    Derive2* d2 = new Derive2();    //多继承</span><br><span class="line">    d2-&gt;function();</span><br><span class="line">    delete d2;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(gdb) p b</span><br><span class="line">$1 = &#123;_vptr.Base = 0x400a90 &lt;vtable for Base+16&gt;, a = 0, b = 0&#125;</span><br><span class="line">(gdb) info vtbl b</span><br><span class="line">vtable for &apos;Base&apos; @ 0x400a90 (subobject @ 0x7fffffffe2e0):</span><br><span class="line">[0]: 0x40081e &lt;Base::function()&gt;</span><br><span class="line">[1]: 0x400828 &lt;Base::function001()&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/post-cpp-no-inherit.png" alt="image"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(gdb) p d</span><br><span class="line">$2 = &#123;&lt;Base&gt; = &#123;_vptr.Base = 0x400a50 &lt;vtable for Derive+16&gt;, a = 0, b = 0&#125;, c = 1&#125;</span><br><span class="line">(gdb) info vtbl d</span><br><span class="line">vtable for &apos;Derive&apos; @ 0x400a50 (subobject @ 0x7fffffffe2c0):</span><br><span class="line">[0]: 0x40086e &lt;Derive::function()&gt;</span><br><span class="line">[1]: 0x400828 &lt;Base::function001()&gt;</span><br><span class="line">[2]: 0x400878 &lt;Derive::function006()&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/post-cpp-single-inherit.png" alt="image"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">(gdb) p *d2        </span><br><span class="line">$5 = &#123;&lt;Derive&gt; = &#123;&lt;Base&gt; = &#123;_vptr.Base = 0x4009d0 &lt;vtable for Derive2+16&gt;, a = 0, b = 0&#125;, c = 0&#125;, </span><br><span class="line">        &lt;Test&gt; = &#123;_vptr.Test = 0x400a00 &lt;vtable for Derive2+64&gt;, vv = 0&#125;, d2 = 0&#125;</span><br><span class="line">(gdb) info vtbl d2</span><br><span class="line">vtable for &apos;Derive2&apos; @ 0x4009d0 (subobject @ 0x603010):</span><br><span class="line">[0]: 0x4008ee &lt;Derive2::function()&gt;</span><br><span class="line">[1]: 0x400828 &lt;Base::function001()&gt;</span><br><span class="line">[2]: 0x4008f8 &lt;Derive2::function006()&gt;</span><br><span class="line">[3]: 0x400902 &lt;Derive2::bar()&gt;</span><br><span class="line"></span><br><span class="line">vtable for &apos;Test&apos; @ 0x400a00 (subobject @ 0x603028):</span><br><span class="line">[0]: 0x40090c &lt;non-virtual thunk to Derive2::bar()&gt;</span><br><span class="line">[1]: 0x40088c &lt;Test::foo()&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/post-cpp-multi-inherit.png" alt="image"></p>
+<h4 id="构造函数与虚函数表"><a href="#构造函数与虚函数表" class="headerlink" title="构造函数与虚函数表"></a>构造函数与虚函数表</h4><p>虚函数表创建时机是在编译期间。 编译期间编译器就为每个类确定好了对应的虚函数表里的内容。 所以在程序运行时，编译器会把虚函数表的首地址赋值给虚函数表指针，所以，这个虚函数表指针就有值了。</p>
+<p><img src="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/c%2B%2B_class_model.png" alt="image"></p>
+<h3 id="ref"><a href="#ref" class="headerlink" title="ref"></a>ref</h3><ul>
+<li><a href="https://tangocc.github.io/2018/03/20/cpp-class-memory-struct/" target="_blank" rel="noopener">https://tangocc.github.io/2018/03/20/cpp-class-memory-struct/</a></li>
 </ul>
-<p><img src="http://otc9g6h5k.bkt.clouddn.com/Windows_event.jpg" alt="image"><br><img src="http://otc9g6h5k.bkt.clouddn.com/Windows_event2.gif" alt="image"></p>
-<h5 id="windows-程序-最基本的窗口"><a href="#windows-程序-最基本的窗口" class="headerlink" title="windows 程序 最基本的窗口"></a>windows 程序 最基本的窗口</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">//一个简单的Win32应用程序</span><br><span class="line">//通过这个简单的实例讲解Windows消息是如何传递的</span><br><span class="line">#include &lt;windows.h&gt;</span><br><span class="line">//声明窗口过程函数</span><br><span class="line">LRESULT CALLBACK WndProc(HWND,UINT,WPARAM,LPARAM);</span><br><span class="line">//定义一个全局变量，作为窗口类名</span><br><span class="line">TCHAR szClassName[] = TEXT(&quot;SimpleWin32&quot;);</span><br><span class="line">//应用程序主函数</span><br><span class="line">int WINAPI WinMain (HINSTANCE hInstance,</span><br><span class="line">                                  HINSTANCE hPrevInstance,</span><br><span class="line">                                  LPSTR szCmdLine,</span><br><span class="line">                                  int iCmdShow)</span><br><span class="line">&#123;</span><br><span class="line">    //****1.设计一个窗口类****</span><br><span class="line">    WNDCLASS wndclass;</span><br><span class="line">    //****2.注册窗口类</span><br><span class="line">    if(!RegisterClass (&amp;wndclass))</span><br><span class="line">    &#123;</span><br><span class="line">           MessageBox (NULL, TEXT (&quot;RegisterClass Fail!&quot;), </span><br><span class="line">                   szClassName, MB_ICONERROR);</span><br><span class="line">           return 0;</span><br><span class="line">    &#125;</span><br><span class="line">    //****3.创建一个窗口</span><br><span class="line">    HWND hwnd;</span><br><span class="line">    hwnd = CreateWindow(szClassName,//窗口类名称</span><br><span class="line">           TEXT (&quot;The Simple Win32 Application&quot;),//窗口标题 </span><br><span class="line">           WS_OVERLAPPEDWINDOW,//窗口风格,即通常我们使用的windows窗口样式</span><br><span class="line">           CW_USEDEFAULT,//指定窗口的初始水平位置,即屏幕坐标系的窗口的左上角的X坐标</span><br><span class="line">           CW_USEDEFAULT,//指定窗口的初始垂直位置,即屏幕坐标系的窗口的左上角的Y坐标</span><br><span class="line">           CW_USEDEFAULT,//窗口的宽度</span><br><span class="line">           CW_USEDEFAULT,//窗口的高度</span><br><span class="line">           NULL,//父窗口句柄</span><br><span class="line">           NULL,//窗口菜单句柄</span><br><span class="line">           hInstance,//实例句柄</span><br><span class="line">           NULL);</span><br><span class="line">    //****4.显示窗口</span><br><span class="line">    ShowWindow(hwnd,iCmdShow);</span><br><span class="line">    //消息循环</span><br><span class="line">    MSG msg;</span><br><span class="line">    while(GetMessage(&amp;msg,NULL,0,0))//从消息队列中取消息 </span><br><span class="line">    &#123;</span><br><span class="line">           TranslateMessage (&amp;msg);              //转换消息</span><br><span class="line">           DispatchMessage (&amp;msg);               //派发消息</span><br><span class="line">    &#125;</span><br><span class="line">    return msg.wParam;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//消息处理函数</span><br><span class="line">//参数:窗口句柄，消息，消息参数，消息参数</span><br><span class="line">LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)</span><br><span class="line">&#123;</span><br><span class="line">    //处理感兴趣的消息</span><br><span class="line">    switch (message)</span><br><span class="line">    &#123;</span><br><span class="line">    case WM_DESTROY:</span><br><span class="line">           //当用户关闭窗口，窗口销毁，程序需结束，发退出消息，以退出消息循环</span><br><span class="line">           PostQuitMessage(0);</span><br><span class="line">           return 0;</span><br><span class="line">    // 鼠标消息</span><br><span class="line">    &#125;</span><br><span class="line">    //其他消息交给由系统提供的缺省处理函数</span><br><span class="line">    return ::DefWindowProc (hwnd, message, wParam, lParam);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="浏览器处理消息"><a href="#浏览器处理消息" class="headerlink" title="浏览器处理消息"></a>浏览器处理消息</h5><p>在Windows上，浏览器作为一个Windows上的应用程序，也会收到鼠标点击的事件，所以收到以后的事件不是 JavaScript 事件，而是浏览器进程和js解释器共同处理的事件</p>
-<p>浏览器访问网页是个网络io,渲染html，css 以及执行 js的操作，有些操作比如说获取远程数据、I/O操作等，他们都很耗时，如果采用同步的方式，那么进程在执行这些操作时就会因为耗时而等待，就像上面那样，下面的任务也只能等待，这样效率并不高。那浏览器是怎么做的呢?</p>
-<p><strong>为了协调事件，用户交互，脚本，渲染，网络等，用户代理必须使用事件循环。</strong><br><strong>事件循环的主要机制就是任务队列机制:</strong></p>
-<ul>
-<li>一个事件循环有一个或者多个任务队列（task queues）。任务队列是task的有序列表，task是调度Events，Parsing，Callbacks，Using a resource，Reacting to DOM manipulation这些任务的算法;</li>
-<li>每个任务都来自一个特定的任务源（task source）(比如鼠标键盘事件)。来自同一个特定任务源且属于特定事件循环的任务必须被加入到同一个任务队列中，来自不同任务源的任务可以放在不同的任务队列中;</li>
-<li>浏览器调用这些队列中的任务时采取这样的做法: 相同队列中的任务按照先进先出的顺序, 不同的队列按照提前设置的队列优先级来调用. 例如，用户代理可以有一个用于鼠标和键盘事件的任务队列（用户交互任务源），另一个用于其他任务。然后，用户代理75%概率调用键盘和鼠标事件任务队列，25%调用其他队列, 这样的话就保持界面响应而且不会饿死其他任务队列. 但是相同队列中的任务要按照先进先出的顺序。也就是说单独的任务队列中的任务总是按先进先出的顺序执行，但是不保证多个任务队列中的任务优先级，具体实现可能会交叉执行</li>
-</ul>
-<p>在调用任务的过程中, 会产生新的任务, 浏览器就会不断执行任务, 因此称为事件循环.</p>
-<p><img src="http://otc9g6h5k.bkt.clouddn.com/browser-event.png" alt="image"></p>
-<h5 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h5><ul>
-<li>[1] <a href="https://segmentfault.com/a/1190000012748907" target="_blank" rel="noopener">https://segmentfault.com/a/1190000012748907</a></li>
-<li>[2] <a href="https://github.com/JaffarL/weeiry/blob/master/2018-2-11/Nodejs%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF.md" target="_blank" rel="noopener">https://github.com/JaffarL/weeiry/blob/master/2018-2-11/Nodejs%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF.md</a></li>
-<li>[3] <a href="https://blog.csdn.net/liulianglin/article/details/14449577" target="_blank" rel="noopener">https://blog.csdn.net/liulianglin/article/details/14449577</a></li>
-</ul>
+<h3 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h3><p>菱形继承于虚继承这里没写，使用gdb也可以很快找到，编译器的规则而已，同理，后面这两种知道规则就可以了，在语言的框架下理解就可以了。</p>
 </span>
       
     </div>
@@ -407,9 +382,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/web/" rel="tag">#web</a>
-          
-            <a href="/tags/javascript/" rel="tag">#javascript</a>
+            <a href="/tags/c/" rel="tag">#c++</a>
           
         </div>
       
@@ -418,13 +391,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/05/20/linux_file_system/" rel="prev">linux_file_system</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/04/29/linux_init_and_systemd/" rel="next">linux_init_and_systemd</a>
+              <a href="/2020/12/18/rvalue_constructor/" rel="next">右值引用和构造</a>
             
           </div>
         </div>
@@ -658,7 +629,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题起因"><span class="nav-number">1.</span> <span class="nav-text">问题起因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#理清这个思路"><span class="nav-number">3.</span> <span class="nav-text">理清这个思路</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#首先几个概念"><span class="nav-number">3.0.1.</span> <span class="nav-text">首先几个概念</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#windows-程序-最基本的窗口"><span class="nav-number">3.0.2.</span> <span class="nav-text">windows 程序 最基本的窗口</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#浏览器处理消息"><span class="nav-number">3.0.3.</span> <span class="nav-text">浏览器处理消息</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#参考"><span class="nav-number">3.0.4.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用GDB调试-C-虚函数"><span class="nav-number">2.</span> <span class="nav-text">使用GDB调试 C++ 虚函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#构造函数与虚函数表"><span class="nav-number">2.1.</span> <span class="nav-text">构造函数与虚函数表</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ref"><span class="nav-number">3.</span> <span class="nav-text">ref</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TODO"><span class="nav-number">4.</span> <span class="nav-text">TODO</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
