@@ -3391,6 +3391,103 @@
           
           
             
+              <a class="post-title-link" href="/2019/03/18/make_a_linux_3/" itemprop="url">
+                写一个操作系统_03 引导内核
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2019-03-18T21:08:45+08:00" content="2019-03-18">
+            2019-03-18
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/kernel/" itemprop="url" rel="index">
+                  <span itemprop="name">kernel</span>
+                </a>
+              </span>
+
+              
+              
+                , 
+              
+
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/kernel/OS/" itemprop="url" rel="index">
+                  <span itemprop="name">OS</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            操作系统引导MBR&nbsp;&nbsp;接上一篇BIOS启动，BIOS完成了基础的硬件检测和硬件的中断向量表的初始化，然后BIOS找到MBR并且把MBR加载在内存中，跳转到该位置。加载的位置在内存中的0x7C00,至于为什么是这个位置，主要是因为历史的原因吧，最初的内存只有32K,历史选择了0x7
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2019/03/18/make_a_linux_3/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2019/03/17/Coastline/" itemprop="url">
                 东西冲海岸线
               </a>
@@ -4173,110 +4270,6 @@ Enjoy :)
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2018/09/16/concurrent_overview/" itemprop="url">
-                concurrent overview
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2018-09-16T01:01:39+08:00" content="2018-09-16">
-            2018-09-16
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/concurrent/" itemprop="url" rel="index">
-                  <span itemprop="name">concurrent</span>
-                </a>
-              </span>
-
-              
-              
-                , 
-              
-
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/concurrent/coroutine/" itemprop="url" rel="index">
-                  <span itemprop="name">coroutine</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            并发并发模型多进程
-
-简单
-开销比较大
-
-–例子: apache
-
-Apache的server为process-based server ,也就是基于多进程的HTTP服务器，它需要对每个用户请求创建一个子进程进行响应，这样的缺点是，如果并发的请求非常多(在大型门户网站很常见)，就会需要非常多的进程，
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2018/09/16/concurrent_overview/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -4313,7 +4306,7 @@ Apache的server为process-based server ,也就是基于多进程的HTTP服务器
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">65</span>
+              <span class="site-state-item-count">66</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -4327,7 +4320,7 @@ Apache的server为process-based server ,也就是基于多进程的HTTP服务器
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">48</span>
+              <span class="site-state-item-count">49</span>
               <span class="site-state-item-name">tags</span>
               </a>
           </div>
@@ -4371,7 +4364,7 @@ Apache的server为process-based server ,也就是基于多进程的HTTP服务器
       <div class="footer-inner"> <div class="copyright" >
   
   &copy; &nbsp;  2018 - 
-  <span itemprop="copyrightYear">2020
+  <span itemprop="copyrightYear">2021
   </span>
   <span class="with-love">
     <i class="icon-next-heart"></i>

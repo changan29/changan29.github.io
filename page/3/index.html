@@ -3391,6 +3391,92 @@
           
           
             
+              <a class="post-title-link" href="/2020/01/22/protobuf_Serialize_file/" itemprop="url">
+                protobuf 序列化到文件及反序列化
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2020-01-22T20:29:39+08:00" content="2020-01-22">
+            2020-01-22
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/protobuf/" itemprop="url" rel="index">
+                  <span itemprop="name">protobuf</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            项目应用游戏中，将对局的数据保留下来，用于对局回顾及debug等用途，由于协议采用PB，故以二进制的pb格式写入文件，在使用该对局内容的时候，按照格式反序列化出来用于播放对局、压测数据构造等。
+涉及的部分： pvp服务器，产生对局数据，然后通过路由发送到recordsvr，一个专门写文件的服务器，写
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2020/01/22/protobuf_Serialize_file/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2019/12/30/linklist_timer/" itemprop="url">
                 一种定时器的实现
               </a>
@@ -4109,103 +4195,6 @@ HIT计算机网络
           
           
             
-              <a class="post-title-link" href="/2019/10/24/linux_timer/" itemprop="url">
-                linux定时器时间轮算法
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2019-10-24T23:58:45+08:00" content="2019-10-24">
-            2019-10-24
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/linux/" itemprop="url" rel="index">
-                  <span itemprop="name">linux</span>
-                </a>
-              </span>
-
-              
-              
-                , 
-              
-
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/linux/timer/" itemprop="url" rel="index">
-                  <span itemprop="name">timer</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            时间轮实现Linux定时器分为低精度定时器和高精度定时器两种类型，内核对其均有实现。本文讨论的是我们在应用程序开发中比较常见的低精度定时器。作为常用的基础组件，定时器常用的几种实现方法包括：基于排序链表实现、基于小根堆实现、基于红黑树实现、基于时间轮实现。本文讲解的是时间复杂度最优，也是linux内
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2019/10/24/linux_timer/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
               <a class="post-title-link" href="/2019/10/24/IPC_and_pipe/" itemprop="url">
                 进程通信 & PIPE
               </a>
@@ -4329,7 +4318,7 @@ HIT计算机网络
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">65</span>
+              <span class="site-state-item-count">66</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -4343,7 +4332,7 @@ HIT计算机网络
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">48</span>
+              <span class="site-state-item-count">49</span>
               <span class="site-state-item-name">tags</span>
               </a>
           </div>
@@ -4387,7 +4376,7 @@ HIT计算机网络
       <div class="footer-inner"> <div class="copyright" >
   
   &copy; &nbsp;  2018 - 
-  <span itemprop="copyrightYear">2020
+  <span itemprop="copyrightYear">2021
   </span>
   <span class="with-love">
     <i class="icon-next-heart"></i>
