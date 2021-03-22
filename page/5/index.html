@@ -3391,6 +3391,105 @@
           
           
             
+              <a class="post-title-link" href="/2019/04/27/make_a_linux_15/" itemprop="url">
+                写一个操作系统_15 内存管理初步
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2019-04-27T21:08:45+08:00" content="2019-04-27">
+            2019-04-27
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/kernel/" itemprop="url" rel="index">
+                  <span itemprop="name">kernel</span>
+                </a>
+              </span>
+
+              
+              
+                , 
+              
+
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/kernel/OS/" itemprop="url" rel="index">
+                  <span itemprop="name">OS</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            内存管理初步物理内存认为的先规划成两部分，用户的物理内存和内核的物理内存，专项专用，内核有方法去占用用户的内存，但是规定两部分内存是专用的，内核只使用自己的物理内存。
+物理内存的内核、用户部分分别用 bitmap 来统计管理。
+虚拟内存首先，虚拟内存也是需要管理的，毕竟程序要申请堆上的内存，假定我们
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2019/04/27/make_a_linux_15/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2019/04/24/make_a_linux_14/" itemprop="url">
                 写一个操作系统_14 C 链接与系统调用
               </a>
@@ -4261,104 +4360,6 @@ Linux内核有一个系统调用指令clone()，这个指令产生一个调用�
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2019/03/28/make_a_linux_7/" itemprop="url">
-                写一个操作系统_07 设计自己的页表
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2019-03-28T21:08:45+08:00" content="2019-03-28">
-            2019-03-28
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/kernel/" itemprop="url" rel="index">
-                  <span itemprop="name">kernel</span>
-                </a>
-              </span>
-
-              
-              
-                , 
-              
-
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/kernel/OS/" itemprop="url" rel="index">
-                  <span itemprop="name">OS</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            设计自己的页表只针对32位的操作系统，设计一个二级页表，目的是构建一个简易的能跑起来的操作系统。对于4G的地址空间，每个页大小是4K,模仿Linux早期的做法，32位地址的前10位为页目录项，中间10位为页表，后面10位为偏移量。
-12|--目录项----|--页表-----|---地址偏移-||-
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2019/03/28/make_a_linux_7/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -4395,7 +4396,7 @@ Linux内核有一个系统调用指令clone()，这个指令产生一个调用�
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">69</span>
+              <span class="site-state-item-count">70</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
