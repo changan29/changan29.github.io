@@ -3391,6 +3391,94 @@
           
           
             
+              <a class="post-title-link" href="/2020/11/26/hook-complications-and-x64-instrcution-format/" itemprop="url">
+                从hook的并发症理解x64指令格式
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2020-11-26T17:22:39+08:00" content="2020-11-26">
+            2020-11-26
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/hook/" itemprop="url" rel="index">
+                  <span itemprop="name">hook</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            hook的并发症可以理解成一个有意思的问题，假如地址 addr1 上有一个函数func1，长度为len, 将这个函数 整体换一个位置，挪到 addr2, 移动之后的函数成为func2
+1memcpy(addr2 ,addr1,len );
+原来调用 func1 语法是:
+1func1(arg1 , 
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2020/11/26/hook-complications-and-x64-instrcution-format/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2020/11/18/game-sync-modle/" itemprop="url">
                 网络游戏同步模型
               </a>
@@ -4236,91 +4324,6 @@ https://weibo.com/l
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2020/06/16/replay/" itemprop="url">
-                游戏业务流量录制回放
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2020-06-16T19:40:39+08:00" content="2020-06-16">
-            2020-06-16
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/replay/" itemprop="url" rel="index">
-                  <span itemprop="name">replay</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            前置知识对于一个业务进程，其对外的交互大概有一下几种操作，1.从接入层收包处理，2. 写入或者读db拿数据包处理，3.与其他的进程交互接收其他进程的处理结果，也是通过收发包。如果用兼容的格式或者同样的框架写逻辑进程，收发包的地方可以抽象为 Recv和Send两个接口，定义一个通用类，每个逻辑进程继承
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2020/06/16/replay/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -4357,7 +4360,7 @@ https://weibo.com/l
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">72</span>
+              <span class="site-state-item-count">73</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
