@@ -3391,6 +3391,96 @@
           
           
             
+              <a class="post-title-link" href="/2021/04/19/redis-replica-and-redundancy/" itemprop="url">
+                redis数据冗余与分片
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2021-04-19T19:40:39+08:00" content="2021-04-19">
+            2021-04-19
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/redis/" itemprop="url" rel="index">
+                  <span itemprop="name">redis</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            redis数据冗余与分片数据冗余-主从复制Redis 提供了主从库模式，以保证数据副本的一致，主从库之间采用的是读写分离的方式。
+
+读操作：主库、从库都可以接收；
+写操作：首先到主库执行，然后，主库将写操作同步给从库。
+
+主从库间如何进行第一次同步？1replicaof  172.16.19.3  
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2021/04/19/redis-replica-and-redundancy/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2021/04/17/redis-persistence/" itemprop="url">
                 redis持久化
               </a>
@@ -4174,92 +4264,6 @@ case:我们的一个开发环境中有多个进程依赖同一个动态库.so，
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2020/12/16/shared_ptr/" itemprop="url">
-                std::shared_ptr
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2020-12-16T15:40:39+08:00" content="2020-12-16">
-            2020-12-16
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/c/" itemprop="url" rel="index">
-                  <span itemprop="name">c++</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            shared_ptr1template&lt; class T &gt; class shared_ptr; (C++11 起)
-多个shared_ptr管理同一个指针，仅当最后一个shared_ptr析构时，指针才被delete。这是怎么实现的呢？答案是：引用计数（reference counti
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2020/12/16/shared_ptr/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -4296,7 +4300,7 @@ case:我们的一个开发环境中有多个进程依赖同一个动态库.so，
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">73</span>
+              <span class="site-state-item-count">74</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>

@@ -31,7 +31,7 @@
 
 
 
-  <meta name="keywords" content="Pressure test,tools," />
+  <meta name="keywords" content="redis," />
 
 
 
@@ -40,23 +40,26 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="概述 首先对于游戏的业务，一般是玩家登陆到大厅，有一些任务、物品、好友、排行榜、聊天这种交互，其次是玩家与玩家之前的匹配与对局。以Moba游戏为例，玩家主要的行为就是登陆后进行匹配，匹配到水平差不多的10个人，分为两队，每组5个人创建对局进行pvp战斗，玩家的操作以指令的方式由客户端发到服务器。 大厅中客户端与服务器的连接是TCP连接，对局中玩家的操作更关注实时性，一般的用可靠UDP进行通信。 接">
-<meta name="keywords" content="Pressure test,tools">
+<meta name="description" content="redis数据冗余与分片数据冗余-主从复制Redis 提供了主从库模式，以保证数据副本的一致，主从库之间采用的是读写分离的方式。  读操作：主库、从库都可以接收； 写操作：首先到主库执行，然后，主库将写操作同步给从库。  主从库间如何进行第一次同步？1replicaof  172.16.19.3  6379  断网增量更新当主从库断连后，主库会把断连期间收到的写操作命令，写入 replicatio">
+<meta name="keywords" content="redis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="多进程游戏压测工具">
-<meta property="og:url" content="http://oneyearago.me/2020/06/04/Multi-process-pressure-measurement-tool-implementation/index.html">
+<meta property="og:title" content="redis数据冗余与分片">
+<meta property="og:url" content="http://oneyearago.me/2021/04/19/redis-replica-and-redundancy/index.html">
 <meta property="og:site_name" content="changan&#39;s blog">
-<meta property="og:description" content="概述 首先对于游戏的业务，一般是玩家登陆到大厅，有一些任务、物品、好友、排行榜、聊天这种交互，其次是玩家与玩家之前的匹配与对局。以Moba游戏为例，玩家主要的行为就是登陆后进行匹配，匹配到水平差不多的10个人，分为两队，每组5个人创建对局进行pvp战斗，玩家的操作以指令的方式由客户端发到服务器。 大厅中客户端与服务器的连接是TCP连接，对局中玩家的操作更关注实时性，一般的用可靠UDP进行通信。 接">
+<meta property="og:description" content="redis数据冗余与分片数据冗余-主从复制Redis 提供了主从库模式，以保证数据副本的一致，主从库之间采用的是读写分离的方式。  读操作：主库、从库都可以接收； 写操作：首先到主库执行，然后，主库将写操作同步给从库。  主从库间如何进行第一次同步？1replicaof  172.16.19.3  6379  断网增量更新当主从库断连后，主库会把断连期间收到的写操作命令，写入 replicatio">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/game_c2s.png">
-<meta property="og:image" content="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/tapp_svr_loop.png">
-<meta property="og:image" content="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/gameperf.png">
-<meta property="og:image" content="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/bus_channel.png">
-<meta property="og:updated_time" content="2020-06-04T09:34:18.068Z">
+<meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/rds-commu.jpg">
+<meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/redis-replicaof.jpg">
+<meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/redis-diff-push.jpg">
+<meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/rds-sentinel.png">
+<meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/rds-sentinel-util.png">
+<meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/redis-cluster.jpg">
+<meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/redis-cluster-choose.jpg">
+<meta property="og:updated_time" content="2021-04-19T10:58:00.496Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="多进程游戏压测工具">
-<meta name="twitter:description" content="概述 首先对于游戏的业务，一般是玩家登陆到大厅，有一些任务、物品、好友、排行榜、聊天这种交互，其次是玩家与玩家之前的匹配与对局。以Moba游戏为例，玩家主要的行为就是登陆后进行匹配，匹配到水平差不多的10个人，分为两队，每组5个人创建对局进行pvp战斗，玩家的操作以指令的方式由客户端发到服务器。 大厅中客户端与服务器的连接是TCP连接，对局中玩家的操作更关注实时性，一般的用可靠UDP进行通信。 接">
-<meta name="twitter:image" content="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/game_c2s.png">
+<meta name="twitter:title" content="redis数据冗余与分片">
+<meta name="twitter:description" content="redis数据冗余与分片数据冗余-主从复制Redis 提供了主从库模式，以保证数据副本的一致，主从库之间采用的是读写分离的方式。  读操作：主库、从库都可以接收； 写操作：首先到主库执行，然后，主库将写操作同步给从库。  主从库间如何进行第一次同步？1replicaof  172.16.19.3  6379  断网增量更新当主从库断连后，主库会把断连期间收到的写操作命令，写入 replicatio">
+<meta name="twitter:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/rds-commu.jpg">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -66,7 +69,7 @@
   };
 </script>
 
-  <title> 多进程游戏压测工具 | changan's blog </title>
+  <title> redis数据冗余与分片 | changan's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -316,7 +319,7 @@
           
           
             
-              多进程游戏压测工具
+              redis数据冗余与分片
             
           
         </h1>
@@ -325,8 +328,8 @@
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2020-06-04T22:31:45+08:00" content="2020-06-04">
-            2020-06-04
+          <time itemprop="dateCreated" datetime="2021-04-19T19:40:39+08:00" content="2021-04-19">
+            2021-04-19
           </time>
         </span>
 
@@ -335,20 +338,8 @@
             &nbsp; | &nbsp; In
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/Pressure-test/" itemprop="url" rel="index">
-                  <span itemprop="name">Pressure test</span>
-                </a>
-              </span>
-
-              
-              
-                , 
-              
-
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/Pressure-test/tools/" itemprop="url" rel="index">
-                  <span itemprop="name">tools</span>
+                <a href="/categories/redis/" itemprop="url" rel="index">
+                  <span itemprop="name">redis</span>
                 </a>
               </span>
 
@@ -371,50 +362,25 @@
       
 
       
-        <span itemprop="articleBody"><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p><img src="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/game_c2s.png" alt="image"></p>
-<p>首先对于游戏的业务，一般是玩家登陆到大厅，有一些任务、物品、好友、排行榜、聊天这种交互，其次是玩家与玩家之前的匹配与对局。以Moba游戏为例，玩家主要的行为就是登陆后进行匹配，匹配到水平差不多的10个人，分为两队，每组5个人创建对局进行pvp战斗，玩家的操作以指令的方式由客户端发到服务器。 大厅中客户端与服务器的连接是TCP连接，对局中玩家的操作更关注实时性，一般的用可靠UDP进行通信。</p>
-<h5 id="接入层"><a href="#接入层" class="headerlink" title="接入层"></a>接入层</h5><p>对于大厂而言，客户端接入服务器一般是连接一个接入层，经接入层转发请求到游戏服务器，接入层的目的也是标准化（工业化）的一部分，使得每个游戏都可以复用，只需要写业务逻辑从而不用重写网络连接的代码。我们模拟玩家的行为，也就是往游戏服务器对应的接入层发包。</p>
-<h5 id="内存池缓存数据"><a href="#内存池缓存数据" class="headerlink" title="内存池缓存数据"></a>内存池缓存数据</h5><p>对于游戏，玩家身上有很多属性，比如各种物品、分数、赛季信息、抽奖信息、VIP等级、头像框id、注册时间、各种活动的数据等。而游戏在开服或者有一些活动的时候，也是玩家集中登陆集中操作的时候，服务器的做法一般是在玩家登陆的服务器 建立内存池，将玩家的数据缓存到内存，纯内存的操作处理玩家数据比较高效。</p>
-<h5 id="通信协议"><a href="#通信协议" class="headerlink" title="通信协议"></a>通信协议</h5><p>王者荣耀和吃鸡应该也是使用Protocol Buffers<br><a href="https://developers.google.com/protocol-buffers" target="_blank" rel="noopener">https://developers.google.com/protocol-buffers</a></p>
-<h4 id="服务器逻辑"><a href="#服务器逻辑" class="headerlink" title="服务器逻辑"></a>服务器逻辑</h4><p>服务器主循环：<br><img src="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/tapp_svr_loop.png" alt="image"></p>
-<h4 id="压测概述与思路"><a href="#压测概述与思路" class="headerlink" title="压测概述与思路"></a>压测概述与思路</h4><p><img src="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/gameperf.png" alt="image"></p>
-<p>我们通过模拟真实玩家发起压力测试，有的场景比较简单，比如查询排行榜，只要构造了排行榜的数据，发起查询请求即可；但是也有比较复杂的场景，比如巅峰赛观战，比如需要8000人在对局，与此同时，有40000人在观战，正在对局中的人需要模拟玩家的行为，移动、一技能、装备、聊天、弹幕等操作，此时我们需要保持着和多个进程的连接。</p>
-<p>同时，每个进程保持的连接可能是有限的，比如接入层sdk的限制，连接层和逻辑层需要做到可扩展。</p>
-<h4 id="共享内存通道"><a href="#共享内存通道" class="headerlink" title="共享内存通道"></a>共享内存通道</h4><p>为支持逻辑层和连接层的可扩展，每增加一个逻辑层或者连接层，可以增加一个共享内存通道，<br><img src="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/bus_channel.png" alt="image"></p>
-<p>详细的代码在这里，可编译运行：</p>
-<p><a href="https://github.com/changan29/playcpp/tree/master/bus_channel" target="_blank" rel="noopener">https://github.com/changan29/playcpp/tree/master/bus_channel</a></p>
-<h4 id="定时器"><a href="#定时器" class="headerlink" title="定时器"></a>定时器</h4><p>一个Timer的实现需要具备以下几个行为:</p>
+        <span itemprop="articleBody"><h3 id="redis数据冗余与分片"><a href="#redis数据冗余与分片" class="headerlink" title="redis数据冗余与分片"></a>redis数据冗余与分片</h3><h4 id="数据冗余-主从复制"><a href="#数据冗余-主从复制" class="headerlink" title="数据冗余-主从复制"></a>数据冗余-主从复制</h4><p>Redis 提供了主从库模式，以保证数据副本的一致，主从库之间采用的是读写分离的方式。<br><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/rds-commu.jpg" alt="image"></p>
 <ul>
-<li>StartTimer(Interval, ExpiryAction)</li>
+<li>读操作：主库、从库都可以接收；</li>
+<li>写操作：首先到主库执行，然后，主库将写操作同步给从库。</li>
 </ul>
-<p>注册一个时间间隔为 Interval 后执行 ExpiryAction 的定时器实例，其中，返回 TimerId 以区分在定时器系统中的其他定时器实例。</p>
-<ul>
-<li>StopTimer(TimerId)</li>
+<h4 id="主从库间如何进行第一次同步？"><a href="#主从库间如何进行第一次同步？" class="headerlink" title="主从库间如何进行第一次同步？"></a>主从库间如何进行第一次同步？</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">replicaof  172.16.19.3  6379</span><br></pre></td></tr></table></figure>
+<p><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/redis-replicaof.jpg" alt="image"></p>
+<h4 id="断网增量更新"><a href="#断网增量更新" class="headerlink" title="断网增量更新"></a>断网增量更新</h4><p>当主从库断连后，主库会把断连期间收到的写操作命令，写入 replication buffer，同时也会把这些操作命令也写入 repl_backlog_buffer 这个缓冲区。</p>
+<p><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/redis-diff-push.jpg" alt="image"></p>
+<h4 id="主从全量同步使用RDB而不使用AOF的原因"><a href="#主从全量同步使用RDB而不使用AOF的原因" class="headerlink" title="主从全量同步使用RDB而不使用AOF的原因"></a>主从全量同步使用RDB而不使用AOF的原因</h4><p>RDB文件内容是经过压缩的二进制数据（不同数据类型数据做了针对性优化），文件很小。而AOF文件记录的是每一次写操作的命令，写操作越多文件会变得很大，其中还包括很多对同一个key的多次冗余操作。</p>
+<h4 id="哨兵机制"><a href="#哨兵机制" class="headerlink" title="哨兵机制"></a>哨兵机制</h4><p>Redis-Sentinel是Redis官方推荐的高可用性(HA)解决方案，当用Redis做Master-slave的高可用方案时，假如master宕机了，Redis本身(包括它的很多客户端)都没有实现自动进行主备切换，而Redis-sentinel本身也是一个独立运行的进程，它能监控多个master-slave集群，发现master宕机后能进行自动切换。<br><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/rds-sentinel.png" alt="image"><br><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/rds-sentinel-util.png" alt="image"></p>
+<h5 id="如何选定新主库？"><a href="#如何选定新主库？" class="headerlink" title="如何选定新主库？"></a>如何选定新主库？</h5><ul>
+<li>优先级最高的从库得分高。</li>
+<li>和旧主库同步程度最接近的从库得分高。</li>
+<li>ID 号小的从库得分高。</li>
 </ul>
-<p>根据 TimerId 找到注册的定时器实例并执行 Stop 。</p>
-<ul>
-<li>PerTickBookkeeping()</li>
-</ul>
-<p>在一个 Tick 时间粒度内，定时器系统需要执行的动作，它最主要的行为，就是检查定时器系统中，是否有定时器实例已经到期。</p>
-<p>具体的代码实现思路就是：在StartTimer的时候，把 当前时间 + Interval 作为key放入一个容器，然后在Loop的每次Tick里，从容器里面选出一个最小的key与当前时间比较，如果key小于当前时间，则这个key代表的timer就是expired，需要执行它的ExpiryAction(一般为回调)。</p>
-<h5 id="链表的实现"><a href="#链表的实现" class="headerlink" title="链表的实现"></a>链表的实现</h5><ul>
-<li>精度是 1ms</li>
-<li>最长时间是10min,延长时间可以增加 slot数量,slot时间的间隔是 1ms</li>
-<li>通过继承Timer父类，在子类重写timeout实现 超时回调</li>
-<li>每次都需要遍历超过时间的所有链表，时间复杂度为O(n)</li>
-</ul>
-<p>详细的代码在这里，可编译运行：</p>
-<p><a href="https://github.com/changan29/codeLib/tree/master/timer" target="_blank" rel="noopener">https://github.com/changan29/codeLib/tree/master/timer</a></p>
-<h4 id="协程"><a href="#协程" class="headerlink" title="协程"></a>协程</h4><p>协程框架使用的是 ucontext，参考之前写的这篇：<br><a href="http://www.oneyearago.me/2020/05/26/ucontext_01/" target="_blank" rel="noopener">http://www.oneyearago.me/2020/05/26/ucontext_01/</a></p>
-<p>实现的机制是：</p>
-<ol>
-<li>每个玩家抽象成机器人，有一个Robot类，Robot类继承 协程类</li>
-<li>每个Robot有自己的行为，logic进程的代码就是robot的行为</li>
-<li>把每个玩家抽象成一个协程，方便写逻辑，相互独立，等待调度</li>
-<li>初始化的时候创建一批玩家（协程），按照配置等待一定的时间开始执行（比如10ms）,结合定时器，可以按照固定的频率发包（比如1秒发送200个）</li>
-<li>调度程序  调度程序比较简单，比如有了响应包或者定时器事件到了，根据timer_id或者pkg_head_src标记等 resume 协程</li>
-</ol>
-<p>由于连接层和逻辑层 涉及业务协议和连接层sdk，此处没有单独的可调试代码，协议也不可泄露 :）</p>
+<h3 id="数据分片"><a href="#数据分片" class="headerlink" title="数据分片"></a>数据分片</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">redis-cli -h 172.16.19.3 –p 6379 cluster addslots 0,1</span><br><span class="line">redis-cli -h 172.16.19.4 –p 6379 cluster addslots 2,3</span><br><span class="line">redis-cli -h 172.16.19.5 –p 6379 cluster addslots 4</span><br></pre></td></tr></table></figure>
+<p><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/redis-cluster.jpg" alt="image"></p>
+<h4 id="客户端如何定位数据？"><a href="#客户端如何定位数据？" class="headerlink" title="客户端如何定位数据？"></a>客户端如何定位数据？</h4><p><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/redis-cluster-choose.jpg" alt="image"></p>
 </span>
       
     </div>
@@ -423,9 +389,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Pressure-test/" rel="tag">#Pressure test</a>
-          
-            <a href="/tags/tools/" rel="tag">#tools</a>
+            <a href="/tags/redis/" rel="tag">#redis</a>
           
         </div>
       
@@ -434,13 +398,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/06/10/game_match_making/" rel="prev">竞技游戏匹配系统</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/05/26/ucontext_01/" rel="next">ucontext</a>
+              <a href="/2021/04/17/redis-persistence/" rel="next">redis持久化</a>
             
           </div>
         </div>
@@ -674,7 +636,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#接入层"><span class="nav-number">1.0.1.</span> <span class="nav-text">接入层</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#内存池缓存数据"><span class="nav-number">1.0.2.</span> <span class="nav-text">内存池缓存数据</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#通信协议"><span class="nav-number">1.0.3.</span> <span class="nav-text">通信协议</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#服务器逻辑"><span class="nav-number">1.1.</span> <span class="nav-text">服务器逻辑</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#压测概述与思路"><span class="nav-number">1.2.</span> <span class="nav-text">压测概述与思路</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#共享内存通道"><span class="nav-number">1.3.</span> <span class="nav-text">共享内存通道</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#定时器"><span class="nav-number">1.4.</span> <span class="nav-text">定时器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#链表的实现"><span class="nav-number">1.4.1.</span> <span class="nav-text">链表的实现</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#协程"><span class="nav-number">1.5.</span> <span class="nav-text">协程</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#redis数据冗余与分片"><span class="nav-number">1.</span> <span class="nav-text">redis数据冗余与分片</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#数据冗余-主从复制"><span class="nav-number">1.1.</span> <span class="nav-text">数据冗余-主从复制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#主从库间如何进行第一次同步？"><span class="nav-number">1.2.</span> <span class="nav-text">主从库间如何进行第一次同步？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#断网增量更新"><span class="nav-number">1.3.</span> <span class="nav-text">断网增量更新</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#主从全量同步使用RDB而不使用AOF的原因"><span class="nav-number">1.4.</span> <span class="nav-text">主从全量同步使用RDB而不使用AOF的原因</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#哨兵机制"><span class="nav-number">1.5.</span> <span class="nav-text">哨兵机制</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#如何选定新主库？"><span class="nav-number">1.5.1.</span> <span class="nav-text">如何选定新主库？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据分片"><span class="nav-number">2.</span> <span class="nav-text">数据分片</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#客户端如何定位数据？"><span class="nav-number">2.1.</span> <span class="nav-text">客户端如何定位数据？</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
