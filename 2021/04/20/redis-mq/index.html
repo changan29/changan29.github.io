@@ -31,7 +31,7 @@
 
 
 
-  <meta name="keywords" content="little," />
+  <meta name="keywords" content="redis," />
 
 
 
@@ -40,21 +40,22 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="写在前面那不勒斯四部曲这部小说看完我感觉并没有网友推荐的那么惊艳那么有内涵，乏善可陈，不是很懂网友的好评如潮。寻常的成长题材，传统的写作手法，单一化女性视角，一直游离于这个故事之外，无法共鸣，可能是我从没去过意大利？？？ 书中我收获比较大的地方是莉拉和莱农在同一时期怀孕的时候，有女性在怀孕时期的心里描写，可能对我以后有点作用;其他的地方都是成长的轨迹了，大时代，小人物，甚至背景交代的不清楚，总之没">
-<meta name="keywords" content="little">
+<meta name="description" content="消息队列的特征消息队列在存取消息时，必须要满足三个需求，分别是  消息保序 处理重复的消息 保证消息可靠性  消息保序对于 单队列，单进程的queue， 是满足先入先出的特点的，本身是有序的，但是如果有多个队列或多个消费者线程的时候，可能会产生乱序的问题。 kafka的例子:   stream的缺点就是在redis内部，stream就是一个单一的key，如果不对key进行分片，那么stream的容">
+<meta name="keywords" content="redis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="那不勒斯四部曲--意大利">
-<meta property="og:url" content="http://oneyearago.me/2019/01/20/Napoli/index.html">
+<meta property="og:title" content="redis消息队列">
+<meta property="og:url" content="http://oneyearago.me/2021/04/20/redis-mq/index.html">
 <meta property="og:site_name" content="changan&#39;s blog">
-<meta property="og:description" content="写在前面那不勒斯四部曲这部小说看完我感觉并没有网友推荐的那么惊艳那么有内涵，乏善可陈，不是很懂网友的好评如潮。寻常的成长题材，传统的写作手法，单一化女性视角，一直游离于这个故事之外，无法共鸣，可能是我从没去过意大利？？？ 书中我收获比较大的地方是莉拉和莱农在同一时期怀孕的时候，有女性在怀孕时期的心里描写，可能对我以后有点作用;其他的地方都是成长的轨迹了，大时代，小人物，甚至背景交代的不清楚，总之没">
+<meta property="og:description" content="消息队列的特征消息队列在存取消息时，必须要满足三个需求，分别是  消息保序 处理重复的消息 保证消息可靠性  消息保序对于 单队列，单进程的queue， 是满足先入先出的特点的，本身是有序的，但是如果有多个队列或多个消费者线程的时候，可能会产生乱序的问题。 kafka的例子:   stream的缺点就是在redis内部，stream就是一个单一的key，如果不对key进行分片，那么stream的容">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="http://oss01-1251969284.cosgz.myqcloud.com/n1.png">
-<meta property="og:image" content="http://oss01-1251969284.cosgz.myqcloud.com/it.jpg">
-<meta property="og:updated_time" content="2019-01-21T01:36:12.000Z">
+<meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/kafka-rand-seq.png">
+<meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/kafka-rand-seq-solu.png">
+<meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/redis-list-streams-mq.jpg">
+<meta property="og:updated_time" content="2021-04-20T13:34:18.379Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="那不勒斯四部曲--意大利">
-<meta name="twitter:description" content="写在前面那不勒斯四部曲这部小说看完我感觉并没有网友推荐的那么惊艳那么有内涵，乏善可陈，不是很懂网友的好评如潮。寻常的成长题材，传统的写作手法，单一化女性视角，一直游离于这个故事之外，无法共鸣，可能是我从没去过意大利？？？ 书中我收获比较大的地方是莉拉和莱农在同一时期怀孕的时候，有女性在怀孕时期的心里描写，可能对我以后有点作用;其他的地方都是成长的轨迹了，大时代，小人物，甚至背景交代的不清楚，总之没">
-<meta name="twitter:image" content="http://oss01-1251969284.cosgz.myqcloud.com/n1.png">
+<meta name="twitter:title" content="redis消息队列">
+<meta name="twitter:description" content="消息队列的特征消息队列在存取消息时，必须要满足三个需求，分别是  消息保序 处理重复的消息 保证消息可靠性  消息保序对于 单队列，单进程的queue， 是满足先入先出的特点的，本身是有序的，但是如果有多个队列或多个消费者线程的时候，可能会产生乱序的问题。 kafka的例子:   stream的缺点就是在redis内部，stream就是一个单一的key，如果不对key进行分片，那么stream的容">
+<meta name="twitter:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/kafka-rand-seq.png">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -64,7 +65,7 @@
   };
 </script>
 
-  <title> 那不勒斯四部曲--意大利 | changan's blog </title>
+  <title> redis消息队列 | changan's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -314,7 +315,7 @@
           
           
             
-              那不勒斯四部曲--意大利
+              redis消息队列
             
           
         </h1>
@@ -323,8 +324,8 @@
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2019-01-20T16:08:45+08:00" content="2019-01-20">
-            2019-01-20
+          <time itemprop="dateCreated" datetime="2021-04-20T21:40:39+08:00" content="2021-04-20">
+            2021-04-20
           </time>
         </span>
 
@@ -333,8 +334,8 @@
             &nbsp; | &nbsp; In
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/little/" itemprop="url" rel="index">
-                  <span itemprop="name">little</span>
+                <a href="/categories/redis/" itemprop="url" rel="index">
+                  <span itemprop="name">redis</span>
                 </a>
               </span>
 
@@ -357,18 +358,34 @@
       
 
       
-        <span itemprop="articleBody"><h4 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h4><p>那不勒斯四部曲这部小说看完我感觉并没有网友推荐的那么惊艳那么有内涵，乏善可陈，不是很懂网友的好评如潮。寻常的成长题材，传统的写作手法，单一化女性视角，一直游离于这个故事之外，无法共鸣，可能是我从没去过意大利？？？</p>
-<p>书中我收获比较大的地方是莉拉和莱农在同一时期怀孕的时候，有女性在怀孕时期的心里描写，可能对我以后有点作用;其他的地方都是成长的轨迹了，大时代，小人物，甚至背景交代的不清楚，总之没有期望的好。</p>
-<h4 id="功课"><a href="#功课" class="headerlink" title="功课"></a>功课</h4><p>看小说总是要做功课的，时代背景，地理位置等。先写一个概览吧，至于啥时候有钱有时间去再说。</p>
-<p>今天的那不勒斯在意大利南部，距离罗马200公里路程，比武汉到长沙的距离还近。意大利南部常常与贫穷、犯罪和黑手党联系在一起，而在经济发展方面，南意大利始终落后于北意大利，故事也是发生在南部这个区域。<br><img src="http://oss01-1251969284.cosgz.myqcloud.com/n1.png" alt="image"></p>
-<p>那不勒斯是南方的“米兰”，整个南部的经济中心，自然吸引了无数来自地中海以西以南的移民。移民一多，对治安和生活方式上造成了巨大的冲击。好在意大利人文化强盛，不至于被破了老祖宗留下的财富，文化上还是保留得比较完整。治安上最头疼的一是黑人，二是棕肤色人种。对于亚洲人而言，棕肤色人种更危险。他们来自地中海沿岸，从希腊土耳其叙利亚，到埃及利比亚，突尼斯阿尔及利亚等，保守估计超过一半都是非法移民。</p>
-<h4 id="意大利"><a href="#意大利" class="headerlink" title="意大利"></a>意大利</h4><p>意大利过去分裂为许多王国与城邦，但是最终在1861年完成统一。可能由于历史的原因，北部被普鲁士占领，现在比较发达，高效率;南部比较贫穷低效。</p>
-<p>意大利近代是以工业发家的，但其实传统意大利是一个农业国。我们国家也是农业国，农业国有个什么共同点呢？除了穷，就是好厨艺。意大利的饮食文化非常丰富，是现代西餐的起源。客观地讲，他们的饮食文化和中国的饮食文化不相上下。而南意的饮食文化占整个意大利饮食文化的七成以上，可以代表意大利饮食文化。</p>
-<p>整个意大利人都很妈宝，他们虽然外表大男子主义，但家庭中心实际上是以母亲为主体的。他们真的可能一天和老妈打四五次电话，每次聊半个小时，而且聊的都是老妈唠叨孩子的话。吃午餐没有，吃的什么，想不想老妈做的肉酱面，晚餐想吃什么老妈给你做，你已经有两小时没回家了怎么养了个不知道回家的白眼狼，中午做的提拉米苏已经冻好了你赶紧回来吃，哎哟小宝贝老妈已经两个小时没见你了好想你。这种电话他们一天要打四五次。他们这些意大利人看似很不耐烦但其实内心非常享受！</p>
-<p>他们对老婆的态度和对老妈的态度完全不一样。对老婆就是索命鬼，债主，娶了你真是我的不幸。于是意大利男人在家庭里，和老婆孩子比较脱节，和老妈黏黏糊糊。这种循环下去，老婆有一天也会变成家庭的主心骨，成为儿子的老妈，她也会和自己儿子黏黏糊糊，女儿则变成别家的主心骨。传统意大利家庭就是这样循环下去的。《教父》里面就有所体现，男人主外经营所有生意业务，但家里面的大小事一切由老妈坐镇。</p>
-<h4 id="旅游"><a href="#旅游" class="headerlink" title="旅游"></a>旅游</h4><p>意大利适合旅游，一流的设计、时尚、跑车、咖啡、足球和旅游胜地，大气奢华，就像一个凭借着大航海祖上发财的富二代，高端奢华。</p>
-<p>不过发达国家一般都会有硬核的科技支撑，这方面对这个国家表示一丝遗憾，引用一个来自高中物理课本的图片:<br><img src="http://oss01-1251969284.cosgz.myqcloud.com/it.jpg" alt="image"></p>
-<p>anyway, 希望最近两年可以去一次 : )</p>
+        <span itemprop="articleBody"><h3 id="消息队列的特征"><a href="#消息队列的特征" class="headerlink" title="消息队列的特征"></a>消息队列的特征</h3><p>消息队列在存取消息时，必须要满足三个需求，分别是</p>
+<ul>
+<li>消息保序</li>
+<li>处理重复的消息</li>
+<li>保证消息可靠性</li>
+</ul>
+<h4 id="消息保序"><a href="#消息保序" class="headerlink" title="消息保序"></a>消息保序</h4><p>对于 单队列，单进程的queue， 是满足先入先出的特点的，本身是有序的，但是如果有多个队列或多个消费者线程的时候，可能会产生乱序的问题。</p>
+<p>kafka的例子:</p>
+<p><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/kafka-rand-seq.png" alt="image"></p>
+<p><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/kafka-rand-seq-solu.png" alt="image"></p>
+<p>stream的缺点就是在redis内部，stream就是一个单一的key，如果不对key进行分片，那么stream的容量被限制在单个redis的实例，<br>当然我们可以使用redis cluster对stream的key进行分片，实现类似kafka多partition的概念，但是由于redis cluster的一些限制，需要解决redis原生命令不支持跨slot操作的问题，<br>当然经过合理的设计，这并不是一个很大的问题，但是也需要解决，因此如果mq中的数据过于庞大，单个redis实例已经无法容纳，我们需要对stream的key进行分片并解决一些问题，这增大了业务实现的难度.</p>
+<h4 id="重复消息"><a href="#重复消息" class="headerlink" title="重复消息"></a>重复消息</h4><p>比如 RabbitMQ、RocketMQ、Kafka，都有可能会出现消息重复消费的问题，正常。因为这问题通常不是 MQ 自己保证的，是由我们开发来保证的。挑一个 Kafka 来举个例子，说说怎么重复消费吧。</p>
+<p>Kafka 实际上有个 offset 的概念，就是每个消息写进去，都有一个 offset，代表消息的序号，然后 consumer 消费了数据之后，每隔一段时间（定时定期），会把自己消费过的消息的 offset 提交一下，表示“我已经消费过了，下次我要是重启啥的，<br>你就让我继续从上次消费到的 offset 来继续消费吧”。</p>
+<p>但是凡事总有意外，比如我们之前生产经常遇到的，就是你有时候重启系统，看你怎么重启了，如果碰到点着急的，直接 kill 进程了，再重启。这会导致 consumer 有些消息处理了，但是没来得及提交 offset，尴尬了。重启之后，少数消息会再次消费一次。</p>
+<p>当收到一条消息后，消费者程序就可以对比收到的消息 ID 和记录的已处理过的消息 ID，来判断当前收到的消息有没有经过处理。如果已经处理过，那么，消费者程序就不再进行处理了。这种处理特性也称为幂等性，<br>幂等性就是指，对于同一条消息，消费者收到一次的处理结果和收到多次的处理结果是一致的。</p>
+<p>基于 Streams 的消息队列解决方案:</p>
+<ul>
+<li>XADD：插入消息，保证有序，可以自动生成全局唯一 ID</li>
+<li>XREAD：用于读取消息，可以按 ID 读取数据</li>
+</ul>
+<h4 id="可靠性"><a href="#可靠性" class="headerlink" title="可靠性"></a>可靠性</h4><p>基于 Streams 的消息队列解决方案:</p>
+<ul>
+<li>XPENDING 命令可以用来查询每个消费组内所有消费者已读取但尚未确认的消息，而 XACK 命令用于向消息队列确认消息处理已完成</li>
+</ul>
+<p>在用Redis当作队列或存储数据时，是有可能丢失数据的：一个场景是，如果打开AOF并且是每秒写盘，因为这个写盘过程是异步的，Redis宕机时会丢失1秒的数据。而如果AOF改为同步写盘，那么写入性能会下降。<br>另一个场景是，如果采用主从集群，如果写入量比较大，从库同步存在延迟，此时进行主从切换，也存在丢失数据的可能（从库还未同步完成主库发来的数据就被提成主库）。<br>总的来说，Redis不保证严格的数据完整性和主从切换时的一致性。我们在使用Redis时需要注意。</p>
+<p>而采用RabbitMQ和Kafka这些专业的队列中间件时，就没有这个问题了。这些组件一般是部署一个集群，生产者在发布消息时，队列中间件一般会采用写多个节点+预写磁盘的方式保证消息的完整性，即便其中一个节点挂了，也能保证集群的数据不丢失。</p>
+<p>如果是金融相关的业务场景，例如交易、支付这类，建议还是使用专业的队列中间件。</p>
+<h4 id="用-List-和-Streams-实现消息队列的特点和区别"><a href="#用-List-和-Streams-实现消息队列的特点和区别" class="headerlink" title="用 List 和 Streams 实现消息队列的特点和区别"></a>用 List 和 Streams 实现消息队列的特点和区别</h4><p><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/redis-list-streams-mq.jpg" alt="image"></p>
 </span>
       
     </div>
@@ -377,7 +394,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/little/" rel="tag">#little</a>
+            <a href="/tags/redis/" rel="tag">#redis</a>
           
         </div>
       
@@ -386,13 +403,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/01/21/20thcentury/" rel="prev">《20世纪简史》</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/01/04/vmstat/" rel="next">vmstat</a>
+              <a href="/2021/04/19/redis-replica-and-redundancy/" rel="next">redis数据冗余与分片</a>
             
           </div>
         </div>
@@ -626,7 +641,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#写在前面"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#功课"><span class="nav-number">2.</span> <span class="nav-text">功课</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#意大利"><span class="nav-number">3.</span> <span class="nav-text">意大利</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#旅游"><span class="nav-number">4.</span> <span class="nav-text">旅游</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#消息队列的特征"><span class="nav-number">1.</span> <span class="nav-text">消息队列的特征</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#消息保序"><span class="nav-number">1.1.</span> <span class="nav-text">消息保序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#重复消息"><span class="nav-number">1.2.</span> <span class="nav-text">重复消息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#可靠性"><span class="nav-number">1.3.</span> <span class="nav-text">可靠性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#用-List-和-Streams-实现消息队列的特点和区别"><span class="nav-number">1.4.</span> <span class="nav-text">用 List 和 Streams 实现消息队列的特点和区别</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>

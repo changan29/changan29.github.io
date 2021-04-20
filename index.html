@@ -3391,6 +3391,101 @@
           
           
             
+              <a class="post-title-link" href="/2021/04/20/redis-mq/" itemprop="url">
+                redis消息队列
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2021-04-20T21:40:39+08:00" content="2021-04-20">
+            2021-04-20
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/redis/" itemprop="url" rel="index">
+                  <span itemprop="name">redis</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            消息队列的特征消息队列在存取消息时，必须要满足三个需求，分别是
+
+消息保序
+处理重复的消息
+保证消息可靠性
+
+消息保序对于 单队列，单进程的queue， 是满足先入先出的特点的，本身是有序的，但是如果有多个队列或多个消费者线程的时候，可能会产生乱序的问题。
+kafka的例子:
+
+
+stream的缺点
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2021/04/20/redis-mq/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2021/04/19/redis-replica-and-redundancy/" itemprop="url">
                 redis数据冗余与分片
               </a>
@@ -4178,92 +4273,6 @@ case:我们的一个开发环境中有多个进程依赖同一个动态库.so，
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2020/12/22/cpp-class-model/" itemprop="url">
-                c++虚函数表
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2020-12-22T15:40:39+08:00" content="2020-12-22">
-            2020-12-22
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/c/" itemprop="url" rel="index">
-                  <span itemprop="name">c++</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            概述首先,相较于C语言，C++语言并没有额外增加内存消耗(确切说，在没有虚函数情况下)。 对于一个C++类对象,每个对象有独立的数据成员(非static),但是内存中成员函数只有一份,该类的所有对象共享成员函数。
-编译器在编译阶段,进行函数的重构，即将成员函数进行非成员化。通过将this指针作为函数
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2020/12/22/cpp-class-model/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -4300,7 +4309,7 @@ case:我们的一个开发环境中有多个进程依赖同一个动态库.so，
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">74</span>
+              <span class="site-state-item-count">75</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
