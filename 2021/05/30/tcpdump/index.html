@@ -48,10 +48,13 @@
 <meta property="og:site_name" content="changan&#39;s blog">
 <meta property="og:description" content="1tcpdump -i eth0  -v -nn -X  -v &amp;apos;port 80&amp;apos; -c 5 -w cap.tcpdump 选项 i, interface 指定监听哪个网卡 nn, 如遇到21这类的端口号，显示21而不是 ftp X, 显示16进制和 ASCII码 ‘port 53’ 过滤端口 c : count 包个数 v : verbose  F : filter by f">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2021-05-30T14:17:48.879Z">
+<meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/ip-header.png">
+<meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/tcp-header.png">
+<meta property="og:updated_time" content="2021-05-30T14:24:04.378Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="tcpdump note">
 <meta name="twitter:description" content="1tcpdump -i eth0  -v -nn -X  -v &amp;apos;port 80&amp;apos; -c 5 -w cap.tcpdump 选项 i, interface 指定监听哪个网卡 nn, 如遇到21这类的端口号，显示21而不是 ftp X, 显示16进制和 ASCII码 ‘port 53’ 过滤端口 c : count 包个数 v : verbose  F : filter by f">
+<meta name="twitter:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/ip-header.png">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -373,6 +376,8 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tcpdump -i eth0 -c 3 &apos;dst port 53 or dst port 80&apos;</span><br><span class="line">tcpdump -i eth0 -c 3 &apos;dst 203.213.108.26 and port 22&apos;</span><br></pre></td></tr></table></figure>
 <h4 id="高阶过滤的方式"><a href="#高阶过滤的方式" class="headerlink" title="高阶过滤的方式"></a>高阶过滤的方式</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">## 支持协议头 可读变量</span><br><span class="line">tcpdump  -i eth0 -nn &apos; tcp[tcpflags] &amp; tcp-syn != 0 and  host 223.212.118.26 and port 80&apos;</span><br><span class="line"></span><br><span class="line">## 支持 proto[expr：size]格式  从某个协议的 第多少位 提取多少字节内容</span><br><span class="line">tcpdump &apos;ip[2:2] &gt; 567&apos; # ip包长度大于567的 网络包</span><br></pre></td></tr></table></figure>
 <p>参考资料: man pcap-filter</p>
+<p><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/ip-header.png" alt="image"></p>
+<p><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/tcp-header.png" alt="image"></p>
 </span>
       
     </div>
