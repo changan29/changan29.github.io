@@ -40,25 +40,26 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="三次握手主要做什么 同步 初始序列号 同步 MSS    四次挥手一定是四次吗？很容易抓到 三次挥手的包 MSS &amp;amp; MTU尽可能避免IP的分片网络通信，尽一切可能避免IP的分片！为什么？因为负责IP分片的那台主机、路由器会花费很多CPU资源来处理分片，同时负责重组IP分片的主机、路由器则需要更多的CPU资源来重组这些IP包的分片。比如一台路由器的数据处理能力是10G，如果处理分片则降">
+<meta name="description" content="渴望明天2021年高考，看到个图，挺好玩的，作为标题吧 哈哈哈 TCP  三次握手主要做什么 同步 初始序列号 同步 MSS    四次挥手一定是四次吗？很容易抓到 三次挥手的包 MSS &amp;amp; MTU尽可能避免IP的分片网络通信，尽一切可能避免IP的分片！为什么？因为负责IP分片的那台主机、路由器会花费很多CPU资源来处理分片，同时负责重组IP分片的主机、路由器则需要更多的CPU资源来重组这">
 <meta name="keywords" content="tcp">
 <meta property="og:type" content="article">
-<meta property="og:title" content="tcp note">
+<meta property="og:title" content="渴望明天">
 <meta property="og:url" content="http://oneyearago.me/2021/06/07/tcp/index.html">
 <meta property="og:site_name" content="changan&#39;s blog">
-<meta property="og:description" content="三次握手主要做什么 同步 初始序列号 同步 MSS    四次挥手一定是四次吗？很容易抓到 三次挥手的包 MSS &amp;amp; MTU尽可能避免IP的分片网络通信，尽一切可能避免IP的分片！为什么？因为负责IP分片的那台主机、路由器会花费很多CPU资源来处理分片，同时负责重组IP分片的主机、路由器则需要更多的CPU资源来重组这些IP包的分片。比如一台路由器的数据处理能力是10G，如果处理分片则降">
+<meta property="og:description" content="渴望明天2021年高考，看到个图，挺好玩的，作为标题吧 哈哈哈 TCP  三次握手主要做什么 同步 初始序列号 同步 MSS    四次挥手一定是四次吗？很容易抓到 三次挥手的包 MSS &amp;amp; MTU尽可能避免IP的分片网络通信，尽一切可能避免IP的分片！为什么？因为负责IP分片的那台主机、路由器会花费很多CPU资源来处理分片，同时负责重组IP分片的主机、路由器则需要更多的CPU资源来重组这">
 <meta property="og:locale" content="en">
+<meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/wait-tomorrow.jpg">
 <meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/tcp-socket.jpg">
 <meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/network-api.jpg">
 <meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/tcp-handshake.jpg">
 <meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/goodbye-tcp.png">
 <meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/tcp_ladder_states.svg">
 <meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/tcp-congestion.png">
-<meta property="og:updated_time" content="2021-06-07T13:19:24.391Z">
+<meta property="og:updated_time" content="2021-06-07T13:26:53.847Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="tcp note">
-<meta name="twitter:description" content="三次握手主要做什么 同步 初始序列号 同步 MSS    四次挥手一定是四次吗？很容易抓到 三次挥手的包 MSS &amp;amp; MTU尽可能避免IP的分片网络通信，尽一切可能避免IP的分片！为什么？因为负责IP分片的那台主机、路由器会花费很多CPU资源来处理分片，同时负责重组IP分片的主机、路由器则需要更多的CPU资源来重组这些IP包的分片。比如一台路由器的数据处理能力是10G，如果处理分片则降">
-<meta name="twitter:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/tcp-socket.jpg">
+<meta name="twitter:title" content="渴望明天">
+<meta name="twitter:description" content="渴望明天2021年高考，看到个图，挺好玩的，作为标题吧 哈哈哈 TCP  三次握手主要做什么 同步 初始序列号 同步 MSS    四次挥手一定是四次吗？很容易抓到 三次挥手的包 MSS &amp;amp; MTU尽可能避免IP的分片网络通信，尽一切可能避免IP的分片！为什么？因为负责IP分片的那台主机、路由器会花费很多CPU资源来处理分片，同时负责重组IP分片的主机、路由器则需要更多的CPU资源来重组这">
+<meta name="twitter:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/wait-tomorrow.jpg">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -68,7 +69,7 @@
   };
 </script>
 
-  <title> tcp note | changan's blog </title>
+  <title> 渴望明天 | changan's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -318,7 +319,7 @@
           
           
             
-              tcp note
+              渴望明天
             
           
         </h1>
@@ -361,7 +362,8 @@
       
 
       
-        <span itemprop="articleBody"><p><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/tcp-socket.jpg" alt="image"></p>
+        <span itemprop="articleBody"><h3 id="渴望明天"><a href="#渴望明天" class="headerlink" title="渴望明天"></a>渴望明天</h3><p>2021年高考，看到个图，挺好玩的，作为标题吧<br><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/wait-tomorrow.jpg" alt="image"></p>
+<h3 id="哈哈哈-TCP"><a href="#哈哈哈-TCP" class="headerlink" title="哈哈哈 TCP"></a>哈哈哈 TCP</h3><p><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/tcp-socket.jpg" alt="image"></p>
 <p><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/network-api.jpg" alt="image"></p>
 <h3 id="三次握手主要做什么"><a href="#三次握手主要做什么" class="headerlink" title="三次握手主要做什么"></a>三次握手主要做什么</h3><ul>
 <li>同步 初始序列号</li>
@@ -659,7 +661,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#三次握手主要做什么"><span class="nav-number">1.</span> <span class="nav-text">三次握手主要做什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四次挥手一定是四次吗？"><span class="nav-number">2.</span> <span class="nav-text">四次挥手一定是四次吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MSS-amp-MTU"><span class="nav-number">3.</span> <span class="nav-text">MSS &amp; MTU</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#尽可能避免IP的分片"><span class="nav-number">3.1.</span> <span class="nav-text">尽可能避免IP的分片</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MSS"><span class="nav-number">3.2.</span> <span class="nav-text">MSS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Path-MTU-Discovery"><span class="nav-number">3.3.</span> <span class="nav-text">Path MTU Discovery</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TIME-WAIT-status"><span class="nav-number">3.4.</span> <span class="nav-text">TIME_WAIT status</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#还有一个状态是-CLOSE-WAIT"><span class="nav-number">3.4.1.</span> <span class="nav-text">还有一个状态是 CLOSE_WAIT</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SACK"><span class="nav-number">3.5.</span> <span class="nav-text">SACK</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#延迟-ACK"><span class="nav-number">3.6.</span> <span class="nav-text">延迟 ACK</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cwnd-congestion-window"><span class="nav-number">3.7.</span> <span class="nav-text">cwnd ( congestion window )</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#渴望明天"><span class="nav-number">1.</span> <span class="nav-text">渴望明天</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#哈哈哈-TCP"><span class="nav-number">2.</span> <span class="nav-text">哈哈哈 TCP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三次握手主要做什么"><span class="nav-number">3.</span> <span class="nav-text">三次握手主要做什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四次挥手一定是四次吗？"><span class="nav-number">4.</span> <span class="nav-text">四次挥手一定是四次吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MSS-amp-MTU"><span class="nav-number">5.</span> <span class="nav-text">MSS &amp; MTU</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#尽可能避免IP的分片"><span class="nav-number">5.1.</span> <span class="nav-text">尽可能避免IP的分片</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MSS"><span class="nav-number">5.2.</span> <span class="nav-text">MSS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Path-MTU-Discovery"><span class="nav-number">5.3.</span> <span class="nav-text">Path MTU Discovery</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TIME-WAIT-status"><span class="nav-number">5.4.</span> <span class="nav-text">TIME_WAIT status</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#还有一个状态是-CLOSE-WAIT"><span class="nav-number">5.4.1.</span> <span class="nav-text">还有一个状态是 CLOSE_WAIT</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SACK"><span class="nav-number">5.5.</span> <span class="nav-text">SACK</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#延迟-ACK"><span class="nav-number">5.6.</span> <span class="nav-text">延迟 ACK</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cwnd-congestion-window"><span class="nav-number">5.7.</span> <span class="nav-text">cwnd ( congestion window )</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
