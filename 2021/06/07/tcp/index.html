@@ -1,0 +1,918 @@
+
+<!doctype html>
+<html class="theme-next use-motion theme-next-mala">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="思绪来的快去的也快，偶尔在这里停留" />
+
+
+
+  <meta name="keywords" content="tcp," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="三次握手主要做什么 同步 初始序列号 同步 MSS    四次挥手一定是四次吗？很容易抓到 三次挥手的包 MSS &amp;amp; MTU尽可能避免IP的分片网络通信，尽一切可能避免IP的分片！为什么？因为负责IP分片的那台主机、路由器会花费很多CPU资源来处理分片，同时负责重组IP分片的主机、路由器则需要更多的CPU资源来重组这些IP包的分片。比如一台路由器的数据处理能力是10G，如果处理分片则降低">
+<meta name="keywords" content="tcp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="tcp备忘">
+<meta property="og:url" content="http://oneyearago.me/2021/06/07/tcp/index.html">
+<meta property="og:site_name" content="changan&#39;s blog">
+<meta property="og:description" content="三次握手主要做什么 同步 初始序列号 同步 MSS    四次挥手一定是四次吗？很容易抓到 三次挥手的包 MSS &amp;amp; MTU尽可能避免IP的分片网络通信，尽一切可能避免IP的分片！为什么？因为负责IP分片的那台主机、路由器会花费很多CPU资源来处理分片，同时负责重组IP分片的主机、路由器则需要更多的CPU资源来重组这些IP包的分片。比如一台路由器的数据处理能力是10G，如果处理分片则降低">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/tcp-socket.jpg">
+<meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/tcp-handshake.jpg">
+<meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/goodbye-tcp.png">
+<meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/tcp_ladder_states.svg">
+<meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/tcp-congestion.png">
+<meta property="og:updated_time" content="2021-06-07T13:10:08.673Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="tcp备忘">
+<meta name="twitter:description" content="三次握手主要做什么 同步 初始序列号 同步 MSS    四次挥手一定是四次吗？很容易抓到 三次挥手的包 MSS &amp;amp; MTU尽可能避免IP的分片网络通信，尽一切可能避免IP的分片！为什么？因为负责IP分片的那台主机、路由器会花费很多CPU资源来处理分片，同时负责重组IP分片的主机、路由器则需要更多的CPU资源来重组这些IP包的分片。比如一台路由器的数据处理能力是10G，如果处理分片则降低">
+<meta name="twitter:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/tcp-socket.jpg">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mala',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> tcp备忘 | changan's blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">changan's blog</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            About
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    
+      
+
+      
+        <style type="text/css">
+
+    .circle {
+        width: 40px;
+        height: 40px;
+        background: #555 no-repeat;
+        cursor: move;
+    }
+
+    .assist-btn {
+        position: fixed;
+        top: 50％;
+        left: 10px;
+        -moz-border-radius: 50px;
+        -webkit-border-radius: 50px;
+        border-radius: 50px;
+        outline: none;
+        border: none;
+        color: #87daff;
+    }
+
+</style>
+
+<script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+<script type="text/javascript">
+    // 浮动圆点展开与收缩
+    /*
+    $(function () {
+        var assist_box = $('.assist-box');
+        $('#assist_btn').hover(function () {
+            assist_box.stop().show(300);
+        }, function () {
+            assist_box.stop().hide(150);
+        })
+    });
+    */  
+    //浮动圆点拖动
+    $(function () {
+        var box = document.getElementById('assist_btn');
+        box.onmousedown = function (event) {
+            var e = event || window.event,
+                t = e.target || e.srcElement,
+                // 鼠标按下时的坐标x1,y1
+                x1 = e.clientX,
+                y1 = e.clientY,
+                //鼠标按下时的左右偏移量
+                dragLeft = this.offsetLeft,
+                dragTop = this.offsetTop;
+
+            document.onmousemove = function (event) {
+                var e = event || window.event,
+                    t = e.target || e.srcElement,
+                    // 鼠标移动时的动态坐标
+                    x2 = e.clientX,
+                    y2 = e.clientY,
+                    // 鼠标移动时的坐标的变化量
+                    x = x2 - x1,
+                    y = y2 - y1;
+                box.style.left = (dragLeft + x) + 'px';
+                box.style.top = (dragTop + y) + 'px';
+            }
+
+            document.onmouseup = function () {
+                this.onmousemove = null;
+            }
+        }
+    });
+
+/*
+    $whitesmoke   = #f5f5f5
+    $gainsboro    = #eee
+    $gray-lighter = #ddd
+    $grey-light   = #ccc
+    $grey         = #bbb
+    $grey-dark    = #999
+    $grey-dim     = #666
+    $black-light  = #555
+    $black-deep   = #222
+    $red          = #ff2a2a
+    $blue-bright  = #87daff
+    $blue         = #0684bd
+    $blue-deep    = #262a30
+*/
+    // white theme
+    var body = {color: "#555", background: "white"};
+    var a_tag = {color: "#222"};
+    var header = { background: "#f5f5f5"};
+    var logo_line_i = {background: "#222"};
+    // var post_code = {background: "#eee", color: "#222"};
+
+    function switch_theme() {
+        $("body").css(body);
+        $("a:not('.links-of-author-item a, .site-state-item a, .site-state-posts a, .feed-link a, .motion-element a, .post-tags a, .show-commit-cls a, #donate_board a')").css(a_tag);
+        $(".header, .footer").css(header);
+        $(".logo-line-before i, .logo-line-after i").css(logo_line_i);
+        //$(".post code").css(post_code);
+        $("#idhyt-surprise-ball #idhyt-surprise-ball-animation .drag").css(a_tag);
+        $(".post-title-link, .posts-expand .post-meta, .post-comments-count, .disqus-comment-count, .post-category a, .post-nav-next a, .post-nav-item a").css(a_tag);
+        
+        // $("code").css({color: '#c5c8c6', background: '#1d1f21'});
+        $("#assist_btn").hide(1500);
+    }
+
+    $(function () {
+        $("#assist_btn").dblclick(function() {
+            switch_theme();
+        });
+    });
+
+</script>
+
+<div>
+
+    <button class="assist-btn circle" id="assist_btn" title="双击切换">
+        亮
+    </button>
+
+</div>
+
+
+
+
+
+
+
+
+
+      
+
+    
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              tcp备忘
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2021-06-07T21:40:39+08:00" content="2021-06-07">
+            2021-06-07
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/tcp/" itemprop="url" rel="index">
+                  <span itemprop="name">tcp</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/tcp-socket.jpg" alt="image"></p>
+<h3 id="三次握手主要做什么"><a href="#三次握手主要做什么" class="headerlink" title="三次握手主要做什么"></a>三次握手主要做什么</h3><ul>
+<li>同步 初始序列号</li>
+<li>同步 MSS </li>
+</ul>
+<p><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/tcp-handshake.jpg" alt="image"></p>
+<h3 id="四次挥手一定是四次吗？"><a href="#四次挥手一定是四次吗？" class="headerlink" title="四次挥手一定是四次吗？"></a>四次挥手一定是四次吗？</h3><p>很容易抓到 三次挥手的包<br><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/goodbye-tcp.png" alt="image"></p>
+<h3 id="MSS-amp-MTU"><a href="#MSS-amp-MTU" class="headerlink" title="MSS &amp; MTU"></a>MSS &amp; MTU</h3><h4 id="尽可能避免IP的分片"><a href="#尽可能避免IP的分片" class="headerlink" title="尽可能避免IP的分片"></a>尽可能避免IP的分片</h4><p>网络通信，尽一切可能避免IP的分片！为什么？因为负责IP分片的那台主机、路由器会花费很多CPU资源来处理分片，同时负责重组IP分片的主机、路由器则需要更多的CPU资源来重组这些IP包的分片。比如一台路由器的数据处理能力是10G，如果处理分片则降低到2G左右，这还是比较高端的平台，采用硬件，软件CPU一起协作才达到的水平，如果比较低端的平台，纯粹采用CPU软件来处理，那数据包处理能力简直惨不忍睹！</p>
+<h4 id="MSS"><a href="#MSS" class="headerlink" title="MSS"></a>MSS</h4><p>一般网络接口都有一个最大传输单元即MTU，比如MTU=1500，什么意思呢？如果IP包的尺寸&lt;= 1500，原封不动从这个网络接口发送，否则就需要分片。<br>那聪明的你一定会说，既然知道MTU=1500，那为什么要发超过1500的包呢？给自己找不自在？既然IP包最大1500了，那如果TCP=1480不就可以了吗？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">IP   = IP Header + TCP = 20 + 1480 = 1500</span><br><span class="line"></span><br><span class="line">TCP  = TCP Header + TCP Payload = 20 + 1460 = 1480</span><br></pre></td></tr></table></figure>
+<p>这个TCP  Payload = 1460 对应的就是TCP最大传输单元，我们称之为“ Maximum Segment Size” 即MSS，那么MSS= MTU - IP Header - TCP Header = 1500 - 20 -20 = 1460。</p>
+<p>TCP 在三次握手的第一个SYN消息中有一个选项option 4，就是为了协商通信双方的MSS，如果一方MSS=1460，而另一方的MSS= 8960，会选择较小的一方即1460作为这个TCP连接的MSS，这样双向通信都可以避免因为IP包太大引起的分片。但是MSS能完全避免IP分片吗？不能！还有什么好的办法？</p>
+<h4 id="Path-MTU-Discovery"><a href="#Path-MTU-Discovery" class="headerlink" title="Path MTU Discovery"></a>Path MTU Discovery</h4><p>还是拿第一个例子来讲，IP包= 1500 从源主机发送出来了，然后在互联网上一跳一跳奔向目的地，突然到了一台路由器上，需要从一个接口发送出去，这个接口MTU只有1000，<br>由于IP包 1500 &gt; 1000，这个IP包必须分片才能出去，于是就分成了两个IP分片发送出了，那能否让这台路由器不分片呢？<br>可以的，大家记得IP头有一个标志位DF，Don’t Fragment，如果为1，意思是这个IP包在传输的过程中不能分片，如果此IP包大于物理接口的MTU，请直接丢弃，<br>并发消息告诉源主机！什么消息？ICMP的消息，告诉包因为太大了，因为不能分片所以被丢了，并告诉源主机可以重新发小于等于MTU的包；那发什么样的ICMP消息？</p>
+<p>ICMP协议里有type字段，还有code字段，发送type=3，code=4，MTU=1000的消息就可以了，当这个ICMP消息到达IP包的源主机，源主机知道原来是IP太大了，那最大可以发送多大的呢？ICMP消息里有，那就是MTU = 1000，于是源主机发送小于等于1000字节的就可以避免在传输路径上的分片。</p>
+<p>如果IP包=1000在传输过程中遇到更小的MTU=500怎么办？呵呵，重复以上的步骤就可以了！这个不断寻找路径上最小MTU的过程，我们称之为：Path MTU Discovery。</p>
+<p>如果ICMP type=3 code=4 无法到达源主机会发生什么？很显然IP包被静静地丢了，TCP连接超时中断。ICMP为什么回不来？一般被防火墙或者路由器的访问控制列表ACL给无情拒绝通过！如果你可以管理配置这些设备，只要允许ICMP type=3 code=4通过就可以了，否则只有老老实实关闭 Path MTU Discovery 这个功能了，至少分片可以通信，而不分片则彻底无法通信了，这就是聊胜于无，无奈的选择！</p>
+<h4 id="TIME-WAIT-status"><a href="#TIME-WAIT-status" class="headerlink" title="TIME_WAIT status"></a>TIME_WAIT status</h4><p><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/tcp_ladder_states.svg" alt="image"></p>
+<p>为何要有这个状态， 原因很简单，那就是每次建立连接的时候序列号都是随机产生的，并且这个序列号是32位的，会回绕。现在我来解释这和TIME_WAIT有什么关系。</p>
+<p>任何的TCP分段都要在尽力而为的IP网络上传输，中间的路由器可能会随意的缓存任何的IP数据报，它并不管这个IP数据报上被承载的是什么数据，然而根据经验和互联网的大小，一个IP数据报最多存活MSL(这是根据地球表面积，电磁波在各种介质中的传输速率以及IP协议的TTL等综合推算出来的，如果在火星上，这个MSL会大得多…)。</p>
+<p>现在我们考虑终止连接时的被动方发送了一个FIN，然后主动方回复了一个ACK，然而这个ACK可能会丢失，这会造成被动方重发FIN，这个FIN可能会在互联网上存活MSL。</p>
+<p>如果没有TIME_WAIT的话，假设连接1已经断开，然而其被动方最后重发的那个FIN(或者FIN之前发送的任何TCP分段)还在网络上，然而连接2重用了连接1的所有的5元素(源IP，目的IP，TCP，源端口，目的端口)，刚刚将建立好连接，连接1迟到的FIN到达了，这个FIN将以比较低但是确实可能的概率终止掉连接2.</p>
+<p>为何说是概率比较低呢？这涉及到一个匹配问题，迟到的FIN分段的序列号必须落在连接2的一方的期望序列号范围之内。虽然这种巧合很少发生，但确实会发生，毕竟初始序列号是随机产生了。因此终止连接的主动方必须在接受了被动方且回复了ACK之后等待2*MSL时间才能进入CLOSE状态，之所以乘以2是因为这是保守的算法，最坏情况下，针对被动方的ACK在以最长路线(经历一个MSL)经过互联网马上到达被动方时丢失。</p>
+<p>为了应对这个问题，RFC793对初始序列号的生成有个建议，那就是设定一个基准，在这个基准之上搞随机，这个基准就是时间，我们知道时间是单调递增的。然而这仍然有问题，那就是回绕问题，如果发生回绕，那么新的序列号将会落到一个很低的值。 因此最好的办法就是避开“重叠”，其含义就是基准之上的随机要设定一个范围。</p>
+<p>要知道，很多人很不喜欢看到服务器上出现大量的TIME_WAIT状态的连接，因此他们将TIME_WAIT的值设置的很低，这虽然在大多数情况下可行，然而确实也是一种冒险行为。最好的方式就是，不要重用一个连接。</p>
+<h5 id="还有一个状态是-CLOSE-WAIT"><a href="#还有一个状态是-CLOSE-WAIT" class="headerlink" title="还有一个状态是 CLOSE_WAIT"></a>还有一个状态是 CLOSE_WAIT</h5><p>CLOSE_WAIT 状态在服务器停留时间很短，如果你发现大量的 CLOSE_WAIT 状态，那么就意味着被动关闭的一方没有及时发出 FIN 包，这时候基本要去查代码了，代码不严谨，这个链接关不了了</p>
+<p>参考: <a href="https://zhuanlan.zhihu.com/p/60382685" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/60382685</a> </p>
+<h4 id="SACK"><a href="#SACK" class="headerlink" title="SACK"></a>SACK</h4><p>早期TCP实现为，只要一个TCP分段丢失，即使后面的TCP分段都被完整收到，发送端还是会重传从丢失分段开始的所有报文，这就会导致一个问题，那就是重传风暴，一个分段丢失，引起大量的重传。这种风暴实则不必要的，因为大多数的TCP实现中，接收端已经缓存了乱序的分段，这些被重传的丢失分段之后的分段到达接收端之后，很大的可能性是被丢弃。</p>
+<p>TCP是保证数据顺序的，但是并不意味着它总是会丢弃乱序的TCP分段，具体会不会丢弃是和具体实现相关的，RFC建议如果内存允许，还是要缓存这些乱序到来的分段，然后实现一种机制等到可以拼接成一个按序序列的时候将缓存的分段拼接，这就类似于IP协议中的分片一样，但是由于IP数据报是不确认的，因此IP协议的实现必须缓存收到的任何分片而不能将其丢弃，因为丢弃了一个IP分片，它就再也不会到来了。</p>
+<p>现在，TCP实现了一种称为 选择确认的方式，接收端会显式告诉发送端需要重传哪些分段而不需要重传哪些分段。这无疑避免了重传风暴。</p>
+<h4 id="延迟-ACK"><a href="#延迟-ACK" class="headerlink" title="延迟 ACK"></a>延迟 ACK</h4><p>大多数情况下，ACK还是可以和数据一起捎带传输的。如果没有捎带传输，那么就只能单独回来一个ACK，如果这样的分段太多，网络的利用率就会下降。从大同用火车拉到北京100吨煤，为了确认煤已收到，北京需要派一辆同样的火车空载开到大同去复命，因为没有别的交通工具，只有火车。如果这位复命者刚开着一列火车走，又从大同来了一车煤，这拉煤的哥们儿又要开一列空车去复命了。</p>
+<p>RFC建议了一种延迟的ACK，也就是说，ACK在收到数据后并不马上回复，而是延迟一段可以接受的时间，延迟一段时间的目的是看能不能和接收方要发给发送方的数据一起回去，因为TCP协议头中总是包含确认号的，如果能的话，就将ACK一起捎带回去，这样网络利用率就提高了。往大同复命的确认者不必开一辆空载火车回大同了，此时北京正好有一批货物要送往大同，这位复命者搭着这批货的火车返回大同。</p>
+<p>如果等了一段可以接受的时间，还是没有数据要发往发送端，此时就需要单独发送一个ACK了，然而即使如此，这个延迟的ACK虽然没有等到可以被捎带的数据分段，也可能等到了后续到来的TCP分段，这样它们就可以取最大者一起返回了，要知道，TCP的确认号是收到的按序报文的最后一个字节的后一个字节。最后，RFC建议，延迟的ACK最多等待两个分段的积累确认。</p>
+<h4 id="cwnd-congestion-window"><a href="#cwnd-congestion-window" class="headerlink" title="cwnd ( congestion window )"></a>cwnd ( congestion window )</h4><p>窗口分为滑动窗口和拥塞窗口。</p>
+<p>滑动窗口是接受数据端使用的窗口大小，用来告知发送端接收端的缓存大小，以此可以控制发送端发送数据的大小，从而达到流量控制的目的。</p>
+<p>当与另一个网络的主机建立TCP连接时，拥塞窗口被初始化为1个报文段（即另一端通告的报文段大小）。每收到一个ACK， 拥塞窗口就增加一个报文段（cwnd以字节为单位，但是慢启动以报文段大小为单位进行增加）。发送方取拥塞窗口与通告窗口中的最小值作为发送上限。拥塞窗 口是发送方使用的流量控制，而通告窗口则是接收方使用的流量控制。</p>
+<p>发送方开始时发送一个报文段，然后等待ACK。当收到该ACK时，拥塞窗口从1增加为2，即可以发送两个报文段。当收到这两个报文段的ACK时，拥塞窗口就增加为4。这是一种指数增加的关系。</p>
+<p>所谓快速重传/快速恢复是针对慢启动的，我们知道慢启动要从1个MSS开始增加拥塞窗口，而快速重传/快速恢复则是一旦收到3个冗余ACK，不必进入慢启动，而是将拥塞窗口缩小为当前阀值的一半加上3，然后如果继续收到冗余ACK，则将拥塞窗口加1个MSS，直到收到一个新的数据ACK，将窗口设置成正常的阀值，开始加性增加的阶段。</p>
+<p><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/tcp-congestion.png" alt="image"></p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li><a href="https://mp.weixin.qq.com/s/RP6w69I-q5ai9Bx_SzjUfQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/RP6w69I-q5ai9Bx_SzjUfQ</a></li>
+<li><a href="https://blog.csdn.net/dog250/article/details/6612496" target="_blank" rel="noopener">TCP协议疑难杂症全景解析</a></li>
+</ul>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tcp/" rel="tag">#tcp</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/05/30/tcpdump/" rel="next">tcpdump note</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div>
+      
+        <style type="text/css">
+
+    .donate_bar {
+        text-align: center;
+        margin-top : 5%;
+    }
+
+    .donate_bar.hidden {
+        display:none;
+    }
+/*
+    .donate_bar a.btn_donate {
+        display: inline-block;
+        width: 82px;
+        height: 82px;
+        margin-left:auto;
+        margin-right:auto;
+
+        background: url("http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif") no-repeat;
+        _background: url("http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif") no-repeat; 
+
+        -webkit-transition: background 0s;
+        -moz-transition: background 0s;
+        -o-transition: background 0s;
+        -ms-transition: background 0s;
+        transition: background 0s;
+    }
+*/
+    .donate_bar a.btn_donate:hover { 
+        // background-position: 0px -82px;
+        color: #87daff
+    }
+
+    .donate_bar .donate_txt {
+        display: block;
+        color: #9d9d9d;
+        font: 14px/2 "Microsoft Yahei";
+    }
+
+    .bold { 
+        font-weight: bold; 
+    }
+
+    .post-donate a {
+        border-bottom: 0px;
+    }
+
+    #donate_guide table {
+        border: none;
+    }
+
+    #donate_guide td {
+        border-bottom: none;
+        border-right: none;
+        background: #333333;
+        valign: top;
+    }
+
+</style>
+
+
+
+    
+
+    <div class ="post-donate">
+        <div id="donate_board" class="donate_bar center">
+              <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏">赏</a>
+              <span id="donate_txt" class="donate_txt">
+                   
+                        请我喝杯咖啡
+                   
+              </span>
+            <br>
+        </div>  
+  
+        <div id="donate_guide" class="donate_bar center hidden">
+            <!--
+              
+
+            
+                <a href="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="微信打赏" class="fancybox" rel="article0"
+                    style="margin-right:30%">
+                    <img src="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="" height="164px" width="164px">
+                </a>
+            
+            -->
+            <table>
+                <tr>
+                    <td>
+                         
+                    </td>
+                    <td>
+                        
+                            <a href="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="微信打赏" class="fancybox" rel="article0"
+                                style="margin-right:30%">
+                                <img src="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="" height="164px" width="164px">
+                            </a>
+                        
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+        <script type="text/javascript">
+            document.getElementById('btn_donate').onclick = function() {
+                $('#donate_board').addClass('hidden');
+                // $('#donate_guide').removeClass('hidden');
+                $('#donate_guide').show(2000);
+            }
+
+        </script>
+    </div>
+
+    
+
+
+      
+    </div>
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+          <div class="comments" id="comments">
+            
+            -->
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table Of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="changan" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">changan</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">思绪来的快去的也快，偶尔在这里停留</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">78</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">59</span>
+              <span class="site-state-item-name">categories</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">56</span>
+              <span class="site-state-item-name">tags</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://github.com/changan29" target="_blank">GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/zhaochanganplus" target="_blank">ZhiHu</a>
+              </span>
+            
+          
+        </div>
+
+        <div class="links-of-friendly motion-element">
+          
+        </div>
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#三次握手主要做什么"><span class="nav-number">1.</span> <span class="nav-text">三次握手主要做什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四次挥手一定是四次吗？"><span class="nav-number">2.</span> <span class="nav-text">四次挥手一定是四次吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MSS-amp-MTU"><span class="nav-number">3.</span> <span class="nav-text">MSS &amp; MTU</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#尽可能避免IP的分片"><span class="nav-number">3.1.</span> <span class="nav-text">尽可能避免IP的分片</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MSS"><span class="nav-number">3.2.</span> <span class="nav-text">MSS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Path-MTU-Discovery"><span class="nav-number">3.3.</span> <span class="nav-text">Path MTU Discovery</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TIME-WAIT-status"><span class="nav-number">3.4.</span> <span class="nav-text">TIME_WAIT status</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#还有一个状态是-CLOSE-WAIT"><span class="nav-number">3.4.1.</span> <span class="nav-text">还有一个状态是 CLOSE_WAIT</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SACK"><span class="nav-number">3.5.</span> <span class="nav-text">SACK</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#延迟-ACK"><span class="nav-number">3.6.</span> <span class="nav-text">延迟 ACK</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cwnd-congestion-window"><span class="nav-number">3.7.</span> <span class="nav-text">cwnd ( congestion window )</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2018 - 
+  <span itemprop="copyrightYear">2021
+  </span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changan
+  </span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme by <a class="theme-link" href="http://blog.idhyt.com">idhyt</a>.<a class="theme-link" href="https://github.com/idhyt/hexo-theme-next/tree/magiclamp">Mala</a>
+</div>
+
+<!-- busuanzi -->
+
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
