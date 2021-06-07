@@ -40,23 +40,24 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="三次握手主要做什么 同步 初始序列号 同步 MSS    四次挥手一定是四次吗？很容易抓到 三次挥手的包 MSS &amp;amp; MTU尽可能避免IP的分片网络通信，尽一切可能避免IP的分片！为什么？因为负责IP分片的那台主机、路由器会花费很多CPU资源来处理分片，同时负责重组IP分片的主机、路由器则需要更多的CPU资源来重组这些IP包的分片。比如一台路由器的数据处理能力是10G，如果处理分片则降低">
+<meta name="description" content="三次握手主要做什么 同步 初始序列号 同步 MSS    四次挥手一定是四次吗？很容易抓到 三次挥手的包 MSS &amp;amp; MTU尽可能避免IP的分片网络通信，尽一切可能避免IP的分片！为什么？因为负责IP分片的那台主机、路由器会花费很多CPU资源来处理分片，同时负责重组IP分片的主机、路由器则需要更多的CPU资源来重组这些IP包的分片。比如一台路由器的数据处理能力是10G，如果处理分片则降">
 <meta name="keywords" content="tcp">
 <meta property="og:type" content="article">
-<meta property="og:title" content="tcp备忘">
+<meta property="og:title" content="tcp note">
 <meta property="og:url" content="http://oneyearago.me/2021/06/07/tcp/index.html">
 <meta property="og:site_name" content="changan&#39;s blog">
-<meta property="og:description" content="三次握手主要做什么 同步 初始序列号 同步 MSS    四次挥手一定是四次吗？很容易抓到 三次挥手的包 MSS &amp;amp; MTU尽可能避免IP的分片网络通信，尽一切可能避免IP的分片！为什么？因为负责IP分片的那台主机、路由器会花费很多CPU资源来处理分片，同时负责重组IP分片的主机、路由器则需要更多的CPU资源来重组这些IP包的分片。比如一台路由器的数据处理能力是10G，如果处理分片则降低">
+<meta property="og:description" content="三次握手主要做什么 同步 初始序列号 同步 MSS    四次挥手一定是四次吗？很容易抓到 三次挥手的包 MSS &amp;amp; MTU尽可能避免IP的分片网络通信，尽一切可能避免IP的分片！为什么？因为负责IP分片的那台主机、路由器会花费很多CPU资源来处理分片，同时负责重组IP分片的主机、路由器则需要更多的CPU资源来重组这些IP包的分片。比如一台路由器的数据处理能力是10G，如果处理分片则降">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/tcp-socket.jpg">
+<meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/network-api.jpg">
 <meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/tcp-handshake.jpg">
 <meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/goodbye-tcp.png">
 <meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/tcp_ladder_states.svg">
 <meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/tcp-congestion.png">
-<meta property="og:updated_time" content="2021-06-07T13:10:08.673Z">
+<meta property="og:updated_time" content="2021-06-07T13:19:24.391Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="tcp备忘">
-<meta name="twitter:description" content="三次握手主要做什么 同步 初始序列号 同步 MSS    四次挥手一定是四次吗？很容易抓到 三次挥手的包 MSS &amp;amp; MTU尽可能避免IP的分片网络通信，尽一切可能避免IP的分片！为什么？因为负责IP分片的那台主机、路由器会花费很多CPU资源来处理分片，同时负责重组IP分片的主机、路由器则需要更多的CPU资源来重组这些IP包的分片。比如一台路由器的数据处理能力是10G，如果处理分片则降低">
+<meta name="twitter:title" content="tcp note">
+<meta name="twitter:description" content="三次握手主要做什么 同步 初始序列号 同步 MSS    四次挥手一定是四次吗？很容易抓到 三次挥手的包 MSS &amp;amp; MTU尽可能避免IP的分片网络通信，尽一切可能避免IP的分片！为什么？因为负责IP分片的那台主机、路由器会花费很多CPU资源来处理分片，同时负责重组IP分片的主机、路由器则需要更多的CPU资源来重组这些IP包的分片。比如一台路由器的数据处理能力是10G，如果处理分片则降">
 <meta name="twitter:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/tcp-socket.jpg">
 
 
@@ -67,7 +68,7 @@
   };
 </script>
 
-  <title> tcp备忘 | changan's blog </title>
+  <title> tcp note | changan's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -317,7 +318,7 @@
           
           
             
-              tcp备忘
+              tcp note
             
           
         </h1>
@@ -361,6 +362,7 @@
 
       
         <span itemprop="articleBody"><p><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/tcp-socket.jpg" alt="image"></p>
+<p><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/net/network-api.jpg" alt="image"></p>
 <h3 id="三次握手主要做什么"><a href="#三次握手主要做什么" class="headerlink" title="三次握手主要做什么"></a>三次握手主要做什么</h3><ul>
 <li>同步 初始序列号</li>
 <li>同步 MSS </li>
@@ -605,21 +607,21 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">78</span>
+              <span class="site-state-item-count">70</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">59</span>
+              <span class="site-state-item-count">49</span>
               <span class="site-state-item-name">categories</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">56</span>
+              <span class="site-state-item-count">48</span>
               <span class="site-state-item-name">tags</span>
               </a>
           </div>
