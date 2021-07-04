@@ -43,7 +43,7 @@
 <meta name="description" content="概述 首先对于游戏的业务，一般是玩家登陆到大厅，有一些任务、物品、好友、排行榜、聊天这种交互，其次是玩家与玩家之前的匹配与对局。以Moba游戏为例，玩家主要的行为就是登陆后进行匹配，匹配到水平差不多的10个人，分为两队，每组5个人创建对局进行pvp战斗，玩家的操作以指令的方式由客户端发到服务器。 大厅中客户端与服务器的连接是TCP连接，对局中玩家的操作更关注实时性，一般的用可靠UDP进行通信。 接">
 <meta name="keywords" content="Pressure test,tools">
 <meta property="og:type" content="article">
-<meta property="og:title" content="多进程游戏压测工具">
+<meta property="og:title" content="多进程游戏压测工具的实现">
 <meta property="og:url" content="http://oneyearago.me/2020/06/04/Multi-process-pressure-measurement-tool-implementation/index.html">
 <meta property="og:site_name" content="changan&#39;s blog">
 <meta property="og:description" content="概述 首先对于游戏的业务，一般是玩家登陆到大厅，有一些任务、物品、好友、排行榜、聊天这种交互，其次是玩家与玩家之前的匹配与对局。以Moba游戏为例，玩家主要的行为就是登陆后进行匹配，匹配到水平差不多的10个人，分为两队，每组5个人创建对局进行pvp战斗，玩家的操作以指令的方式由客户端发到服务器。 大厅中客户端与服务器的连接是TCP连接，对局中玩家的操作更关注实时性，一般的用可靠UDP进行通信。 接">
@@ -52,9 +52,9 @@
 <meta property="og:image" content="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/tapp_svr_loop.png">
 <meta property="og:image" content="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/gameperf.png">
 <meta property="og:image" content="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/bus_channel.png">
-<meta property="og:updated_time" content="2020-06-04T09:34:18.068Z">
+<meta property="og:updated_time" content="2021-07-04T07:58:33.872Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="多进程游戏压测工具">
+<meta name="twitter:title" content="多进程游戏压测工具的实现">
 <meta name="twitter:description" content="概述 首先对于游戏的业务，一般是玩家登陆到大厅，有一些任务、物品、好友、排行榜、聊天这种交互，其次是玩家与玩家之前的匹配与对局。以Moba游戏为例，玩家主要的行为就是登陆后进行匹配，匹配到水平差不多的10个人，分为两队，每组5个人创建对局进行pvp战斗，玩家的操作以指令的方式由客户端发到服务器。 大厅中客户端与服务器的连接是TCP连接，对局中玩家的操作更关注实时性，一般的用可靠UDP进行通信。 接">
 <meta name="twitter:image" content="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/game_c2s.png">
 
@@ -66,7 +66,7 @@
   };
 </script>
 
-  <title> 多进程游戏压测工具 | changan's blog </title>
+  <title> 多进程游戏压测工具的实现 | changan's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -316,7 +316,7 @@
           
           
             
-              多进程游戏压测工具
+              多进程游戏压测工具的实现
             
           
         </h1>
@@ -414,7 +414,6 @@
 <li>初始化的时候创建一批玩家（协程），按照配置等待一定的时间开始执行（比如10ms）,结合定时器，可以按照固定的频率发包（比如1秒发送200个）</li>
 <li>调度程序  调度程序比较简单，比如有了响应包或者定时器事件到了，根据timer_id或者pkg_head_src标记等 resume 协程</li>
 </ol>
-<p>由于连接层和逻辑层 涉及业务协议和连接层sdk，此处没有单独的可调试代码，协议也不可泄露 :）</p>
 </span>
       
     </div>
