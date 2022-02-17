@@ -1,0 +1,914 @@
+
+<!doctype html>
+<html class="theme-next use-motion theme-next-mala">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="思绪来的快去的也快，偶尔在这里停留" />
+
+
+
+  <meta name="keywords" content="thread," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="前言在这个多核时代，如何充分利用每个 CPU 内核是一个绕不开的话题，从需要为成千上万的用户同时提供服务的服务端应用程序，到需要同时打开十几个页面，每个页面都有几十上百个链接的 web 浏览器应用程序，从保持着几 t 甚或几 p 的数据的数据库系统，到手机上的一个有良好用户响应能力的 app，为了充分利用每个 CPU 内核，都会想到是否可以使用多线程技术。这里所说的“充分利用”包含了两个层面的意思">
+<meta name="keywords" content="thread">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用 C++11 编写 Linux 多线程程序">
+<meta property="og:url" content="http://oneyearago.me/2022/02/18/muiti-thread-by-cpp/index.html">
+<meta property="og:site_name" content="changan&#39;s blog">
+<meta property="og:description" content="前言在这个多核时代，如何充分利用每个 CPU 内核是一个绕不开的话题，从需要为成千上万的用户同时提供服务的服务端应用程序，到需要同时打开十几个页面，每个页面都有几十上百个链接的 web 浏览器应用程序，从保持着几 t 甚或几 p 的数据的数据库系统，到手机上的一个有良好用户响应能力的 app，为了充分利用每个 CPU 内核，都会想到是否可以使用多线程技术。这里所说的“充分利用”包含了两个层面的意思">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2022-02-17T16:20:53.478Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用 C++11 编写 Linux 多线程程序">
+<meta name="twitter:description" content="前言在这个多核时代，如何充分利用每个 CPU 内核是一个绕不开的话题，从需要为成千上万的用户同时提供服务的服务端应用程序，到需要同时打开十几个页面，每个页面都有几十上百个链接的 web 浏览器应用程序，从保持着几 t 甚或几 p 的数据的数据库系统，到手机上的一个有良好用户响应能力的 app，为了充分利用每个 CPU 内核，都会想到是否可以使用多线程技术。这里所说的“充分利用”包含了两个层面的意思">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mala',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 使用 C++11 编写 Linux 多线程程序 | changan's blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">changan's blog</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            About
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    
+      
+
+      
+        <style type="text/css">
+
+    .circle {
+        width: 40px;
+        height: 40px;
+        background: #555 no-repeat;
+        cursor: move;
+    }
+
+    .assist-btn {
+        position: fixed;
+        top: 50％;
+        left: 10px;
+        -moz-border-radius: 50px;
+        -webkit-border-radius: 50px;
+        border-radius: 50px;
+        outline: none;
+        border: none;
+        color: #87daff;
+    }
+
+</style>
+
+<script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+<script type="text/javascript">
+    // 浮动圆点展开与收缩
+    /*
+    $(function () {
+        var assist_box = $('.assist-box');
+        $('#assist_btn').hover(function () {
+            assist_box.stop().show(300);
+        }, function () {
+            assist_box.stop().hide(150);
+        })
+    });
+    */  
+    //浮动圆点拖动
+    $(function () {
+        var box = document.getElementById('assist_btn');
+        box.onmousedown = function (event) {
+            var e = event || window.event,
+                t = e.target || e.srcElement,
+                // 鼠标按下时的坐标x1,y1
+                x1 = e.clientX,
+                y1 = e.clientY,
+                //鼠标按下时的左右偏移量
+                dragLeft = this.offsetLeft,
+                dragTop = this.offsetTop;
+
+            document.onmousemove = function (event) {
+                var e = event || window.event,
+                    t = e.target || e.srcElement,
+                    // 鼠标移动时的动态坐标
+                    x2 = e.clientX,
+                    y2 = e.clientY,
+                    // 鼠标移动时的坐标的变化量
+                    x = x2 - x1,
+                    y = y2 - y1;
+                box.style.left = (dragLeft + x) + 'px';
+                box.style.top = (dragTop + y) + 'px';
+            }
+
+            document.onmouseup = function () {
+                this.onmousemove = null;
+            }
+        }
+    });
+
+/*
+    $whitesmoke   = #f5f5f5
+    $gainsboro    = #eee
+    $gray-lighter = #ddd
+    $grey-light   = #ccc
+    $grey         = #bbb
+    $grey-dark    = #999
+    $grey-dim     = #666
+    $black-light  = #555
+    $black-deep   = #222
+    $red          = #ff2a2a
+    $blue-bright  = #87daff
+    $blue         = #0684bd
+    $blue-deep    = #262a30
+*/
+    // white theme
+    var body = {color: "#555", background: "white"};
+    var a_tag = {color: "#222"};
+    var header = { background: "#f5f5f5"};
+    var logo_line_i = {background: "#222"};
+    // var post_code = {background: "#eee", color: "#222"};
+
+    function switch_theme() {
+        $("body").css(body);
+        $("a:not('.links-of-author-item a, .site-state-item a, .site-state-posts a, .feed-link a, .motion-element a, .post-tags a, .show-commit-cls a, #donate_board a')").css(a_tag);
+        $(".header, .footer").css(header);
+        $(".logo-line-before i, .logo-line-after i").css(logo_line_i);
+        //$(".post code").css(post_code);
+        $("#idhyt-surprise-ball #idhyt-surprise-ball-animation .drag").css(a_tag);
+        $(".post-title-link, .posts-expand .post-meta, .post-comments-count, .disqus-comment-count, .post-category a, .post-nav-next a, .post-nav-item a").css(a_tag);
+        
+        // $("code").css({color: '#c5c8c6', background: '#1d1f21'});
+        $("#assist_btn").hide(1500);
+    }
+
+    $(function () {
+        $("#assist_btn").dblclick(function() {
+            switch_theme();
+        });
+    });
+
+</script>
+
+<div>
+
+    <button class="assist-btn circle" id="assist_btn" title="双击切换">
+        亮
+    </button>
+
+</div>
+
+
+
+
+
+
+
+
+
+      
+
+    
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              使用 C++11 编写 Linux 多线程程序
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2022-02-18T22:40:39+08:00" content="2022-02-18">
+            2022-02-18
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/thread/" itemprop="url" rel="index">
+                  <span itemprop="name">thread</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>在这个多核时代，如何充分利用每个 CPU 内核是一个绕不开的话题，从需要为成千上万的用户同时提供服务的服务端应用程序，到需要同时打开十几个页面，每个页面都有几十上百个链接的 web 浏览器应用程序，从保持着几 t 甚或几 p 的数据的数据库系统，到手机上的一个有良好用户响应能力的 app，为了充分利用每个 CPU 内核，都会想到是否可以使用多线程技术。这里所说的“充分利用”包含了两个层面的意思，一个是使用到所有的内核，再一个是内核不空闲，不让某个内核长时间处于空闲状态。在 C++98 的时代，C++标准并没有包含多线程的支持，人们只能直接调用操作系统提供的 SDK API 来编写多线程程序，不同的操作系统提供的 SDK API 以及线程控制能力不尽相同，到了 C++11，终于在标准之中加入了正式的多线程的支持，从而我们可以使用标准形式的类来创建与执行线程，也使得我们可以使用标准形式的锁、原子操作、线程本地存储 (TLS) 等来进行复杂的各种模式的多线程编程，而且，C++11 还提供了一些高级概念，比如 promise/future，packaged_task，async 等以简化某些模式的多线程编程。</p>
+<h3 id="线程间的数据交互和数据争用"><a href="#线程间的数据交互和数据争用" class="headerlink" title="线程间的数据交互和数据争用"></a>线程间的数据交互和数据争用</h3><p>同一个进程内的多个线程之间多是免不了要有数据互相来往的，队列和共享数据是实现多个线程之间的数据交互的常用方式，封装好的队列使用起来相对来说不容易出错一些，而共享数据则是最基本的也是较容易出错的，因为它会产生数据争用的情况，即有超过一个线程试图同时抢占某个资源，比如对某块内存进行读写等，如下例所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// thread_data_race.cc</span><br><span class="line">static void</span><br><span class="line">inc(int *p )&#123;</span><br><span class="line"> for(int i = 0; i &lt; COUNT; i++)&#123;</span><br><span class="line"> (*p)++;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line">void threadDataRacing(void)&#123;</span><br><span class="line"> int a = 0;</span><br><span class="line"> thread ta( inc, &amp;a);</span><br><span class="line"> thread tb( inc, &amp;a);</span><br><span class="line"> ta.join();</span><br><span class="line"> tb.join();</span><br><span class="line"> cout &lt;&lt; &quot;a=&quot; &lt;&lt; a &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这是简化了的极端情况，我们可以一眼看出来这是两个线程在同时对&amp;a 这个内存地址进行写操作，但是在实际工作中，在代码的海洋中发现它并不一定容易。从表面看，两个线程执行完之后，最后的 a 值应该是 COUNT <em> 2，但是实际上并非如此，因为简单如 (</em>p)++这样的操作并不是一个原子动作，要解决这个问题，对于简单的基本类型数据如字符、整型、指针等，C++提供了原子模版类 atomic，而对于复杂的对象，则提供了最常用的锁机制，比如互斥类 mutex，门锁 lock_guard，唯一锁 unique_lock，条件变量 condition_variable 等。</p>
+<p>现在我们使用原子模版类 atomic 改造上述例子得到预期结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// thread_atomic.cc</span><br><span class="line">static void</span><br><span class="line">inc(atomic&lt;int&gt; *p )&#123;</span><br><span class="line"> for(int i = 0; i &lt; COUNT; i++)&#123;</span><br><span class="line"> (*p)++;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line">void threadDataRacing(void)&#123;</span><br><span class="line"> atomic&lt;int&gt; a(0) ;</span><br><span class="line"> thread ta( inc, &amp;a);</span><br><span class="line"> thread tb( inc, &amp;a);</span><br><span class="line"> ta.join();</span><br><span class="line"> tb.join();</span><br><span class="line"> cout &lt;&lt; &quot;a=&quot; &lt;&lt; a &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们也可以使用 lock_guard，lock_guard 是一个范围锁，本质是 RAII(Resource Acquire Is Initialization)，在构建的时候自动加锁，在析构的时候自动解锁，这保证了每一次加锁都会得到解锁。即使是调用函数发生了异常，在清理栈帧的时候也会调用它的析构函数得到解锁，从而保证每次加锁都会解锁，但是我们不能手工调用加锁方法或者解锁方法来进行更加精细的资源占用管理，使用 lock_guard 示例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// thread_lock_guard.cc</span><br><span class="line">static mutex g_mutex;</span><br><span class="line">static void</span><br><span class="line">inc(int *p )&#123;</span><br><span class="line"> for(int i = 0; i &lt; COUNT; i++)&#123;</span><br><span class="line"> lock_guard&lt;mutex&gt; _(g_mutex);</span><br><span class="line"> (*p)++;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line">void threadLockGuard(void)&#123;</span><br><span class="line"> int a = 0;</span><br><span class="line"> thread ta( inc, &amp;a);</span><br><span class="line"> thread tb( inc, &amp;a);</span><br><span class="line"> ta.join();</span><br><span class="line"> tb.join();</span><br><span class="line"> cout &lt;&lt; &quot;a=&quot; &lt;&lt; a &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果要支持手工加锁，可以考虑使用 unique_lock 或者直接使用 mutex。unique_lock 也支持 RAII，它也可以一次性将多个锁加锁；如果使用 mutex 则直接调用 mutex 类的 lock, unlock, trylock 等方法进行更加精细的锁管理：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">//thread_mutex.cc</span><br><span class="line">static mutex g_mutex;</span><br><span class="line">static void</span><br><span class="line">inc(int *p )&#123;</span><br><span class="line"> thread_local int i; // TLS 变量</span><br><span class="line"> for(; i &lt; COUNT; i++)&#123;</span><br><span class="line"> g_mutex.lock();</span><br><span class="line"> (*p)++;</span><br><span class="line"> g_mutex.unlock();</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line">void threadMutex(void)&#123;</span><br><span class="line"> int a = 0;</span><br><span class="line"> thread ta( inc, &amp;a);</span><br><span class="line"> thread tb( inc, &amp;a);</span><br><span class="line"> ta.join();</span><br><span class="line"> tb.join();</span><br><span class="line"> cout &lt;&lt; &quot;a=&quot; &lt;&lt; a &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在上例中，我们还使用了线程本地存储 (TLS) 变量，我们只需要在变量前面声明它是 thread_local 即可。TLS 变量在线程栈内分配，线程栈只有在线程创建之后才生效，在线程退出的时候销毁，需要注意不同系统的线程栈的大小是不同的，如果 TLS 变量占用空间比较大，需要注意这个问题。TLS 变量一般不能跨线程，其初始化在调用线程第一次使用这个变量时进行，默认初始化为 0。</p>
+<p>对于线程间的事件通知，C++11 提供了条件变量类 condition_variable，可视为 pthread_cond_t 的封装，使用条件变量可以让一个线程等待其它线程的通知 (wait，wait_for，wait_until)，也可以给其它线程发送通知 (notify_one，notify_all)，条件变量必须和锁配合使用，在等待时因为有解锁和重新加锁，所以，在等待时必须使用可以手工解锁和加锁的锁，比如 unique_lock，而不能使用 lock_guard，示例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">//thread_cond_var.cc</span><br><span class="line">#include &lt;thread&gt;</span><br><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;condition_variable&gt;</span><br><span class="line">using namespace std;</span><br><span class="line">mutex m;</span><br><span class="line">condition_variable cv;</span><br><span class="line">void threadCondVar(void)&#123;</span><br><span class="line"># define THREAD_COUNT 10</span><br><span class="line"> thread** t = new thread*[THREAD_COUNT];</span><br><span class="line"> int i;</span><br><span class="line"> for(i = 0; i &lt; THREAD_COUNT; i++)&#123;</span><br><span class="line"> t[i] = new thread( [](int index)&#123;</span><br><span class="line"> unique_lock&lt;mutex&gt; lck(m);</span><br><span class="line"> cv.wait_for(lck, chrono::hours(1000));</span><br><span class="line"> cout &lt;&lt; index &lt;&lt; endl;</span><br><span class="line"> &#125;, i );</span><br><span class="line"> this_thread::sleep_for( chrono::milliseconds(50));</span><br><span class="line"> &#125;</span><br><span class="line"> for(i = 0; i &lt; THREAD_COUNT; i++)&#123;</span><br><span class="line"> lock_guard&lt;mutex&gt; _(m);</span><br><span class="line"> cv.notify_one();</span><br><span class="line"> &#125;</span><br><span class="line"> for(i = 0; i &lt; THREAD_COUNT; i++)&#123;</span><br><span class="line"> t[i]-&gt;join();</span><br><span class="line"> delete t[i];</span><br><span class="line"> &#125;</span><br><span class="line"> delete t;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从上例的运行结果也可以看到，条件变量是不保证次序的，即首先调用 wait 的不一定首先被唤醒。</p>
+<h3 id="几个高级概念"><a href="#几个高级概念" class="headerlink" title="几个高级概念"></a>几个高级概念</h3><p>C++11 提供了若干多线程编程的高级概念：promise/future, packaged_task, async，来简化多线程编程，尤其是线程之间的数据交互比较简单的情况下，让我们可以将注意力更多地放在业务处理上。</p>
+<p>promise/future 可以用来在线程之间进行简单的数据交互，而不需要考虑锁的问题，线程 A 将数据保存在一个 promise 变量中，另外一个线程 B 可以通过这个 promise 变量的 get_future() 获取其值，当线程 A 尚未在 promise 变量中赋值时，线程 B 也可以等待这个 promise 变量的赋值：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// thread_promise_future.cc</span><br><span class="line">promise&lt;string&gt; val;</span><br><span class="line">static void</span><br><span class="line">threadPromiseFuture()&#123;</span><br><span class="line"> thread ta([]()&#123;</span><br><span class="line"> future&lt;string&gt; fu = val.get_future();</span><br><span class="line"> cout &lt;&lt; &quot;waiting promise-&gt;future&quot; &lt;&lt; endl;</span><br><span class="line"> cout &lt;&lt; fu.get() &lt;&lt; endl;</span><br><span class="line"> &#125;);</span><br><span class="line"> thread tb([]()&#123;</span><br><span class="line"> this_thread::sleep_for( chrono::milliseconds(100) );</span><br><span class="line"> val.set_value(&quot;promise is set&quot;);</span><br><span class="line"> &#125;);</span><br><span class="line"> ta.join();</span><br><span class="line"> tb.join();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一个 future 变量只能调用一次 get()，如果需要多次调用 get()，可以使用 shared_future，通过 promise/future 还可以在线程之间传递异常。</p>
+<p>如果将一个 callable 对象和一个 promise 组合，那就是 packaged_task，它可以进一步简化操作：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">// thread_packaged_task.cc</span><br><span class="line">static mutex g_mutex;</span><br><span class="line">static void</span><br><span class="line">threadPackagedTask()&#123;</span><br><span class="line"> auto run = [=](int index)&#123; </span><br><span class="line"> &#123;</span><br><span class="line"> lock_guard&lt;mutex&gt; _(g_mutex);</span><br><span class="line"> cout &lt;&lt; &quot;tasklet &quot; &lt;&lt; index &lt;&lt; endl;</span><br><span class="line"> &#125;</span><br><span class="line"> this_thread::sleep_for( chrono::seconds(10) );</span><br><span class="line"> return index * 1000;</span><br><span class="line"> &#125;;</span><br><span class="line"> packaged_task&lt;int(int)&gt; pt1(run);</span><br><span class="line"> packaged_task&lt;int(int)&gt; pt2(run);</span><br><span class="line"> thread t1([&amp;]()&#123;pt1(2);&#125; );</span><br><span class="line"> thread t2([&amp;]()&#123;pt2(3);&#125; );</span><br><span class="line"> int f1 = pt1.get_future().get();</span><br><span class="line"> int f2 = pt2.get_future().get();</span><br><span class="line"> cout &lt;&lt; &quot;task result=&quot; &lt;&lt; f1 &lt;&lt; endl;</span><br><span class="line"> cout &lt;&lt; &quot;task result=&quot; &lt;&lt; f2 &lt;&lt; endl;</span><br><span class="line"> t1.join();</span><br><span class="line"> t2.join();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们还可以试图将一个 packaged_task 和一个线程组合，那就是 async() 函数。使用 async() 函数启动执行代码，返回一个 future 对象来保存代码返回值，不需要我们显式地创建和销毁线程等，而是由 C++11 库的实现决定何时创建和销毁线程，以及创建几个线程等，示例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">thread_async.cc</span><br><span class="line">static long</span><br><span class="line">do_sum(vector&lt;long&gt; *arr, size_t start, size_t count)&#123;</span><br><span class="line"> static mutex _m;</span><br><span class="line"> long sum = 0;</span><br><span class="line"> for(size_t i = 0; i &lt; count; i++)&#123;</span><br><span class="line"> sum += (*arr)[start + i];</span><br><span class="line"> &#125;</span><br><span class="line"> &#123;</span><br><span class="line"> lock_guard&lt;mutex&gt; _(_m);</span><br><span class="line"> cout &lt;&lt; &quot;thread &quot; &lt;&lt; this_thread::get_id() </span><br><span class="line"> &lt;&lt; &quot;, count=&quot; &lt;&lt; count</span><br><span class="line"> &lt;&lt; &quot;, sum=&quot; &lt;&lt; sum &lt;&lt; endl;</span><br><span class="line"> &#125;</span><br><span class="line"> return sum;</span><br><span class="line">&#125;</span><br><span class="line">static void</span><br><span class="line">threadAsync()&#123;</span><br><span class="line"># define COUNT 1000000</span><br><span class="line"> vector&lt;long&gt; data(COUNT);</span><br><span class="line"> for(size_t i = 0; i &lt; COUNT; i++)&#123;</span><br><span class="line"> data[i] = random() &amp; 0xff;</span><br><span class="line"> &#125;</span><br><span class="line"> //</span><br><span class="line"> vector&lt; future&lt;long&gt; &gt; result;</span><br><span class="line"> size_t ptc = thread::hardware_concurrency() * 2;</span><br><span class="line"> for(size_t batch = 0; batch &lt; ptc; batch++)&#123;</span><br><span class="line"> size_t batch_each = COUNT / ptc;</span><br><span class="line"> if (batch == ptc - 1)&#123;</span><br><span class="line"> batch_each = COUNT - (COUNT / ptc * batch);</span><br><span class="line"> &#125;</span><br><span class="line"> result.push_back(async(do_sum, &amp;data, batch * batch_each, batch_each));</span><br><span class="line"> &#125;</span><br><span class="line"> long total = 0;</span><br><span class="line"> for(size_t batch = 0; batch &lt; ptc; batch++)&#123;</span><br><span class="line"> total += result[batch].get();</span><br><span class="line"> &#125;</span><br><span class="line"> cout &lt;&lt; &quot;total=&quot; &lt;&lt; total &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果是在多核或者多 CPU 的环境上面运行上述例子，仔细观察输出结果，可能会发现有些线程 ID 是重复的，这说明重复使用了线程，也就是说，通过使用 async() 还可达到一些线程池的功能。</p>
+<h3 id="几个需要注意的地方"><a href="#几个需要注意的地方" class="headerlink" title="几个需要注意的地方"></a>几个需要注意的地方</h3><p>thread 同时也是棉线、毛线、丝线等意思，我想大家都能体会面对一团乱麻不知从何处查找头绪的感受，不要忘了，线程不是静态的，它是不断变化的，请想像一下面对一团会动态变化的乱麻的情景。所以，使用多线程技术的首要准则是我们自己要十分清楚我们的线程在哪里？线头（线程入口和出口）在哪里？先安排好线程的运行，注意不同线程的交叉点（访问或者修改同一个资源，包括内存、I/O 设备等），尽量减少线程的交叉点，要知道几条线堆在一起最怕的是互相打结。</p>
+<p>当我们的确需要不同线程访问一个共同的资源时，一般都需要进行加锁保护，否则很可能会出现数据不一致的情况，从而出现各种时现时不现的莫名其妙的问题，加锁保护时有几个问题需要特别注意：一是一个线程内连续多次调用非递归锁 (non-recursive lock) 的加锁动作，这很可能会导致异常；二是加锁的粒度；三是出现死锁 (deadlock)，多个线程互相等待对方释放锁导致这些线程全部处于罢工状态。</p>
+<p>第一个问题只要根据场景调用合适的锁即可，当我们可能会在某个线程内重复调用某个锁的加锁动作时，我们应该使用递归锁 (recursive lock)，在 C++11 中，可以根据需要来使用 recursive_mutex，或者 recursive_timed_mutex。</p>
+<p>第二个问题，即锁的粒度，原则上应该是粒度越小越好，那意味着阻塞的时间越少，效率更高，比如一个数据库，给一个数据行 (data row) 加锁当然比给一个表 (table) 加锁要高效，但是同时复杂度也会越大，越容易出错，比如死锁等。</p>
+<p>对于第三个问题我们需要先看下出现死锁的条件：</p>
+<ul>
+<li>资源互斥，某个资源在某一时刻只能被一个线程持有 (hold)；</li>
+<li>吃着碗里的还看着锅里的，持有一个以上的互斥资源的线程在等待被其它进程持有的互斥资源；</li>
+<li>不可抢占，只有在某互斥资源的持有线程释放了该资源之后，其它线程才能去持有该资源；</li>
+<li>环形等待，有两个或者两个以上的线程各自持有某些互斥资源，并且各自在等待其它线程所持有的互斥资源。</li>
+</ul>
+<p>我们只要不让上述四个条件中的任意一个不成立即可。在设计的时候，非常有必要先分析一下会否出现满足四个条件的情况，特别是检查有无试图去同时保持两个或者两个以上的锁，当我们发现试图去同时保持两个或者两个以上的锁的时候，就需要特别警惕了。下面我们来看一个简化了的死锁的例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">// thread_deadlock.cc</span><br><span class="line">static mutex g_mutex1, g_mutex2;</span><br><span class="line">static void</span><br><span class="line">inc1(int *p )&#123;</span><br><span class="line"> for(int i = 0; i &lt; COUNT; i++)&#123;</span><br><span class="line"> g_mutex1.lock();</span><br><span class="line"> (*p)++;</span><br><span class="line"> g_mutex2.lock();</span><br><span class="line"> // do something.</span><br><span class="line"> g_mutex2.unlock();</span><br><span class="line"> g_mutex1.unlock();</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line">static void</span><br><span class="line">inc2(int *p )&#123;</span><br><span class="line"> for(int i = 0; i &lt; COUNT; i++)&#123;</span><br><span class="line"> g_mutex2.lock();</span><br><span class="line"> g_mutex1.lock();</span><br><span class="line"> (*p)++;</span><br><span class="line"> g_mutex1.unlock();</span><br><span class="line"> // do other thing.</span><br><span class="line"> g_mutex2.unlock();</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line">void threadMutex(void)&#123;</span><br><span class="line"> int a = 0;</span><br><span class="line"> thread ta( inc1, &amp;a);</span><br><span class="line"> thread tb( inc2, &amp;a);</span><br><span class="line"> ta.join();</span><br><span class="line"> tb.join();</span><br><span class="line"> cout &lt;&lt; &quot;a=&quot; &lt;&lt; a &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个例子中，g_mutex1 和 g_mutex2 都是互斥的资源，任意时刻都只有一个线程可以持有（加锁成功），而且只有持有线程调用 unlock 释放锁资源的时候其它线程才能去持有，满足条件 1 和 3，线程 ta 持有了 g_mutex1 之后，在释放 g_mutex1 之前试图去持有 g_mutex2，而线程 tb 持有了 g_mutex2 之后，在释放 g_mutex2 之前试图去持有 g_mutex1，满足条件 2 和 4，这种情况之下，当线程 ta 试图去持有 g_mutex2 的时候，如果 tb 正持有 g_mutex2 而试图去持有 g_mutex1 时就发生了死锁。在有些环境下，可能要多次运行这个例子才出现死锁，实际工作中这种偶现特性让查找问题变难。要破除这个死锁，我们只要按如下代码所示破除条件 3 和 4 即可：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">// thread_break_deadlock.cc</span><br><span class="line">static mutex g_mutex1, g_mutex2;</span><br><span class="line">static voi</span><br><span class="line">inc1(int *p )&#123;</span><br><span class="line"> for(int i = 0; i &lt; COUNT; i++)&#123;</span><br><span class="line"> g_mutex1.lock();</span><br><span class="line"> (*p)++;</span><br><span class="line"> g_mutex1.unlock();</span><br><span class="line"> g_mutex2.lock();</span><br><span class="line"> // do something.</span><br><span class="line"> g_mutex2.unlock();</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line">static void</span><br><span class="line">inc2(int *p )&#123;</span><br><span class="line"> for(int i = 0; i &lt; COUNT; i++)&#123;</span><br><span class="line"> g_mutex2.lock();</span><br><span class="line"> // do other thing.</span><br><span class="line"> g_mutex2.unlock();</span><br><span class="line"> g_mutex1.lock();</span><br><span class="line"> (*p)++;</span><br><span class="line"> g_mutex1.unlock();</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line">void threadMutex(void)&#123;</span><br><span class="line"> int a = 0;</span><br><span class="line"> thread ta( inc1, &amp;a);</span><br><span class="line"> thread tb( inc2, &amp;a);</span><br><span class="line"> ta.join();</span><br><span class="line"> tb.join();</span><br><span class="line"> cout &lt;&lt; &quot;a=&quot; &lt;&lt; a &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在一些复杂的并行编程场景，如何避免死锁是一个很重要的话题，在实践中，当我们看到有两个锁嵌套加锁的时候就要特别提高警惕，它极有可能满足了条件 2 或者 4。</p>
+<h4 id="编译与调试"><a href="#编译与调试" class="headerlink" title="编译与调试"></a>编译与调试</h4><ul>
+<li>使用 g++编译链接时设置 -Wl,–no-as-needed 传给链接器，有些版本的 g++需要这个设置；</li>
+<li>设置宏定义 -D_REENTRANT，有些库函数是依赖于这个宏定义来确定是否使用多线程版本的。</li>
+<li>在用 gdb 调试多线程程序的时候，可以输入命令 info threads 查看当前的线程列表，通过命令 thread n 切换到第 n 个线程的上下文，这里的 n 是 info threads 命令输出的线程索引数字，例如，如果要切换到第 2 个线程的上下文，则输入命令 thread 2。</li>
+</ul>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/thread/" rel="tag">#thread</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/07/25/protobuf-rpc/" rel="next">基于protobuf 的 rpc</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div>
+      
+        <style type="text/css">
+
+    .donate_bar {
+        text-align: center;
+        margin-top : 5%;
+    }
+
+    .donate_bar.hidden {
+        display:none;
+    }
+/*
+    .donate_bar a.btn_donate {
+        display: inline-block;
+        width: 82px;
+        height: 82px;
+        margin-left:auto;
+        margin-right:auto;
+
+        background: url("http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif") no-repeat;
+        _background: url("http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif") no-repeat; 
+
+        -webkit-transition: background 0s;
+        -moz-transition: background 0s;
+        -o-transition: background 0s;
+        -ms-transition: background 0s;
+        transition: background 0s;
+    }
+*/
+    .donate_bar a.btn_donate:hover { 
+        // background-position: 0px -82px;
+        color: #87daff
+    }
+
+    .donate_bar .donate_txt {
+        display: block;
+        color: #9d9d9d;
+        font: 14px/2 "Microsoft Yahei";
+    }
+
+    .bold { 
+        font-weight: bold; 
+    }
+
+    .post-donate a {
+        border-bottom: 0px;
+    }
+
+    #donate_guide table {
+        border: none;
+    }
+
+    #donate_guide td {
+        border-bottom: none;
+        border-right: none;
+        background: #333333;
+        valign: top;
+    }
+
+</style>
+
+
+
+    
+
+    <div class ="post-donate">
+        <div id="donate_board" class="donate_bar center">
+              <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏">赏</a>
+              <span id="donate_txt" class="donate_txt">
+                   
+                        请我喝杯咖啡
+                   
+              </span>
+            <br>
+        </div>  
+  
+        <div id="donate_guide" class="donate_bar center hidden">
+            <!--
+              
+
+            
+                <a href="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="微信打赏" class="fancybox" rel="article0"
+                    style="margin-right:30%">
+                    <img src="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="" height="164px" width="164px">
+                </a>
+            
+            -->
+            <table>
+                <tr>
+                    <td>
+                         
+                    </td>
+                    <td>
+                        
+                            <a href="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="微信打赏" class="fancybox" rel="article0"
+                                style="margin-right:30%">
+                                <img src="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="" height="164px" width="164px">
+                            </a>
+                        
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+        <script type="text/javascript">
+            document.getElementById('btn_donate').onclick = function() {
+                $('#donate_board').addClass('hidden');
+                // $('#donate_guide').removeClass('hidden');
+                $('#donate_guide').show(2000);
+            }
+
+        </script>
+    </div>
+
+    
+
+
+      
+    </div>
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+          <div class="comments" id="comments">
+            
+            -->
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table Of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="changan" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">changan</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">思绪来的快去的也快，偶尔在这里停留</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">74</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">54</span>
+              <span class="site-state-item-name">categories</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">54</span>
+              <span class="site-state-item-name">tags</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://github.com/changan29" target="_blank">GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/zhaochanganplus" target="_blank">ZhiHu</a>
+              </span>
+            
+          
+        </div>
+
+        <div class="links-of-friendly motion-element">
+          
+        </div>
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程间的数据交互和数据争用"><span class="nav-number">2.</span> <span class="nav-text">线程间的数据交互和数据争用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#几个高级概念"><span class="nav-number">3.</span> <span class="nav-text">几个高级概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#几个需要注意的地方"><span class="nav-number">4.</span> <span class="nav-text">几个需要注意的地方</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#编译与调试"><span class="nav-number">4.1.</span> <span class="nav-text">编译与调试</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2018 - 
+  <span itemprop="copyrightYear">2022
+  </span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changan
+  </span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme by <a class="theme-link" href="http://blog.idhyt.com">idhyt</a>.<a class="theme-link" href="https://github.com/idhyt/hexo-theme-next/tree/magiclamp">Mala</a>
+</div>
+
+<!-- busuanzi -->
+
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
