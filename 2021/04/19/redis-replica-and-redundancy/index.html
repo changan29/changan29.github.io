@@ -55,7 +55,7 @@
 <meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/rds-sentinel-util.png">
 <meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/redis-cluster.jpg">
 <meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/redis-cluster-choose.jpg">
-<meta property="og:updated_time" content="2021-04-19T10:58:00.496Z">
+<meta property="og:updated_time" content="2022-11-24T13:55:54.298Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="redis数据冗余与分片">
 <meta name="twitter:description" content="redis数据冗余与分片数据冗余-主从复制Redis 提供了主从库模式，以保证数据副本的一致，主从库之间采用的是读写分离的方式。  读操作：主库、从库都可以接收； 写操作：首先到主库执行，然后，主库将写操作同步给从库。  主从库间如何进行第一次同步？1replicaof  172.16.19.3  6379  断网增量更新当主从库断连后，主库会把断连期间收到的写操作命令，写入 replicatio">
@@ -381,6 +381,8 @@
 <h3 id="数据分片"><a href="#数据分片" class="headerlink" title="数据分片"></a>数据分片</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">redis-cli -h 172.16.19.3 –p 6379 cluster addslots 0,1</span><br><span class="line">redis-cli -h 172.16.19.4 –p 6379 cluster addslots 2,3</span><br><span class="line">redis-cli -h 172.16.19.5 –p 6379 cluster addslots 4</span><br></pre></td></tr></table></figure>
 <p><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/redis-cluster.jpg" alt="image"></p>
 <h4 id="客户端如何定位数据？"><a href="#客户端如何定位数据？" class="headerlink" title="客户端如何定位数据？"></a>客户端如何定位数据？</h4><p><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/redis-cluster-choose.jpg" alt="image"></p>
+<script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
+</script>
 </span>
       
     </div>

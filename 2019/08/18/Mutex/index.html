@@ -48,7 +48,7 @@
 <meta property="og:site_name" content="changan&#39;s blog">
 <meta property="og:description" content="临界区、信号量、互斥锁、自旋锁与原子操作临界区程序想要使用共享资源，必然通过一些指令去访问这些资源，若多个任务都访问同一资源，那么访问该资源的指令代码组成的区域称临界区。简而言之，临界区是代码 信号量信号量简单的说是一种计数器，用P/V操作表示减和增。增加操作包括两个微操作： 增加：  将信号量的值加一 唤醒此信号量上等待的线程  减少：  判断信号量的值是否大于0 如果值大于0，则将信号量减1">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-10-24T16:18:54.000Z">
+<meta property="og:updated_time" content="2022-11-24T13:55:54.277Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="临界区、信号量、互斥锁、自旋锁与原子操作">
 <meta name="twitter:description" content="临界区、信号量、互斥锁、自旋锁与原子操作临界区程序想要使用共享资源，必然通过一些指令去访问这些资源，若多个任务都访问同一资源，那么访问该资源的指令代码组成的区域称临界区。简而言之，临界区是代码 信号量信号量简单的说是一种计数器，用P/V操作表示减和增。增加操作包括两个微操作： 增加：  将信号量的值加一 唤醒此信号量上等待的线程  减少：  判断信号量的值是否大于0 如果值大于0，则将信号量减1">
@@ -374,6 +374,8 @@
 <p>有的资源同时只允许一个访问，无论读写；于是我们抽象它为“互斥锁”。</p>
 <h4 id="原子操作"><a href="#原子操作" class="headerlink" title="原子操作"></a>原子操作</h4><p>原子操作，就是不能被更高等级中断抢夺优先的操作。由于操作系统大部分时间处于开中断状态，所以，一个程序在执行的时候可能被优先级更高的线程中断。而有些操作是不能被中断的，不然会出现无法还原的后果，这时候，这些操作就需要原子操作。就是不能被中断的操作。</p>
 <p>硬件级的原子操作：在单处理器系统（UniProcessor）中，能够在单条指令中完成的操作都可以认为是“原子操作”，因为中断只发生在指令边缘。在多处理器结构中（Symmetric Multi-Processor）就不同了，由于系统中有多个处理器独立运行，即使能在单条指令中完成的操作也有可能受到干扰。在X86平台生，CPU提供了在指令执行期间对总线加锁的手段。CPU上有一根引线#HLOCK pin连到北桥，如果汇编语言的程序中在一条指令前面加上前缀”LOCK”，经过汇编以后的机器代码就使CPU在执行这条指令的时候把#HLOCK pin的电位拉低，持续到这条指令结束时放开，从而把总线锁住，这样同一总线上别的CPU就暂时不能通过总线访问内存了，保证了这条指令在多处理器环境中的原子性。</p>
+<script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
+</script>
 </span>
       
     </div>
@@ -391,7 +393,7 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/10/24/IPC_and_pipe/" rel="prev">进程通信 & PIPE</a>
+              <a href="/2019/10/24/linux_timer/" rel="prev">linux定时器时间轮算法</a>
             
           </div>
 

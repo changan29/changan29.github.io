@@ -52,7 +52,7 @@
 <meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/os/kuaizhao.png">
 <meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/os/kuaizhao_read5.png">
 <meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/os/2-phase-lock.jpg">
-<meta property="og:updated_time" content="2021-03-20T14:07:41.088Z">
+<meta property="og:updated_time" content="2022-11-24T13:55:54.187Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ddia-事务">
 <meta name="twitter:description" content="transaction事务是一个抽象层，允许应用程序假装某些并发问题和某些类型的硬件和软件故障不存在。各式各样的错误被简化为一种简单情况：事务中止（transaction abort），而应用需要的仅仅是重试。 如果没有事务处理，各种错误情况（进程崩溃，网络中断，停电，磁盘已满，意外并发等）意味着数据可能以各种方式变得不一致。例如，非规范化的数据可能很容易与源数据不同步。如果没有事务处理，就很难推">
@@ -397,6 +397,8 @@
 <h5 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h5><p><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/os/2-phase-lock.jpg" alt="image"></p>
 <p>事务 B 的 update 语句会被阻塞，直到事务 A 执行 commit 之后，事务 B 才能继续执行。</p>
 <p>也就是说，在 InnoDB 事务中，行锁是在需要的时候才加上的，但并不是不需要了就立刻释放，而是要等到事务结束时才释放。这个就是两阶段锁协议。</p>
+<script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
+</script>
 </span>
       
     </div>
@@ -416,7 +418,7 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2021/03/23/c++11-lambda/" rel="prev">C++11 lambda</a>
+              <a href="/2021/03/23/c++11-atomic/" rel="prev">C++ 11 Atomic</a>
             
           </div>
 

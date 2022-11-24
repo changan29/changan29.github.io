@@ -49,7 +49,7 @@
 <meta property="og:description" content="中断分类按照中断的来源分类，来自CPU外部的中断称为外部中断，来自CPU内部的称为内部中断；细分的话，外部中断根据严重程度，分为可屏蔽中断和不可屏蔽中断；内部中断按照是否正常分为软中断和异常。 外部中断外部中断来自CPU的外部的某个硬件，因此又被称为硬件中断，比如网卡收到了一个数据包，它就会通知CPU，CPU得到通知便将数据拷贝到内核缓冲区。 为了接受外部中断，CPU有两个引脚作为接受接口，INT">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://201904-1251969284.cossh.myqcloud.com/idtr.png">
-<meta property="og:updated_time" content="2019-04-21T09:19:14.000Z">
+<meta property="og:updated_time" content="2022-11-24T13:55:54.234Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="写一个操作系统_10 操作系统是由中断驱动的">
 <meta name="twitter:description" content="中断分类按照中断的来源分类，来自CPU外部的中断称为外部中断，来自CPU内部的称为内部中断；细分的话，外部中断根据严重程度，分为可屏蔽中断和不可屏蔽中断；内部中断按照是否正常分为软中断和异常。 外部中断外部中断来自CPU的外部的某个硬件，因此又被称为硬件中断，比如网卡收到了一个数据包，它就会通知CPU，CPU得到通知便将数据拷贝到内核缓冲区。 为了接受外部中断，CPU有两个引脚作为接受接口，INT">
@@ -391,6 +391,8 @@
 <h4 id="中断时候的栈变化"><a href="#中断时候的栈变化" class="headerlink" title="中断时候的栈变化"></a>中断时候的栈变化</h4><p>当前进程被中断打断后，为了从中断返回后能继续运行该进程，处理器自<br>动把CS 和EIP 的当前值保存到中断处理程序使用的栈中。</p>
 <p>不同特权级别下处理器使用不同的栈，至于中断处<br>理程序使用的是哪个栈，要视它当时所在的特权级别，因为中断是可以在任何特权级别下发生的。</p>
 <p>除了要保存CS 、EIP 外，还需要保存标志寄存器EFLAGS ，如果涉及到特权级变化，还要压入SS 和ESP 寄存器。</p>
+<script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
+</script>
 </span>
       
     </div>

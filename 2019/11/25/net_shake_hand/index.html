@@ -52,7 +52,7 @@
 <meta property="og:image" content="https://201911-1251969284.cos.ap-shanghai.myqcloud.com/UDP-Header-Format.png">
 <meta property="og:image" content="https://201911-1251969284.cos.ap-shanghai.myqcloud.com/TCP-Header-Format.png">
 <meta property="og:image" content="https://201911-1251969284.cos.ap-shanghai.myqcloud.com/tcp_all_stat">
-<meta property="og:updated_time" content="2019-11-24T17:28:16.000Z">
+<meta property="og:updated_time" content="2022-11-24T13:55:54.282Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="TCP的几个问题">
 <meta name="twitter:description" content="IP header UDP header TCP header MTU &amp;amp; MSSMSS=MTU-IP包头长-TCP包头长 三次握手交换初始序列号 交换TCP窗口大小信息 四次挥手可以三次挥手吗，可以，ack+fin一起发就是三次，启用延迟确认就有三次挥手 2MSL等待状态TIME_WAIT状态也称为2MSL等待状态。每个具体TCP实现必须选择一个报文段最大生存时间MSL（Maximum">
@@ -373,6 +373,8 @@
 <h3 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h3><p>发送方不能发的太快，接收不过来</p>
 <h3 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h3><p>成因: 中间路由器缓存有限，发送带宽有限，更多没必要的重传，多跳<br>影响: 丢包 &amp; 时延<br>方案: 观察 时延 丢包判断是否拥塞(TCP采用)<br>策略: 慢启动，先指数增，遇到丢包 /2 再线性增</p>
 <h3 id="状态图"><a href="#状态图" class="headerlink" title="状态图"></a>状态图</h3><p><img src="https://201911-1251969284.cos.ap-shanghai.myqcloud.com/tcp_all_stat" alt="image"></p>
+<script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
+</script>
 </span>
       
     </div>

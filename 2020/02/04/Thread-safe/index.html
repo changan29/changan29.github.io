@@ -48,7 +48,7 @@
 <meta property="og:site_name" content="changan&#39;s blog">
 <meta property="og:description" content="原子操作自增(++i)操作在多线程环境下出现错误是因为这个操作被编译成的代码不止一条指令，因此在执行的时候可能执行到一半被系统调度打乱，去执行别的代码。我们把单指令的操作称为原子的(atomic),因为无论如何，单条指令的执行时不会被打乱的，为了避免出错，很多体系结构都提供了一些常用操作的原子指令。 同步与锁为了避免多个线程同时读写同一个数据而产生不可预料的后果，我们要将多个线程对同一个数据的访问">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-02-04T12:25:25.895Z">
+<meta property="og:updated_time" content="2022-11-24T13:55:54.319Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="程序员的自我修养-线程安全">
 <meta name="twitter:description" content="原子操作自增(++i)操作在多线程环境下出现错误是因为这个操作被编译成的代码不止一条指令，因此在执行的时候可能执行到一半被系统调度打乱，去执行别的代码。我们把单指令的操作称为原子的(atomic),因为无论如何，单条指令的执行时不会被打乱的，为了避免出错，很多体系结构都提供了一些常用操作的原子指令。 同步与锁为了避免多个线程同时读写同一个数据而产生不可预料的后果，我们要将多个线程对同一个数据的访问">
@@ -369,6 +369,8 @@
 <h3 id="cpu-乱序执行"><a href="#cpu-乱序执行" class="headerlink" title="cpu 乱序执行"></a>cpu 乱序执行</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#define barrier() __asm__ volatile (&quot;lwsync&quot;)</span><br><span class="line">volatile T* pInst = 0;</span><br><span class="line"></span><br><span class="line">T* GetInstance()</span><br><span class="line">&#123;</span><br><span class="line">    if(!pInst)</span><br><span class="line">    &#123;</span><br><span class="line">        Lock();</span><br><span class="line">        if()</span><br><span class="line">        &#123;</span><br><span class="line">            T* temp = new T;</span><br><span class="line">            barrier();</span><br><span class="line">            pInst = temp;</span><br><span class="line">        &#125;</span><br><span class="line">        unLock();</span><br><span class="line">    &#125;</span><br><span class="line">    return pInst;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>上面的代码加了一个barrier，是为了解决CPU的乱序执行。C++里面的new实际包含两个步骤，1、分配内存；2.调用构造函数。pInst = new T;包含三个步骤，1.分配内存，2，在内存的位置调用构造函数，3.将内存的值付给pInst, 其中2 3 是可能乱序执行的。</p>
 <p>通常情况下，调用CPU提供的一条指令可以阻止CPU乱序，这条指令通常被称为barrier，一条barrier指令会阻止CPU将指令之前的指令交换到barrier之后。在powerPC中，这条指令是 lwsync.</p>
+<script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
+</script>
 </span>
       
     </div>

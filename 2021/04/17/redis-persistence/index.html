@@ -51,7 +51,7 @@
 <meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/rds-aof.jpg">
 <meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/aof-rewrite.jpg">
 <meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/rds-snapshotting.jpg">
-<meta property="og:updated_time" content="2021-04-17T08:27:40.800Z">
+<meta property="og:updated_time" content="2022-11-24T13:55:54.295Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="redis持久化">
 <meta name="twitter:description" content="AOF 机制 (Append Only File) flush时间配置AOF 配置项 appendfsync 的三个可选值:  Always，同步写回：每个写命令执行完，立马同步地将日志写回磁盘； Everysec，每秒写回：每个写命令执行完，只是先把日志写到 AOF 文件的内存缓冲区，每隔一秒把缓冲区中的内容写入磁盘； No，操作系统控制的写回：每个写命令执行完，只是先把日志写到 AOF 文件的">
@@ -381,6 +381,8 @@
 <h3 id="快照"><a href="#快照" class="headerlink" title="快照"></a>快照</h3><p><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/rds-snapshotting.jpg" alt="image"><br>理论跟 aof重写机制类似， fork之后,遍历k-v按照一定格式做镜像；后面在按照这个镜像恢复</p>
 <h4 id="混合使用-AOF-日志和内存快照"><a href="#混合使用-AOF-日志和内存快照" class="headerlink" title="混合使用 AOF 日志和内存快照"></a>混合使用 AOF 日志和内存快照</h4><p>内存快照以一定的频率执行，在两次快照之间，使用 AOF 日志记录这期间的所有命令操作。</p>
 <h4 id="风险"><a href="#风险" class="headerlink" title="风险"></a>风险</h4><p>如果Redis进程绑定了CPU，那么子进程会继承父进程的CPU亲和性属性，子进程必然会与父进程争夺同一个CPU资源，整个Redis Server的性能必然会受到影响！所以如果Redis需要开启定时RDB和AOF重写，进程一定不要绑定CPU。</p>
+<script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
+</script>
 </span>
       
     </div>

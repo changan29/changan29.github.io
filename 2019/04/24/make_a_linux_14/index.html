@@ -48,7 +48,7 @@
 <meta property="og:site_name" content="changan&#39;s blog">
 <meta property="og:description" content="用C语言写内核无论什么语言，要编译成 ELF文件格式(或者定一个其他的标准) 12345int main()&amp;#123;    while(1)&amp;#123;&amp;#125;;    return 0;&amp;#125; 链接可以指定最终生成的可执行文件的起始虚拟地址，我们 指定 内核加载到 0x1500的地方，内核初始化的时候跳转内核要跳转到这个地方。 123456ld kernel/main.o -Tte">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-06-02T13:37:54.000Z">
+<meta property="og:updated_time" content="2022-11-24T13:55:54.245Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="写一个操作系统_14 C 链接与系统调用">
 <meta name="twitter:description" content="用C语言写内核无论什么语言，要编译成 ELF文件格式(或者定一个其他的标准) 12345int main()&amp;#123;    while(1)&amp;#123;&amp;#125;;    return 0;&amp;#125; 链接可以指定最终生成的可执行文件的起始虚拟地址，我们 指定 内核加载到 0x1500的地方，内核初始化的时候跳转内核要跳转到这个地方。 123456ld kernel/main.o -Tte">
@@ -405,6 +405,8 @@
 </ul>
 <p>例子:</p>
 <p>调用中断号，前提是这个中断函数已经写好了，系统已经提供，所以才称为 系统调用。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">char* str=”hello,world\n”;</span><br><span class="line">int count = 0;</span><br><span class="line">void main() &#123;</span><br><span class="line">asm (”pusha; \</span><br><span class="line">	movl $4 ，%eax ; \</span><br><span class="line">	movl $1 ， %ebx; \</span><br><span class="line">	movl str ， %ecx;\</span><br><span class="line">	movl $12 ，%edx ; \</span><br><span class="line">	int $0x80; \</span><br><span class="line">	mov %eax,count;\</span><br><span class="line">	pop a \</span><br><span class="line">	”) ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
+</script>
 </span>
       
     </div>

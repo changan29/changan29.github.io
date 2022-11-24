@@ -49,7 +49,7 @@
 <meta property="og:description" content="什么是系统调用系统调用是应用程序(包含运行库)与操作系统内核的接口，它决定了应用程序如何与内核打交道。在现在的操作系统系统里，程序运行的时候，本身是没有权利访问系统的资源，由于系统有限的资源有可能被不同的应用程序同时访问，因此，如果不加以保护，各个应用程序的冲突在所难免。所以现代操作系统都尽可能的把冲突的资源保护起来，阻止程序直接访问。这些资源，包括文件、网络、IO、各种设备等。 为了让应用程序有">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://202002-1251969284.cos.ap-shanghai.myqcloud.com/linux_syscall_0x80.png">
-<meta property="og:updated_time" content="2020-02-16T12:29:59.000Z">
+<meta property="og:updated_time" content="2022-11-24T13:55:54.308Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="程序员的自我修养 - 系统调用及原理">
 <meta name="twitter:description" content="什么是系统调用系统调用是应用程序(包含运行库)与操作系统内核的接口，它决定了应用程序如何与内核打交道。在现在的操作系统系统里，程序运行的时候，本身是没有权利访问系统的资源，由于系统有限的资源有可能被不同的应用程序同时访问，因此，如果不加以保护，各个应用程序的冲突在所难免。所以现代操作系统都尽可能的把冲突的资源保护起来，阻止程序直接访问。这些资源，包括文件、网络、IO、各种设备等。 为了让应用程序有">
@@ -380,6 +380,8 @@
 <p>调用syscenter之后，系统会直接跳转到由某个寄存器制定的函数执行，并自动完成特定特权级的转换，堆栈切换等功能。</p>
 <p>在参数传递方面，新型的系统调用和int 的系统调用完全相同，仍然使用EBX..EDX,ESI，EDI，EBP这六个寄存器。</p>
 <p>分析过程：<br>ldd获取共享库，找到linux-gate.so.1，也就是地址0xffffe0000被映射到vdso，可以把文件的这个段单独导出到一个文件里分析，vdso导出一系列函数，其中 _kernel_vsyscall_ 中使用了 syscenter系统调用，从而完成系统调用。</p>
+<script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
+</script>
 </span>
       
     </div>

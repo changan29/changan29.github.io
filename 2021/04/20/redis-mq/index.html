@@ -51,7 +51,7 @@
 <meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/kafka-rand-seq.png">
 <meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/kafka-rand-seq-solu.png">
 <meta property="og:image" content="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/redis-list-streams-mq.jpg">
-<meta property="og:updated_time" content="2021-04-20T13:34:18.379Z">
+<meta property="og:updated_time" content="2022-11-24T13:55:54.293Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="redis消息队列">
 <meta name="twitter:description" content="消息队列的特征消息队列在存取消息时，必须要满足三个需求，分别是  消息保序 处理重复的消息 保证消息可靠性  消息保序对于 单队列，单进程的queue， 是满足先入先出的特点的，本身是有序的，但是如果有多个队列或多个消费者线程的时候，可能会产生乱序的问题。 kafka的例子:   stream的缺点就是在redis内部，stream就是一个单一的key，如果不对key进行分片，那么stream的容">
@@ -386,6 +386,8 @@
 <p>而采用RabbitMQ和Kafka这些专业的队列中间件时，就没有这个问题了。这些组件一般是部署一个集群，生产者在发布消息时，队列中间件一般会采用写多个节点+预写磁盘的方式保证消息的完整性，即便其中一个节点挂了，也能保证集群的数据不丢失。</p>
 <p>如果是金融相关的业务场景，例如交易、支付这类，建议还是使用专业的队列中间件。</p>
 <h4 id="用-List-和-Streams-实现消息队列的特点和区别"><a href="#用-List-和-Streams-实现消息队列的特点和区别" class="headerlink" title="用 List 和 Streams 实现消息队列的特点和区别"></a>用 List 和 Streams 实现消息队列的特点和区别</h4><p><img src="https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/redis-list-streams-mq.jpg" alt="image"></p>
+<script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
+</script>
 </span>
       
     </div>

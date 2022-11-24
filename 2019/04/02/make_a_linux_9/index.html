@@ -49,7 +49,7 @@
 <meta property="og:description" content="函数调用约定编译器一般使用堆栈实现函数调用，每个进程都有自己的栈，用栈来传递参数，会带来以下问题：  参数存储在栈中，那么谁来负责回收参数所占的栈空间，是调用者？还是被调用者 当参数很多的时候后，主调函数将参数以什么样的顺序传递  高级语言有调用的约定: 举例: 12345678910111213141516int sub(int a , int b)&amp;#123; // 被调    return">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://201904-1251969284.cossh.myqcloud.com/func_call_types.jpg">
-<meta property="og:updated_time" content="2019-04-20T12:08:18.000Z">
+<meta property="og:updated_time" content="2022-11-24T13:55:54.269Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="写一个操作系统_09 C语言和汇编语言">
 <meta name="twitter:description" content="函数调用约定编译器一般使用堆栈实现函数调用，每个进程都有自己的栈，用栈来传递参数，会带来以下问题：  参数存储在栈中，那么谁来负责回收参数所占的栈空间，是调用者？还是被调用者 当参数很多的时候后，主调函数将参数以什么样的顺序传递  高级语言有调用的约定: 举例: 12345678910111213141516int sub(int a , int b)&amp;#123; // 被调    return">
@@ -383,6 +383,8 @@
 </ul>
 <p>C代码嵌入汇编:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">char* str = &quot;C &amp; ASM Code\n&quot;;</span><br><span class="line">int count = 0;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    asm(&quot;pusha;\</span><br><span class="line">            movl $4,%eax;\</span><br><span class="line">            movl $1,%ebx;\</span><br><span class="line">            movl str,%ecx;\</span><br><span class="line">            movl $13,%edx;\</span><br><span class="line">            int $0x80;\</span><br><span class="line">            movl %eax,count;\</span><br><span class="line">            popa;\</span><br><span class="line">            &quot;);</span><br><span class="line">&#125;</span><br><span class="line">// gcc -m32 casm.c</span><br></pre></td></tr></table></figure></p>
 <h4 id="内联汇编及其扩展"><a href="#内联汇编及其扩展" class="headerlink" title="内联汇编及其扩展"></a>内联汇编及其扩展</h4><p>上面的例子是内联汇编的一个例子，基本的内敛汇编功能比较薄弱，在此基础上，GCC添加了扩展功能，在C语言里面用扩展汇编真的不舒服，相当于多了一种语言，需要依据其规则。</p>
+<script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
+</script>
 </span>
       
     </div>

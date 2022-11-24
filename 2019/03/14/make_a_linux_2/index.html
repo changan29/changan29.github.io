@@ -50,7 +50,7 @@
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://201903-1251969284.cosgz.myqcloud.com/neicun.png">
 <meta property="og:image" content="http://201903-1251969284.cosgz.myqcloud.com/Apple1-Mainboard.jpg">
-<meta property="og:updated_time" content="2019-03-19T03:14:46.000Z">
+<meta property="og:updated_time" content="2022-11-24T13:55:54.250Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="写一个操作系统_02 硬件与BIOS">
 <meta name="twitter:description" content="硬件与BIOS流程硬件&amp;nbsp;&amp;nbsp; 传统来说，主板上两个主要芯片，靠上方的叫北桥，靠下方的叫南桥。 &amp;nbsp;&amp;nbsp; 大体上说：北桥负责与CPU通信，并且连接高速设备（内存/显卡），并且与南桥通信；南桥负责与低速设备（硬盘/USB）通信，时钟/BIOS/系统管理/旧式设备控制，并且与北桥通信。 &amp;nbsp;&amp;nbsp; Intel从第一代Core i7 (i7 9xx)开始，将">
@@ -382,6 +382,8 @@
 <h3 id="完成历史使命"><a href="#完成历史使命" class="headerlink" title="完成历史使命"></a>完成历史使命</h3><p>&nbsp;&nbsp;BIOS做完计算机硬件自检和初始化后，会选择一个启动设备（例如软盘、硬盘、光盘等），并且读取该设备的第一扇区(即主引导扇区或启动扇区)到内存一个特定的地址0x7c00处，然后CPU控制权会转移到那个地址继续执行。至此BIOS的初始化工作做完了。</p>
 <p>&nbsp;&nbsp;CPU的控制权交到了 0x7C00, 如果我们把操作系统放到磁盘或光盘，接下来就可以加载操作系统到内存，执行我们的操作系统了。</p>
 <p>&nbsp;&nbsp;那是一片更广阔的天地。<br><img src="http://201903-1251969284.cosgz.myqcloud.com/Apple1-Mainboard.jpg" alt="image"><br>图为苹果计算机的第一代产品</p>
+<script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
+</script>
 </span>
       
     </div>

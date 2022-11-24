@@ -52,7 +52,7 @@
 <meta property="og:image" content="https://202002-1251969284.cos.ap-shanghai.myqcloud.com/vma_maps_in_proc">
 <meta property="og:image" content="https://202002-1251969284.cos.ap-shanghai.myqcloud.com/inux-virtual-space-02.png">
 <meta property="og:image" content="https://202002-1251969284.cos.ap-shanghai.myqcloud.com/args_top_stack_main.jpg">
-<meta property="og:updated_time" content="2020-02-15T09:59:31.000Z">
+<meta property="og:updated_time" content="2022-11-24T13:55:54.232Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="程序员的自我修养 - 可执行文件的装载与进程">
 <meta name="twitter:description" content="进程的建立从操作系统的角度看，一个进程最关键的特征是它拥有独立的虚拟地址空间，这使得它有别于其他进程，很多时候一个程序程序被执行同时伴随着一个新进程的创建，在有虚拟存储的情况下，创建一个进程，然后加载可执行文件并且执行，需要做三件事：  创建一个独立的虚拟地址空间 读取可执行文件头，并且建立虚拟空间与可执行文件的映射关系 将CPU的指令寄存器设置成可执行文件的入口地址，启动运行  首先是创建虚拟地">
@@ -381,6 +381,8 @@
 <li>初始化ELF进程环境，寄存器地址等</li>
 <li>将系统调用的返回修改成ELF可执行文件的入口点，这个入口点取决于链接的方式，对于静态链接，入口是e_entry地址，对于动态链接，程序入口点是动态连接器。</li>
 </ul>
+<script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
+</script>
 </span>
       
     </div>
