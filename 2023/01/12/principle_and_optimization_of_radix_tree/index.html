@@ -68,9 +68,9 @@
 <meta property="og:image" content="https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/017.png">
 <meta property="og:image" content="https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/018.png">
 <meta property="og:image" content="https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/019.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/2691051/1663838548131-1c78a5e0-7a30-40a5-9bdf-04ea316faf6e.png#averageHue=%23f0f0f0&clientId=u5c92151a-cd4b-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=109&id=u9dea437a&margin=%5Bobject%20Object%5D&name=image.png&originHeight=218&originWidth=1452&originalType=binary&ratio=1&rotation=0&showTitle=false&size=134838&status=done&style=none&taskId=ufb657c3c-d55b-4739-9e79-f3571bcea13&title=&width=726">
+<meta property="og:image" content="https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/021.png">
 <meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/2691051/1663835511810-4013030d-7ae3-4792-adac-c1052a882dc6.png#averageHue=%23dcdbdb&clientId=u5c92151a-cd4b-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=335&id=uc2051b28&margin=%5Bobject%20Object%5D&name=image.png&originHeight=670&originWidth=1450&originalType=binary&ratio=1&rotation=0&showTitle=false&size=51770&status=done&style=none&taskId=ud3f2978b-a854-46fb-8945-a22678bdd71&title=&width=725">
-<meta property="og:updated_time" content="2023-04-13T10:14:22.908Z">
+<meta property="og:updated_time" content="2023-04-13T10:17:16.790Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="可变基数树技术分享">
 <meta name="twitter:description" content="可变基数树分享使用可变基数树优化交易订单簿以及使用SIMD硬件加速查找主要参考论文: https://db.in.tum.de/~leis/papers/ART.pdf 背景 内存变得容量更大更便宜，整个数据库/存储引擎可以放到内存 传统的内存数据索引一般是平衡二叉树 在现代的硬件上效率不高 另一类索引结构，hash表 只支持单点查找，范围查找不好 索引效率是决定性能的关键因素 前言 T树和二叉树">
@@ -566,7 +566,7 @@
 <li>最近最少使用（Least-Recently-Used，LRU）</li>
 </ul>
 <p>所有这些策略都需要额外的时间和硬件。</p>
-<h3 id="另外的优化途径-SIMD"><a href="#另外的优化途径-SIMD" class="headerlink" title="另外的优化途径-SIMD"></a>另外的优化途径-SIMD</h3><h4 id="硬件支持"><a href="#硬件支持" class="headerlink" title="硬件支持"></a>硬件支持</h4><p><img src="https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/019.png" alt=""><br><img src="https://cdn.nlark.com/yuque/0/2022/png/2691051/1663838548131-1c78a5e0-7a30-40a5-9bdf-04ea316faf6e.png#averageHue=%23f0f0f0&amp;clientId=u5c92151a-cd4b-4&amp;crop=0&amp;crop=0&amp;crop=1&amp;crop=1&amp;from=paste&amp;height=109&amp;id=u9dea437a&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=218&amp;originWidth=1452&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=134838&amp;status=done&amp;style=none&amp;taskId=ufb657c3c-d55b-4739-9e79-f3571bcea13&amp;title=&amp;width=726" alt="image.png"></p>
+<h3 id="另外的优化途径-SIMD"><a href="#另外的优化途径-SIMD" class="headerlink" title="另外的优化途径-SIMD"></a>另外的优化途径-SIMD</h3><h4 id="硬件支持"><a href="#硬件支持" class="headerlink" title="硬件支持"></a>硬件支持</h4><p><img src="https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/019.png" alt=""><br><img src="https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/021.png" alt=""></p>
 <h4 id="语言支持"><a href="#语言支持" class="headerlink" title="语言支持"></a>语言支持</h4><p>Java JEP 417: Vector API (Third Incubator) on jdk17/18</p>
 <ul>
 <li><a href="https://openjdk.org/jeps/414" target="_blank" rel="noopener">https://openjdk.org/jeps/414</a></li>
