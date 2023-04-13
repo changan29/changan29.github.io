@@ -48,6 +48,7 @@
 <meta property="og:site_name" content="changan&#39;s blog">
 <meta property="og:description" content="可变基数树分享使用可变基数树优化交易订单簿以及使用SIMD硬件加速查找主要参考论文: https://db.in.tum.de/~leis/papers/ART.pdf 背景 内存变得容量更大更便宜，整个数据库/存储引擎可以放到内存 传统的内存数据索引一般是平衡二叉树 在现代的硬件上效率不高 另一类索引结构，hash表 只支持单点查找，范围查找不好 索引效率是决定性能的关键因素 前言 T树和二叉树">
 <meta property="og:locale" content="en">
+<meta property="og:image" content="https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/orderbook.jpeg">
 <meta property="og:image" content="https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/001.png">
 <meta property="og:image" content="https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/002.png">
 <meta property="og:image" content="https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/003.png">
@@ -70,11 +71,11 @@
 <meta property="og:image" content="https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/019.png">
 <meta property="og:image" content="https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/021.png">
 <meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/2691051/1663835511810-4013030d-7ae3-4792-adac-c1052a882dc6.png#averageHue=%23dcdbdb&clientId=u5c92151a-cd4b-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=335&id=uc2051b28&margin=%5Bobject%20Object%5D&name=image.png&originHeight=670&originWidth=1450&originalType=binary&ratio=1&rotation=0&showTitle=false&size=51770&status=done&style=none&taskId=ud3f2978b-a854-46fb-8945-a22678bdd71&title=&width=725">
-<meta property="og:updated_time" content="2023-04-13T10:17:16.790Z">
+<meta property="og:updated_time" content="2023-04-13T15:04:56.378Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="可变基数树技术分享">
 <meta name="twitter:description" content="可变基数树分享使用可变基数树优化交易订单簿以及使用SIMD硬件加速查找主要参考论文: https://db.in.tum.de/~leis/papers/ART.pdf 背景 内存变得容量更大更便宜，整个数据库/存储引擎可以放到内存 传统的内存数据索引一般是平衡二叉树 在现代的硬件上效率不高 另一类索引结构，hash表 只支持单点查找，范围查找不好 索引效率是决定性能的关键因素 前言 T树和二叉树">
-<meta name="twitter:image" content="https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/001.png">
+<meta name="twitter:image" content="https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/orderbook.jpeg">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -377,7 +378,7 @@
       
 
       
-        <span itemprop="articleBody"><h2 id="可变基数树分享"><a href="#可变基数树分享" class="headerlink" title="可变基数树分享"></a>可变基数树分享</h2><p>使用可变基数树优化交易订单簿以及使用SIMD硬件加速查找<br>主要参考论文: <a href="https://db.in.tum.de/~leis/papers/ART.pdf" target="_blank" rel="noopener">https://db.in.tum.de/~leis/papers/ART.pdf</a></p>
+        <span itemprop="articleBody"><h2 id="可变基数树分享"><a href="#可变基数树分享" class="headerlink" title="可变基数树分享"></a>可变基数树分享</h2><p>使用可变基数树优化交易订单簿以及使用SIMD硬件加速查找<br><img src="https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/orderbook.jpeg" alt=""><br>主要参考论文: <a href="https://db.in.tum.de/~leis/papers/ART.pdf" target="_blank" rel="noopener">https://db.in.tum.de/~leis/papers/ART.pdf</a></p>
 <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><ul>
 <li>内存变得容量更大更便宜，整个数据库/存储引擎可以放到内存</li>
 <li>传统的内存数据索引一般是平衡二叉树 在现代的硬件上效率不高</li>
