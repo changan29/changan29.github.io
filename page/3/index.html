@@ -3391,6 +3391,93 @@
           
           
             
+              <a class="post-title-link" href="/2021/03/08/understand-r-reference/" itemprop="url">
+                理解右值引用
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2021-03-08T21:40:39+08:00" content="2021-03-08">
+            2021-03-08
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/C/" itemprop="url" rel="index">
+                  <span itemprop="name">C++</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            一句话概述std::move本身只做类型转换，对性能无影响。我们可以在自己的类中实现移动语义，避免深拷贝，充分利用右值引用和std::move的语言特性。
+移动语义目的就是用浅拷贝代替深拷贝，右值引用跟深拷贝放到同一场景才是有意义的。
+实现移动语义在没有右值引用之前，一个简单的数组类通常实现如下，有
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2021/03/08/understand-r-reference/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2021/01/13/a-linux-shared-lib-bug/" itemprop="url">
                 一个Linux 动态库常见bug
               </a>
@@ -4233,100 +4320,6 @@ Intel省略了 寄存器前的
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2020/07/23/tianwen-1-wenchang/" itemprop="url">
-                去看天问一号发射
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2020-07-23T15:40:39+08:00" content="2020-07-23">
-            2020-07-23
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/tianwen/" itemprop="url" rel="index">
-                  <span itemprop="name">tianwen</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            天问一号发射
-
-卫星发射时间表  时间表在网上有很多,善用搜索基本找是没什么问题.微博上关注了一个圈内的小姐姐,更新时间和信息都比较及时.
-
-论坛
-http://www.spaceflightfans.cn/china-launch-schedule
-
-
-微博
-https://weibo.com/l
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2020/07/23/tianwen-1-wenchang/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -4363,21 +4356,21 @@ https://weibo.com/l
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">72</span>
+              <span class="site-state-item-count">73</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">50</span>
+              <span class="site-state-item-count">51</span>
               <span class="site-state-item-name">categories</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">49</span>
+              <span class="site-state-item-count">50</span>
               <span class="site-state-item-name">tags</span>
               </a>
           </div>
