@@ -40,19 +40,19 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="期货合约合约交易，通常指期货合约。现货合约我们以后再讨论。这里我们仍然以数字货币的期货合约为例，实现一个基于BTC/USD价格指数的期货合约。 所谓期货交易，就是指以约定的价格在未来进行交割。 期货交易的目的原本是以当前约定的价格锁定未来某个时间段的价格，这样企业生产就可以合理地锁定采购成本，避免了价格涨跌带来的经营风险。 但是市场的风险并不会平白消失。风险其实并没有消失，而是转移到了市场的其他参">
+<meta name="description" content="注：本文是普及金融市场交易的基础知识，不是为了鼓励大家去炒股炒币。相反，通过学习证券知识，理解衍生品原理，可以更好地认识市场风险，自觉放弃杠杆赌博暴富等不切实际的幻想，避免落入各种理财、带单、空气币等诈骗套路。本文一切内容均不构成任何投资意见或建议。 期货合约合约交易，通常指期货合约。现货合约我们以后再讨论。这里我们仍然以数字货币的期货合约为例，实现一个基于BTC/USD价格指数的期货合约。 所谓">
 <meta name="keywords" content="web3,trade">
 <meta property="og:type" content="article">
-<meta property="og:title" content="合约交易系统设计与开发">
+<meta property="og:title" content="数字货币交易系统设计与开发">
 <meta property="og:url" content="http://oneyearago.me/2022/06/23/contract_transaction_system/index.html">
 <meta property="og:site_name" content="changan&#39;s blog">
-<meta property="og:description" content="期货合约合约交易，通常指期货合约。现货合约我们以后再讨论。这里我们仍然以数字货币的期货合约为例，实现一个基于BTC/USD价格指数的期货合约。 所谓期货交易，就是指以约定的价格在未来进行交割。 期货交易的目的原本是以当前约定的价格锁定未来某个时间段的价格，这样企业生产就可以合理地锁定采购成本，避免了价格涨跌带来的经营风险。 但是市场的风险并不会平白消失。风险其实并没有消失，而是转移到了市场的其他参">
+<meta property="og:description" content="注：本文是普及金融市场交易的基础知识，不是为了鼓励大家去炒股炒币。相反，通过学习证券知识，理解衍生品原理，可以更好地认识市场风险，自觉放弃杠杆赌博暴富等不切实际的幻想，避免落入各种理财、带单、空气币等诈骗套路。本文一切内容均不构成任何投资意见或建议。 期货合约合约交易，通常指期货合约。现货合约我们以后再讨论。这里我们仍然以数字货币的期货合约为例，实现一个基于BTC/USD价格指数的期货合约。 所谓">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/web3/web3-trade-system.png#id=Gr4L8&originHeight=520&originWidth=1570&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
-<meta property="og:updated_time" content="2023-04-13T08:19:13.485Z">
+<meta property="og:updated_time" content="2023-04-13T08:54:17.133Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="合约交易系统设计与开发">
-<meta name="twitter:description" content="期货合约合约交易，通常指期货合约。现货合约我们以后再讨论。这里我们仍然以数字货币的期货合约为例，实现一个基于BTC/USD价格指数的期货合约。 所谓期货交易，就是指以约定的价格在未来进行交割。 期货交易的目的原本是以当前约定的价格锁定未来某个时间段的价格，这样企业生产就可以合理地锁定采购成本，避免了价格涨跌带来的经营风险。 但是市场的风险并不会平白消失。风险其实并没有消失，而是转移到了市场的其他参">
+<meta name="twitter:title" content="数字货币交易系统设计与开发">
+<meta name="twitter:description" content="注：本文是普及金融市场交易的基础知识，不是为了鼓励大家去炒股炒币。相反，通过学习证券知识，理解衍生品原理，可以更好地认识市场风险，自觉放弃杠杆赌博暴富等不切实际的幻想，避免落入各种理财、带单、空气币等诈骗套路。本文一切内容均不构成任何投资意见或建议。 期货合约合约交易，通常指期货合约。现货合约我们以后再讨论。这里我们仍然以数字货币的期货合约为例，实现一个基于BTC/USD价格指数的期货合约。 所谓">
 <meta name="twitter:image" content="https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/web3/web3-trade-system.png#id=Gr4L8&originHeight=520&originWidth=1570&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
 
 
@@ -63,7 +63,7 @@
   };
 </script>
 
-  <title> 合约交易系统设计与开发 | changan's blog </title>
+  <title> 数字货币交易系统设计与开发 | changan's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -313,7 +313,7 @@
           
           
             
-              合约交易系统设计与开发
+              数字货币交易系统设计与开发
             
           
         </h1>
@@ -368,7 +368,8 @@
       
 
       
-        <span itemprop="articleBody"><h3 id="期货合约"><a href="#期货合约" class="headerlink" title="期货合约"></a>期货合约</h3><p>合约交易，通常指期货合约。现货合约我们以后再讨论。这里我们仍然以数字货币的期货合约为例，实现一个基于BTC/USD价格指数的期货合约。</p>
+        <span itemprop="articleBody"><p><strong>注：本文是普及金融市场交易的基础知识，不是为了鼓励大家去炒股炒币。相反，通过学习证券知识，理解衍生品原理，可以更好地认识市场风险，自觉放弃杠杆赌博暴富等不切实际的幻想，避免落入各种理财、带单、空气币等诈骗套路。本文一切内容均不构成任何投资意见或建议。</strong></p>
+<h3 id="期货合约"><a href="#期货合约" class="headerlink" title="期货合约"></a>期货合约</h3><p>合约交易，通常指期货合约。现货合约我们以后再讨论。这里我们仍然以数字货币的期货合约为例，实现一个基于BTC/USD价格指数的期货合约。</p>
 <p>所谓期货交易，就是指以约定的价格在未来进行交割。</p>
 <p>期货交易的目的原本是以当前约定的价格锁定未来某个时间段的价格，这样企业生产就可以合理地锁定采购成本，避免了价格涨跌带来的经营风险。</p>
 <p>但是市场的风险并不会平白消失。风险其实并没有消失，而是转移到了市场的其他参与方。企业通过期货市场锁定现货价格，现货价格的波动风险实际上转移到了合约的对手方。因此，期货市场是一个高度投机的市场。期货市场的高收益源于交易方承担了高风险，而高风险也会带来巨额亏损。</p>
@@ -409,13 +410,13 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2023/01/02/programmer_leijun/" rel="prev">我的程序员生涯_雷军</a>
+              <a href="/2022/10/02/Market_Making_Guide/" rel="prev">做市指南</a>
             
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2022/03/23/Thinking_about_credit_digital_currency/" rel="next">信用数字货币的思考</a>
+              <a href="/2022/03/21/Thinking_about_credit_digital_currency/" rel="next">信用数字货币的思考</a>
             
           </div>
         </div>
@@ -597,7 +598,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">70</span>
+              <span class="site-state-item-count">72</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>

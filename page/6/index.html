@@ -3391,6 +3391,210 @@
           
           
             
+              <a class="post-title-link" href="/2019/04/23/make_a_linux_13/" itemprop="url">
+                写一个操作系统_13 内核的宏观视角
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2019-04-23T21:08:45+08:00" content="2019-04-23">
+            2019-04-23
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/kernel/" itemprop="url" rel="index">
+                  <span itemprop="name">kernel</span>
+                </a>
+              </span>
+
+              
+              
+                , 
+              
+
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/kernel/OS/" itemprop="url" rel="index">
+                  <span itemprop="name">OS</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            规划内核的内存分布MBR、loader部分我们把 加MBR、Loader以及后面需要加载的内核都放到 物理内存的 0-1M 这个空间里面，其中，MBR执行完了以后，我们把它覆盖掉，如下面的图。
+图1: MBR,loader的物理内存定位
+
+图二: 覆盖MBR位置写kerner.bin
+
+分离用户空间
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2019/04/23/make_a_linux_13/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2019/04/20/make_a_linux_12/" itemprop="url">
+                写一个操作系统_12 linux 原始的几个进程
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2019-04-20T21:08:45+08:00" content="2019-04-20">
+            2019-04-20
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/kernel/" itemprop="url" rel="index">
+                  <span itemprop="name">kernel</span>
+                </a>
+              </span>
+
+              
+              
+                , 
+              
+
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/kernel/OS/" itemprop="url" rel="index">
+                  <span itemprop="name">OS</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            原始进程Linux下有3个特殊的进程，idle进程(PID = 0), init进程(PID = 1)和kthreadd(PID = 2)
+
+idle进程
+
+由系统自动创建, 运行在内核态
+idle进程其pid=0，其前身是系统创建的第一个进程，也是唯一一个没有通过fork或者kernel_thre
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2019/04/20/make_a_linux_12/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2019/04/11/make_a_linux_11/" itemprop="url">
                 写一个操作系统_11 Linux是怎么实现线程的
               </a>
@@ -4156,215 +4360,11 @@ Linux内核有一个系统调用指令clone()，这个指令产生一个调用�
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2019/03/23/make_a_linux_5/" itemprop="url">
-                写一个操作系统_05 调试MBR
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2019-03-23T21:08:45+08:00" content="2019-03-23">
-            2019-03-23
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/kernel/" itemprop="url" rel="index">
-                  <span itemprop="name">kernel</span>
-                </a>
-              </span>
-
-              
-              
-                , 
-              
-
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/kernel/OS/" itemprop="url" rel="index">
-                  <span itemprop="name">OS</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            熟悉MBR引导MBR的512字节里面也是代码，他被BIOS加载执行，自身执行的时候加载操作系统的loader，我们在没有操作系统loader的情况下先写一段测试程序，体验一下。
-实现的功能如下:
-BIOS 加载 MBR中的代码，执行，用BIOS 中断 INT 0x10显示字符串
-MBR的代码1234
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2019/03/23/make_a_linux_5/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2019/03/20/make_a_linux_4/" itemprop="url">
-                写一个操作系统_04 内核调试环境搭建
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2019-03-20T21:08:45+08:00" content="2019-03-20">
-            2019-03-20
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/kernel/" itemprop="url" rel="index">
-                  <span itemprop="name">kernel</span>
-                </a>
-              </span>
-
-              
-              
-                , 
-              
-
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/kernel/OS/" itemprop="url" rel="index">
-                  <span itemprop="name">OS</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            环境准备工作有一台win10的笔记本，调试想选择在Linux环境下，选择配置虚拟机，然后安装bochs调试内核需要准备的软件:
-
-VirtualBox和增加工具包
-安装CentOS 6.8minimal
-设置CentOS的网卡，使之能上网
-用yum安装开发工具和GNOME
-安装bochs
-进入GNO
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2019/03/20/make_a_linux_4/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/">&laquo;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/7/">&raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/5/">&laquo;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/7/">&raquo;</a>
   </nav>
 
  </div>
@@ -4396,7 +4396,7 @@ VirtualBox和增加工具包
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">70</span>
+              <span class="site-state-item-count">72</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>

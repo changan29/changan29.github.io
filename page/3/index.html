@@ -3391,6 +3391,181 @@
           
           
             
+              <a class="post-title-link" href="/2021/01/13/a-linux-shared-lib-bug/" itemprop="url">
+                一个Linux 动态库常见bug
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2021-01-13T17:22:39+08:00" content="2021-01-13">
+            2021-01-13
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/os/" itemprop="url" rel="index">
+                  <span itemprop="name">os</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            遇到的问题对于正在运行的程序，当更新动态库尝试重新加载时，可能会导致程序 CoreDump 。
+case:我们的一个开发环境中有多个进程依赖同一个动态库.so， 我更新这个so的时候，直接用1cp new.so old.so
+导致多个进程同时core,😮😮😮
+
+这里简单解释下其原因，以及规避方
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2021/01/13/a-linux-shared-lib-bug/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2020/12/22/cpp-class-model/" itemprop="url">
+                c++虚函数表
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2020-12-22T15:40:39+08:00" content="2020-12-22">
+            2020-12-22
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/c/" itemprop="url" rel="index">
+                  <span itemprop="name">c++</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            概述首先,相较于C语言，C++语言并没有额外增加内存消耗(确切说，在没有虚函数情况下)。 对于一个C++类对象,每个对象有独立的数据成员(非static),但是内存中成员函数只有一份,该类的所有对象共享成员函数。
+编译器在编译阶段,进行函数的重构，即将成员函数进行非成员化。通过将this指针作为函数
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2020/12/22/cpp-class-model/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2020/12/16/shared_ptr/" itemprop="url">
                 std::shared_ptr
               </a>
@@ -4152,183 +4327,11 @@ https://weibo.com/l
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2020/06/26/linux-segment/" itemprop="url">
-                Linux中的段
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2020-06-26T15:40:39+08:00" content="2020-06-26">
-            2020-06-26
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/kernel/" itemprop="url" rel="index">
-                  <span itemprop="name">kernel</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            Linux中的段Intel 微处理器的段机制是从8086 开始提出的， 那时引入的段机制解决了从CPU 内部16 位地址到20 位实地址的转换。为了保持这种兼容性，386 仍然使用段机制，但比以前复杂。因此，Linux 内核的设计并没有全部采用Intel 所提供的段方案，仅仅有限度地使用了一下分段机
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2020/06/26/linux-segment/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2020/06/22/geohash/" itemprop="url">
-                附近的人
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2020-06-22T15:40:39+08:00" content="2020-06-22">
-            2020-06-22
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/geohash/" itemprop="url" rel="index">
-                  <span itemprop="name">geohash</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            why位置信息在软件以及显示生活中有了越来越多的应用，比如微信里面附近的人，很多游戏里面也加入了地理位置的玩法，让玩家与玩家有更多的互动，提高黏性。
-假想这样一个需求：玩家获取附近的人，一起开黑或者某些社交软件获取附近的人交友或者交流，需要怎么实现，假定该软件的使用者比较多。
-本身学过一些硬件、传感
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2020/06/22/geohash/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/">&laquo;</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/4/">&raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/2/">&laquo;</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/4/">&raquo;</a>
   </nav>
 
  </div>
@@ -4360,7 +4363,7 @@ https://weibo.com/l
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">70</span>
+              <span class="site-state-item-count">72</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
