@@ -31,7 +31,7 @@
 
 
 
-  <meta name="keywords" content="OS,kernel," />
+  <meta name="keywords" content="game," />
 
 
 
@@ -40,20 +40,23 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="中断分类按照中断的来源分类，来自CPU外部的中断称为外部中断，来自CPU内部的称为内部中断；细分的话，外部中断根据严重程度，分为可屏蔽中断和不可屏蔽中断；内部中断按照是否正常分为软中断和异常。 外部中断外部中断来自CPU的外部的某个硬件，因此又被称为硬件中断，比如网卡收到了一个数据包，它就会通知CPU，CPU得到通知便将数据拷贝到内核缓冲区。 为了接受外部中断，CPU有两个引脚作为接受接口，INT">
-<meta name="keywords" content="OS,kernel">
+<meta name="description" content="概述 首先对于游戏的业务，一般是玩家登陆到大厅，有一些任务、物品、好友、排行榜、聊天这种交互，其次是玩家与玩家之前的匹配与对局。以Moba游戏为例，玩家主要的行为就是登陆后进行匹配，匹配到水平差不多的10个人，分为两队，每组5个人创建对局进行pvp战斗，玩家的操作以指令的方式由客户端发到服务器。 大厅中客户端与服务器的连接是TCP连接，对局中玩家的操作更关注实时性，一般的用可靠UDP进行通信。 接">
+<meta name="keywords" content="game">
 <meta property="og:type" content="article">
-<meta property="og:title" content="写一个操作系统_10 操作系统是由中断驱动的">
-<meta property="og:url" content="http://oneyearago.me/2019/04/08/make_a_linux_10/index.html">
+<meta property="og:title" content="多进程游戏压测工具">
+<meta property="og:url" content="http://oneyearago.me/2020/10/02/press_robots/index.html">
 <meta property="og:site_name" content="changan&#39;s blog">
-<meta property="og:description" content="中断分类按照中断的来源分类，来自CPU外部的中断称为外部中断，来自CPU内部的称为内部中断；细分的话，外部中断根据严重程度，分为可屏蔽中断和不可屏蔽中断；内部中断按照是否正常分为软中断和异常。 外部中断外部中断来自CPU的外部的某个硬件，因此又被称为硬件中断，比如网卡收到了一个数据包，它就会通知CPU，CPU得到通知便将数据拷贝到内核缓冲区。 为了接受外部中断，CPU有两个引脚作为接受接口，INT">
+<meta property="og:description" content="概述 首先对于游戏的业务，一般是玩家登陆到大厅，有一些任务、物品、好友、排行榜、聊天这种交互，其次是玩家与玩家之前的匹配与对局。以Moba游戏为例，玩家主要的行为就是登陆后进行匹配，匹配到水平差不多的10个人，分为两队，每组5个人创建对局进行pvp战斗，玩家的操作以指令的方式由客户端发到服务器。 大厅中客户端与服务器的连接是TCP连接，对局中玩家的操作更关注实时性，一般的用可靠UDP进行通信。 接">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="http://201904-1251969284.cossh.myqcloud.com/idtr.png">
-<meta property="og:updated_time" content="2022-11-24T13:55:54.234Z">
+<meta property="og:image" content="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/game_c2s.png">
+<meta property="og:image" content="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/tapp_svr_loop.png">
+<meta property="og:image" content="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/gameperf.png">
+<meta property="og:image" content="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/bus_channel.png">
+<meta property="og:updated_time" content="2023-04-18T09:33:44.576Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="写一个操作系统_10 操作系统是由中断驱动的">
-<meta name="twitter:description" content="中断分类按照中断的来源分类，来自CPU外部的中断称为外部中断，来自CPU内部的称为内部中断；细分的话，外部中断根据严重程度，分为可屏蔽中断和不可屏蔽中断；内部中断按照是否正常分为软中断和异常。 外部中断外部中断来自CPU的外部的某个硬件，因此又被称为硬件中断，比如网卡收到了一个数据包，它就会通知CPU，CPU得到通知便将数据拷贝到内核缓冲区。 为了接受外部中断，CPU有两个引脚作为接受接口，INT">
-<meta name="twitter:image" content="http://201904-1251969284.cossh.myqcloud.com/idtr.png">
+<meta name="twitter:title" content="多进程游戏压测工具">
+<meta name="twitter:description" content="概述 首先对于游戏的业务，一般是玩家登陆到大厅，有一些任务、物品、好友、排行榜、聊天这种交互，其次是玩家与玩家之前的匹配与对局。以Moba游戏为例，玩家主要的行为就是登陆后进行匹配，匹配到水平差不多的10个人，分为两队，每组5个人创建对局进行pvp战斗，玩家的操作以指令的方式由客户端发到服务器。 大厅中客户端与服务器的连接是TCP连接，对局中玩家的操作更关注实时性，一般的用可靠UDP进行通信。 接">
+<meta name="twitter:image" content="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/game_c2s.png">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -63,7 +66,7 @@
   };
 </script>
 
-  <title> 写一个操作系统_10 操作系统是由中断驱动的 | changan's blog </title>
+  <title> 多进程游戏压测工具 | changan's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -313,7 +316,7 @@
           
           
             
-              写一个操作系统_10 操作系统是由中断驱动的
+              多进程游戏压测工具
             
           
         </h1>
@@ -322,8 +325,8 @@
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2019-04-08T21:08:45+08:00" content="2019-04-08">
-            2019-04-08
+          <time itemprop="dateCreated" datetime="2020-10-02T15:40:39+08:00" content="2020-10-02">
+            2020-10-02
           </time>
         </span>
 
@@ -332,20 +335,8 @@
             &nbsp; | &nbsp; In
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/kernel/" itemprop="url" rel="index">
-                  <span itemprop="name">kernel</span>
-                </a>
-              </span>
-
-              
-              
-                , 
-              
-
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/kernel/OS/" itemprop="url" rel="index">
-                  <span itemprop="name">OS</span>
+                <a href="/categories/game/" itemprop="url" rel="index">
+                  <span itemprop="name">game</span>
                 </a>
               </span>
 
@@ -368,29 +359,49 @@
       
 
       
-        <span itemprop="articleBody"><h3 id="中断分类"><a href="#中断分类" class="headerlink" title="中断分类"></a>中断分类</h3><p>按照中断的来源分类，来自CPU外部的中断称为外部中断，来自CPU内部的称为内部中断；细分的话，外部中断根据严重程度，分为可屏蔽中断和不可屏蔽中断；内部中断按照是否正常分为软中断和异常。</p>
-<h3 id="外部中断"><a href="#外部中断" class="headerlink" title="外部中断"></a>外部中断</h3><p>外部中断来自CPU的外部的某个硬件，因此又被称为硬件中断，比如网卡收到了一个数据包，它就会通知CPU，CPU得到通知便将数据拷贝到内核缓冲区。</p>
-<p>为了接受外部中断，CPU有两个引脚作为接受接口，INTR和NMI线。</p>
-<h4 id="可屏蔽中断"><a href="#可屏蔽中断" class="headerlink" title="可屏蔽中断"></a>可屏蔽中断</h4><p>有些中断是不会引起系统宕机，还是网卡的例子，网络数据包通过网线达到网卡，存到网卡自己的缓冲区，这个缓冲区是会被写满的，写满以后，后来的数据就会被丢掉。写满以后，CPU收到中断一般会马上拷贝网卡数据到内核缓冲区，但是这样的数据其实是可以丢的，不会引发崩溃，属于可屏蔽中断。</p>
-<p>这类中断通过INTR线传到CPU引脚。</p>
-<h4 id="不可屏蔽中断"><a href="#不可屏蔽中断" class="headerlink" title="不可屏蔽中断"></a>不可屏蔽中断</h4><p>内存读写错误这类的属于不可屏蔽，出了问题只能找硬件工程师了 : )</p>
-<h3 id="内部中断"><a href="#内部中断" class="headerlink" title="内部中断"></a>内部中断</h3><p>内部中断可以分为软中断和异常。</p>
-<h4 id="软中断"><a href="#软中断" class="headerlink" title="软中断"></a>软中断</h4><p>软中断就是由软件主动引发的中断，可以认为是主动引发的，从而实现在CPU的支持下实现某种功能。比如:</p>
+        <span itemprop="articleBody"><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p><img src="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/game_c2s.png" alt="image"></p>
+<p>首先对于游戏的业务，一般是玩家登陆到大厅，有一些任务、物品、好友、排行榜、聊天这种交互，其次是玩家与玩家之前的匹配与对局。以Moba游戏为例，玩家主要的行为就是登陆后进行匹配，匹配到水平差不多的10个人，分为两队，每组5个人创建对局进行pvp战斗，玩家的操作以指令的方式由客户端发到服务器。 大厅中客户端与服务器的连接是TCP连接，对局中玩家的操作更关注实时性，一般的用可靠UDP进行通信。</p>
+<h5 id="接入层"><a href="#接入层" class="headerlink" title="接入层"></a>接入层</h5><p>对于大厂而言，客户端接入服务器一般是连接一个接入层，经接入层转发请求到游戏服务器，接入层的目的也是标准化（工业化）的一部分，使得每个游戏都可以复用，只需要写业务逻辑从而不用重写网络连接的代码。我们模拟玩家的行为，也就是往游戏服务器对应的接入层发包。</p>
+<h5 id="内存池缓存数据"><a href="#内存池缓存数据" class="headerlink" title="内存池缓存数据"></a>内存池缓存数据</h5><p>对于游戏，玩家身上有很多属性，比如各种物品、分数、赛季信息、抽奖信息、VIP等级、头像框id、注册时间、各种活动的数据等。而游戏在开服或者有一些活动的时候，也是玩家集中登陆集中操作的时候，服务器的做法一般是在玩家登陆的服务器 建立内存池，将玩家的数据缓存到内存，纯内存的操作处理玩家数据比较高效。</p>
+<h5 id="通信协议"><a href="#通信协议" class="headerlink" title="通信协议"></a>通信协议</h5><p>王者荣耀和吃鸡应该也是使用Protocol Buffers<br><a href="https://developers.google.com/protocol-buffers" target="_blank" rel="noopener">https://developers.google.com/protocol-buffers</a></p>
+<h4 id="服务器逻辑"><a href="#服务器逻辑" class="headerlink" title="服务器逻辑"></a>服务器逻辑</h4><p>服务器主循环：<br><img src="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/tapp_svr_loop.png" alt="image"></p>
+<h4 id="压测概述与思路"><a href="#压测概述与思路" class="headerlink" title="压测概述与思路"></a>压测概述与思路</h4><p><img src="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/gameperf.png" alt="image"></p>
+<p>我们通过模拟真实玩家发起压力测试，有的场景比较简单，比如查询排行榜，只要构造了排行榜的数据，发起查询请求即可；但是也有比较复杂的场景，比如巅峰赛观战，比如需要8000人在对局，与此同时，有40000人在观战，正在对局中的人需要模拟玩家的行为，移动、一技能、装备、聊天、弹幕等操作，此时我们需要保持着和多个进程的连接。</p>
+<p>同时，每个进程保持的连接可能是有限的，比如接入层sdk的限制，连接层和逻辑层需要做到可扩展。</p>
+<h4 id="共享内存通道"><a href="#共享内存通道" class="headerlink" title="共享内存通道"></a>共享内存通道</h4><p>为支持逻辑层和连接层的可扩展，每增加一个逻辑层或者连接层，可以增加一个共享内存通道，<br><img src="https://202003-1251969284.cos.ap-shanghai.myqcloud.com/bus_channel.png" alt="image"></p>
+<p>详细的代码在这里，可编译运行：</p>
+<p><a href="https://github.com/changan29/playcpp/tree/master/bus_channel" target="_blank" rel="noopener">https://github.com/changan29/playcpp/tree/master/bus_channel</a></p>
+<h4 id="定时器"><a href="#定时器" class="headerlink" title="定时器"></a>定时器</h4><p>一个Timer的实现需要具备以下几个行为:</p>
 <ul>
-<li>int 0xxx 表示进行系统调用</li>
-<li>int3 我们用gdb 或bochs 调试程序时，实际上就是调试器fork 了一个子进程，<br>子进程用于运行被调试的程序。调试器中经常要设置断点，其原理就是父进程修改了子进程的指令,触发3号中断，执行3号中断上的中断处理程序。</li>
+<li>StartTimer(Interval, ExpiryAction)</li>
 </ul>
-<h4 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h4><p>发生除0，缺页等错误的时候，正常的流程被打断。</p>
+<p>注册一个时间间隔为 Interval 后执行 ExpiryAction 的定时器实例，其中，返回 TimerId 以区分在定时器系统中的其他定时器实例。</p>
 <ul>
-<li>可被修复的异常    比如操作系统的缺页异常</li>
-<li>终止程序的异常</li>
+<li>StopTimer(TimerId)</li>
 </ul>
-<h3 id="中断描述符"><a href="#中断描述符" class="headerlink" title="中断描述符"></a>中断描述符</h3><p>一个中断源就会产生一个中断向量，每个中断向量都对应中断描述符表中的一个门描述符，任何中断<br>源都通过中断向量对应到中断描述符表中的门描述符，通过该门描述符就找到了对应的中断处理程序。</p>
-<p>在CPU 内部有个中断描述符表寄存器（ Interrupt Descriptor Table Register, IDTR ），该寄存器分为两<br>部分：第O～ 15 位是表界限，第16～47 位是IDT 的基地址。</p>
-<p><img src="http://201904-1251969284.cossh.myqcloud.com/idtr.png" alt="image"></p>
-<h4 id="中断时候的栈变化"><a href="#中断时候的栈变化" class="headerlink" title="中断时候的栈变化"></a>中断时候的栈变化</h4><p>当前进程被中断打断后，为了从中断返回后能继续运行该进程，处理器自<br>动把CS 和EIP 的当前值保存到中断处理程序使用的栈中。</p>
-<p>不同特权级别下处理器使用不同的栈，至于中断处<br>理程序使用的是哪个栈，要视它当时所在的特权级别，因为中断是可以在任何特权级别下发生的。</p>
-<p>除了要保存CS 、EIP 外，还需要保存标志寄存器EFLAGS ，如果涉及到特权级变化，还要压入SS 和ESP 寄存器。</p>
+<p>根据 TimerId 找到注册的定时器实例并执行 Stop 。</p>
+<ul>
+<li>PerTickBookkeeping()</li>
+</ul>
+<p>在一个 Tick 时间粒度内，定时器系统需要执行的动作，它最主要的行为，就是检查定时器系统中，是否有定时器实例已经到期。</p>
+<p>具体的代码实现思路就是：在StartTimer的时候，把 当前时间 + Interval 作为key放入一个容器，然后在Loop的每次Tick里，从容器里面选出一个最小的key与当前时间比较，如果key小于当前时间，则这个key代表的timer就是expired，需要执行它的ExpiryAction(一般为回调)。</p>
+<h5 id="链表的实现"><a href="#链表的实现" class="headerlink" title="链表的实现"></a>链表的实现</h5><ul>
+<li>精度是 1ms</li>
+<li>最长时间是10min,延长时间可以增加 slot数量,slot时间的间隔是 1ms</li>
+<li>通过继承Timer父类，在子类重写timeout实现 超时回调</li>
+<li>每次都需要遍历超过时间的所有链表，时间复杂度为O(n)</li>
+</ul>
+<p>详细的代码在这里，可编译运行：</p>
+<p><a href="https://github.com/changan29/codeLib/tree/master/timer" target="_blank" rel="noopener">https://github.com/changan29/codeLib/tree/master/timer</a></p>
+<h4 id="协程"><a href="#协程" class="headerlink" title="协程"></a>协程</h4><p>协程框架使用的是 ucontext，参考之前写的这篇：<br><a href="http://www.oneyearago.me/2020/05/26/ucontext_01/" target="_blank" rel="noopener">http://www.oneyearago.me/2020/05/26/ucontext_01/</a></p>
+<p>实现的机制是：</p>
+<ol>
+<li>每个玩家抽象成机器人，有一个Robot类，Robot类继承 协程类</li>
+<li>每个Robot有自己的行为，logic进程的代码就是robot的行为</li>
+<li>把每个玩家抽象成一个协程，方便写逻辑，相互独立，等待调度</li>
+<li>初始化的时候创建一批玩家（协程），按照配置等待一定的时间开始执行（比如10ms）,结合定时器，可以按照固定的频率发包（比如1秒发送200个）</li>
+<li>调度程序  调度程序比较简单，比如有了响应包或者定时器事件到了，根据timer_id或者pkg_head_src标记等 resume 协程</li>
+</ol>
 <script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
 </script>
 </span>
@@ -401,9 +412,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/OS/" rel="tag">#OS</a>
-          
-            <a href="/tags/kernel/" rel="tag">#kernel</a>
+            <a href="/tags/game/" rel="tag">#game</a>
           
         </div>
       
@@ -412,13 +421,13 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/04/11/make_a_linux_11/" rel="prev">写一个操作系统_11 Linux是怎么实现线程的</a>
+              <a href="/2020/10/14/c++-network-lib/" rel="prev">那些年我们追过的...</a>
             
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/04/07/201904/" rel="next">2019年4月</a>
+              <a href="/2020/09/27/hook_and_internal/" rel="next">hook的几种方式及原理学习</a>
             
           </div>
         </div>
@@ -652,7 +661,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#中断分类"><span class="nav-number">1.</span> <span class="nav-text">中断分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#外部中断"><span class="nav-number">2.</span> <span class="nav-text">外部中断</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#可屏蔽中断"><span class="nav-number">2.1.</span> <span class="nav-text">可屏蔽中断</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#不可屏蔽中断"><span class="nav-number">2.2.</span> <span class="nav-text">不可屏蔽中断</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内部中断"><span class="nav-number">3.</span> <span class="nav-text">内部中断</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#软中断"><span class="nav-number">3.1.</span> <span class="nav-text">软中断</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#异常"><span class="nav-number">3.2.</span> <span class="nav-text">异常</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#中断描述符"><span class="nav-number">4.</span> <span class="nav-text">中断描述符</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#中断时候的栈变化"><span class="nav-number">4.1.</span> <span class="nav-text">中断时候的栈变化</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#接入层"><span class="nav-number">1.0.1.</span> <span class="nav-text">接入层</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#内存池缓存数据"><span class="nav-number">1.0.2.</span> <span class="nav-text">内存池缓存数据</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#通信协议"><span class="nav-number">1.0.3.</span> <span class="nav-text">通信协议</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#服务器逻辑"><span class="nav-number">1.1.</span> <span class="nav-text">服务器逻辑</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#压测概述与思路"><span class="nav-number">1.2.</span> <span class="nav-text">压测概述与思路</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#共享内存通道"><span class="nav-number">1.3.</span> <span class="nav-text">共享内存通道</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#定时器"><span class="nav-number">1.4.</span> <span class="nav-text">定时器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#链表的实现"><span class="nav-number">1.4.1.</span> <span class="nav-text">链表的实现</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#协程"><span class="nav-number">1.5.</span> <span class="nav-text">协程</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
