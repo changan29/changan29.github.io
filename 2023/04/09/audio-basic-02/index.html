@@ -31,7 +31,7 @@
 
 
 
-  <meta name="keywords" content="c++," />
+  <meta name="keywords" content="音视频," />
 
 
 
@@ -40,18 +40,22 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="引入的原子指令SSE2 extensions introduce two new fence instructions (LFENCE and MFENCE) as companions to the SFENCE instruction introduced with SSE extensions. The LFENCE instruction establishes a memory fenc">
-<meta name="keywords" content="c++">
+<meta name="description" content="怎样对声音进行数字化？对声音进行数字化，首先要使用特定的设备对声音进行采集，比如麦克风就是常见的声音采集设备。麦克风里面有一层碳膜，非常薄而且十分敏感。声音是一种纵波，会压缩空气也会压缩这层碳膜，碳膜在受到挤压时也会发出振动，在碳膜的下方就是一个电极，碳膜在振动的时候会接触电极，接触时间的长短和频率与声波的振动幅度和频率有关，这样就完成了声音信号到电信号的转换。之后再经过放大电路处理，就可以实施后">
+<meta name="keywords" content="音视频">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C++ 11 Atomic">
-<meta property="og:url" content="http://oneyearago.me/2021/03/23/c++11-atomic/index.html">
+<meta property="og:title" content="音视频基础-音频基础-02">
+<meta property="og:url" content="http://oneyearago.me/2023/04/09/audio-basic-02/index.html">
 <meta property="og:site_name" content="changan&#39;s blog">
-<meta property="og:description" content="引入的原子指令SSE2 extensions introduce two new fence instructions (LFENCE and MFENCE) as companions to the SFENCE instruction introduced with SSE extensions. The LFENCE instruction establishes a memory fenc">
+<meta property="og:description" content="怎样对声音进行数字化？对声音进行数字化，首先要使用特定的设备对声音进行采集，比如麦克风就是常见的声音采集设备。麦克风里面有一层碳膜，非常薄而且十分敏感。声音是一种纵波，会压缩空气也会压缩这层碳膜，碳膜在受到挤压时也会发出振动，在碳膜的下方就是一个电极，碳膜在振动的时候会接触电极，接触时间的长短和频率与声波的振动幅度和频率有关，这样就完成了声音信号到电信号的转换。之后再经过放大电路处理，就可以实施后">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2022-11-24T13:55:54.165Z">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/how-to-desc-audio.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio-desc.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio-store-calc.png">
+<meta property="og:updated_time" content="2024-02-26T07:44:36.165Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="C++ 11 Atomic">
-<meta name="twitter:description" content="引入的原子指令SSE2 extensions introduce two new fence instructions (LFENCE and MFENCE) as companions to the SFENCE instruction introduced with SSE extensions. The LFENCE instruction establishes a memory fenc">
+<meta name="twitter:title" content="音视频基础-音频基础-02">
+<meta name="twitter:description" content="怎样对声音进行数字化？对声音进行数字化，首先要使用特定的设备对声音进行采集，比如麦克风就是常见的声音采集设备。麦克风里面有一层碳膜，非常薄而且十分敏感。声音是一种纵波，会压缩空气也会压缩这层碳膜，碳膜在受到挤压时也会发出振动，在碳膜的下方就是一个电极，碳膜在振动的时候会接触电极，接触时间的长短和频率与声波的振动幅度和频率有关，这样就完成了声音信号到电信号的转换。之后再经过放大电路处理，就可以实施后">
+<meta name="twitter:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/how-to-desc-audio.png">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -61,7 +65,7 @@
   };
 </script>
 
-  <title> C++ 11 Atomic | changan's blog </title>
+  <title> 音视频基础-音频基础-02 | changan's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -311,7 +315,7 @@
           
           
             
-              C++ 11 Atomic
+              音视频基础-音频基础-02
             
           
         </h1>
@@ -320,8 +324,8 @@
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2021-03-23T15:40:39+08:00" content="2021-03-23">
-            2021-03-23
+          <time itemprop="dateCreated" datetime="2023-04-09T18:20:39+08:00" content="2023-04-09">
+            2023-04-09
           </time>
         </span>
 
@@ -330,8 +334,8 @@
             &nbsp; | &nbsp; In
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/c/" itemprop="url" rel="index">
-                  <span itemprop="name">c++</span>
+                <a href="/categories/音视频/" itemprop="url" rel="index">
+                  <span itemprop="name">音视频</span>
                 </a>
               </span>
 
@@ -354,148 +358,40 @@
       
 
       
-        <span itemprop="articleBody"><h3 id="引入的原子指令"><a href="#引入的原子指令" class="headerlink" title="引入的原子指令"></a>引入的原子指令</h3><p>SSE2 extensions introduce two new fence instructions (LFENCE and MFENCE) as companions to the SFENCE instruction introduced with SSE extensions. The LFENCE instruction establishes a memory fence for loads. It guarantees ordering between two loads and prevents speculative loads from passing the load fence (that is, no speculative loads are allowed until all loads specified before the load fence have been carried out). The MFENCE instruction establishes a memory fence for both loads and stores. The processor ensures that no load or store after MFENCE will become globally visible until all loads and stores before MFENCE are globally visible.1 Note that the sequences LFENCE;SFENCE and SFENCE;LFENCE are not equivalent to MFENCE because neither ensures that older stores are globally observed prior to younger loads.</p>
-<h2 id="C-封装"><a href="#C-封装" class="headerlink" title="C++ 封装"></a>C++ 封装</h2><p>我们都知道多核编程常用锁避免多个线程在修改同一个数据时产生race condition。当锁成为性能瓶颈时，我们又总想试着绕开它，而不可避免地接触了原子指令。但在实践中，用原子指令写出正确的代码是一件非常困难的事，琢磨不透的race condition、ABA problem、memory fence很烧脑，这篇文章试图通过介绍SMP架构下的原子指令帮助大家入门。C++11正式引入了原子指令，我们就以其语法描述。</p>
-<p>顾名思义，原子指令是对软件不可再分的指令，比如x.fetch_add(n)指原子地给x加上n，这个指令对软件要么没做，要么完成，不会观察到中间状态。常见的原子指令有：</p>
-<table>
-<thead>
-<tr>
-<th>原子指令</th>
-<th>作用 </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>x.load()</td>
-<td>返回x的值。</td>
-</tr>
-<tr>
-<td>x.store(n)</td>
-<td>把x设为n，什么都不返回。</td>
-</tr>
-<tr>
-<td>x.exchange(n)</td>
-<td>把x设为n，返回设定之前的值。</td>
-</tr>
-<tr>
-<td>x.compare_exchange_strong(expected_ref, desired)</td>
-<td>若x等于expected_ref，则设为desired，返回成功；否则把最新值写入expected_ref，返回失败。</td>
-</tr>
-<tr>
-<td>x.compare_exchange_weak(expected_ref, desired)</td>
-<td>相比compare_exchange_strong可能有spurious wakeup。</td>
-</tr>
-<tr>
-<td>x.fetch_add(n), x.fetch_sub(n)</td>
-<td>原子地做x += n, x-= n，返回修改之前的值。</td>
-</tr>
-</tbody>
-</table>
-<p>你已经可以用这些指令做原子计数，比如多个线程同时累加一个原子变量，以统计这些线程对一些资源的操作次数。但是，这可能会有两个问题：</p>
+        <span itemprop="articleBody"><h3 id="怎样对声音进行数字化？"><a href="#怎样对声音进行数字化？" class="headerlink" title="怎样对声音进行数字化？"></a>怎样对声音进行数字化？</h3><p>对声音进行数字化，首先要使用特定的设备对声音进行采集，比如麦克风就是常见的声音采集设备。麦克风里面有一层碳膜，非常薄而且十分敏感。声音是一种纵波，会压缩空气也会压缩这层碳膜，碳膜在受到挤压时也会发出振动，在碳膜的下方就是一个电极，碳膜在振动的时候会接触电极，接触时间的长短和频率与声波的振动幅度和频率有关，这样就完成了声音信号到电信号的转换。之后再经过放大电路处理，就可以实施后面的采样、量化处理了。</p>
+<p>声音由波形组成，包含了不同频率、振幅的波的叠加。为了在数字媒体内表示这些波形，需要对波形进行<strong>采样</strong>，其采样率需要满足可以表示的声音的最高频率；同时还需要存储足够的<strong>位深</strong>，以表示声音样本中波形的适当振幅。</p>
+<p>声音处理设备重建频率的能力称为其<strong>频率响应</strong>，创造适当响度和柔度的能力称为其<strong>动态范围</strong>，这些术语通常统称为声音设备的<strong>保真度</strong>。最简单的编码方式可以利用这两个基本元素重建声音，同时还能够高效地存储和传输数据。</p>
+<p>声音的数字化过程是将模拟信号（连续时间信号）转化为数字信号（离散时间信号）的过程，包括 3 个步骤：</p>
 <ul>
-<li>这个操作没有你想象地快。</li>
-<li>如果你尝试通过看似简单的原子操作控制对一些资源的访问，你的程序有很大几率会crash。</li>
+<li><strong>采样</strong>：以一定采样率在时域内获取离散信号。</li>
+<li><strong>量化</strong>：每个采样点幅度的数字化表示。</li>
+<li><strong>编码</strong>：以一定格式存储数据。</li>
 </ul>
-<h3 id="Cacheline"><a href="#Cacheline" class="headerlink" title="Cacheline"></a>Cacheline</h3><p>没有任何竞争或只被一个线程访问的原子操作是比较快的，“竞争”指的是多个线程同时访问同一个cacheline。现代CPU为了以低价格获得高性能，大量使用了cache，并把cache分了多级。百度内常见的Intel E5-2620拥有32K的L1 dcache和icache，256K的L2 cache和15M的L3 cache。其中L1和L2 cache为每个核心独有，L3则所有核心共享。一个核心写入自己的L1 cache是极快的(4 cycles, ~2ns)，但当另一个核心读或写同一处内存时，它得确认看到其他核心中对应的cacheline。对于软件来说，这个过程是原子的，不能在中间穿插其他代码，只能等待CPU完成一致性同步，这个复杂的硬件算法使得原子操作会变得很慢，在E5-2620上竞争激烈时fetch_add会耗费700纳秒左右。访问被多个线程频繁共享的内存往往是比较慢的。比如像一些场景临界区看着很小，但保护它的spinlock性能不佳，因为spinlock使用的exchange, fetch_add等指令必须等待最新的cacheline，看上去只有几条指令，花费若干微秒并不奇怪。</p>
-<p>要提高性能，就要避免让CPU频繁同步cacheline。这不单和原子指令本身的性能有关，还会影响到程序的整体性能。最有效的解决方法很直白：尽量避免共享。</p>
-<h3 id="Memory-fence"><a href="#Memory-fence" class="headerlink" title="Memory fence"></a>Memory fence</h3><p>仅靠原子技术实现不了对资源的访问控制，即使简单如spinlock或引用计数，看上去正确的代码也可能会crash。这里的关键在于重排指令导致了读写顺序的变化。只要没有依赖，代码中在后面的指令就可能跑到前面去，编译器和CPU都会这么做。</p>
-<p>这么做的动机非常自然，CPU要尽量塞满每个cycle，在单位时间内运行尽量多的指令。如上节中提到的，访存指令在等待cacheline同步时要花费数百纳秒，最高效地自然是同时同步多个cacheline，而不是一个个做。一个线程在代码中对多个变量的依次修改，可能会以不同的次序同步到另一个线程所在的核心上。不同线程对数据的需求不同，按需同步也会导致cacheline的读序和写序不同。</p>
-<p>如果其中第一个变量扮演了开关的作用，控制对后续变量的访问。那么当这些变量被一起同步到其他核心时，更新顺序可能变了，第一个变量未必是第一个更新的，然而其他线程还认为它代表着其他变量有效，去访问了实际已被删除的变量，从而导致未定义的行为。比如下面的代码片段：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// Thread 1</span><br><span class="line">// ready was initialized to false</span><br><span class="line">p.init();</span><br><span class="line">ready =true;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// Thread2</span><br><span class="line">if(ready)&#123;</span><br><span class="line">    p.bar();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>从人的角度，这是对的，因为线程2在ready为true时才会访问p，按线程1的逻辑，此时p应该初始化好了。但对多核机器而言，这段代码可能难以正常运行：</p>
-<ul>
-<li>线程1中的ready = true可能会被编译器或cpu重排到p.init()之前，从而使线程2看到ready为true时，p仍然未初始化。这种情况同样也会在线程2中发生，p.bar()中的一些代码可能被重排到检查ready之前。</li>
-</ul>
-<ul>
-<li>即使没有重排，ready和p的值也会独立地同步到线程2所在核心的cache，线程2仍然可能在看到ready为true时看到未初始化的p。</li>
-</ul>
-<p>通过这个简单例子，你可以窥见原子指令编程的复杂性了吧。为了解决这个问题，CPU和编译器提供了memory fence，让用户可以声明访存指令间的可见性(visibility)关系，boost和C++11对memory fence做了抽象，总结为如下几种memory order.</p>
-<table>
-<thead>
-<tr>
-<th>header 1</th>
-<th>header 2</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>row 1 col 1</td>
-<td>row 1 col 2</td>
-</tr>
-<tr>
-<td>row 2 col 1</td>
-<td>row 2 col 2</td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th>memory order</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>memory_order_relaxed</td>
-<td>没有fencing作用</td>
-</tr>
-<tr>
-<td>memory_order_consume</td>
-<td>后面依赖此原子变量的访存指令勿重排至此条指令之前</td>
-</tr>
-<tr>
-<td>memory_order_acquire</td>
-<td>后面访存指令勿重排至此条指令之前</td>
-</tr>
-<tr>
-<td>memory_order_release</td>
-<td>前面访存指令勿重排至此条指令之后。当此条指令的结果对其他线程可见后，之前的所有指令都可见</td>
-</tr>
-<tr>
-<td>memory_order_acq_rel</td>
-<td>acquire + release语意</td>
-</tr>
-<tr>
-<td>memory_order_seq_cst</td>
-<td>acq_rel语意外加所有使用seq_cst的指令有严格地全序关系</td>
-</tr>
-</tbody>
-</table>
-<p>有了memory order，上面的例子可以这么更正：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// Thread1</span><br><span class="line">// ready was initialized to false</span><br><span class="line">p.init();</span><br><span class="line">ready.store(true, std::memory_order_release);</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// Thread2</span><br><span class="line">if(ready.load(std::memory_order_acquire))&#123;</span><br><span class="line">    p.bar();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>线程2中的acquire和线程1的release配对，确保线程2在看到ready==true时能看到线程1 release之前所有的访存操作。</p>
-<p>注意，memory fence不等于可见性，即使线程2恰好在线程1在把ready设置为true后读取了ready也不意味着它能看到true，因为同步cache是有延时的。memory fence保证的是可见性的顺序：“假如我看到了a的最新值，那么我一定也得看到b的最新值”。</p>
-<p>一个相关问题是：如何知道看到的值是新还是旧？一般分两种情况：</p>
-<p>值是特殊的。比如在上面的例子中，ready=true是个特殊值，只要线程2看到ready为true就意味着更新了。只要设定了特殊值，读到或没有读到特殊值都代表了一种含义。<br>总是累加。一些场景下没有特殊值，那我们就用fetch_add之类的指令累加一个变量，只要变量的值域足够大，在很长一段时间内，新值和之前所有的旧值都会不相同，我们就能区分彼此了。<br>原子指令的例子可以看boost.atomic的Example，atomic的官方描述可以看这里  <a href="https://zh.cppreference.com/w/cpp/atomic/memory_order。" target="_blank" rel="noopener">https://zh.cppreference.com/w/cpp/atomic/memory_order。</a></p>
-<h3 id="wait-free-amp-lock-free"><a href="#wait-free-amp-lock-free" class="headerlink" title="wait-free &amp; lock-free"></a>wait-free &amp; lock-free</h3><p>原子指令能为我们的服务赋予两个重要属性：wait-free和lock-free。前者指不管OS如何调度线程，每个线程都始终在做有用的事；后者比前者弱一些，指不管OS如何调度线程，至少有一个线程在做有用的事。如果我们的服务中使用了锁，那么OS可能把一个刚获得锁的线程切换出去，这时候所有依赖这个锁的线程都在等待，而没有做有用的事，所以用了锁就不是lock-free，更不会是wait-free。为了确保一件事情总在确定时间内完成，实时系统的关键代码至少是lock-free的。在百度广泛又多样的在线服务中，对时效性也有着严苛的要求，如果RPC中最关键的部分满足wait-free或lock-free，就可以提供更稳定的服务质量。</p>
-<p>值得提醒的是，常见想法是lock-free或wait-free的算法会更快，但事实可能相反，因为：</p>
-<ul>
-<li><p>lock-free和wait-free必须处理更多更复杂的race condition和ABA problem，完成相同目的的代码比用锁更复杂。代码越多，耗时就越长。</p>
-</li>
-<li><p>使用mutex的算法变相带“后退”效果。后退(backoff)指出现竞争时尝试另一个途径以临时避免竞争，mutex出现竞争时会使调用者睡眠，使拿到锁的那个线程可以很快地独占完成一系列流程，总体吞吐可能反而高了。</p>
-</li>
-</ul>
-<p>mutex导致低性能往往是因为临界区过大（限制了并发度），或竞争过于激烈（上下文切换开销变得突出）。lock-free/wait-free算法的价值在于其保证了一个或所有线程始终在做有用的事，而不是绝对的高性能。但在一种情况下lock-free和wait-free算法的性能多半更高：就是算法本身可以用少量原子指令实现。实现锁也是要用原子指令的，当算法本身用一两条指令就能完成的时候，相比额外用锁肯定是更快了。</p>
-<h3 id="理解C-的原子操作"><a href="#理解C-的原子操作" class="headerlink" title="理解C++的原子操作"></a>理解C++的原子操作</h3><p>事实上，Sequentially-consistent ordering是目前绝大多数编译器的缺省设置。如果按照高赞回答的意思，那么多线程如果使用了atom操作，貌似就几乎变成了单线程（或者回合制）？真的吗？</p>
-<p>既然是多线程，那么线程之间的执行顺序就一定不是确定性的（你只能在某些点同步它们，但是在任何其它的地方是没有办法保证执行顺序的）。C++11所规定的这6种模式，其实并不是限制（或者规定）两个线程该怎样同步执行，而是在规定一个线程内的指令该怎样执行。是的，我知道这部分的文档（规定）以及给出的例子里面，满屏都是多线程。但是其实讨论的是单线程的问题。更为准确地说，是在讨论单线程内的指令执行顺序对于多线程的影响的问题。</p>
-<p>首先，什么是原子操作？原子操作就是对一个内存上变量（或者叫左值）的读取-变更-存储（load-add-store）作为一个整体一次完成。让我们考察一下普通的非原子操作：x++这个表达式如果编译成汇编，对应的是3条指令：mov（从内存到寄存器），add，mov（从寄存器到内存）那么在多线程环境下，就存在这样的可能：当线程A刚刚执行完第二条指令的时候，线程B开始执行第一条指令。那么就会导致线程B没有看到线程A执行的结果。如果这个变量初始值是0，那么线程A和线程B的结果都是1。如果我们想要避免这种情况，就可以使用原子操作。使用了原子操作之后，你可以认为这3条指令变成了一个整体，从而别的线程无法在其执行的期间当中访问x。也就是起到了锁的作用。所以，atom本身就是一种锁。它自己就已经完成了线程间同步的问题。这里并没有那6个memory order的什么事情。</p>
-<p>问题在于以这个原子操作为中心，其前后的代码。这些代码并不一定需要是原子操作，只是普通的代码就行。什么问题？比如还有另外一个变量y，在我们这个原子操作代码的附近，有一个y++那么现在的问题是，这个y++到底会在我们的x++之前执行，还是之后？注意这完全是单线程当中指令的执行顺序问题，与多线程风马牛不相及。但是，这个问题会导致多线程执行结果的不同。</p>
-<p>理解了这个，就理解了那6种memory order。为啥？因为我们对x进行原子操作的地方，锁定了线程间的关系，是一个同步点。那么，以这个点为基准，我们就可以得出两个线程当中其它指令执行先后顺序关系。比如，A线程先对x进行了自增操作。因为对x的访问是原子的，所以B线程执行该行代码（假设代码当中对x的访问只有这一处）的时间点必然在A完成之后。那么，如果在A线程当中，y++是在x++之前执行的，那么我们就可以肯定，对于B线程来说，在x++（同步点）之后所有对y的参照，必定能看到A线程执行了y++之后的值（注意对y的访问并非原子）但是有个问题。如果在程序当中y++紧靠x++，那么其实它到底是会先于x++执行（完毕），还是晚于x++执行（完毕），这个是没准儿的。为啥呢？首先编译器对代码可能进行指令重排。</p>
-<p>也就是说，编译器编译之后（特别是开了优化之后）的代码执行顺序，是不一定严格按照你写代码的顺序的。但是如果仅仅如此，也只是二进制（机器码）的顺序与源代码不同，还不至于导致A和B当中的指令执行顺序不同（因为A和B执行的是相同的机器码程序）。但是实际上，在非常微观的层面上，A和B也是可能不同的，甚至于，A每次执行到这里顺序都不见得一样。啥？…还真的是这样。原因在于当代CPU内部也有指令重排。也就是说，CPU执行指令的顺序，也不见得是完全严格按照机器码的顺序。特别是，当代CPU的IPC（每时钟执行指令数）一般都远大于1，也就是所谓的多发射，很多命令都是同时执行的。</p>
-<p>比如，当代CPU当中（一个核心）一般会有2套以上的整数ALU（加法器），2套以上的浮点ALU（加法器），往往还有独立的乘法器，以及，独立的Load和Store执行器。Load和Store模块往往还有8个以上的队列，也就是可以同时进行8个以上内存地址（cache line）的读写交换。是不是有些晕？</p>
-<p>简单来说，你可以理解当代CPU不仅是多核心，而且每个核心还是多任务（多指令）并行的。计算机课本上的那种一个时钟一条指令的，早就是老黄历了 （当然，宏观来看基本原理并没有改变）看到这里还没有晕的话，那么恭喜你，你快要理解什么是memory order了。所谓的memory order，其实就是限制编译器以及CPU对单线程当中的指令执行顺序进行重排的程度（此外还包括对cache的控制方法）。</p>
-<p>这种限制，决定了以atom操作为基准点（边界），对其之前的内存访问命令，以及之后的内存访问命令，能够在多大的范围内自由重排（或者反过来，需要施加多大的保序限制）。</p>
-<p>从而形成了6种模式。它本身与多线程无关，是限制的单一线程当中指令执行顺序。但是（合理的）指令执行顺序的重排在单线程环境下不会造成逻辑错误而在多线程环境下会，所以这个问题的目的是为了解决多线程环境下出现的问题。</p>
-<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><ul>
-<li>brpc文档</li>
-<li><a href="https://www.zhihu.com/question/24301047/answer/1193956492" target="_blank" rel="noopener">https://www.zhihu.com/question/24301047/answer/1193956492</a></li>
-<li><a href="https://stackoverflow.com/questions/27595595/when-are-x86-lfence-sfence-and-mfence-instructions-required" target="_blank" rel="noopener">https://stackoverflow.com/questions/27595595/when-are-x86-lfence-sfence-and-mfence-instructions-required</a></li>
-</ul>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/how-to-desc-audio.png" alt="image"></p>
+<p><strong>经过数字化处理后的数字音频包含如下三要素：</strong></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio-desc.png" alt="image"></p>
+<h3 id="采样率"><a href="#采样率" class="headerlink" title="采样率"></a>采样率</h3><p>对模拟信号的采样一般遵循奈奎斯特采样定理：如果一个信号是带限的（即它的傅立叶变换在某一有限频带范围以外均为零），并且它的样本取得足够密（相对于信号中的最高频率而言），那么这些样本值就能唯一地用来表征这一信号，并且能从这些样本中把信号完全恢复出来。为了不失真地恢复模拟信号，采样频率应该不小于模拟信号频谱中最高频率的 2 倍。一般实际应用中保证采样频率为信号最高频率的 2.56～4 倍。</p>
+<p>数字信号由模拟信号采样而来，如果满足采样定理，数字信号就可以完全恢复原始的模拟信号。</p>
+<p>从发声的角度来看，人类发出的声音信号频率绝大部分在 5k Hz 以内，因此以 10k Hz 的频率来采样就足够了。</p>
+<p>生活中常见的采样率：</p>
+<blockquote>
+<p>8,000 Hz：电话所用采样率，对于人的说话已经足够；<br>11,025 Hz：AM 调幅广播所用采样率；<br>22,050 Hz 和 24,000 Hz：FM调频广播所用采样率；<br>32,000 Hz：miniDV 数码视频 camcorder、DAT（LP mode）所用采样率；<br>44,100 Hz：音频 CD，也常用于 MPEG-1 音频（VCD/SVCD/MP3）所用采样率；<br>47,250 Hz：商用 PCM 录音机所用采样率；<br>48,000 Hz：miniDV、数字电视、DVD、DAT、电影和专业音频所用的数字声音所用采样率；<br>50,000 Hz：商用数字录音机所用采样率；<br>96,000 或者 192,000 Hz：DVD-Audio、一些 LPCM DVD 音轨、BD-ROM（蓝光盘）音轨、和 HD-DVD（高清晰度 DVD）音轨所用所用采样率；<br>2.8224 MHz：Direct Stream Digital 的 1 位 sigma-delta modulation 过程所用采样率。</p>
+</blockquote>
+<h3 id="量化位深（采样大小）"><a href="#量化位深（采样大小）" class="headerlink" title="量化位深（采样大小）"></a>量化位深（采样大小）</h3><p>量化位深是对模拟音频信号的幅度轴进行数字化，它决定了模拟信号数字化以后的动态范围。比如，8 bit 位深可以拥有 48 分贝的动态范围，16 bit 位深可以拥有 96 分贝的动态范围，24 bit 位深可以拥有 144 分贝的动态范围，32 bit 位深可以拥有 192 分贝的动态范围。这里位深和动态范围的数值对应关系的计算公式可以从上文声压级的计算公式推导而来。位深体现的是能表示的值的范围，比如 16 bit 能表示的最大值是 216 - 1 = 65535，那么取其最大值就能计算它能表示的最大声压级：最大声压级 = 20 × lg(65535) = 96.33。所以 16 bit 的位深可以最大表示 96 分贝。</p>
+<h3 id="声道"><a href="#声道" class="headerlink" title="声道"></a>声道</h3><p>声道是指声音在录制或播放时在不同空间位置采集或回放的相互独立的音频信号，所以声道数也就是声音录制时的音源数量或回放时相应的扬声器数量。</p>
+<blockquote>
+<p>单声道（Mono）：是以单个声道来重现声音。它只用了一个麦克风，一个扬声器或是耳机、并联扬声器，并从同样的信号路径送入信号，在并联扬声器中，虽有多个扬声器，但每个扬声器送入的仍是同一信号。</p>
+<p>立体声（Stereo）：是使用两个或多个独立的音效通道，在一对以对称方式配置的扬声器上出现。以此方法所发出的声音，在不同方向仍可保持自然与悦耳。</p>
+<p>5.1 声道：包含一个正面声道、左前方声道、右前方声道、左环绕声道、右环绕声道，以及一个用来重放 120 Hz 以下超低频的声道。最早应用于早期的电影院，如杜比 AC-3。</p>
+<p>7.1 声道：在 5.1 声道的基础上，把左右的环绕声道拆分为左右环绕声道以及左右后置声道。主要应用于蓝光以及现代的电影院。</p>
+</blockquote>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio-store-calc.png" alt="image"></p>
+<h3 id="PCM"><a href="#PCM" class="headerlink" title="PCM"></a>PCM</h3><p>我们在手机、电脑上处理的声音数据，就是声音经过数字化后的数据，也就是数字音频数据，其中最常见的格式是 PCM（Pulse Code Modulation），即脉冲编码调制格式。得到 PCM 数据的主要过程是将话音等模拟信号每隔一定时间进行取样，使其离散化，同时将抽样值按分层单位四舍五入取整量化，同时将抽样值按一组二进制码来表示抽样脉冲的幅值。也就是我们在上文中讲到的采样、量化、编码过程。</p>
+<p>在计算机应用中，PCM 是能达到音频最高保真水平的格式，它被广泛用于素材保存及音乐欣赏，PCM 也因此被称为无损编码格式。但这并不意味着 PCM 就能够确保信号绝对保真，它只能做到最大程度的无限接近原始声音。要计算一个 PCM 音频流的码率需要数字音频的三要素信息即可：码率 = 采样率 × 量化位深 × 声道数。</p>
+<p>由于 PCM 编码是无损编码，且广泛应用，所以我们通常可以认为音频的裸数据格式就是 PCM 的。但为了节省存储空间以及传输成本，通常我们会对音频 PCM 数据进行压缩，这也就是音频编码，比如 MP3、AAC、OPUS 都是我们常见的音频编码格式。</p>
 <script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
 </script>
+
 </span>
       
     </div>
@@ -504,7 +400,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/c/" rel="tag">#c++</a>
+            <a href="/tags/音视频/" rel="tag">#音视频</a>
           
         </div>
       
@@ -513,13 +409,13 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2021/04/10/redis-basic/" rel="prev">redis基础</a>
+              <a href="/2023/04/15/audio-basic-03/" rel="prev">音视频基础-音频基础-03</a>
             
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2021/03/23/c++11-lambda/" rel="next">C++11 lambda</a>
+              <a href="/2023/04/06/audio_basic_01/" rel="next">音视频基础-音频基础-01</a>
             
           </div>
         </div>
@@ -753,7 +649,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#引入的原子指令"><span class="nav-number">1.</span> <span class="nav-text">引入的原子指令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-封装"><span class="nav-number"></span> <span class="nav-text">C++ 封装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Cacheline"><span class="nav-number">1.</span> <span class="nav-text">Cacheline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Memory-fence"><span class="nav-number">2.</span> <span class="nav-text">Memory fence</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#wait-free-amp-lock-free"><span class="nav-number">3.</span> <span class="nav-text">wait-free &amp; lock-free</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#理解C-的原子操作"><span class="nav-number">4.</span> <span class="nav-text">理解C++的原子操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#引用"><span class="nav-number">5.</span> <span class="nav-text">引用</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#怎样对声音进行数字化？"><span class="nav-number">1.</span> <span class="nav-text">怎样对声音进行数字化？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#采样率"><span class="nav-number">2.</span> <span class="nav-text">采样率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#量化位深（采样大小）"><span class="nav-number">3.</span> <span class="nav-text">量化位深（采样大小）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#声道"><span class="nav-number">4.</span> <span class="nav-text">声道</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PCM"><span class="nav-number">5.</span> <span class="nav-text">PCM</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
