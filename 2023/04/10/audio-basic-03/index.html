@@ -31,7 +31,7 @@
 
 
 
-  <meta name="keywords" content="os," />
+  <meta name="keywords" content="音视频," />
 
 
 
@@ -40,19 +40,22 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="keywords" content="os">
+<meta name="description" content="音频编码基本原理（1） 音频信号的冗余信息数字音频信号如果不加压缩地直接进行传送，将会占用极大的带宽。例如，一套双声道数字音频若取样频率为44.1KHz，每样值按16bit量化，则其码率为： 2*44.1kHz*16bit=1.411Mbit/s 如此大的带宽将给信号的传输和处理都带来许多困难，因此必须采取音频压缩技术对音频数据进行处理，才能有效地传输音频数据。 数字音频压缩编码在保证信号在听觉方">
+<meta name="keywords" content="音视频">
 <meta property="og:type" content="article">
-<meta property="og:title" content="画画">
-<meta property="og:url" content="http://oneyearago.me/2020/11/11/painting/index.html">
+<meta property="og:title" content="音视频基础-音频基础-03">
+<meta property="og:url" content="http://oneyearago.me/2023/04/10/audio-basic-03/index.html">
 <meta property="og:site_name" content="changan&#39;s blog">
+<meta property="og:description" content="音频编码基本原理（1） 音频信号的冗余信息数字音频信号如果不加压缩地直接进行传送，将会占用极大的带宽。例如，一套双声道数字音频若取样频率为44.1KHz，每样值按16bit量化，则其码率为： 2*44.1kHz*16bit=1.411Mbit/s 如此大的带宽将给信号的传输和处理都带来许多困难，因此必须采取音频压缩技术对音频数据进行处理，才能有效地传输音频数据。 数字音频压缩编码在保证信号在听觉方">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/10/k-pthread.png">
-<meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/10/k-memory.png">
-<meta property="og:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/10/k-mutex.png">
-<meta property="og:updated_time" content="2022-11-24T13:55:54.284Z">
+<meta property="og:image" content="https://img-blog.csdn.net/20140602173751953?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbGVpeGlhb2h1YTEwMjA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="https://img-blog.csdn.net/20140602173759515?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbGVpeGlhb2h1YTEwMjA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="https://img-blog.csdn.net/20140602173806843?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbGVpeGlhb2h1YTEwMjA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2024-02-26T07:40:25.916Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="画画">
-<meta name="twitter:image" content="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/10/k-pthread.png">
+<meta name="twitter:title" content="音视频基础-音频基础-03">
+<meta name="twitter:description" content="音频编码基本原理（1） 音频信号的冗余信息数字音频信号如果不加压缩地直接进行传送，将会占用极大的带宽。例如，一套双声道数字音频若取样频率为44.1KHz，每样值按16bit量化，则其码率为： 2*44.1kHz*16bit=1.411Mbit/s 如此大的带宽将给信号的传输和处理都带来许多困难，因此必须采取音频压缩技术对音频数据进行处理，才能有效地传输音频数据。 数字音频压缩编码在保证信号在听觉方">
+<meta name="twitter:image" content="https://img-blog.csdn.net/20140602173751953?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbGVpeGlhb2h1YTEwMjA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -62,7 +65,7 @@
   };
 </script>
 
-  <title> 画画 | changan's blog </title>
+  <title> 音视频基础-音频基础-03 | changan's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -312,7 +315,7 @@
           
           
             
-              画画
+              音视频基础-音频基础-03
             
           
         </h1>
@@ -321,8 +324,8 @@
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2020-11-11T15:40:39+08:00" content="2020-11-11">
-            2020-11-11
+          <time itemprop="dateCreated" datetime="2023-04-10T18:20:39+08:00" content="2023-04-10">
+            2023-04-10
           </time>
         </span>
 
@@ -331,8 +334,8 @@
             &nbsp; | &nbsp; In
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/os/" itemprop="url" rel="index">
-                  <span itemprop="name">os</span>
+                <a href="/categories/音视频/" itemprop="url" rel="index">
+                  <span itemprop="name">音视频</span>
                 </a>
               </span>
 
@@ -355,11 +358,29 @@
       
 
       
-        <span itemprop="articleBody"><p><img src="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/10/k-pthread.png" alt="image"></p>
-<p><img src="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/10/k-memory.png" alt="image"> </p>
-<p><img src="https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/10/k-mutex.png" alt="image"> </p>
+        <span itemprop="articleBody"><h3 id="音频编码基本原理"><a href="#音频编码基本原理" class="headerlink" title="音频编码基本原理"></a><strong>音频编码基本原理</strong></h3><h3 id="（1）-音频信号的冗余信息"><a href="#（1）-音频信号的冗余信息" class="headerlink" title="（1） 音频信号的冗余信息"></a><strong>（1） 音频信号的冗余信息</strong></h3><p>数字音频信号如果不加压缩地直接进行传送，将会占用极大的带宽。例如，一套双声道数字音频若取样频率为44.1KHz，每样值按16bit量化，则其码率为：</p>
+<p>2*44.1kHz*16bit=1.411Mbit/s</p>
+<p>如此大的带宽将给信号的传输和处理都带来许多困难，因此必须采取音频压缩技术对音频数据进行处理，才能有效地传输音频数据。</p>
+<p>数字音频压缩编码在保证信号在听觉方面不产生失真的前提下，对音频数据信号进行尽可能大的压缩。数字音频压缩编码采取去除声音信号中冗余成分的方法来实现。所谓冗余成分指的是音频中不能被人耳感知到的信号，它们对确定声音的音色，音调等信息没有任何的帮助。</p>
+<p>冗余信号包含人耳听觉范围外的音频信号以及被掩蔽掉的音频信号等。例如，人耳所能察觉的声音信号的频率范围为20Hz～20KHz，除此之外的其它频率人耳无法察觉，都可视为冗余信号。此外，根据人耳听觉的生理和心理声学现象，当一个强音信号与一个弱音信号同时存在时，弱音信号将被强音信号所掩蔽而听不见，这样弱音信号就可以视为冗余信号而不用传送。这就是人耳听觉的掩蔽效应，主要表现在<a href="https://so.csdn.net/so/search?q=%E9%A2%91%E8%B0%B1&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener">频谱</a>掩蔽效应和时域掩蔽效应，现分别介绍如下：</p>
+<h4 id="（a）频谱掩蔽效应"><a href="#（a）频谱掩蔽效应" class="headerlink" title="（a）频谱掩蔽效应"></a>（a）频谱掩蔽效应</h4><p>一个频率的声音能量小于某个阈值之后，人耳就会听不到，这个阈值称为最小可闻阈。当有另外能量较大的声音出现的时候，该声音频率附近的阈值会提高很多，即所谓的掩蔽效应。如图所示：</p>
+<p><img src="https://img-blog.csdn.net/20140602173751953?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbGVpeGlhb2h1YTEwMjA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""></p>
+<p>频率掩蔽效应</p>
+<p>由图中我们可以看出人耳对2KHz～5KHz的声音最敏感，而对频率太低或太高的声音信号都很迟钝，当有一个频率为0.2KHz、强度为60dB的声音出现时，其附近的阈值提高了很多。由图中我们可以看出在0.1KHz以下、1KHz以上的部分,由于离0.2KHz强信号较远，不受0.2KHz强信号影响,阈值不受影响；而在0.1KHz～1KHz范围，由于0.2KHz强音的出现,阈值有较大的提升，人耳在此范围所能感觉到的最小声音强度大幅提升。如果0.1KHz～1KHz范围内的声音信号的强度在被提升的阈值曲线之下，由于它被0.2KHz强音信号所掩蔽，那么此时我们人耳只能听到0.2KHz的强音信号而根本听不见其它弱信号，这些与0.2KHz强音信号同时存在的弱音信号就可视为冗余信号而不必传送。</p>
+<h4 id="（b）-时域掩蔽效应"><a href="#（b）-时域掩蔽效应" class="headerlink" title="（b） 时域掩蔽效应"></a>（b） 时域掩蔽效应</h4><p>当强音信号和弱音信号同时出现时，还存在时域掩蔽效应。即两者发生时间很接近的时候，也会发生掩蔽效应。时域掩蔽过程曲线如图所示，分为前掩蔽、同时掩蔽和后掩蔽三部分。</p>
+<p><img src="https://img-blog.csdn.net/20140602173759515?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbGVpeGlhb2h1YTEwMjA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""></p>
+<p>时域掩蔽效应</p>
+<p>由图我们可以看出，时域掩蔽效应可以分成三种：前掩蔽，同时掩蔽，后掩蔽。前掩蔽是指人耳在听到强信号之前的短暂时间内，已经存在的弱信号会被掩蔽而听不到。同时掩蔽是指当强信号与弱信号同时存在时，弱信号会被强信号所掩蔽而听不到。后掩蔽是指当强信号消失后，需经过较长的一段时间才能重新听见弱信号，称为后掩蔽。这些被掩蔽的弱信号即可视为冗余信号。</p>
+<h3 id="（2）-压缩编码方法"><a href="#（2）-压缩编码方法" class="headerlink" title="（2） 压缩编码方法"></a><strong>（2） 压缩编码方法</strong></h3><p>当前数字音频编码领域存在着不同的编码方案和实现方式, 但基本的编码思路大同小异, 如图所示。</p>
+<p><img src="https://img-blog.csdn.net/20140602173806843?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbGVpeGlhb2h1YTEwMjA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""></p>
+<p>数字音频编码系统模型</p>
+<p>对每一个音频声道中的音频采样信号,首先都要将它们映射到频域中,这种时域到频域的映射可通过子带滤波器实现。每个声道中的音频采样块首先要根据心理声学模型来计算掩蔽门限值, 然后由计算出的掩蔽门限值决定从公共比特池中分配给该声道的不同频率域中多少比特数，接着进行量化以及编码工作，最后将控制参数及辅助数据加入数据之中，产生编码后的数据流。</p>
+<h4 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h4><ul>
+<li><a href="https://blog.csdn.net/leixiaohua1020/article/details/28114081" target="_blank" rel="noopener">https://blog.csdn.net/leixiaohua1020/article/details/28114081</a></li>
+</ul>
 <script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
 </script>
+
 </span>
       
     </div>
@@ -368,7 +389,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/os/" rel="tag">#os</a>
+            <a href="/tags/音视频/" rel="tag">#音视频</a>
           
         </div>
       
@@ -377,13 +398,13 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/11/18/game-sync-modle/" rel="prev">网络游戏同步模型</a>
+              <a href="/2023/04/10/audio-basic-02/" rel="prev">音视频基础-音频基础-02</a>
             
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/11/03/csapp-3-asm/" rel="next">程序的机器级表示</a>
+              <a href="/2023/04/06/audio_basic_01/" rel="next">音视频基础-音频基础-01</a>
             
           </div>
         </div>
@@ -617,7 +638,7 @@
           <div class="post-toc">
             
             
-              <p class="post-toc-empty">This post does not have a Table Of Contents</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#音频编码基本原理"><span class="nav-number">1.</span> <span class="nav-text">音频编码基本原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（1）-音频信号的冗余信息"><span class="nav-number">2.</span> <span class="nav-text">（1） 音频信号的冗余信息</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#（a）频谱掩蔽效应"><span class="nav-number">2.1.</span> <span class="nav-text">（a）频谱掩蔽效应</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#（b）-时域掩蔽效应"><span class="nav-number">2.2.</span> <span class="nav-text">（b） 时域掩蔽效应</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（2）-压缩编码方法"><span class="nav-number">3.</span> <span class="nav-text">（2） 压缩编码方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#引用"><span class="nav-number">3.1.</span> <span class="nav-text">引用</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>

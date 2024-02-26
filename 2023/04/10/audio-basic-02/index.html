@@ -43,7 +43,7 @@
 <meta name="description" content="怎样对声音进行数字化？对声音进行数字化，首先要使用特定的设备对声音进行采集，比如麦克风就是常见的声音采集设备。麦克风里面有一层碳膜，非常薄而且十分敏感。声音是一种纵波，会压缩空气也会压缩这层碳膜，碳膜在受到挤压时也会发出振动，在碳膜的下方就是一个电极，碳膜在振动的时候会接触电极，接触时间的长短和频率与声波的振动幅度和频率有关，这样就完成了声音信号到电信号的转换。之后再经过放大电路处理，就可以实施后">
 <meta name="keywords" content="音视频">
 <meta property="og:type" content="article">
-<meta property="og:title" content="音视频基础- 声音采集与量化">
+<meta property="og:title" content="音视频基础-音频基础-02">
 <meta property="og:url" content="http://oneyearago.me/2023/04/10/audio-basic-02/index.html">
 <meta property="og:site_name" content="changan&#39;s blog">
 <meta property="og:description" content="怎样对声音进行数字化？对声音进行数字化，首先要使用特定的设备对声音进行采集，比如麦克风就是常见的声音采集设备。麦克风里面有一层碳膜，非常薄而且十分敏感。声音是一种纵波，会压缩空气也会压缩这层碳膜，碳膜在受到挤压时也会发出振动，在碳膜的下方就是一个电极，碳膜在振动的时候会接触电极，接触时间的长短和频率与声波的振动幅度和频率有关，这样就完成了声音信号到电信号的转换。之后再经过放大电路处理，就可以实施后">
@@ -51,9 +51,9 @@
 <meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/how-to-desc-audio.png">
 <meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio-desc.png">
 <meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio-store-calc.png">
-<meta property="og:updated_time" content="2024-02-26T02:59:35.424Z">
+<meta property="og:updated_time" content="2024-02-26T07:40:14.883Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="音视频基础- 声音采集与量化">
+<meta name="twitter:title" content="音视频基础-音频基础-02">
 <meta name="twitter:description" content="怎样对声音进行数字化？对声音进行数字化，首先要使用特定的设备对声音进行采集，比如麦克风就是常见的声音采集设备。麦克风里面有一层碳膜，非常薄而且十分敏感。声音是一种纵波，会压缩空气也会压缩这层碳膜，碳膜在受到挤压时也会发出振动，在碳膜的下方就是一个电极，碳膜在振动的时候会接触电极，接触时间的长短和频率与声波的振动幅度和频率有关，这样就完成了声音信号到电信号的转换。之后再经过放大电路处理，就可以实施后">
 <meta name="twitter:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/how-to-desc-audio.png">
 
@@ -65,7 +65,7 @@
   };
 </script>
 
-  <title> 音视频基础- 声音采集与量化 | changan's blog </title>
+  <title> 音视频基础-音频基础-02 | changan's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -315,7 +315,7 @@
           
           
             
-              音视频基础- 声音采集与量化
+              音视频基础-音频基础-02
             
           
         </h1>
@@ -389,20 +389,9 @@
 <h3 id="PCM"><a href="#PCM" class="headerlink" title="PCM"></a>PCM</h3><p>我们在手机、电脑上处理的声音数据，就是声音经过数字化后的数据，也就是数字音频数据，其中最常见的格式是 PCM（Pulse Code Modulation），即脉冲编码调制格式。得到 PCM 数据的主要过程是将话音等模拟信号每隔一定时间进行取样，使其离散化，同时将抽样值按分层单位四舍五入取整量化，同时将抽样值按一组二进制码来表示抽样脉冲的幅值。也就是我们在上文中讲到的采样、量化、编码过程。</p>
 <p>在计算机应用中，PCM 是能达到音频最高保真水平的格式，它被广泛用于素材保存及音乐欣赏，PCM 也因此被称为无损编码格式。但这并不意味着 PCM 就能够确保信号绝对保真，它只能做到最大程度的无限接近原始声音。要计算一个 PCM 音频流的码率需要数字音频的三要素信息即可：码率 = 采样率 × 量化位深 × 声道数。</p>
 <p>由于 PCM 编码是无损编码，且广泛应用，所以我们通常可以认为音频的裸数据格式就是 PCM 的。但为了节省存储空间以及传输成本，通常我们会对音频 PCM 数据进行压缩，这也就是音频编码，比如 MP3、AAC、OPUS 都是我们常见的音频编码格式。</p>
-<pre><code>data-repo=&quot;changan29/changan29.github.io&quot;
-data-repo-id=&quot;MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=&quot;
-data-category=&quot;Announcements&quot;
-data-category-id=&quot;DIC_kwDOC6bf5s4CSvAi&quot;
-data-mapping=&quot;url&quot;
-data-strict=&quot;0&quot;
-data-reactions-enabled=&quot;1&quot;
-data-emit-metadata=&quot;0&quot;
-data-input-position=&quot;bottom&quot;
-data-theme=&quot;preferred_color_scheme&quot;
-data-lang=&quot;zh-CN&quot;
-crossorigin=&quot;anonymous&quot;
-async&gt;
-</code></pre><p></p>
+<script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
+</script>
+
 </span>
       
     </div>
@@ -424,7 +413,7 @@ async&gt;
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2023/04/06/audio_basic_01/" rel="next">音视频基础-音频基础-01</a>
+              <a href="/2023/04/10/audio-basic-03/" rel="next">音视频基础-音频基础-03</a>
             
           </div>
         </div>
@@ -606,7 +595,7 @@ async&gt;
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">75</span>
+              <span class="site-state-item-count">76</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>

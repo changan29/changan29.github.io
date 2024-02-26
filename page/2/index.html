@@ -3391,6 +3391,93 @@
           
           
             
+              <a class="post-title-link" href="/2021/06/19/strip-and-objcopy/" itemprop="url">
+                用strip和objcopy精简二进制
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2021-06-19T02:40:39+08:00" content="2021-06-19">
+            2021-06-19
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/objcopy/" itemprop="url" rel="index">
+                  <span itemprop="name">objcopy</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            问题: 设置到 LD_PRELOAD的动态库 找不到符号在设置了优先加载的 动态库以后，先加载的库里面的函数与 后加载的库里面的函数可能是有冲突的，比如遇到的这个例子，先加在的动态库中其实不存在完整的函数实现，只有符号表，并不能执行，但是它被设置成先加载了。
+
+对于有多个动态库中存在同一个符号的，一
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2021/06/19/strip-and-objcopy/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2021/06/07/tcp/" itemprop="url">
                 渴望明天
               </a>
@@ -4022,91 +4109,6 @@ key-value的管理方式
           
           
             
-              <a class="post-title-link" href="/2021/03/23/c++11-atomic/" itemprop="url">
-                C++ 11 Atomic
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2021-03-23T15:40:39+08:00" content="2021-03-23">
-            2021-03-23
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/c/" itemprop="url" rel="index">
-                  <span itemprop="name">c++</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            引入的原子指令SSE2 extensions introduce two new fence instructions (LFENCE and MFENCE) as companions to the SFENCE instruction introduced with SSE extensions
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2021/03/23/c++11-atomic/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
               <a class="post-title-link" href="/2021/03/23/c++11-lambda/" itemprop="url">
                 C++11 lambda
               </a>
@@ -4193,8 +4195,8 @@ Capture By Valu
           
           
             
-              <a class="post-title-link" href="/2021/03/20/ddia-7-transaction/" itemprop="url">
-                ddia-事务
+              <a class="post-title-link" href="/2021/03/23/c++11-atomic/" itemprop="url">
+                C++ 11 Atomic
               </a>
             
           
@@ -4204,8 +4206,8 @@ Capture By Valu
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2021-03-20T22:40:39+08:00" content="2021-03-20">
-            2021-03-20
+          <time itemprop="dateCreated" datetime="2021-03-23T15:40:39+08:00" content="2021-03-23">
+            2021-03-23
           </time>
         </span>
 
@@ -4214,8 +4216,8 @@ Capture By Valu
             &nbsp; | &nbsp; In
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/transaction/" itemprop="url" rel="index">
-                  <span itemprop="name">transaction</span>
+                <a href="/categories/c/" itemprop="url" rel="index">
+                  <span itemprop="name">c++</span>
                 </a>
               </span>
 
@@ -4241,12 +4243,11 @@ Capture By Valu
         
           <span itemprop="articleBody">
             
-            transaction事务是一个抽象层，允许应用程序假装某些并发问题和某些类型的硬件和软件故障不存在。各式各样的错误被简化为一种简单情况：事务中止（transaction abort），而应用需要的仅仅是重试。
-如果没有事务处理，各种错误情况（进程崩溃，网络中断，停电，磁盘已满，意外并发等）意味着数
+            引入的原子指令SSE2 extensions introduce two new fence instructions (LFENCE and MFENCE) as companions to the SFENCE instruction introduced with SSE extensions
             ...
           </span>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2021/03/20/ddia-7-transaction/#more" rel="contents">
+            <a class="btn" href="/2021/03/23/c++11-atomic/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -4304,7 +4305,7 @@ Capture By Valu
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">75</span>
+              <span class="site-state-item-count">76</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
