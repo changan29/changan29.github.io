@@ -31,7 +31,7 @@
 
 
 
-  <meta name="keywords" content="OS,Thread," />
+  <meta name="keywords" content="音视频," />
 
 
 
@@ -40,18 +40,22 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="原子操作自增(++i)操作在多线程环境下出现错误是因为这个操作被编译成的代码不止一条指令，因此在执行的时候可能执行到一半被系统调度打乱，去执行别的代码。我们把单指令的操作称为原子的(atomic),因为无论如何，单条指令的执行时不会被打乱的，为了避免出错，很多体系结构都提供了一些常用操作的原子指令。 同步与锁为了避免多个线程同时读写同一个数据而产生不可预料的后果，我们要将多个线程对同一个数据的访问">
-<meta name="keywords" content="OS,Thread">
+<meta name="description" content="怎样对声音进行数字化？对声音进行数字化，首先要使用特定的设备对声音进行采集，比如麦克风就是常见的声音采集设备。麦克风里面有一层碳膜，非常薄而且十分敏感。声音是一种纵波，会压缩空气也会压缩这层碳膜，碳膜在受到挤压时也会发出振动，在碳膜的下方就是一个电极，碳膜在振动的时候会接触电极，接触时间的长短和频率与声波的振动幅度和频率有关，这样就完成了声音信号到电信号的转换。之后再经过放大电路处理，就可以实施后">
+<meta name="keywords" content="音视频">
 <meta property="og:type" content="article">
-<meta property="og:title" content="程序员的自我修养-线程安全">
-<meta property="og:url" content="http://oneyearago.me/2020/02/04/Thread-safe/index.html">
+<meta property="og:title" content="音视频基础- 声音采集与量化">
+<meta property="og:url" content="http://oneyearago.me/2023/04/10/audio-basic-02/index.html">
 <meta property="og:site_name" content="changan&#39;s blog">
-<meta property="og:description" content="原子操作自增(++i)操作在多线程环境下出现错误是因为这个操作被编译成的代码不止一条指令，因此在执行的时候可能执行到一半被系统调度打乱，去执行别的代码。我们把单指令的操作称为原子的(atomic),因为无论如何，单条指令的执行时不会被打乱的，为了避免出错，很多体系结构都提供了一些常用操作的原子指令。 同步与锁为了避免多个线程同时读写同一个数据而产生不可预料的后果，我们要将多个线程对同一个数据的访问">
+<meta property="og:description" content="怎样对声音进行数字化？对声音进行数字化，首先要使用特定的设备对声音进行采集，比如麦克风就是常见的声音采集设备。麦克风里面有一层碳膜，非常薄而且十分敏感。声音是一种纵波，会压缩空气也会压缩这层碳膜，碳膜在受到挤压时也会发出振动，在碳膜的下方就是一个电极，碳膜在振动的时候会接触电极，接触时间的长短和频率与声波的振动幅度和频率有关，这样就完成了声音信号到电信号的转换。之后再经过放大电路处理，就可以实施后">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2022-11-24T13:55:54.319Z">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/how-to-desc-audio.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio-desc.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio-store-calc.png">
+<meta property="og:updated_time" content="2024-02-26T02:59:35.424Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="程序员的自我修养-线程安全">
-<meta name="twitter:description" content="原子操作自增(++i)操作在多线程环境下出现错误是因为这个操作被编译成的代码不止一条指令，因此在执行的时候可能执行到一半被系统调度打乱，去执行别的代码。我们把单指令的操作称为原子的(atomic),因为无论如何，单条指令的执行时不会被打乱的，为了避免出错，很多体系结构都提供了一些常用操作的原子指令。 同步与锁为了避免多个线程同时读写同一个数据而产生不可预料的后果，我们要将多个线程对同一个数据的访问">
+<meta name="twitter:title" content="音视频基础- 声音采集与量化">
+<meta name="twitter:description" content="怎样对声音进行数字化？对声音进行数字化，首先要使用特定的设备对声音进行采集，比如麦克风就是常见的声音采集设备。麦克风里面有一层碳膜，非常薄而且十分敏感。声音是一种纵波，会压缩空气也会压缩这层碳膜，碳膜在受到挤压时也会发出振动，在碳膜的下方就是一个电极，碳膜在振动的时候会接触电极，接触时间的长短和频率与声波的振动幅度和频率有关，这样就完成了声音信号到电信号的转换。之后再经过放大电路处理，就可以实施后">
+<meta name="twitter:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/how-to-desc-audio.png">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -61,7 +65,7 @@
   };
 </script>
 
-  <title> 程序员的自我修养-线程安全 | changan's blog </title>
+  <title> 音视频基础- 声音采集与量化 | changan's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -311,7 +315,7 @@
           
           
             
-              程序员的自我修养-线程安全
+              音视频基础- 声音采集与量化
             
           
         </h1>
@@ -320,8 +324,8 @@
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2020-02-04T20:24:39+08:00" content="2020-02-04">
-            2020-02-04
+          <time itemprop="dateCreated" datetime="2023-04-10T18:20:39+08:00" content="2023-04-10">
+            2023-04-10
           </time>
         </span>
 
@@ -330,8 +334,8 @@
             &nbsp; | &nbsp; In
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/OS/" itemprop="url" rel="index">
-                  <span itemprop="name">OS</span>
+                <a href="/categories/音视频/" itemprop="url" rel="index">
+                  <span itemprop="name">音视频</span>
                 </a>
               </span>
 
@@ -354,23 +358,51 @@
       
 
       
-        <span itemprop="articleBody"><h3 id="原子操作"><a href="#原子操作" class="headerlink" title="原子操作"></a>原子操作</h3><p>自增(++i)操作在多线程环境下出现错误是因为这个操作被编译成的代码不止一条指令，因此在执行的时候可能执行到一半被系统调度打乱，去执行别的代码。我们把单指令的操作称为原子的(atomic),因为无论如何，单条指令的执行时不会被打乱的，为了避免出错，很多体系结构都提供了一些常用操作的原子指令。</p>
-<h3 id="同步与锁"><a href="#同步与锁" class="headerlink" title="同步与锁"></a>同步与锁</h3><p>为了避免多个线程同时读写同一个数据而产生不可预料的后果，我们要将多个线程对同一个数据的访问同步。所谓同步，指一个线程正在访问数据的时候，其他线程不能对同一个数据访问。</p>
-<p>同步的最常用方法是使用锁。<strong>==锁是一种非强制的机制==</strong>，每个线程在访问之前试图去获取锁，并在访问之后释放锁，如果锁在被访问的时候已经被占用，线程等待，直到锁重新可用。</p>
-<p>二元信号量是最简单的一种锁，她只有两种状态，占用和非占用，它适合只能被唯一线程访问的资源；对于允许多个线程并发访问的资源，多元信号量简称信号量(semaphore)，她是一个很好的选择，多元信号量维护一个计数。</p>
-<h3 id="互斥量-mutex"><a href="#互斥量-mutex" class="headerlink" title="互斥量 (mutex)"></a>互斥量 (mutex)</h3><p>和二元信号量类似，资源仅同时允许一个线程访问，但和信号量不同的是，信号量在整个系统中可以被任意线程捕获，也就是说同一个信号量可以被系统的一个线程获取后由另一个线程释放，而互斥量则要求哪个线程获取了互斥量，哪个线程就要释放整个锁，其他线程越俎代庖释放信号量是无效的。</p>
-<h3 id="临界区-Critical-section"><a href="#临界区-Critical-section" class="headerlink" title="临界区 (Critical section)"></a>临界区 (Critical section)</h3><p>临界区是比互斥量更严格的同步手段，在术语中，把临界区的锁的获取称为进入临界区，把锁的释放称为离开临界区。临界区和互斥量的区别在于，互斥量和信号量是在系统的任何进程都是可见的，然而临界区的作用范围是仅限于本进程，其他的进程无法获取。除此之外，临界区和互斥量有相同的性质。</p>
-<h3 id="读写锁"><a href="#读写锁" class="headerlink" title="读写锁"></a>读写锁</h3><p>致力于一种更加特定场合的同步，对于一段数据，多个线程同时读总是没问题的，但假设操作不是原子的，只要有任何一个线程试图对这个数据进行修改，就必须使用同步手段避免出错。假如我们使用上述信号量，互斥量、临界区的方式进行修改，尽管正确，但是比较麻烦，对于读频繁但是写入比较少的情况，也比较低效。</p>
-<p>读写锁可以解决这个问题，对于同一个锁，读写锁有两种获取方式，共享的或者是独占的，当锁处于自由的状态时，试图以任意一种方式获取锁都能成功；如果锁处于共享的状态，其他线程以共享的方式获取锁仍然可以成功，此时这个锁分配给了多个线程，然而，如果其他线程试图以独占的方式获取锁已经处于共享状态的锁，它必须等待锁被所有的线程释放；相应的，处于独占状态的锁将阻止任何其他线程获取该锁。</p>
-<h3 id="过度优化"><a href="#过度优化" class="headerlink" title="过度优化"></a>过度优化</h3><p>线程安全是一个非常烫手的山芋，因为即使合理地使用锁，也不一定能保证线程安全，这是落后的编译器技术已经无法满足日益增长的并发需求。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">x=0;</span><br><span class="line">Thread1     Thread2</span><br><span class="line">lock();     lock();</span><br><span class="line">x++;        x++;</span><br><span class="line">unlock();   unlock();</span><br></pre></td></tr></table></figure>
-<p>如果编译器为了提高x的访问速度，把x放到某个寄存器里面，由于CPU的动态调度和编译器为了优化而交换毫不相干的相邻指令，此时锁失效。</p>
-<p>我们可以使用 volatile关键字阻止过度优化，其基本可以做2件事，一是阻止编译器为了提高速度将一个变量缓存到寄存器里面而不写会，而是阻止编译器调整操作volatile变量的指令顺序。</p>
-<h3 id="cpu-乱序执行"><a href="#cpu-乱序执行" class="headerlink" title="cpu 乱序执行"></a>cpu 乱序执行</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#define barrier() __asm__ volatile (&quot;lwsync&quot;)</span><br><span class="line">volatile T* pInst = 0;</span><br><span class="line"></span><br><span class="line">T* GetInstance()</span><br><span class="line">&#123;</span><br><span class="line">    if(!pInst)</span><br><span class="line">    &#123;</span><br><span class="line">        Lock();</span><br><span class="line">        if()</span><br><span class="line">        &#123;</span><br><span class="line">            T* temp = new T;</span><br><span class="line">            barrier();</span><br><span class="line">            pInst = temp;</span><br><span class="line">        &#125;</span><br><span class="line">        unLock();</span><br><span class="line">    &#125;</span><br><span class="line">    return pInst;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面的代码加了一个barrier，是为了解决CPU的乱序执行。C++里面的new实际包含两个步骤，1、分配内存；2.调用构造函数。pInst = new T;包含三个步骤，1.分配内存，2，在内存的位置调用构造函数，3.将内存的值付给pInst, 其中2 3 是可能乱序执行的。</p>
-<p>通常情况下，调用CPU提供的一条指令可以阻止CPU乱序，这条指令通常被称为barrier，一条barrier指令会阻止CPU将指令之前的指令交换到barrier之后。在powerPC中，这条指令是 lwsync.</p>
-<script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
-</script>
+        <span itemprop="articleBody"><h3 id="怎样对声音进行数字化？"><a href="#怎样对声音进行数字化？" class="headerlink" title="怎样对声音进行数字化？"></a>怎样对声音进行数字化？</h3><p>对声音进行数字化，首先要使用特定的设备对声音进行采集，比如麦克风就是常见的声音采集设备。麦克风里面有一层碳膜，非常薄而且十分敏感。声音是一种纵波，会压缩空气也会压缩这层碳膜，碳膜在受到挤压时也会发出振动，在碳膜的下方就是一个电极，碳膜在振动的时候会接触电极，接触时间的长短和频率与声波的振动幅度和频率有关，这样就完成了声音信号到电信号的转换。之后再经过放大电路处理，就可以实施后面的采样、量化处理了。</p>
+<p>声音由波形组成，包含了不同频率、振幅的波的叠加。为了在数字媒体内表示这些波形，需要对波形进行<strong>采样</strong>，其采样率需要满足可以表示的声音的最高频率；同时还需要存储足够的<strong>位深</strong>，以表示声音样本中波形的适当振幅。</p>
+<p>声音处理设备重建频率的能力称为其<strong>频率响应</strong>，创造适当响度和柔度的能力称为其<strong>动态范围</strong>，这些术语通常统称为声音设备的<strong>保真度</strong>。最简单的编码方式可以利用这两个基本元素重建声音，同时还能够高效地存储和传输数据。</p>
+<p>声音的数字化过程是将模拟信号（连续时间信号）转化为数字信号（离散时间信号）的过程，包括 3 个步骤：</p>
+<ul>
+<li><strong>采样</strong>：以一定采样率在时域内获取离散信号。</li>
+<li><strong>量化</strong>：每个采样点幅度的数字化表示。</li>
+<li><strong>编码</strong>：以一定格式存储数据。</li>
+</ul>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/how-to-desc-audio.png" alt="image"></p>
+<p><strong>经过数字化处理后的数字音频包含如下三要素：</strong></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio-desc.png" alt="image"></p>
+<h3 id="采样率"><a href="#采样率" class="headerlink" title="采样率"></a>采样率</h3><p>对模拟信号的采样一般遵循奈奎斯特采样定理：如果一个信号是带限的（即它的傅立叶变换在某一有限频带范围以外均为零），并且它的样本取得足够密（相对于信号中的最高频率而言），那么这些样本值就能唯一地用来表征这一信号，并且能从这些样本中把信号完全恢复出来。为了不失真地恢复模拟信号，采样频率应该不小于模拟信号频谱中最高频率的 2 倍。一般实际应用中保证采样频率为信号最高频率的 2.56～4 倍。</p>
+<p>数字信号由模拟信号采样而来，如果满足采样定理，数字信号就可以完全恢复原始的模拟信号。</p>
+<p>从发声的角度来看，人类发出的声音信号频率绝大部分在 5k Hz 以内，因此以 10k Hz 的频率来采样就足够了。</p>
+<p>生活中常见的采样率：</p>
+<blockquote>
+<p>8,000 Hz：电话所用采样率，对于人的说话已经足够；<br>11,025 Hz：AM 调幅广播所用采样率；<br>22,050 Hz 和 24,000 Hz：FM调频广播所用采样率；<br>32,000 Hz：miniDV 数码视频 camcorder、DAT（LP mode）所用采样率；<br>44,100 Hz：音频 CD，也常用于 MPEG-1 音频（VCD/SVCD/MP3）所用采样率；<br>47,250 Hz：商用 PCM 录音机所用采样率；<br>48,000 Hz：miniDV、数字电视、DVD、DAT、电影和专业音频所用的数字声音所用采样率；<br>50,000 Hz：商用数字录音机所用采样率；<br>96,000 或者 192,000 Hz：DVD-Audio、一些 LPCM DVD 音轨、BD-ROM（蓝光盘）音轨、和 HD-DVD（高清晰度 DVD）音轨所用所用采样率；<br>2.8224 MHz：Direct Stream Digital 的 1 位 sigma-delta modulation 过程所用采样率。</p>
+</blockquote>
+<h3 id="量化位深（采样大小）"><a href="#量化位深（采样大小）" class="headerlink" title="量化位深（采样大小）"></a>量化位深（采样大小）</h3><p>量化位深是对模拟音频信号的幅度轴进行数字化，它决定了模拟信号数字化以后的动态范围。比如，8 bit 位深可以拥有 48 分贝的动态范围，16 bit 位深可以拥有 96 分贝的动态范围，24 bit 位深可以拥有 144 分贝的动态范围，32 bit 位深可以拥有 192 分贝的动态范围。这里位深和动态范围的数值对应关系的计算公式可以从上文声压级的计算公式推导而来。位深体现的是能表示的值的范围，比如 16 bit 能表示的最大值是 216 - 1 = 65535，那么取其最大值就能计算它能表示的最大声压级：最大声压级 = 20 × lg(65535) = 96.33。所以 16 bit 的位深可以最大表示 96 分贝。</p>
+<h3 id="声道"><a href="#声道" class="headerlink" title="声道"></a>声道</h3><p>声道是指声音在录制或播放时在不同空间位置采集或回放的相互独立的音频信号，所以声道数也就是声音录制时的音源数量或回放时相应的扬声器数量。</p>
+<blockquote>
+<p>单声道（Mono）：是以单个声道来重现声音。它只用了一个麦克风，一个扬声器或是耳机、并联扬声器，并从同样的信号路径送入信号，在并联扬声器中，虽有多个扬声器，但每个扬声器送入的仍是同一信号。</p>
+<p>立体声（Stereo）：是使用两个或多个独立的音效通道，在一对以对称方式配置的扬声器上出现。以此方法所发出的声音，在不同方向仍可保持自然与悦耳。</p>
+<p>5.1 声道：包含一个正面声道、左前方声道、右前方声道、左环绕声道、右环绕声道，以及一个用来重放 120 Hz 以下超低频的声道。最早应用于早期的电影院，如杜比 AC-3。</p>
+<p>7.1 声道：在 5.1 声道的基础上，把左右的环绕声道拆分为左右环绕声道以及左右后置声道。主要应用于蓝光以及现代的电影院。</p>
+</blockquote>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio-store-calc.png" alt="image"></p>
+<h3 id="PCM"><a href="#PCM" class="headerlink" title="PCM"></a>PCM</h3><p>我们在手机、电脑上处理的声音数据，就是声音经过数字化后的数据，也就是数字音频数据，其中最常见的格式是 PCM（Pulse Code Modulation），即脉冲编码调制格式。得到 PCM 数据的主要过程是将话音等模拟信号每隔一定时间进行取样，使其离散化，同时将抽样值按分层单位四舍五入取整量化，同时将抽样值按一组二进制码来表示抽样脉冲的幅值。也就是我们在上文中讲到的采样、量化、编码过程。</p>
+<p>在计算机应用中，PCM 是能达到音频最高保真水平的格式，它被广泛用于素材保存及音乐欣赏，PCM 也因此被称为无损编码格式。但这并不意味着 PCM 就能够确保信号绝对保真，它只能做到最大程度的无限接近原始声音。要计算一个 PCM 音频流的码率需要数字音频的三要素信息即可：码率 = 采样率 × 量化位深 × 声道数。</p>
+<p>由于 PCM 编码是无损编码，且广泛应用，所以我们通常可以认为音频的裸数据格式就是 PCM 的。但为了节省存储空间以及传输成本，通常我们会对音频 PCM 数据进行压缩，这也就是音频编码，比如 MP3、AAC、OPUS 都是我们常见的音频编码格式。</p>
+<pre><code>data-repo=&quot;changan29/changan29.github.io&quot;
+data-repo-id=&quot;MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=&quot;
+data-category=&quot;Announcements&quot;
+data-category-id=&quot;DIC_kwDOC6bf5s4CSvAi&quot;
+data-mapping=&quot;url&quot;
+data-strict=&quot;0&quot;
+data-reactions-enabled=&quot;1&quot;
+data-emit-metadata=&quot;0&quot;
+data-input-position=&quot;bottom&quot;
+data-theme=&quot;preferred_color_scheme&quot;
+data-lang=&quot;zh-CN&quot;
+crossorigin=&quot;anonymous&quot;
+async&gt;
+</code></pre><p></p>
 </span>
       
     </div>
@@ -379,9 +411,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/OS/" rel="tag">#OS</a>
-          
-            <a href="/tags/Thread/" rel="tag">#Thread</a>
+            <a href="/tags/音视频/" rel="tag">#音视频</a>
           
         </div>
       
@@ -390,13 +420,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/02/15/loader_and_start_process/" rel="prev">程序员的自我修养 - 可执行文件的装载与进程</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/12/30/linklist_timer/" rel="next">一种定时器的实现</a>
+              <a href="/2023/04/06/audio_basic_01/" rel="next">音视频基础-音频基础-01</a>
             
           </div>
         </div>
@@ -630,7 +658,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#原子操作"><span class="nav-number">1.</span> <span class="nav-text">原子操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#同步与锁"><span class="nav-number">2.</span> <span class="nav-text">同步与锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#互斥量-mutex"><span class="nav-number">3.</span> <span class="nav-text">互斥量 (mutex)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#临界区-Critical-section"><span class="nav-number">4.</span> <span class="nav-text">临界区 (Critical section)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#读写锁"><span class="nav-number">5.</span> <span class="nav-text">读写锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#过度优化"><span class="nav-number">6.</span> <span class="nav-text">过度优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cpu-乱序执行"><span class="nav-number">7.</span> <span class="nav-text">cpu 乱序执行</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#怎样对声音进行数字化？"><span class="nav-number">1.</span> <span class="nav-text">怎样对声音进行数字化？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#采样率"><span class="nav-number">2.</span> <span class="nav-text">采样率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#量化位深（采样大小）"><span class="nav-number">3.</span> <span class="nav-text">量化位深（采样大小）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#声道"><span class="nav-number">4.</span> <span class="nav-text">声道</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PCM"><span class="nav-number">5.</span> <span class="nav-text">PCM</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
