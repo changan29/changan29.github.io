@@ -31,7 +31,7 @@
 
 
 
-  <meta name="keywords" content="OS," />
+  <meta name="keywords" content="音视频," />
 
 
 
@@ -40,18 +40,27 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="文件描述符限制文件描述符Linux的核心思想之一就是”一切皆文件”。即Linux中所有的内容都是以文件的形式保存和管理的，它为不同类型的文件提供了统一的操作接口，对于不同类型的文件，我们都可以使用fopen()/fclose()/fwrite()/fread()等对这些文件进行读写处理。在Linux中，普通文件、目录、链接文件、字符设备、块设备以及网络套接字等等都以文件的形式存在。 文件描述符（文">
-<meta name="keywords" content="OS">
+<meta name="description" content="音频重采样">
+<meta name="keywords" content="音视频">
 <meta property="og:type" content="article">
-<meta property="og:title" content="文件描述符限制">
-<meta property="og:url" content="http://oneyearago.me/2019/03/30/file_handler_limit/index.html">
+<meta property="og:title" content="音视频基础-音频基础-04">
+<meta property="og:url" content="http://oneyearago.me/2023/04/13/audio-basic-04/index.html">
 <meta property="og:site_name" content="changan&#39;s blog">
-<meta property="og:description" content="文件描述符限制文件描述符Linux的核心思想之一就是”一切皆文件”。即Linux中所有的内容都是以文件的形式保存和管理的，它为不同类型的文件提供了统一的操作接口，对于不同类型的文件，我们都可以使用fopen()/fclose()/fwrite()/fread()等对这些文件进行读写处理。在Linux中，普通文件、目录、链接文件、字符设备、块设备以及网络套接字等等都以文件的形式存在。 文件描述符（文">
+<meta property="og:description" content="音频重采样">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2022-11-24T13:55:54.190Z">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio_codec_1.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio_codec_2.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio_codec_3.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio_codec_4.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio_codec_5.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio_codec_6.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio_codec_7.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio_codec_8.png">
+<meta property="og:updated_time" content="2024-06-15T07:19:51.394Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="文件描述符限制">
-<meta name="twitter:description" content="文件描述符限制文件描述符Linux的核心思想之一就是”一切皆文件”。即Linux中所有的内容都是以文件的形式保存和管理的，它为不同类型的文件提供了统一的操作接口，对于不同类型的文件，我们都可以使用fopen()/fclose()/fwrite()/fread()等对这些文件进行读写处理。在Linux中，普通文件、目录、链接文件、字符设备、块设备以及网络套接字等等都以文件的形式存在。 文件描述符（文">
+<meta name="twitter:title" content="音视频基础-音频基础-04">
+<meta name="twitter:description" content="音频重采样">
+<meta name="twitter:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio_codec_1.png">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -61,7 +70,7 @@
   };
 </script>
 
-  <title> 文件描述符限制 | changan's blog </title>
+  <title> 音视频基础-音频基础-04 | changan's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -311,7 +320,7 @@
           
           
             
-              文件描述符限制
+              音视频基础-音频基础-04
             
           
         </h1>
@@ -320,8 +329,8 @@
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2019-03-30T16:08:45+08:00" content="2019-03-30">
-            2019-03-30
+          <time itemprop="dateCreated" datetime="2023-04-13T18:20:39+08:00" content="2023-04-13">
+            2023-04-13
           </time>
         </span>
 
@@ -330,8 +339,8 @@
             &nbsp; | &nbsp; In
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/OS/" itemprop="url" rel="index">
-                  <span itemprop="name">OS</span>
+                <a href="/categories/音视频/" itemprop="url" rel="index">
+                  <span itemprop="name">音视频</span>
                 </a>
               </span>
 
@@ -354,19 +363,17 @@
       
 
       
-        <span itemprop="articleBody"><h3 id="文件描述符限制"><a href="#文件描述符限制" class="headerlink" title="文件描述符限制"></a>文件描述符限制</h3><h4 id="文件描述符"><a href="#文件描述符" class="headerlink" title="文件描述符"></a>文件描述符</h4><p>Linux的核心思想之一就是”一切皆文件”。即Linux中所有的内容都是以文件的形式保存和管理的，它为不同类型的文件提供了统一的操作接口，对于不同类型的文件，我们都可以使用fopen()/fclose()/fwrite()/fread()等对这些文件进行读写处理。在Linux中，普通文件、目录、链接文件、字符设备、块设备以及网络套接字等等都以文件的形式存在。</p>
-<p>文件描述符（文件句柄）是Linux内核为了高效管理已被打开的文件所创建的索引，它是一个非负整数，用于指代被打开的文件。文件打开后，所有对该文件的操作都通过文件描述符进行操作。</p>
-<p>文件描述符是系统的重要资源，当打开过多文件时会出现把系统内存耗尽的情况，所以Linux提供了多种维度对文件描述符的使用上限进行限制，以避免该问题。</p>
-<h4 id="文件描述符限制-1"><a href="#文件描述符限制-1" class="headerlink" title="文件描述符限制"></a>文件描述符限制</h4><h5 id="file-max"><a href="#file-max" class="headerlink" title="file-max"></a>file-max</h5><p>file_max用于限制整个系统能够分配的文件描述符，即当前系统下所有用户下的所有进程，其分配的所有文件描述符之和不能超过该值。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">dailybuild@9.77.10.46:~&gt;cat /proc/sys/fs/file-max </span><br><span class="line">3043564</span><br><span class="line"># 临时修改，机器重启后失效</span><br><span class="line">sysctl -w fs.file-max=102400</span><br><span class="line"></span><br><span class="line"># 永久修改（直接在/etc/sysctl.conf文件最后添加一行fs.file-max=102400），执行下面命令使配置生效。</span><br><span class="line">sysctl -p</span><br></pre></td></tr></table></figure></p>
-<h5 id="file-nr"><a href="#file-nr" class="headerlink" title="file-nr"></a>file-nr</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dailybuild@9.77.10.46:~&gt;cat /proc/sys/fs/file-nr</span><br><span class="line">1952    0       3043564</span><br></pre></td></tr></table></figure>
-<p>file-nr是一个只读文件,它记录了当前系统中文件描述符的使用情况，第一个（6144）是系统已经分配的文件描述符数；第二个（0）是系统已经分配但未使用的文件描述符数；第三个是内核最大能分配的文件描述符数，与file-max一致。我们可以通过查看此数据判断文件描述符是够已经将要用尽和是否需要扩file-max字段。</p>
-<h5 id="nr-open"><a href="#nr-open" class="headerlink" title="nr_open"></a>nr_open</h5><p>nr_open用于限制单个进程可以分配的最大文件描述符，该限制对于系统上所有用户下的所有进程都生效，查看当时如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dailybuild@9.77.10.46:~&gt;cat /proc/sys/fs/nr_open</span><br><span class="line">1048576</span><br></pre></td></tr></table></figure></p>
-<h5 id="soft-limit-amp-amp-hard-limit"><a href="#soft-limit-amp-amp-hard-limit" class="headerlink" title="soft limit &amp;&amp; hard limit"></a>soft limit &amp;&amp; hard limit</h5><p>Soft limit 和 Hard limit# 在Linux的系统中对于进程(Process)会有一些限制，这就所谓的limit，在实际应用中最常见的就是对打开文件(Open Files)的限制，在配置web 服务如nginx时就会用到。在linux中这些限制是分为软限制(soft limit)和硬限制(hard limit)的。他们的区别就是软限制可以在程序的进程中自行改变(突破限制)，而硬限制则不行(除非程序进程有root权限)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ulimit -Sn 查看的是软限制</span><br><span class="line"></span><br><span class="line">ulimit -Hn 查看的是硬限制</span><br></pre></td></tr></table></figure>
-<p>在这个文件中我们可以对cpu, 内存等等设置限制</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/security/limit.conf</span><br></pre></td></tr></table></figure>
+        <span itemprop="articleBody"><p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio_codec_1.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio_codec_2.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio_codec_3.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio_codec_4.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio_codec_5.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio_codec_6.png" alt="image"></p>
+<h3 id="音频重采样"><a href="#音频重采样" class="headerlink" title="音频重采样"></a>音频重采样</h3><p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio_codec_7.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio_codec_8.png" alt="image"></p>
 <script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
 </script>
+
 </span>
       
     </div>
@@ -375,7 +382,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/OS/" rel="tag">#OS</a>
+            <a href="/tags/音视频/" rel="tag">#音视频</a>
           
         </div>
       
@@ -384,13 +391,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/04/02/make_a_linux_9/" rel="prev">写一个操作系统_09 C语言和汇编语言</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/03/29/make_a_linux_8/" rel="next">写一个操作系统_08 内核与C语言</a>
+              <a href="/2023/04/12/audio-basic-03/" rel="next">音视频基础-音频基础-03</a>
             
           </div>
         </div>
@@ -624,7 +629,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#文件描述符限制"><span class="nav-number">1.</span> <span class="nav-text">文件描述符限制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#文件描述符"><span class="nav-number">1.1.</span> <span class="nav-text">文件描述符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#文件描述符限制-1"><span class="nav-number">1.2.</span> <span class="nav-text">文件描述符限制</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#file-max"><span class="nav-number">1.2.1.</span> <span class="nav-text">file-max</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#file-nr"><span class="nav-number">1.2.2.</span> <span class="nav-text">file-nr</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#nr-open"><span class="nav-number">1.2.3.</span> <span class="nav-text">nr_open</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#soft-limit-amp-amp-hard-limit"><span class="nav-number">1.2.4.</span> <span class="nav-text">soft limit &amp;&amp; hard limit</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#音频重采样"><span class="nav-number">1.</span> <span class="nav-text">音频重采样</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
