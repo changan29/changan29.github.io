@@ -31,7 +31,7 @@
 
 
 
-  <meta name="keywords" content="shell," />
+  <meta name="keywords" content="音视频," />
 
 
 
@@ -40,18 +40,46 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="处理流程当使用 awk 命令处理一个或者多个文件时，它会依次读取文件的每一行内容，然后对其进行处理，awk 命令默认从 stdio 标准输入获取文件内容，awk 使用一对单引号来表示一些可执行的脚本代码，在可执行脚本代码里面，使用一对花括号来表示一段可执行代码块，可以同时存在多个代码块。awk 的每个花括号内同时可以有多个指令，每一个指令用分号分隔，awk 其实就是一个脚本编程语言。 格式:  a">
-<meta name="keywords" content="shell">
+<meta name="description" content="有损压缩帧内压缩               帧间压缩      案例  无损压缩">
+<meta name="keywords" content="音视频">
 <meta property="og:type" content="article">
-<meta property="og:title" content="awk note">
-<meta property="og:url" content="http://oneyearago.me/2019/10/29/awk/index.html">
+<meta property="og:title" content="音视频基础- H264视频编码">
+<meta property="og:url" content="http://oneyearago.me/2023/04/26/vedio-basic-02/index.html">
 <meta property="og:site_name" content="changan&#39;s blog">
-<meta property="og:description" content="处理流程当使用 awk 命令处理一个或者多个文件时，它会依次读取文件的每一行内容，然后对其进行处理，awk 命令默认从 stdio 标准输入获取文件内容，awk 使用一对单引号来表示一些可执行的脚本代码，在可执行脚本代码里面，使用一对花括号来表示一段可执行代码块，可以同时存在多个代码块。awk 的每个花括号内同时可以有多个指令，每一个指令用分号分隔，awk 其实就是一个脚本编程语言。 格式:  a">
+<meta property="og:description" content="有损压缩帧内压缩               帧间压缩      案例  无损压缩">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2022-11-24T13:55:54.162Z">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_01.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_02.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_03.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_04.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_05.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_06.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_07.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_08.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_09.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_10.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_11.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_12.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_13.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_14.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_15.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_16.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_17.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_18.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_19.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_20.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_21.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_22.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_23.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_24.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_25.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_26.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_27.png">
+<meta property="og:updated_time" content="2024-06-15T15:32:38.259Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="awk note">
-<meta name="twitter:description" content="处理流程当使用 awk 命令处理一个或者多个文件时，它会依次读取文件的每一行内容，然后对其进行处理，awk 命令默认从 stdio 标准输入获取文件内容，awk 使用一对单引号来表示一些可执行的脚本代码，在可执行脚本代码里面，使用一对花括号来表示一段可执行代码块，可以同时存在多个代码块。awk 的每个花括号内同时可以有多个指令，每一个指令用分号分隔，awk 其实就是一个脚本编程语言。 格式:  a">
+<meta name="twitter:title" content="音视频基础- H264视频编码">
+<meta name="twitter:description" content="有损压缩帧内压缩               帧间压缩      案例  无损压缩">
+<meta name="twitter:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_01.png">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -61,7 +89,7 @@
   };
 </script>
 
-  <title> awk note | changan's blog </title>
+  <title> 音视频基础- H264视频编码 | changan's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -311,7 +339,7 @@
           
           
             
-              awk note
+              音视频基础- H264视频编码
             
           
         </h1>
@@ -320,8 +348,8 @@
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2019-10-29T17:40:39+08:00" content="2019-10-29">
-            2019-10-29
+          <time itemprop="dateCreated" datetime="2023-04-26T18:20:39+08:00" content="2023-04-26">
+            2023-04-26
           </time>
         </span>
 
@@ -330,8 +358,8 @@
             &nbsp; | &nbsp; In
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/shell/" itemprop="url" rel="index">
-                  <span itemprop="name">shell</span>
+                <a href="/categories/音视频/" itemprop="url" rel="index">
+                  <span itemprop="name">音视频</span>
                 </a>
               </span>
 
@@ -354,117 +382,36 @@
       
 
       
-        <span itemprop="articleBody"><h3 id="处理流程"><a href="#处理流程" class="headerlink" title="处理流程"></a>处理流程</h3><p>当使用 awk 命令处理一个或者多个文件时，它会依次读取文件的每一行内容，然后对其进行处理，awk 命令默认从 stdio 标准输入获取文件内容，awk 使用一对单引号来表示一些可执行的脚本代码，在可执行脚本代码里面，使用一对花括号来表示一段可执行代码块，可以同时存在多个代码块。awk 的每个花括号内同时可以有多个指令，每一个指令用分号分隔，awk 其实就是一个脚本编程语言。</p>
-<p>格式:  awk ‘condition action’ filename</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk -F &apos;[|:;]&apos; &apos;&#123;if ($1 &gt; &quot;m&quot;) print $1; else print &quot;---&quot;&#125;&apos; /etc/passwd</span><br></pre></td></tr></table></figure>
-<p>脚本化:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#! /bin/awk -f</span><br><span class="line">BEGIN    &#123;print &quot;begin to awk\n&quot;&#125; </span><br><span class="line">$s ~ /beijing/ </span><br><span class="line">END &#123; print &quot;end of awk&quot; &#125;</span><br><span class="line"></span><br><span class="line"># xxx.awk xxx.data</span><br></pre></td></tr></table></figure>
-<h3 id="内置变量"><a href="#内置变量" class="headerlink" title="内置变量"></a>内置变量</h3><table>
-<thead>
-<tr>
-<th>变量</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>$0</td>
-<td>行内容</td>
-</tr>
-<tr>
-<td>$1</td>
-<td>第一列字段</td>
-</tr>
-<tr>
-<td>NF</td>
-<td>当前行有多少个字段</td>
-</tr>
-<tr>
-<td>$NF</td>
-<td>最后一个字段</td>
-</tr>
-<tr>
-<td>NR</td>
-<td>当前处理的是第几行</td>
-</tr>
-<tr>
-<td>FILENAME</td>
-<td>当前文件名</td>
-</tr>
-<tr>
-<td>FS</td>
-<td>字段分隔符，默认是空格和制表符。</td>
-</tr>
-<tr>
-<td>RS</td>
-<td>行分隔符，用于分割每一行，默认是换行符。</td>
-</tr>
-<tr>
-<td>OFS</td>
-<td>输出字段的分隔符，用于打印时分隔字段，默认为空格。</td>
-</tr>
-<tr>
-<td>ORS</td>
-<td>输出记录的分隔符，用于打印时分隔记录，默认为换行符。</td>
-</tr>
-<tr>
-<td>OFMT</td>
-<td>数字输出的格式，默认为％.6g。</td>
-</tr>
-</tbody>
-</table>
-<h3 id="内置函数"><a href="#内置函数" class="headerlink" title="内置函数"></a>内置函数</h3><table>
-<thead>
-<tr>
-<th>func</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>tolower()</td>
-<td>字符转为小写</td>
-</tr>
-<tr>
-<td>length()</td>
-<td>返回字符串长度</td>
-</tr>
-<tr>
-<td>substr()</td>
-<td>返回子字符串</td>
-</tr>
-<tr>
-<td>sin()</td>
-<td>正弦</td>
-</tr>
-<tr>
-<td>cos()</td>
-<td>余弦</td>
-</tr>
-<tr>
-<td>sqrt()</td>
-<td>平方根</td>
-</tr>
-<tr>
-<td>rand()</td>
-<td>随机数</td>
-</tr>
-</tbody>
-</table>
-<h3 id="组合使用"><a href="#组合使用" class="headerlink" title="组合使用"></a>组合使用</h3><p>使用 awk 过滤 history 输出，找到最常用的命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@centos ~]# history | awk &apos;&#123;a[$4]++&#125;END&#123;for(i in a)&#123;print a[i] &quot; &quot; i&#125;&#125;&apos; | sort -rn | head</span><br><span class="line">267 ll</span><br><span class="line">122 vim</span><br><span class="line">118 cd</span><br><span class="line">54 awk</span><br><span class="line">34 man</span><br><span class="line">28 g++</span><br><span class="line">23 rm</span><br><span class="line">21 cat</span><br><span class="line">16 mkdir</span><br><span class="line">13 gcc</span><br></pre></td></tr></table></figure>
-<p>过滤文件中重复行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;!x[$0]++&apos; &lt;file&gt;</span><br></pre></td></tr></table></figure>
-<p>假设有一个文本，每一行都是一个 int 数值，想要计算这个文件每一行的和</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;&#123;s+=$1&#125; ENG &#123;printf &quot;%.0f&quot;, s&#125;&apos; /path/to/file</span><br></pre></td></tr></table></figure>
-<h3 id="next"><a href="#next" class="headerlink" title="next"></a>next</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">No      Item_Name               Price           Quantity</span><br><span class="line">1       Mangoes                 $3.45              5</span><br><span class="line">2       Apples                  $2.45              25</span><br><span class="line">3       Pineapples              $4.45              55</span><br><span class="line">4       Tomatoes                $3.45              25</span><br><span class="line">5       Onions                  $1.45              15</span><br><span class="line">6       Bananas                 $3.45              30</span><br><span class="line"></span><br><span class="line">awk &apos;$4 &lt;= 20 &#123; printf &quot;%s\t%s\n&quot;, $0,&quot;*&quot; ; &#125; $4 &gt; 20 &#123; print $0 ;&#125; &apos; food_list.txt </span><br><span class="line"></span><br><span class="line">No    Item_Name     Price      Quantity</span><br><span class="line">1     Mangoes       $3.45       5    *</span><br><span class="line">2     Apples        $2.45      25</span><br><span class="line">3     Pineapples    $4.45      55</span><br><span class="line">4     Tomatoes      $3.45      25 </span><br><span class="line">5     Onions        $1.45      15   *</span><br><span class="line">6     Bananas       $3.45      30</span><br></pre></td></tr></table></figure>
-<p>当第一个表达式用{ printf “%s\t%s\n”, $0,”**” ; }命令进行标注的时候在同样的步骤第二个表达式也进行了判断这样就浪费了时间; 这个东西不是 if else; 而是都判断的，不判断后一个，可以 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;$4 &lt;= 20 &#123; printf &quot;%s\t%s\n&quot;, $0,&quot;*&quot; ; next; &#125; $4 &gt; 20 &#123; print $0 ;&#125; &apos; food_list.txt</span><br></pre></td></tr></table></figure>
-<h3 id="REF"><a href="#REF" class="headerlink" title="REF"></a>REF</h3><ul>
-<li><a href="http://einverne.github.io/post/2018/01/awk.html" target="_blank" rel="noopener">awk</a></li>
-</ul>
+        <span itemprop="articleBody"><h2 id="有损压缩"><a href="#有损压缩" class="headerlink" title="有损压缩"></a>有损压缩</h2><h3 id="帧内压缩"><a href="#帧内压缩" class="headerlink" title="帧内压缩"></a>帧内压缩</h3><p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_01.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_02.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_03.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_04.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_05.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_06.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_07.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_08.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_09.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_10.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_11.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_12.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_13.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_14.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_15.png" alt="image"></p>
+<h3 id="帧间压缩"><a href="#帧间压缩" class="headerlink" title="帧间压缩"></a>帧间压缩</h3><p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_16.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_17.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_18.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_19.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_20.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_21.png" alt="image"></p>
+<h3 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h3><p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_22.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_23.png" alt="image"></p>
+<h2 id="无损压缩"><a href="#无损压缩" class="headerlink" title="无损压缩"></a>无损压缩</h2><p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_24.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_25.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_26.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_codec_27.png" alt="image"></p>
 <script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
 </script>
+
 </span>
       
     </div>
@@ -473,7 +420,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/shell/" rel="tag">#shell</a>
+            <a href="/tags/音视频/" rel="tag">#音视频</a>
           
         </div>
       
@@ -482,13 +429,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/11/25/net_shake_hand/" rel="prev">TCP的几个问题</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/10/24/linux_timer/" rel="next">linux定时器时间轮算法</a>
+              <a href="/2023/04/19/vedio-basic-01/" rel="next">音视频基础-视频基础-01</a>
             
           </div>
         </div>
@@ -722,7 +667,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#处理流程"><span class="nav-number">1.</span> <span class="nav-text">处理流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内置变量"><span class="nav-number">2.</span> <span class="nav-text">内置变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内置函数"><span class="nav-number">3.</span> <span class="nav-text">内置函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组合使用"><span class="nav-number">4.</span> <span class="nav-text">组合使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#next"><span class="nav-number">5.</span> <span class="nav-text">next</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#REF"><span class="nav-number">6.</span> <span class="nav-text">REF</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#有损压缩"><span class="nav-number">1.</span> <span class="nav-text">有损压缩</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#帧内压缩"><span class="nav-number">1.1.</span> <span class="nav-text">帧内压缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#帧间压缩"><span class="nav-number">1.2.</span> <span class="nav-text">帧间压缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#案例"><span class="nav-number">1.3.</span> <span class="nav-text">案例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#无损压缩"><span class="nav-number">2.</span> <span class="nav-text">无损压缩</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
