@@ -40,22 +40,22 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="怎样对声音进行数字化？对声音进行数字化，首先要使用特定的设备对声音进行采集，比如麦克风就是常见的声音采集设备。麦克风里面有一层碳膜，非常薄而且十分敏感。声音是一种纵波，会压缩空气也会压缩这层碳膜，碳膜在受到挤压时也会发出振动，在碳膜的下方就是一个电极，碳膜在振动的时候会接触电极，接触时间的长短和频率与声波的振动幅度和频率有关，这样就完成了声音信号到电信号的转换。之后再经过放大电路处理，就可以实施后">
+<meta name="description" content="音频编码基本原理（1） 音频信号的冗余信息数字音频信号如果不加压缩地直接进行传送，将会占用极大的带宽。例如，一套双声道数字音频若取样频率为44.1KHz，每样值按16bit量化，则其码率为： 2*44.1kHz*16bit=1.411Mbit/s 如此大的带宽将给信号的传输和处理都带来许多困难，因此必须采取音频压缩技术对音频数据进行处理，才能有效地传输音频数据。 数字音频压缩编码在保证信号在听觉方">
 <meta name="keywords" content="音视频">
 <meta property="og:type" content="article">
-<meta property="og:title" content="音视频基础-音频基础-02">
-<meta property="og:url" content="http://oneyearago.me/2023/04/09/audio-basic-02/index.html">
+<meta property="og:title" content="音视频基础-音频基础-03">
+<meta property="og:url" content="http://oneyearago.me/2023/04/09/audio-basic-03/index.html">
 <meta property="og:site_name" content="changan&#39;s blog">
-<meta property="og:description" content="怎样对声音进行数字化？对声音进行数字化，首先要使用特定的设备对声音进行采集，比如麦克风就是常见的声音采集设备。麦克风里面有一层碳膜，非常薄而且十分敏感。声音是一种纵波，会压缩空气也会压缩这层碳膜，碳膜在受到挤压时也会发出振动，在碳膜的下方就是一个电极，碳膜在振动的时候会接触电极，接触时间的长短和频率与声波的振动幅度和频率有关，这样就完成了声音信号到电信号的转换。之后再经过放大电路处理，就可以实施后">
+<meta property="og:description" content="音频编码基本原理（1） 音频信号的冗余信息数字音频信号如果不加压缩地直接进行传送，将会占用极大的带宽。例如，一套双声道数字音频若取样频率为44.1KHz，每样值按16bit量化，则其码率为： 2*44.1kHz*16bit=1.411Mbit/s 如此大的带宽将给信号的传输和处理都带来许多困难，因此必须采取音频压缩技术对音频数据进行处理，才能有效地传输音频数据。 数字音频压缩编码在保证信号在听觉方">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/how-to-desc-audio.png">
-<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio-desc.png">
-<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio-store-calc.png">
-<meta property="og:updated_time" content="2024-02-26T07:44:36.165Z">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio_03_01.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio_03_02.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio_03_03.png">
+<meta property="og:updated_time" content="2024-06-15T06:45:54.532Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="音视频基础-音频基础-02">
-<meta name="twitter:description" content="怎样对声音进行数字化？对声音进行数字化，首先要使用特定的设备对声音进行采集，比如麦克风就是常见的声音采集设备。麦克风里面有一层碳膜，非常薄而且十分敏感。声音是一种纵波，会压缩空气也会压缩这层碳膜，碳膜在受到挤压时也会发出振动，在碳膜的下方就是一个电极，碳膜在振动的时候会接触电极，接触时间的长短和频率与声波的振动幅度和频率有关，这样就完成了声音信号到电信号的转换。之后再经过放大电路处理，就可以实施后">
-<meta name="twitter:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/how-to-desc-audio.png">
+<meta name="twitter:title" content="音视频基础-音频基础-03">
+<meta name="twitter:description" content="音频编码基本原理（1） 音频信号的冗余信息数字音频信号如果不加压缩地直接进行传送，将会占用极大的带宽。例如，一套双声道数字音频若取样频率为44.1KHz，每样值按16bit量化，则其码率为： 2*44.1kHz*16bit=1.411Mbit/s 如此大的带宽将给信号的传输和处理都带来许多困难，因此必须采取音频压缩技术对音频数据进行处理，才能有效地传输音频数据。 数字音频压缩编码在保证信号在听觉方">
+<meta name="twitter:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio_03_01.png">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -65,7 +65,7 @@
   };
 </script>
 
-  <title> 音视频基础-音频基础-02 | changan's blog </title>
+  <title> 音视频基础-音频基础-03 | changan's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -315,7 +315,7 @@
           
           
             
-              音视频基础-音频基础-02
+              音视频基础-音频基础-03
             
           
         </h1>
@@ -358,37 +358,26 @@
       
 
       
-        <span itemprop="articleBody"><h3 id="怎样对声音进行数字化？"><a href="#怎样对声音进行数字化？" class="headerlink" title="怎样对声音进行数字化？"></a>怎样对声音进行数字化？</h3><p>对声音进行数字化，首先要使用特定的设备对声音进行采集，比如麦克风就是常见的声音采集设备。麦克风里面有一层碳膜，非常薄而且十分敏感。声音是一种纵波，会压缩空气也会压缩这层碳膜，碳膜在受到挤压时也会发出振动，在碳膜的下方就是一个电极，碳膜在振动的时候会接触电极，接触时间的长短和频率与声波的振动幅度和频率有关，这样就完成了声音信号到电信号的转换。之后再经过放大电路处理，就可以实施后面的采样、量化处理了。</p>
-<p>声音由波形组成，包含了不同频率、振幅的波的叠加。为了在数字媒体内表示这些波形，需要对波形进行<strong>采样</strong>，其采样率需要满足可以表示的声音的最高频率；同时还需要存储足够的<strong>位深</strong>，以表示声音样本中波形的适当振幅。</p>
-<p>声音处理设备重建频率的能力称为其<strong>频率响应</strong>，创造适当响度和柔度的能力称为其<strong>动态范围</strong>，这些术语通常统称为声音设备的<strong>保真度</strong>。最简单的编码方式可以利用这两个基本元素重建声音，同时还能够高效地存储和传输数据。</p>
-<p>声音的数字化过程是将模拟信号（连续时间信号）转化为数字信号（离散时间信号）的过程，包括 3 个步骤：</p>
-<ul>
-<li><strong>采样</strong>：以一定采样率在时域内获取离散信号。</li>
-<li><strong>量化</strong>：每个采样点幅度的数字化表示。</li>
-<li><strong>编码</strong>：以一定格式存储数据。</li>
+        <span itemprop="articleBody"><h3 id="音频编码基本原理"><a href="#音频编码基本原理" class="headerlink" title="音频编码基本原理"></a><strong>音频编码基本原理</strong></h3><h3 id="（1）-音频信号的冗余信息"><a href="#（1）-音频信号的冗余信息" class="headerlink" title="（1） 音频信号的冗余信息"></a><strong>（1） 音频信号的冗余信息</strong></h3><p>数字音频信号如果不加压缩地直接进行传送，将会占用极大的带宽。例如，一套双声道数字音频若取样频率为44.1KHz，每样值按16bit量化，则其码率为：</p>
+<p>2*44.1kHz*16bit=1.411Mbit/s</p>
+<p>如此大的带宽将给信号的传输和处理都带来许多困难，因此必须采取音频压缩技术对音频数据进行处理，才能有效地传输音频数据。</p>
+<p>数字音频压缩编码在保证信号在听觉方面不产生失真的前提下，对音频数据信号进行尽可能大的压缩。数字音频压缩编码采取去除声音信号中冗余成分的方法来实现。所谓冗余成分指的是音频中不能被人耳感知到的信号，它们对确定声音的音色，音调等信息没有任何的帮助。</p>
+<p>冗余信号包含人耳听觉范围外的音频信号以及被掩蔽掉的音频信号等。例如，人耳所能察觉的声音信号的频率范围为20Hz～20KHz，除此之外的其它频率人耳无法察觉，都可视为冗余信号。此外，根据人耳听觉的生理和心理声学现象，当一个强音信号与一个弱音信号同时存在时，弱音信号将被强音信号所掩蔽而听不见，这样弱音信号就可以视为冗余信号而不用传送。这就是人耳听觉的掩蔽效应，主要表现在<a href="https://so.csdn.net/so/search?q=%E9%A2%91%E8%B0%B1\&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener">频谱</a>掩蔽效应和时域掩蔽效应，现分别介绍如下：</p>
+<h4 id="（a）频谱掩蔽效应"><a href="#（a）频谱掩蔽效应" class="headerlink" title="（a）频谱掩蔽效应"></a>（a）频谱掩蔽效应</h4><p>一个频率的声音能量小于某个阈值之后，人耳就会听不到，这个阈值称为最小可闻阈。当有另外能量较大的声音出现的时候，该声音频率附近的阈值会提高很多，即所谓的掩蔽效应。如图所示：</p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio_03_01.png" alt="image"></p>
+<p>频率掩蔽效应</p>
+<p>由图中我们可以看出人耳对2KHz～5KHz的声音最敏感，而对频率太低或太高的声音信号都很迟钝，当有一个频率为0.2KHz、强度为60dB的声音出现时，其附近的阈值提高了很多。由图中我们可以看出在0.1KHz以下、1KHz以上的部分,由于离0.2KHz强信号较远，不受0.2KHz强信号影响,阈值不受影响；而在0.1KHz～1KHz范围，由于0.2KHz强音的出现,阈值有较大的提升，人耳在此范围所能感觉到的最小声音强度大幅提升。如果0.1KHz～1KHz范围内的声音信号的强度在被提升的阈值曲线之下，由于它被0.2KHz强音信号所掩蔽，那么此时我们人耳只能听到0.2KHz的强音信号而根本听不见其它弱信号，这些与0.2KHz强音信号同时存在的弱音信号就可视为冗余信号而不必传送。</p>
+<h4 id="（b）-时域掩蔽效应"><a href="#（b）-时域掩蔽效应" class="headerlink" title="（b） 时域掩蔽效应"></a>（b） 时域掩蔽效应</h4><p>当强音信号和弱音信号同时出现时，还存在时域掩蔽效应。即两者发生时间很接近的时候，也会发生掩蔽效应。时域掩蔽过程曲线如图所示，分为前掩蔽、同时掩蔽和后掩蔽三部分。</p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio_03_02.png" alt="image"></p>
+<p>时域掩蔽效应</p>
+<p>由图我们可以看出，时域掩蔽效应可以分成三种：前掩蔽，同时掩蔽，后掩蔽。前掩蔽是指人耳在听到强信号之前的短暂时间内，已经存在的弱信号会被掩蔽而听不到。同时掩蔽是指当强信号与弱信号同时存在时，弱信号会被强信号所掩蔽而听不到。后掩蔽是指当强信号消失后，需经过较长的一段时间才能重新听见弱信号，称为后掩蔽。这些被掩蔽的弱信号即可视为冗余信号。</p>
+<h3 id="（2）-压缩编码方法"><a href="#（2）-压缩编码方法" class="headerlink" title="（2） 压缩编码方法"></a><strong>（2） 压缩编码方法</strong></h3><p>当前数字音频编码领域存在着不同的编码方案和实现方式, 但基本的编码思路大同小异, 如图所示。</p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio_03_03.png" alt="image"></p>
+<p>数字音频编码系统模型</p>
+<p>对每一个音频声道中的音频采样信号,首先都要将它们映射到频域中,这种时域到频域的映射可通过子带滤波器实现。每个声道中的音频采样块首先要根据心理声学模型来计算掩蔽门限值, 然后由计算出的掩蔽门限值决定从公共比特池中分配给该声道的不同频率域中多少比特数，接着进行量化以及编码工作，最后将控制参数及辅助数据加入数据之中，产生编码后的数据流。</p>
+<h4 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h4><ul>
+<li><a href="https://blog.csdn.net/leixiaohua1020/article/details/28114081" target="_blank" rel="noopener">https://blog.csdn.net/leixiaohua1020/article/details/28114081</a></li>
 </ul>
-<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/how-to-desc-audio.png" alt="image"></p>
-<p><strong>经过数字化处理后的数字音频包含如下三要素：</strong></p>
-<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio-desc.png" alt="image"></p>
-<h3 id="采样率"><a href="#采样率" class="headerlink" title="采样率"></a>采样率</h3><p>对模拟信号的采样一般遵循奈奎斯特采样定理：如果一个信号是带限的（即它的傅立叶变换在某一有限频带范围以外均为零），并且它的样本取得足够密（相对于信号中的最高频率而言），那么这些样本值就能唯一地用来表征这一信号，并且能从这些样本中把信号完全恢复出来。为了不失真地恢复模拟信号，采样频率应该不小于模拟信号频谱中最高频率的 2 倍。一般实际应用中保证采样频率为信号最高频率的 2.56～4 倍。</p>
-<p>数字信号由模拟信号采样而来，如果满足采样定理，数字信号就可以完全恢复原始的模拟信号。</p>
-<p>从发声的角度来看，人类发出的声音信号频率绝大部分在 5k Hz 以内，因此以 10k Hz 的频率来采样就足够了。</p>
-<p>生活中常见的采样率：</p>
-<blockquote>
-<p>8,000 Hz：电话所用采样率，对于人的说话已经足够；<br>11,025 Hz：AM 调幅广播所用采样率；<br>22,050 Hz 和 24,000 Hz：FM调频广播所用采样率；<br>32,000 Hz：miniDV 数码视频 camcorder、DAT（LP mode）所用采样率；<br>44,100 Hz：音频 CD，也常用于 MPEG-1 音频（VCD/SVCD/MP3）所用采样率；<br>47,250 Hz：商用 PCM 录音机所用采样率；<br>48,000 Hz：miniDV、数字电视、DVD、DAT、电影和专业音频所用的数字声音所用采样率；<br>50,000 Hz：商用数字录音机所用采样率；<br>96,000 或者 192,000 Hz：DVD-Audio、一些 LPCM DVD 音轨、BD-ROM（蓝光盘）音轨、和 HD-DVD（高清晰度 DVD）音轨所用所用采样率；<br>2.8224 MHz：Direct Stream Digital 的 1 位 sigma-delta modulation 过程所用采样率。</p>
-</blockquote>
-<h3 id="量化位深（采样大小）"><a href="#量化位深（采样大小）" class="headerlink" title="量化位深（采样大小）"></a>量化位深（采样大小）</h3><p>量化位深是对模拟音频信号的幅度轴进行数字化，它决定了模拟信号数字化以后的动态范围。比如，8 bit 位深可以拥有 48 分贝的动态范围，16 bit 位深可以拥有 96 分贝的动态范围，24 bit 位深可以拥有 144 分贝的动态范围，32 bit 位深可以拥有 192 分贝的动态范围。这里位深和动态范围的数值对应关系的计算公式可以从上文声压级的计算公式推导而来。位深体现的是能表示的值的范围，比如 16 bit 能表示的最大值是 216 - 1 = 65535，那么取其最大值就能计算它能表示的最大声压级：最大声压级 = 20 × lg(65535) = 96.33。所以 16 bit 的位深可以最大表示 96 分贝。</p>
-<h3 id="声道"><a href="#声道" class="headerlink" title="声道"></a>声道</h3><p>声道是指声音在录制或播放时在不同空间位置采集或回放的相互独立的音频信号，所以声道数也就是声音录制时的音源数量或回放时相应的扬声器数量。</p>
-<blockquote>
-<p>单声道（Mono）：是以单个声道来重现声音。它只用了一个麦克风，一个扬声器或是耳机、并联扬声器，并从同样的信号路径送入信号，在并联扬声器中，虽有多个扬声器，但每个扬声器送入的仍是同一信号。</p>
-<p>立体声（Stereo）：是使用两个或多个独立的音效通道，在一对以对称方式配置的扬声器上出现。以此方法所发出的声音，在不同方向仍可保持自然与悦耳。</p>
-<p>5.1 声道：包含一个正面声道、左前方声道、右前方声道、左环绕声道、右环绕声道，以及一个用来重放 120 Hz 以下超低频的声道。最早应用于早期的电影院，如杜比 AC-3。</p>
-<p>7.1 声道：在 5.1 声道的基础上，把左右的环绕声道拆分为左右环绕声道以及左右后置声道。主要应用于蓝光以及现代的电影院。</p>
-</blockquote>
-<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/audio-store-calc.png" alt="image"></p>
-<h3 id="PCM"><a href="#PCM" class="headerlink" title="PCM"></a>PCM</h3><p>我们在手机、电脑上处理的声音数据，就是声音经过数字化后的数据，也就是数字音频数据，其中最常见的格式是 PCM（Pulse Code Modulation），即脉冲编码调制格式。得到 PCM 数据的主要过程是将话音等模拟信号每隔一定时间进行取样，使其离散化，同时将抽样值按分层单位四舍五入取整量化，同时将抽样值按一组二进制码来表示抽样脉冲的幅值。也就是我们在上文中讲到的采样、量化、编码过程。</p>
-<p>在计算机应用中，PCM 是能达到音频最高保真水平的格式，它被广泛用于素材保存及音乐欣赏，PCM 也因此被称为无损编码格式。但这并不意味着 PCM 就能够确保信号绝对保真，它只能做到最大程度的无限接近原始声音。要计算一个 PCM 音频流的码率需要数字音频的三要素信息即可：码率 = 采样率 × 量化位深 × 声道数。</p>
-<p>由于 PCM 编码是无损编码，且广泛应用，所以我们通常可以认为音频的裸数据格式就是 PCM 的。但为了节省存储空间以及传输成本，通常我们会对音频 PCM 数据进行压缩，这也就是音频编码，比如 MP3、AAC、OPUS 都是我们常见的音频编码格式。</p>
 <script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
 </script>
 
@@ -409,11 +398,13 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2023/04/09/audio-basic-02/" rel="prev">音视频基础-音频基础-02</a>
+            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2023/04/09/audio-basic-03/" rel="next">音视频基础-音频基础-03</a>
+              <a href="/2023/04/06/audio_basic_01/" rel="next">音视频基础-音频基础-01</a>
             
           </div>
         </div>
@@ -647,7 +638,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#怎样对声音进行数字化？"><span class="nav-number">1.</span> <span class="nav-text">怎样对声音进行数字化？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#采样率"><span class="nav-number">2.</span> <span class="nav-text">采样率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#量化位深（采样大小）"><span class="nav-number">3.</span> <span class="nav-text">量化位深（采样大小）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#声道"><span class="nav-number">4.</span> <span class="nav-text">声道</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PCM"><span class="nav-number">5.</span> <span class="nav-text">PCM</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#音频编码基本原理"><span class="nav-number">1.</span> <span class="nav-text">音频编码基本原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（1）-音频信号的冗余信息"><span class="nav-number">2.</span> <span class="nav-text">（1） 音频信号的冗余信息</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#（a）频谱掩蔽效应"><span class="nav-number">2.1.</span> <span class="nav-text">（a）频谱掩蔽效应</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#（b）-时域掩蔽效应"><span class="nav-number">2.2.</span> <span class="nav-text">（b） 时域掩蔽效应</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（2）-压缩编码方法"><span class="nav-number">3.</span> <span class="nav-text">（2） 压缩编码方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#引用"><span class="nav-number">3.1.</span> <span class="nav-text">引用</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
