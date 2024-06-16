@@ -40,13 +40,13 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="H264码流结构      案例">
+<meta name="description" content="H264码流结构      案例   SPS &amp;amp; PPS">
 <meta name="keywords" content="音视频">
 <meta property="og:type" content="article">
 <meta property="og:title" content="音视频基础- H264码流结构">
 <meta property="og:url" content="http://oneyearago.me/2023/06/02/vedio-basic-03/index.html">
 <meta property="og:site_name" content="changan&#39;s blog">
-<meta property="og:description" content="H264码流结构      案例">
+<meta property="og:description" content="H264码流结构      案例   SPS &amp;amp; PPS">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_trans_01.png">
 <meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_trans_02.png">
@@ -57,10 +57,14 @@
 <meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_trans_07.png">
 <meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_trans_08.png">
 <meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_trans_09.png">
-<meta property="og:updated_time" content="2024-06-15T16:19:32.731Z">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/spspps/spspps_01.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/spspps/spspps_02.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/spspps/spspps_03.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/spspps/spspps_04.png">
+<meta property="og:updated_time" content="2024-06-16T07:30:02.354Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="音视频基础- H264码流结构">
-<meta name="twitter:description" content="H264码流结构      案例">
+<meta name="twitter:description" content="H264码流结构      案例   SPS &amp;amp; PPS">
 <meta name="twitter:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_trans_01.png">
 
 
@@ -373,6 +377,10 @@
 <h3 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h3><p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_trans_07.png" alt="image"></p>
 <p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_trans_08.png" alt="image"></p>
 <p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/h264_trans_09.png" alt="image"></p>
+<h3 id="SPS-amp-PPS"><a href="#SPS-amp-PPS" class="headerlink" title="SPS &amp; PPS"></a>SPS &amp; PPS</h3><p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/spspps/spspps_01.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/spspps/spspps_02.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/spspps/spspps_03.png" alt="image"></p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/vedio/H264/spspps/spspps_04.png" alt="image"></p>
 <script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
 </script>
 
@@ -631,7 +639,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#H264码流结构"><span class="nav-number">1.</span> <span class="nav-text">H264码流结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#案例"><span class="nav-number">2.</span> <span class="nav-text">案例</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#H264码流结构"><span class="nav-number">1.</span> <span class="nav-text">H264码流结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#案例"><span class="nav-number">2.</span> <span class="nav-text">案例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SPS-amp-PPS"><span class="nav-number">3.</span> <span class="nav-text">SPS &amp; PPS</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
