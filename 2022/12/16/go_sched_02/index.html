@@ -1,0 +1,927 @@
+
+<!doctype html>
+<html class="theme-next use-motion theme-next-mala">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="思绪来的快去的也快，偶尔在这里停留" />
+
+
+
+  <meta name="keywords" content="golang," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="G、P、M 是 Go 调度器的三个核心组件，各司其职。在它们精密地配合下，Go 调度器得以高效运转，这也是 Go 天然支持高并发的内在动力。今天这篇文章我们来深入理解 GPM 模型。 先看 G，取 goroutine 的首字母，主要保存 goroutine 的一些状态信息以及 CPU 的一些寄存器的值，例如 IP 寄存器，以便在轮到本 goroutine 执行时，CPU 知道要从哪一条指令处开始执">
+<meta name="keywords" content="golang">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go语言 goroutine调度">
+<meta property="og:url" content="http://oneyearago.me/2022/12/16/go_sched_02/index.html">
+<meta property="og:site_name" content="changan&#39;s blog">
+<meta property="og:description" content="G、P、M 是 Go 调度器的三个核心组件，各司其职。在它们精密地配合下，Go 调度器得以高效运转，这也是 Go 天然支持高并发的内在动力。今天这篇文章我们来深入理解 GPM 模型。 先看 G，取 goroutine 的首字母，主要保存 goroutine 的一些状态信息以及 CPU 的一些寄存器的值，例如 IP 寄存器，以便在轮到本 goroutine 执行时，CPU 知道要从哪一条指令处开始执">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/sched/assets/14.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/sched/assets/15.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/sched/assets/16.png">
+<meta property="og:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/sched/assets/17.png">
+<meta property="og:updated_time" content="2024-06-24T06:14:41.081Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Go语言 goroutine调度">
+<meta name="twitter:description" content="G、P、M 是 Go 调度器的三个核心组件，各司其职。在它们精密地配合下，Go 调度器得以高效运转，这也是 Go 天然支持高并发的内在动力。今天这篇文章我们来深入理解 GPM 模型。 先看 G，取 goroutine 的首字母，主要保存 goroutine 的一些状态信息以及 CPU 的一些寄存器的值，例如 IP 寄存器，以便在轮到本 goroutine 执行时，CPU 知道要从哪一条指令处开始执">
+<meta name="twitter:image" content="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/sched/assets/14.png">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mala',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> Go语言 goroutine调度 | changan's blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">changan's blog</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            About
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    
+      
+
+      
+        <style type="text/css">
+
+    .circle {
+        width: 40px;
+        height: 40px;
+        background: #555 no-repeat;
+        cursor: move;
+    }
+
+    .assist-btn {
+        position: fixed;
+        top: 50％;
+        left: 10px;
+        -moz-border-radius: 50px;
+        -webkit-border-radius: 50px;
+        border-radius: 50px;
+        outline: none;
+        border: none;
+        color: #87daff;
+    }
+
+</style>
+
+<script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+<script type="text/javascript">
+    // 浮动圆点展开与收缩
+    /*
+    $(function () {
+        var assist_box = $('.assist-box');
+        $('#assist_btn').hover(function () {
+            assist_box.stop().show(300);
+        }, function () {
+            assist_box.stop().hide(150);
+        })
+    });
+    */  
+    //浮动圆点拖动
+    $(function () {
+        var box = document.getElementById('assist_btn');
+        box.onmousedown = function (event) {
+            var e = event || window.event,
+                t = e.target || e.srcElement,
+                // 鼠标按下时的坐标x1,y1
+                x1 = e.clientX,
+                y1 = e.clientY,
+                //鼠标按下时的左右偏移量
+                dragLeft = this.offsetLeft,
+                dragTop = this.offsetTop;
+
+            document.onmousemove = function (event) {
+                var e = event || window.event,
+                    t = e.target || e.srcElement,
+                    // 鼠标移动时的动态坐标
+                    x2 = e.clientX,
+                    y2 = e.clientY,
+                    // 鼠标移动时的坐标的变化量
+                    x = x2 - x1,
+                    y = y2 - y1;
+                box.style.left = (dragLeft + x) + 'px';
+                box.style.top = (dragTop + y) + 'px';
+            }
+
+            document.onmouseup = function () {
+                this.onmousemove = null;
+            }
+        }
+    });
+
+/*
+    $whitesmoke   = #f5f5f5
+    $gainsboro    = #eee
+    $gray-lighter = #ddd
+    $grey-light   = #ccc
+    $grey         = #bbb
+    $grey-dark    = #999
+    $grey-dim     = #666
+    $black-light  = #555
+    $black-deep   = #222
+    $red          = #ff2a2a
+    $blue-bright  = #87daff
+    $blue         = #0684bd
+    $blue-deep    = #262a30
+*/
+    // white theme
+    var body = {color: "#555", background: "white"};
+    var a_tag = {color: "#222"};
+    var header = { background: "#f5f5f5"};
+    var logo_line_i = {background: "#222"};
+    // var post_code = {background: "#eee", color: "#222"};
+
+    function switch_theme() {
+        $("body").css(body);
+        $("a:not('.links-of-author-item a, .site-state-item a, .site-state-posts a, .feed-link a, .motion-element a, .post-tags a, .show-commit-cls a, #donate_board a')").css(a_tag);
+        $(".header, .footer").css(header);
+        $(".logo-line-before i, .logo-line-after i").css(logo_line_i);
+        //$(".post code").css(post_code);
+        $("#idhyt-surprise-ball #idhyt-surprise-ball-animation .drag").css(a_tag);
+        $(".post-title-link, .posts-expand .post-meta, .post-comments-count, .disqus-comment-count, .post-category a, .post-nav-next a, .post-nav-item a").css(a_tag);
+        
+        // $("code").css({color: '#c5c8c6', background: '#1d1f21'});
+        $("#assist_btn").hide(1500);
+    }
+
+    $(function () {
+        $("#assist_btn").dblclick(function() {
+            switch_theme();
+        });
+    });
+
+</script>
+
+<div>
+
+    <button class="assist-btn circle" id="assist_btn" title="双击切换">
+        亮
+    </button>
+
+</div>
+
+
+
+
+
+
+
+
+
+      
+
+    
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              Go语言 goroutine调度
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2022-12-16T18:20:39+08:00" content="2022-12-16">
+            2022-12-16
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/golang/" itemprop="url" rel="index">
+                  <span itemprop="name">golang</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>G、P、M 是 Go 调度器的三个核心组件，各司其职。在它们精密地配合下，Go 调度器得以高效运转，这也是 Go 天然支持高并发的内在动力。今天这篇文章我们来深入理解 GPM 模型。</p>
+<p>先看 G，取 goroutine 的首字母，主要保存 goroutine 的一些状态信息以及 CPU 的一些寄存器的值，例如 IP 寄存器，以便在轮到本 goroutine 执行时，CPU 知道要从哪一条指令处开始执行。</p>
+<blockquote>
+<p>当 goroutine 被调离 CPU 时，调度器负责把 CPU 寄存器的值保存在 g 对象的成员变量之中。</p>
+</blockquote>
+<blockquote>
+<p>当 goroutine 被调度起来运行时，调度器又负责把 g 对象的成员变量所保存的寄存器值恢复到 CPU 的寄存器。</p>
+</blockquote>
+<p>本系列使用的代码版本是 1.9.2，来看一下 g 的源码：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> g <span class="keyword">struct</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// goroutine 使用的栈</span></span><br><span class="line">	stack       stack   <span class="comment">// offset known to runtime/cgo</span></span><br><span class="line">	<span class="comment">// 用于栈的扩张和收缩检查，抢占标志</span></span><br><span class="line">	stackguard0 <span class="keyword">uintptr</span> <span class="comment">// offset known to liblink</span></span><br><span class="line">	stackguard1 <span class="keyword">uintptr</span> <span class="comment">// offset known to liblink</span></span><br><span class="line"></span><br><span class="line">	_panic         *_panic <span class="comment">// innermost panic - offset known to liblink</span></span><br><span class="line">	_defer         *_defer <span class="comment">// innermost defer</span></span><br><span class="line">	<span class="comment">// 当前与 g 绑定的 m</span></span><br><span class="line">	m              *m      <span class="comment">// current m; offset known to arm liblink</span></span><br><span class="line">	<span class="comment">// goroutine 的运行现场</span></span><br><span class="line">	sched          gobuf</span><br><span class="line">	syscallsp      <span class="keyword">uintptr</span>        <span class="comment">// if status==Gsyscall, syscallsp = sched.sp to use during gc</span></span><br><span class="line">	syscallpc      <span class="keyword">uintptr</span>        <span class="comment">// if status==Gsyscall, syscallpc = sched.pc to use during gc</span></span><br><span class="line">	stktopsp       <span class="keyword">uintptr</span>        <span class="comment">// expected sp at top of stack, to check in traceback</span></span><br><span class="line">	<span class="comment">// wakeup 时传入的参数</span></span><br><span class="line">	param          unsafe.Pointer <span class="comment">// passed parameter on wakeup</span></span><br><span class="line">	atomicstatus   <span class="keyword">uint32</span></span><br><span class="line">	stackLock      <span class="keyword">uint32</span> <span class="comment">// sigprof/scang lock; <span class="doctag">TODO:</span> fold in to atomicstatus</span></span><br><span class="line">	goid           <span class="keyword">int64</span></span><br><span class="line">	<span class="comment">// g 被阻塞之后的近似时间</span></span><br><span class="line">	waitsince      <span class="keyword">int64</span>  <span class="comment">// approx time when the g become blocked</span></span><br><span class="line">	<span class="comment">// g 被阻塞的原因</span></span><br><span class="line">	waitreason     <span class="keyword">string</span> <span class="comment">// if status==Gwaiting</span></span><br><span class="line">	<span class="comment">// 指向全局队列里下一个 g</span></span><br><span class="line">	schedlink      guintptr</span><br><span class="line">	<span class="comment">// 抢占调度标志。这个为 true 时，stackguard0 等于 stackpreempt</span></span><br><span class="line">	preempt        <span class="keyword">bool</span>     <span class="comment">// preemption signal, duplicates stackguard0 = stackpreempt</span></span><br><span class="line">	paniconfault   <span class="keyword">bool</span>     <span class="comment">// panic (instead of crash) on unexpected fault address</span></span><br><span class="line">	preemptscan    <span class="keyword">bool</span>     <span class="comment">// preempted g does scan for gc</span></span><br><span class="line">	gcscandone     <span class="keyword">bool</span>     <span class="comment">// g has scanned stack; protected by _Gscan bit in status</span></span><br><span class="line">	gcscanvalid    <span class="keyword">bool</span>     <span class="comment">// false at start of gc cycle, true if G has not run since last scan; <span class="doctag">TODO:</span> remove?</span></span><br><span class="line">	throwsplit     <span class="keyword">bool</span>     <span class="comment">// must not split stack</span></span><br><span class="line">	raceignore     <span class="keyword">int8</span>     <span class="comment">// ignore race detection events</span></span><br><span class="line">	sysblocktraced <span class="keyword">bool</span>     <span class="comment">// StartTrace has emitted EvGoInSyscall about this goroutine</span></span><br><span class="line">	<span class="comment">// syscall 返回之后的 cputicks，用来做 tracing</span></span><br><span class="line">	sysexitticks   <span class="keyword">int64</span>    <span class="comment">// cputicks when syscall has returned (for tracing)</span></span><br><span class="line">	traceseq       <span class="keyword">uint64</span>   <span class="comment">// trace event sequencer</span></span><br><span class="line">	tracelastp     puintptr <span class="comment">// last P emitted an event for this goroutine</span></span><br><span class="line">	<span class="comment">// 如果调用了 LockOsThread，那么这个 g 会绑定到某个 m 上</span></span><br><span class="line">	lockedm        *m</span><br><span class="line">	sig            <span class="keyword">uint32</span></span><br><span class="line">	writebuf       []<span class="keyword">byte</span></span><br><span class="line">	sigcode0       <span class="keyword">uintptr</span></span><br><span class="line">	sigcode1       <span class="keyword">uintptr</span></span><br><span class="line">	sigpc          <span class="keyword">uintptr</span></span><br><span class="line">	<span class="comment">// 创建该 goroutine 的语句的指令地址</span></span><br><span class="line">	gopc           <span class="keyword">uintptr</span> <span class="comment">// pc of go statement that created this goroutine</span></span><br><span class="line">	<span class="comment">// goroutine 函数的指令地址</span></span><br><span class="line">	startpc        <span class="keyword">uintptr</span> <span class="comment">// pc of goroutine function</span></span><br><span class="line">	racectx        <span class="keyword">uintptr</span></span><br><span class="line">	waiting        *sudog         <span class="comment">// sudog structures this g is waiting on (that have a valid elem ptr); in lock order</span></span><br><span class="line">	cgoCtxt        []<span class="keyword">uintptr</span>      <span class="comment">// cgo traceback context</span></span><br><span class="line">	labels         unsafe.Pointer <span class="comment">// profiler labels</span></span><br><span class="line">	<span class="comment">// time.Sleep 缓存的定时器</span></span><br><span class="line">	timer          *timer         <span class="comment">// cached timer for time.Sleep</span></span><br><span class="line"></span><br><span class="line">	gcAssistBytes <span class="keyword">int64</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>源码中，比较重要的字段我已经作了注释，其他未作注释的与调度关系不大或者我暂时也没有理解的。</p>
+<p><code>g</code> 结构体关联了两个比较简单的结构体，stack 表示 goroutine 运行时的栈：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 描述栈的数据结构，栈的范围：[lo, hi)</span></span><br><span class="line"><span class="keyword">type</span> stack <span class="keyword">struct</span> &#123;</span><br><span class="line">    <span class="comment">// 栈顶，低地址</span></span><br><span class="line">	lo <span class="keyword">uintptr</span></span><br><span class="line">	<span class="comment">// 栈低，高地址</span></span><br><span class="line">	hi <span class="keyword">uintptr</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Goroutine 运行时，光有栈还不行，至少还得包括 PC，SP 等寄存器，gobuf 就保存了这些值：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> gobuf <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// 存储 rsp 寄存器的值</span></span><br><span class="line">	sp   <span class="keyword">uintptr</span></span><br><span class="line">	<span class="comment">// 存储 rip 寄存器的值</span></span><br><span class="line">	pc   <span class="keyword">uintptr</span></span><br><span class="line">	<span class="comment">// 指向 goroutine</span></span><br><span class="line">	g    guintptr</span><br><span class="line">	ctxt unsafe.Pointer <span class="comment">// this has to be a pointer so that gc scans it</span></span><br><span class="line">	<span class="comment">// 保存系统调用的返回值</span></span><br><span class="line">	ret  sys.Uintreg</span><br><span class="line">	lr   <span class="keyword">uintptr</span></span><br><span class="line">	bp   <span class="keyword">uintptr</span> <span class="comment">// for GOEXPERIMENT=framepointer</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再来看 M，取 machine 的首字母，它代表一个工作线程，或者说系统线程。G 需要调度到 M 上才能运行，M 是真正工作的人。结构体 m 就是我们常说的 M，它保存了 M 自身使用的栈信息、当前正在 M 上执行的 G 信息、与之绑定的 P 信息……</p>
+<p>当 M 没有工作可做的时候，在它休眠前，会“自旋”地来找工作：检查全局队列，查看 network poller，试图执行 gc 任务，或者“偷”工作。</p>
+<p>结构体 m 的源码如下：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// m 代表工作线程，保存了自身使用的栈信息</span></span><br><span class="line"><span class="keyword">type</span> m <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// 记录工作线程（也就是内核线程）使用的栈信息。在执行调度代码时需要使用</span></span><br><span class="line">	<span class="comment">// 执行用户 goroutine 代码时，使用用户 goroutine 自己的栈，因此调度时会发生栈的切换</span></span><br><span class="line">	g0      *g     <span class="comment">// goroutine with scheduling stack/</span></span><br><span class="line">	morebuf gobuf  <span class="comment">// gobuf arg to morestack</span></span><br><span class="line">	divmod  <span class="keyword">uint32</span> <span class="comment">// div/mod denominator for arm - known to liblink</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// Fields not known to debuggers.</span></span><br><span class="line">	procid        <span class="keyword">uint64</span>     <span class="comment">// for debuggers, but offset not hard-coded</span></span><br><span class="line">	gsignal       *g         <span class="comment">// signal-handling g</span></span><br><span class="line">	sigmask       sigset     <span class="comment">// storage for saved signal mask</span></span><br><span class="line">	<span class="comment">// 通过 tls 结构体实现 m 与工作线程的绑定</span></span><br><span class="line">	<span class="comment">// 这里是线程本地存储</span></span><br><span class="line">	tls           [<span class="number">6</span>]<span class="keyword">uintptr</span> <span class="comment">// thread-local storage (for x86 extern register)</span></span><br><span class="line">	mstartfn      <span class="function"><span class="keyword">func</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	// 指向正在运行的 <span class="title">goroutine</span> 对象</span></span><br><span class="line"><span class="function">	<span class="title">curg</span>          *<span class="title">g</span>       // <span class="title">current</span> <span class="title">running</span> <span class="title">goroutine</span></span></span><br><span class="line"><span class="function">	<span class="title">caughtsig</span>     <span class="title">guintptr</span> // <span class="title">goroutine</span> <span class="title">running</span> <span class="title">during</span> <span class="title">fatal</span> <span class="title">signal</span></span></span><br><span class="line"><span class="function">	// 当前工作线程绑定的 <span class="title">p</span></span></span><br><span class="line"><span class="function">	<span class="title">p</span>             <span class="title">puintptr</span> // <span class="title">attached</span> <span class="title">p</span> <span class="title">for</span> <span class="title">executing</span> <span class="title">go</span> <span class="title">code</span> <span class="params">(<span class="literal">nil</span> <span class="keyword">if</span> not executing <span class="keyword">go</span> code)</span></span></span><br><span class="line"><span class="function">	<span class="title">nextp</span>         <span class="title">puintptr</span></span></span><br><span class="line"><span class="function">	<span class="title">id</span>            <span class="title">int32</span></span></span><br><span class="line"><span class="function">	<span class="title">mallocing</span>     <span class="title">int32</span></span></span><br><span class="line"><span class="function">	<span class="title">throwing</span>      <span class="title">int32</span></span></span><br><span class="line"><span class="function">	// 该字段不等于空字符串的话，要保持 <span class="title">curg</span> 始终在这个 <span class="title">m</span> 上运行</span></span><br><span class="line"><span class="function">	<span class="title">preemptoff</span>    <span class="title">string</span> // <span class="title">if</span> != "", <span class="title">keep</span> <span class="title">curg</span> <span class="title">running</span> <span class="title">on</span> <span class="title">this</span> <span class="title">m</span></span></span><br><span class="line"><span class="function">	<span class="title">locks</span>         <span class="title">int32</span></span></span><br><span class="line"><span class="function">	<span class="title">softfloat</span>     <span class="title">int32</span></span></span><br><span class="line"><span class="function">	<span class="title">dying</span>         <span class="title">int32</span></span></span><br><span class="line"><span class="function">	<span class="title">profilehz</span>     <span class="title">int32</span></span></span><br><span class="line"><span class="function">	<span class="title">helpgc</span>        <span class="title">int32</span></span></span><br><span class="line"><span class="function">	// 为 <span class="title">true</span> 时表示当前 <span class="title">m</span> 处于自旋状态，正在从其他线程偷工作</span></span><br><span class="line"><span class="function">	<span class="title">spinning</span>      <span class="title">bool</span> // <span class="title">m</span> <span class="title">is</span> <span class="title">out</span> <span class="title">of</span> <span class="title">work</span> <span class="title">and</span> <span class="title">is</span> <span class="title">actively</span> <span class="title">looking</span> <span class="title">for</span> <span class="title">work</span></span></span><br><span class="line"><span class="function">	// <span class="title">m</span> 正阻塞在 <span class="title">note</span> 上</span></span><br><span class="line"><span class="function">	<span class="title">blocked</span>       <span class="title">bool</span> // <span class="title">m</span> <span class="title">is</span> <span class="title">blocked</span> <span class="title">on</span> <span class="title">a</span> <span class="title">note</span></span></span><br><span class="line"><span class="function">	// <span class="title">m</span> 正在执行 <span class="title">write</span> <span class="title">barrier</span></span></span><br><span class="line"><span class="function">	<span class="title">inwb</span>          <span class="title">bool</span> // <span class="title">m</span> <span class="title">is</span> <span class="title">executing</span> <span class="title">a</span> <span class="title">write</span> <span class="title">barrier</span></span></span><br><span class="line"><span class="function">	<span class="title">newSigstack</span>   <span class="title">bool</span> // <span class="title">minit</span> <span class="title">on</span> <span class="title">C</span> <span class="title">thread</span> <span class="title">called</span> <span class="title">sigaltstack</span></span></span><br><span class="line"><span class="function">	<span class="title">printlock</span>     <span class="title">int8</span></span></span><br><span class="line"><span class="function">	// 正在执行 <span class="title">cgo</span> 调用</span></span><br><span class="line"><span class="function">	<span class="title">incgo</span>         <span class="title">bool</span> // <span class="title">m</span> <span class="title">is</span> <span class="title">executing</span> <span class="title">a</span> <span class="title">cgo</span> <span class="title">call</span></span></span><br><span class="line"><span class="function">	<span class="title">fastrand</span>      <span class="title">uint32</span></span></span><br><span class="line"><span class="function">	// <span class="title">cgo</span> 调用总计数</span></span><br><span class="line"><span class="function">	<span class="title">ncgocall</span>      <span class="title">uint64</span>      // <span class="title">number</span> <span class="title">of</span> <span class="title">cgo</span> <span class="title">calls</span> <span class="title">in</span> <span class="title">total</span></span></span><br><span class="line"><span class="function">	<span class="title">ncgo</span>          <span class="title">int32</span>       // <span class="title">number</span> <span class="title">of</span> <span class="title">cgo</span> <span class="title">calls</span> <span class="title">currently</span> <span class="title">in</span> <span class="title">progress</span></span></span><br><span class="line"><span class="function">	<span class="title">cgoCallersUse</span> <span class="title">uint32</span>      // <span class="title">if</span> <span class="title">non</span>-<span class="title">zero</span>, <span class="title">cgoCallers</span> <span class="title">in</span> <span class="title">use</span> <span class="title">temporarily</span></span></span><br><span class="line"><span class="function">	<span class="title">cgoCallers</span>    *<span class="title">cgoCallers</span> // <span class="title">cgo</span> <span class="title">traceback</span> <span class="title">if</span> <span class="title">crashing</span> <span class="title">in</span> <span class="title">cgo</span> <span class="title">call</span></span></span><br><span class="line"><span class="function">	// 没有 <span class="title">goroutine</span> 需要运行时，工作线程睡眠在这个 <span class="title">park</span> 成员上，</span></span><br><span class="line"><span class="function">	// 其它线程通过这个 <span class="title">park</span> 唤醒该工作线程</span></span><br><span class="line"><span class="function">	<span class="title">park</span>          <span class="title">note</span></span></span><br><span class="line"><span class="function">	// 记录所有工作线程的链表</span></span><br><span class="line"><span class="function">	<span class="title">alllink</span>       *<span class="title">m</span> // <span class="title">on</span> <span class="title">allm</span></span></span><br><span class="line"><span class="function">	<span class="title">schedlink</span>     <span class="title">muintptr</span></span></span><br><span class="line"><span class="function">	<span class="title">mcache</span>        *<span class="title">mcache</span></span></span><br><span class="line"><span class="function">	<span class="title">lockedg</span>       *<span class="title">g</span></span></span><br><span class="line"><span class="function">	<span class="title">createstack</span>   [32]<span class="title">uintptr</span> // <span class="title">stack</span> <span class="title">that</span> <span class="title">created</span> <span class="title">this</span> <span class="title">thread</span>.</span></span><br><span class="line"><span class="function">	<span class="title">freglo</span>        [16]<span class="title">uint32</span>  // <span class="title">d</span>[<span class="title">i</span>] <span class="title">lsb</span> <span class="title">and</span> <span class="title">f</span>[<span class="title">i</span>]</span></span><br><span class="line"><span class="function">	<span class="title">freghi</span>        [16]<span class="title">uint32</span>  // <span class="title">d</span>[<span class="title">i</span>] <span class="title">msb</span> <span class="title">and</span> <span class="title">f</span>[<span class="title">i</span>+16]</span></span><br><span class="line"><span class="function">	<span class="title">fflag</span>         <span class="title">uint32</span>      // <span class="title">floating</span> <span class="title">point</span> <span class="title">compare</span> <span class="title">flags</span></span></span><br><span class="line"><span class="function">	<span class="title">locked</span>        <span class="title">uint32</span>      // <span class="title">tracking</span> <span class="title">for</span> <span class="title">lockosthread</span></span></span><br><span class="line"><span class="function">	// 正在等待锁的下一个 <span class="title">m</span></span></span><br><span class="line"><span class="function">	<span class="title">nextwaitm</span>     <span class="title">uintptr</span>     // <span class="title">next</span> <span class="title">m</span> <span class="title">waiting</span> <span class="title">for</span> <span class="title">lock</span></span></span><br><span class="line"><span class="function">	<span class="title">needextram</span>    <span class="title">bool</span></span></span><br><span class="line"><span class="function">	<span class="title">traceback</span>     <span class="title">uint8</span></span></span><br><span class="line"><span class="function">	<span class="title">waitunlockf</span>   <span class="title">unsafe</span>.<span class="title">Pointer</span> // <span class="title">todo</span> <span class="title">go</span> <span class="title">func</span><span class="params">(*g, unsafe.pointer)</span> <span class="title">bool</span></span></span><br><span class="line"><span class="function">	<span class="title">waitlock</span>      <span class="title">unsafe</span>.<span class="title">Pointer</span></span></span><br><span class="line"><span class="function">	<span class="title">waittraceev</span>   <span class="title">byte</span></span></span><br><span class="line"><span class="function">	<span class="title">waittraceskip</span> <span class="title">int</span></span></span><br><span class="line"><span class="function">	<span class="title">startingtrace</span> <span class="title">bool</span></span></span><br><span class="line"><span class="function">	<span class="title">syscalltick</span>   <span class="title">uint32</span></span></span><br><span class="line"><span class="function">	// 工作线程 <span class="title">id</span></span></span><br><span class="line"><span class="function">	<span class="title">thread</span>        <span class="title">uintptr</span> // <span class="title">thread</span> <span class="title">handle</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">	// <span class="title">these</span> <span class="title">are</span> <span class="title">here</span> <span class="title">because</span> <span class="title">they</span> <span class="title">are</span> <span class="title">too</span> <span class="title">large</span> <span class="title">to</span> <span class="title">be</span> <span class="title">on</span> <span class="title">the</span> <span class="title">stack</span></span></span><br><span class="line"><span class="function">	// <span class="title">of</span> <span class="title">low</span>-<span class="title">level</span> <span class="title">NOSPLIT</span> <span class="title">functions</span>.</span></span><br><span class="line"><span class="function">	<span class="title">libcall</span>   <span class="title">libcall</span></span></span><br><span class="line"><span class="function">	<span class="title">libcallpc</span> <span class="title">uintptr</span> // <span class="title">for</span> <span class="title">cpu</span> <span class="title">profiler</span></span></span><br><span class="line"><span class="function">	<span class="title">libcallsp</span> <span class="title">uintptr</span></span></span><br><span class="line"><span class="function">	<span class="title">libcallg</span>  <span class="title">guintptr</span></span></span><br><span class="line"><span class="function">	<span class="title">syscall</span>   <span class="title">libcall</span> // <span class="title">stores</span> <span class="title">syscall</span> <span class="title">parameters</span> <span class="title">on</span> <span class="title">windows</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">	<span class="title">mOS</span></span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>再来看 P，取 processor 的首字母，为 M 的执行提供“上下文”，保存 M 执行 G 时的一些资源，例如本地可运行 G 队列，memeory cache 等。</p>
+<p>一个 M 只有绑定 P 才能执行 goroutine，当 M 被阻塞时，整个 P 会被传递给其他 M ，或者说整个 P 被接管。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// p 保存 go 运行时所必须的资源</span></span><br><span class="line"><span class="keyword">type</span> p <span class="keyword">struct</span> &#123;</span><br><span class="line">	lock mutex</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 在 allp 中的索引</span></span><br><span class="line">	id          <span class="keyword">int32</span></span><br><span class="line">	status      <span class="keyword">uint32</span> <span class="comment">// one of pidle/prunning/...</span></span><br><span class="line">	link        puintptr</span><br><span class="line">	<span class="comment">// 每次调用 schedule 时会加一</span></span><br><span class="line">	schedtick   <span class="keyword">uint32</span></span><br><span class="line">	<span class="comment">// 每次系统调用时加一</span></span><br><span class="line">	syscalltick <span class="keyword">uint32</span></span><br><span class="line">	<span class="comment">// 用于 sysmon 线程记录被监控 p 的系统调用时间和运行时间</span></span><br><span class="line">	sysmontick  sysmontick <span class="comment">// last tick observed by sysmon</span></span><br><span class="line">	<span class="comment">// 指向绑定的 m，如果 p 是 idle 的话，那这个指针是 nil</span></span><br><span class="line">	m           muintptr   <span class="comment">// back-link to associated m (nil if idle)</span></span><br><span class="line">	mcache      *mcache</span><br><span class="line">	racectx     <span class="keyword">uintptr</span></span><br><span class="line"></span><br><span class="line">	deferpool    [<span class="number">5</span>][]*_defer <span class="comment">// pool of available defer structs of different sizes (see panic.go)</span></span><br><span class="line">	deferpoolbuf [<span class="number">5</span>][<span class="number">32</span>]*_defer</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Cache of goroutine ids, amortizes accesses to runtime·sched.goidgen.</span></span><br><span class="line">	goidcache    <span class="keyword">uint64</span></span><br><span class="line">	goidcacheend <span class="keyword">uint64</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// Queue of runnable goroutines. Accessed without lock.</span></span><br><span class="line">	<span class="comment">// 本地可运行的队列，不用通过锁即可访问</span></span><br><span class="line">	runqhead <span class="keyword">uint32</span> <span class="comment">// 队列头</span></span><br><span class="line">	runqtail <span class="keyword">uint32</span> <span class="comment">// 队列尾</span></span><br><span class="line">	<span class="comment">// 使用数组实现的循环队列</span></span><br><span class="line">	runq     [<span class="number">256</span>]guintptr</span><br><span class="line"></span><br><span class="line">	<span class="comment">// runnext 非空时，代表的是一个 runnable 状态的 G，</span></span><br><span class="line">	<span class="comment">// 这个 G 被 当前 G 修改为 ready 状态，相比 runq 中的 G 有更高的优先级。</span></span><br><span class="line">	<span class="comment">// 如果当前 G 还有剩余的可用时间，那么就应该运行这个 G</span></span><br><span class="line">	<span class="comment">// 运行之后，该 G 会继承当前 G 的剩余时间</span></span><br><span class="line">	runnext guintptr</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Available G's (status == Gdead)</span></span><br><span class="line">	<span class="comment">// 空闲的 g</span></span><br><span class="line">	gfree    *g</span><br><span class="line">	gfreecnt <span class="keyword">int32</span></span><br><span class="line"></span><br><span class="line">	sudogcache []*sudog</span><br><span class="line">	sudogbuf   [<span class="number">128</span>]*sudog</span><br><span class="line"></span><br><span class="line">	tracebuf traceBufPtr</span><br><span class="line">	traceSwept, traceReclaimed <span class="keyword">uintptr</span></span><br><span class="line"></span><br><span class="line">	palloc persistentAlloc <span class="comment">// per-P to avoid mutex</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// Per-P GC state</span></span><br><span class="line">	gcAssistTime     <span class="keyword">int64</span> <span class="comment">// Nanoseconds in assistAlloc</span></span><br><span class="line">	gcBgMarkWorker   guintptr</span><br><span class="line">	gcMarkWorkerMode gcMarkWorkerMode</span><br><span class="line">	runSafePointFn <span class="keyword">uint32</span> <span class="comment">// if 1, run sched.safePointFn at next safe point</span></span><br><span class="line"></span><br><span class="line">	pad [sys.CacheLineSize]<span class="keyword">byte</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>GPM 三足鼎力，共同成就 Go scheduler。G 需要在 M 上才能运行，M 依赖 P 提供的资源，P 则持有待运行的 G。你中有我，我中有你。</p>
+<p>描述三者的关系：</p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/sched/assets/14.png" alt="曹大 golang notes GPM 三者关系"></p>
+<p>M 会从与它绑定的 P 的本地队列获取可运行的 G，也会从 network poller 里获取可运行的 G，还会从其他 P 偷 G。</p>
+<p>最后我们从宏观上总结一下 GPM，这篇文章尝试从它们的状态流转角度总结。</p>
+<p>首先是 G 的状态流转：</p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/sched/assets/15.png" alt="G 的状态流转图"></p>
+<p>说明一下，上图省略了一些垃圾回收的状态。</p>
+<p>接着是 P 的状态流转：</p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/sched/assets/16.png" alt="P 的状态流转图"></p>
+<blockquote>
+<p>通常情况下（在程序运行时不调整 P 的个数），P 只会在上图中的四种状态下进行切换。 当程序刚开始运行进行初始化时，所有的 P 都处于 <code>_Pgcstop</code> 状态， 随着 P 的初始化（<code>runtime.procresize</code>），会被置于 <code>_Pidle</code>。</p>
+</blockquote>
+<blockquote>
+<p>当 M 需要运行时，会 <code>runtime.acquirep</code> 来使 P 变成 <code>Prunning</code> 状态，并通过 <code>runtime.releasep</code> 来释放。</p>
+</blockquote>
+<blockquote>
+<p>当 G 执行时需要进入系统调用，P 会被设置为 <code>_Psyscall</code>， 如果这个时候被系统监控抢夺（<code>runtime.retake</code>），则 P 会被重新修改为 <code>_Pidle</code>。</p>
+</blockquote>
+<blockquote>
+<p>如果在程序运行中发生 <code>GC</code>，则 P 会被设置为 <code>_Pgcstop</code>， 并在 <code>runtime.startTheWorld</code> 时重新调整为 <code>_Prunning</code>。</p>
+</blockquote>
+<p>最后，我们来看 M 的状态变化：</p>
+<p><img src="https://cos-1251969284.cos.ap-nanjing.myqcloud.com/sched/assets/17.png" alt="M 的状态流转图"></p>
+<p>M 只有自旋和非自旋两种状态。自旋的时候，会努力找工作；找不到的时候会进入非自旋状态，之后会休眠，直到有工作需要处理时，被其他工作线程唤醒，又进入自旋状态。</p>
+<script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
+</script>
+
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/golang/" rel="tag">#golang</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2023/01/02/programmer_leijun/" rel="prev">我的程序员生涯_雷军</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/11/16/go_sched_01/" rel="next">Go语言 goroutine VS thread</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div>
+      
+        <style type="text/css">
+
+    .donate_bar {
+        text-align: center;
+        margin-top : 5%;
+    }
+
+    .donate_bar.hidden {
+        display:none;
+    }
+/*
+    .donate_bar a.btn_donate {
+        display: inline-block;
+        width: 82px;
+        height: 82px;
+        margin-left:auto;
+        margin-right:auto;
+
+        background: url("http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif") no-repeat;
+        _background: url("http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif") no-repeat; 
+
+        -webkit-transition: background 0s;
+        -moz-transition: background 0s;
+        -o-transition: background 0s;
+        -ms-transition: background 0s;
+        transition: background 0s;
+    }
+*/
+    .donate_bar a.btn_donate:hover { 
+        // background-position: 0px -82px;
+        color: #87daff
+    }
+
+    .donate_bar .donate_txt {
+        display: block;
+        color: #9d9d9d;
+        font: 14px/2 "Microsoft Yahei";
+    }
+
+    .bold { 
+        font-weight: bold; 
+    }
+
+    .post-donate a {
+        border-bottom: 0px;
+    }
+
+    #donate_guide table {
+        border: none;
+    }
+
+    #donate_guide td {
+        border-bottom: none;
+        border-right: none;
+        background: #333333;
+        valign: top;
+    }
+
+</style>
+
+
+
+    
+
+    <div class ="post-donate">
+        <div id="donate_board" class="donate_bar center">
+              <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏">赏</a>
+              <span id="donate_txt" class="donate_txt">
+                   
+                        请我喝杯咖啡
+                   
+              </span>
+            <br>
+        </div>  
+  
+        <div id="donate_guide" class="donate_bar center hidden">
+            <!--
+              
+
+            
+                <a href="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="微信打赏" class="fancybox" rel="article0"
+                    style="margin-right:30%">
+                    <img src="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="" height="164px" width="164px">
+                </a>
+            
+            -->
+            <table>
+                <tr>
+                    <td>
+                         
+                    </td>
+                    <td>
+                        
+                            <a href="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="微信打赏" class="fancybox" rel="article0"
+                                style="margin-right:30%">
+                                <img src="http://oss01-1251969284.cosgz.myqcloud.com/wechat2.jpg" title="" height="164px" width="164px">
+                            </a>
+                        
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+        <script type="text/javascript">
+            document.getElementById('btn_donate').onclick = function() {
+                $('#donate_board').addClass('hidden');
+                // $('#donate_guide').removeClass('hidden');
+                $('#donate_guide').show(2000);
+            }
+
+        </script>
+    </div>
+
+    
+
+
+      
+    </div>
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+          <div class="comments" id="comments">
+            
+            -->
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table Of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="changan" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">changan</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">思绪来的快去的也快，偶尔在这里停留</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">87</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">53</span>
+              <span class="site-state-item-name">categories</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">52</span>
+              <span class="site-state-item-name">tags</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://github.com/changan29" target="_blank">GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/zhaochanganplus" target="_blank">ZhiHu</a>
+              </span>
+            
+          
+        </div>
+
+        <div class="links-of-friendly motion-element">
+          
+        </div>
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <p class="post-toc-empty">This post does not have a Table Of Contents</p>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2018 - 
+  <span itemprop="copyrightYear">2024
+  </span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changan
+  </span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme by <a class="theme-link" href="http://blog.idhyt.com">idhyt</a>.<a class="theme-link" href="https://github.com/idhyt/hexo-theme-next/tree/magiclamp">Mala</a>
+</div>
+
+<!-- busuanzi -->
+
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
