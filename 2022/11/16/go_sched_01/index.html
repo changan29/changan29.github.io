@@ -31,7 +31,7 @@
 
 
 
-  <meta name="keywords" content="OS,kernel," />
+  <meta name="keywords" content="golang," />
 
 
 
@@ -40,20 +40,18 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="原始进程Linux下有3个特殊的进程，idle进程(PID = 0), init进程(PID = 1)和kthreadd(PID = 2)  idle进程  由系统自动创建, 运行在内核态 idle进程其pid=0，其前身是系统创建的第一个进程，也是唯一一个没有通过fork或者kernel_thread产生的进程。完成加载系统后，演变为进程调度 调用schedule()函数切换当前进程，在调用该函">
-<meta name="keywords" content="OS,kernel">
+<meta name="description" content="goroutine，绕不开的一个话题是：它和 thread 有什么区别？ 参考资料【How Goroutines Work】告诉我们可以从三个角度区别：内存消耗、创建与销毀、切换。  内存占用  创建一个 goroutine 的栈内存消耗为 2 KB，实际运行过程中，如果栈空间不够用，会自动进行扩容。创建一个 thread 则需要消耗 1 MB 栈内存，而且还需要一个被称为 “a guard pa">
+<meta name="keywords" content="golang">
 <meta property="og:type" content="article">
-<meta property="og:title" content="写一个操作系统_12 linux 原始的几个进程">
-<meta property="og:url" content="http://oneyearago.me/2019/04/20/make_a_linux_12/index.html">
+<meta property="og:title" content="Go语言 goroutine VS thread">
+<meta property="og:url" content="http://oneyearago.me/2022/11/16/go_sched_01/index.html">
 <meta property="og:site_name" content="changan&#39;s blog">
-<meta property="og:description" content="原始进程Linux下有3个特殊的进程，idle进程(PID = 0), init进程(PID = 1)和kthreadd(PID = 2)  idle进程  由系统自动创建, 运行在内核态 idle进程其pid=0，其前身是系统创建的第一个进程，也是唯一一个没有通过fork或者kernel_thread产生的进程。完成加载系统后，演变为进程调度 调用schedule()函数切换当前进程，在调用该函">
+<meta property="og:description" content="goroutine，绕不开的一个话题是：它和 thread 有什么区别？ 参考资料【How Goroutines Work】告诉我们可以从三个角度区别：内存消耗、创建与销毀、切换。  内存占用  创建一个 goroutine 的栈内存消耗为 2 KB，实际运行过程中，如果栈空间不够用，会自动进行扩容。创建一个 thread 则需要消耗 1 MB 栈内存，而且还需要一个被称为 “a guard pa">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="http://201905-1251969284.cossh.myqcloud.com/linux_init.png">
-<meta property="og:updated_time" content="2022-11-24T13:55:54.240Z">
+<meta property="og:updated_time" content="2024-06-24T05:10:28.456Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="写一个操作系统_12 linux 原始的几个进程">
-<meta name="twitter:description" content="原始进程Linux下有3个特殊的进程，idle进程(PID = 0), init进程(PID = 1)和kthreadd(PID = 2)  idle进程  由系统自动创建, 运行在内核态 idle进程其pid=0，其前身是系统创建的第一个进程，也是唯一一个没有通过fork或者kernel_thread产生的进程。完成加载系统后，演变为进程调度 调用schedule()函数切换当前进程，在调用该函">
-<meta name="twitter:image" content="http://201905-1251969284.cossh.myqcloud.com/linux_init.png">
+<meta name="twitter:title" content="Go语言 goroutine VS thread">
+<meta name="twitter:description" content="goroutine，绕不开的一个话题是：它和 thread 有什么区别？ 参考资料【How Goroutines Work】告诉我们可以从三个角度区别：内存消耗、创建与销毀、切换。  内存占用  创建一个 goroutine 的栈内存消耗为 2 KB，实际运行过程中，如果栈空间不够用，会自动进行扩容。创建一个 thread 则需要消耗 1 MB 栈内存，而且还需要一个被称为 “a guard pa">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -63,7 +61,7 @@
   };
 </script>
 
-  <title> 写一个操作系统_12 linux 原始的几个进程 | changan's blog </title>
+  <title> Go语言 goroutine VS thread | changan's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -313,7 +311,7 @@
           
           
             
-              写一个操作系统_12 linux 原始的几个进程
+              Go语言 goroutine VS thread
             
           
         </h1>
@@ -322,8 +320,8 @@
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2019-04-20T21:08:45+08:00" content="2019-04-20">
-            2019-04-20
+          <time itemprop="dateCreated" datetime="2022-11-16T18:20:39+08:00" content="2022-11-16">
+            2022-11-16
           </time>
         </span>
 
@@ -332,20 +330,8 @@
             &nbsp; | &nbsp; In
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/kernel/" itemprop="url" rel="index">
-                  <span itemprop="name">kernel</span>
-                </a>
-              </span>
-
-              
-              
-                , 
-              
-
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/kernel/OS/" itemprop="url" rel="index">
-                  <span itemprop="name">OS</span>
+                <a href="/categories/golang/" itemprop="url" rel="index">
+                  <span itemprop="name">golang</span>
                 </a>
               </span>
 
@@ -368,33 +354,31 @@
       
 
       
-        <span itemprop="articleBody"><h3 id="原始进程"><a href="#原始进程" class="headerlink" title="原始进程"></a>原始进程</h3><p>Linux下有3个特殊的进程，idle进程(PID = 0), init进程(PID = 1)和kthreadd(PID = 2)</p>
+        <span itemprop="articleBody"><p>goroutine，绕不开的一个话题是：它和 thread 有什么区别？</p>
+<p>参考资料【How Goroutines Work】告诉我们可以从三个角度区别：内存消耗、创建与销毀、切换。</p>
 <ul>
-<li>idle进程</li>
+<li>内存占用</li>
 </ul>
-<p>由系统自动创建, 运行在内核态</p>
-<p>idle进程其pid=0，其前身是系统创建的第一个进程，也是唯一一个没有通过fork或者kernel_thread产生的进程。完成加载系统后，演变为进程调度</p>
-<p>调用schedule()函数切换当前进程，在调用该函数之前，Linux系统中只有两个进程，即0号进程init_task和1号进程kernel_init，其中kernel_init进程也是刚刚被创建的。调用该函数后，1号进程kernel_init将会运行！</p>
+<p>创建一个 goroutine 的栈内存消耗为 2 KB，实际运行过程中，如果栈空间不够用，会自动进行扩容。创建一个 thread 则需要消耗 1 MB 栈内存，而且还需要一个被称为 “a guard page” 的区域用于和其他 thread 的栈空间进行隔离。</p>
+<p>对于一个用 Go 构建的 HTTP Server 而言，对到来的每个请求，创建一个 goroutine 用来处理是非常轻松的一件事。而如果用一个使用线程作为并发原语的语言构建的服务，例如 Java 来说，每个请求对应一个线程则太浪费资源了，很快就会出 OOM 错误（OutOfMemoryError）。</p>
 <ul>
-<li>init进程</li>
+<li>创建和销毀</li>
 </ul>
-<p>由idle通过kernel_thread创建，在内核空间完成初始化后, 加载init程序, 并最终转向用户空间，演变为init进程<br>由0进程创建，完成系统的初始化. 是系统中所有其它用户进程的祖先进程</p>
+<p>Thread 创建和销毀都会有巨大的消耗，因为要和操作系统打交道，是内核级的，通常解决的办法就是线程池。而 goroutine 因为是由 Go runtime 负责管理的，创建和销毁的消耗非常小，是用户级。</p>
 <ul>
-<li>kthreadd进程</li>
+<li>切换</li>
 </ul>
-<p>由idle通过kernel_thread创建，并始终运行在内核空间, 负责所有内核线程的调度和管理</p>
-<p>它的任务就是管理和调度其他内核线程kernel_thread, 会循环执行一个kthread的函数，该函数的作用就是运行kthread_create_list全局链表中维护的kthread, 当我们调用kernel_thread创建的内核线程会被加入到此链表中，因此所有的内核线程都是直接或者间接的以kthreadd为父进程</p>
-<h3 id="启动初始化进程"><a href="#启动初始化进程" class="headerlink" title="启动初始化进程"></a>启动初始化进程</h3><p>内核文件加载以后，就开始运行第一个程序 /sbin/init，它的作用是初始化系统环境。</p>
-<p>由于init是第一个运行的程序，它的进程编号（pid）就是1。其他所有进程都从它衍生，都是它的子进程。</p>
-<h3 id="确定运行级别"><a href="#确定运行级别" class="headerlink" title="确定运行级别"></a>确定运行级别</h3><p>许多程序需要开机启动。它们在Windows叫做”服务”（service），在Linux就叫做”守护进程”（daemon）。</p>
-<p>init进程的一大任务，就是去运行这些开机启动的程序。但是，不同的场合需要启动不同的程序，比如用作服务器时，需要启动Apache，用作桌面就不需要。Linux允许为不同的场合，分配不同的开机启动程序，这就叫做”运行级别”（runlevel）。也就是说，启动时根据”运行级别”，确定要运行哪些程序。</p>
-<p>Linux预置七种运行级别（0-6）。一般来说，0是关机，1是单用户模式（也就是维护模式），6是重启。运行级别2-5，各个发行版不太一样，对于Debian来说，都是同样的多用户模式（也就是正常模式）。</p>
-<p>init进程首先读取文件 /etc/inittab，它是运行级别的设置文件。initdefault的值是2，表明系统启动时的运行级别为2。</p>
-<h3 id="加载开机启动程序"><a href="#加载开机启动程序" class="headerlink" title="加载开机启动程序"></a>加载开机启动程序</h3><p>那么，运行级别2有些什么程序呢，系统怎么知道每个级别应该加载哪些程序呢？……回答是每个运行级别在/etc目录下面，都有一个对应的子目录，指定要加载的程序。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/etc/rc0.d</span><br><span class="line">　　/etc/rc1.d</span><br><span class="line">　　/etc/rc2.d</span><br><span class="line">　　/etc/rc3.d</span><br><span class="line">　　/etc/rc4.d</span><br><span class="line">　　/etc/rc5.d</span><br><span class="line">　　/etc/rc6.d</span><br></pre></td></tr></table></figure>
-<p><img src="http://201905-1251969284.cossh.myqcloud.com/linux_init.png" alt="image"></p>
+<p>当 threads 切换时，需要保存各种寄存器，以便将来恢复：</p>
+<blockquote>
+<p>16 general purpose registers, PC (Program Counter), SP (Stack Pointer), segment registers, 16 XMM registers, FP coprocessor state, 16 AVX registers, all MSRs etc.</p>
+</blockquote>
+<p>而 goroutines 切换只需保存三个寄存器：Program Counter, Stack Pointer and BP。</p>
+<p>一般而言，线程切换会消耗 1000-1500 纳秒，一个纳秒平均可以执行 12-18 条指令。所以由于线程切换，执行指令的条数会减少 12000-18000。</p>
+<p>Goroutine 的切换约为 200 ns，相当于 2400-3600 条指令。</p>
+<p>因此，goroutines 切换成本比 threads 要小得多。</p>
 <script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
 </script>
+
 </span>
       
     </div>
@@ -403,9 +387,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/OS/" rel="tag">#OS</a>
-          
-            <a href="/tags/kernel/" rel="tag">#kernel</a>
+            <a href="/tags/golang/" rel="tag">#golang</a>
           
         </div>
       
@@ -414,13 +396,13 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/04/23/make_a_linux_13/" rel="prev">写一个操作系统_13 内核的宏观视角</a>
+              <a href="/2023/01/02/programmer_leijun/" rel="prev">我的程序员生涯_雷军</a>
             
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/04/11/make_a_linux_11/" rel="next">写一个操作系统_11 Linux是怎么实现线程的</a>
+              <a href="/2022/11/11/go_chan_03/" rel="next">Go语言 - 从 channel 接收数据</a>
             
           </div>
         </div>
@@ -654,7 +636,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#原始进程"><span class="nav-number">1.</span> <span class="nav-text">原始进程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动初始化进程"><span class="nav-number">2.</span> <span class="nav-text">启动初始化进程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#确定运行级别"><span class="nav-number">3.</span> <span class="nav-text">确定运行级别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#加载开机启动程序"><span class="nav-number">4.</span> <span class="nav-text">加载开机启动程序</span></a></li></ol></div>
+              <p class="post-toc-empty">This post does not have a Table Of Contents</p>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
