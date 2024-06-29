@@ -31,7 +31,7 @@
 
 
 
-  <meta name="keywords" content="golang," />
+  <meta name="keywords" content="音视频," />
 
 
 
@@ -40,18 +40,20 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="goroutine，绕不开的一个话题是：它和 thread 有什么区别？ 参考资料【How Goroutines Work】告诉我们可以从三个角度区别：内存消耗、创建与销毀、切换。  内存占用  创建一个 goroutine 的栈内存消耗为 2 KB，实际运行过程中，如果栈空间不够用，会自动进行扩容。创建一个 thread 则需要消耗 1 MB 栈内存，而且还需要一个被称为 “a guard pa">
-<meta name="keywords" content="golang">
+<meta name="description" content="整体架构https://webrtc.github.io/webrtc-org/architecture/ 整体设计图 示例进行视频采集解释放代码注释中, html5 和 webrtc 标准互通 确实让音视频的生态、开发者的处境变得更好，很好的思路，接触音视频有点晚少了很多有意思的尝试。 12345678910111213141516171819   &amp;lt;body&amp;gt;    &amp;lt;div">
+<meta name="keywords" content="音视频">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Go语言 goroutine VS thread">
-<meta property="og:url" content="http://oneyearago.me/2022/11/16/go_sched_01/index.html">
+<meta property="og:title" content="webrtc-01 视频采集和录制">
+<meta property="og:url" content="http://oneyearago.me/2024/02/06/webrtc_01/index.html">
 <meta property="og:site_name" content="changan&#39;s blog">
-<meta property="og:description" content="goroutine，绕不开的一个话题是：它和 thread 有什么区别？ 参考资料【How Goroutines Work】告诉我们可以从三个角度区别：内存消耗、创建与销毀、切换。  内存占用  创建一个 goroutine 的栈内存消耗为 2 KB，实际运行过程中，如果栈空间不够用，会自动进行扩容。创建一个 thread 则需要消耗 1 MB 栈内存，而且还需要一个被称为 “a guard pa">
+<meta property="og:description" content="整体架构https://webrtc.github.io/webrtc-org/architecture/ 整体设计图 示例进行视频采集解释放代码注释中, html5 和 webrtc 标准互通 确实让音视频的生态、开发者的处境变得更好，很好的思路，接触音视频有点晚少了很多有意思的尝试。 12345678910111213141516171819   &amp;lt;body&amp;gt;    &amp;lt;div">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2024-06-24T05:10:28.456Z">
+<meta property="og:image" content="https://webrtc.github.io/webrtc-org/assets/images/webrtc-public-diagram-for-website.png">
+<meta property="og:updated_time" content="2024-06-29T13:01:10.891Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Go语言 goroutine VS thread">
-<meta name="twitter:description" content="goroutine，绕不开的一个话题是：它和 thread 有什么区别？ 参考资料【How Goroutines Work】告诉我们可以从三个角度区别：内存消耗、创建与销毀、切换。  内存占用  创建一个 goroutine 的栈内存消耗为 2 KB，实际运行过程中，如果栈空间不够用，会自动进行扩容。创建一个 thread 则需要消耗 1 MB 栈内存，而且还需要一个被称为 “a guard pa">
+<meta name="twitter:title" content="webrtc-01 视频采集和录制">
+<meta name="twitter:description" content="整体架构https://webrtc.github.io/webrtc-org/architecture/ 整体设计图 示例进行视频采集解释放代码注释中, html5 和 webrtc 标准互通 确实让音视频的生态、开发者的处境变得更好，很好的思路，接触音视频有点晚少了很多有意思的尝试。 12345678910111213141516171819   &amp;lt;body&amp;gt;    &amp;lt;div">
+<meta name="twitter:image" content="https://webrtc.github.io/webrtc-org/assets/images/webrtc-public-diagram-for-website.png">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -61,7 +63,7 @@
   };
 </script>
 
-  <title> Go语言 goroutine VS thread | changan's blog </title>
+  <title> webrtc-01 视频采集和录制 | changan's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -311,7 +313,7 @@
           
           
             
-              Go语言 goroutine VS thread
+              webrtc-01 视频采集和录制
             
           
         </h1>
@@ -320,8 +322,8 @@
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2022-11-16T18:20:39+08:00" content="2022-11-16">
-            2022-11-16
+          <time itemprop="dateCreated" datetime="2024-02-06T18:20:39+08:00" content="2024-02-06">
+            2024-02-06
           </time>
         </span>
 
@@ -330,8 +332,8 @@
             &nbsp; | &nbsp; In
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/golang/" itemprop="url" rel="index">
-                  <span itemprop="name">golang</span>
+                <a href="/categories/音视频/" itemprop="url" rel="index">
+                  <span itemprop="name">音视频</span>
                 </a>
               </span>
 
@@ -354,28 +356,13 @@
       
 
       
-        <span itemprop="articleBody"><p>goroutine，绕不开的一个话题是：它和 thread 有什么区别？</p>
-<p>参考资料【How Goroutines Work】告诉我们可以从三个角度区别：内存消耗、创建与销毀、切换。</p>
-<ul>
-<li>内存占用</li>
-</ul>
-<p>创建一个 goroutine 的栈内存消耗为 2 KB，实际运行过程中，如果栈空间不够用，会自动进行扩容。创建一个 thread 则需要消耗 1 MB 栈内存，而且还需要一个被称为 “a guard page” 的区域用于和其他 thread 的栈空间进行隔离。</p>
-<p>对于一个用 Go 构建的 HTTP Server 而言，对到来的每个请求，创建一个 goroutine 用来处理是非常轻松的一件事。而如果用一个使用线程作为并发原语的语言构建的服务，例如 Java 来说，每个请求对应一个线程则太浪费资源了，很快就会出 OOM 错误（OutOfMemoryError）。</p>
-<ul>
-<li>创建和销毀</li>
-</ul>
-<p>Thread 创建和销毀都会有巨大的消耗，因为要和操作系统打交道，是内核级的，通常解决的办法就是线程池。而 goroutine 因为是由 Go runtime 负责管理的，创建和销毁的消耗非常小，是用户级。</p>
-<ul>
-<li>切换</li>
-</ul>
-<p>当 threads 切换时，需要保存各种寄存器，以便将来恢复：</p>
-<blockquote>
-<p>16 general purpose registers, PC (Program Counter), SP (Stack Pointer), segment registers, 16 XMM registers, FP coprocessor state, 16 AVX registers, all MSRs etc.</p>
-</blockquote>
-<p>而 goroutines 切换只需保存三个寄存器：Program Counter, Stack Pointer and BP。</p>
-<p>一般而言，线程切换会消耗 1000-1500 纳秒，一个纳秒平均可以执行 12-18 条指令。所以由于线程切换，执行指令的条数会减少 12000-18000。</p>
-<p>Goroutine 的切换约为 200 ns，相当于 2400-3600 条指令。</p>
-<p>因此，goroutines 切换成本比 threads 要小得多。</p>
+        <span itemprop="articleBody"><h2 id="整体架构"><a href="#整体架构" class="headerlink" title="整体架构"></a>整体架构</h2><p><a href="https://webrtc.github.io/webrtc-org/architecture/#" target="_blank" rel="noopener">https://webrtc.github.io/webrtc-org/architecture/</a></p>
+<h4 id="整体设计图"><a href="#整体设计图" class="headerlink" title="整体设计图"></a>整体设计图</h4><p><img src="https://webrtc.github.io/webrtc-org/assets/images/webrtc-public-diagram-for-website.png" alt="image"></p>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><h4 id="进行视频采集"><a href="#进行视频采集" class="headerlink" title="进行视频采集"></a>进行视频采集</h4><p>解释放代码注释中, html5 和 webrtc 标准互通 确实让音视频的生态、开发者的处境变得更好，很好的思路，接触音视频有点晚少了很多有意思的尝试。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">   &lt;body&gt;</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">           	&lt;video autoplay playsinline id=&quot;player&quot;&gt;&lt;/video&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line"></span><br><span class="line">    &lt;div&gt;</span><br><span class="line">           	&lt;button id=&quot;record&quot;&gt;Start Record&lt;/button&gt;</span><br><span class="line">           	&lt;button id=&quot;recplay&quot; disabled&gt;Play&lt;/button&gt;</span><br><span class="line">           	&lt;button id=&quot;download&quot; disabled&gt;Download&lt;/button&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line"></span><br><span class="line">    &lt;div&gt;</span><br><span class="line">           	&lt;video playsinline id=&quot;recplayer&quot;&gt;&lt;/video&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line"></span><br><span class="line">           &lt;script src=&quot;https://webrtc.github.io/adapter/adapter-latest.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">           &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">           &lt;script src=&quot;./js/client.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;/body&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br></pre></td><td class="code"><pre><span class="line">&apos;use strict&apos;</span><br><span class="line"></span><br><span class="line">var videoplay = document.querySelector(&apos;video#player&apos;);</span><br><span class="line">//var audioplay = document.querySelector(&apos;audio#audioplayer&apos;);</span><br><span class="line"></span><br><span class="line">//record</span><br><span class="line">var recvideo = document.querySelector(&apos;video#recplayer&apos;);</span><br><span class="line">var btnRecord = document.querySelector(&apos;button#record&apos;);</span><br><span class="line">var btnPlay = document.querySelector(&apos;button#recplay&apos;);</span><br><span class="line">var btnDownload = document.querySelector(&apos;button#download&apos;);</span><br><span class="line"></span><br><span class="line">var buffer;</span><br><span class="line">var mediaRecorder;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">function gotMediaStream(stream)&#123;</span><br><span class="line"></span><br><span class="line">	window.stream = stream;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	1. html5标准</span><br><span class="line">		 2008 年发布，正式包含了 &lt;video&gt; 和 &lt;audio&gt; 元素，这些标准在 2010 年代初得到了广泛的采纳和实施，同时逐渐增加了更多功能，如 srcObject 属性</span><br><span class="line"></span><br><span class="line">	2. WebRTC 标准</span><br><span class="line">		2013 年左右，WebRTC 开始在主流浏览器中得到实现</span><br><span class="line">	3. 互通性</span><br><span class="line">		MediaStream API 是连接 HTML5 媒体标准和 WebRTC 的桥梁。这个 API 允许将从摄像头和麦克风等设备获取的媒体流直接赋值给 &lt;video&gt; 或 &lt;audio&gt; 元素</span><br><span class="line">		srcObject 属性的引入（初步在 2013 年左右的草案中出现）</span><br><span class="line">	*/</span><br><span class="line">	videoplay.srcObject = stream;	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function handleError(err)&#123;</span><br><span class="line">	console.log(&apos;getUserMedia error:&apos;, err);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function start() &#123;</span><br><span class="line"></span><br><span class="line">	if(!navigator.mediaDevices ||</span><br><span class="line">		!navigator.mediaDevices.getUserMedia)&#123;</span><br><span class="line"></span><br><span class="line">		console.log(&apos;getUserMedia is not supported!&apos;);</span><br><span class="line">		return;</span><br><span class="line"></span><br><span class="line">	&#125;else&#123;</span><br><span class="line"></span><br><span class="line">		var constraints = &#123;</span><br><span class="line">			video : &#123;</span><br><span class="line">				width: 640,	</span><br><span class="line">				height: 480,</span><br><span class="line">				frameRate:15</span><br><span class="line">			&#125;, </span><br><span class="line">			audio : false </span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		// getUserMedia(constraints?: MediaStreamConstraints): Promise&lt;MediaStream&gt;;</span><br><span class="line">		navigator.mediaDevices.getUserMedia(constraints)</span><br><span class="line">			.then(gotMediaStream)</span><br><span class="line">			.catch(handleError);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">start();</span><br><span class="line"></span><br><span class="line">function handleDataAvailable(e)&#123;</span><br><span class="line">	if(e &amp;&amp; e.data &amp;&amp; e.data.size &gt; 0)&#123;</span><br><span class="line">	 	buffer.push(e.data);			</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function startRecord()&#123;</span><br><span class="line">	</span><br><span class="line">	buffer = [];</span><br><span class="line"></span><br><span class="line">	var options = &#123;</span><br><span class="line">		mimeType: &apos;video/webm;codecs=vp8&apos;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	if(!MediaRecorder.isTypeSupported(options.mimeType))&#123;</span><br><span class="line">		console.error(`$&#123;options.mimeType&#125; is not supported!`);</span><br><span class="line">		return;	</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	try&#123;</span><br><span class="line">		// https://developer.mozilla.org/zh-CN/docs/Web/API/MediaRecorder/dataavailable_event</span><br><span class="line">		mediaRecorder = new MediaRecorder(window.stream, options);</span><br><span class="line">	&#125;catch(e)&#123;</span><br><span class="line">		console.error(&apos;Failed to create MediaRecorder:&apos;, e);</span><br><span class="line">		return;	</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	mediaRecorder.ondataavailable = handleDataAvailable;</span><br><span class="line">	mediaRecorder.start(10);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function stopRecord()&#123;</span><br><span class="line">	mediaRecorder.stop();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">btnRecord.onclick = ()=&gt;&#123;</span><br><span class="line"></span><br><span class="line">	if(btnRecord.textContent === &apos;Start Record&apos;)&#123;</span><br><span class="line">		startRecord();	</span><br><span class="line">		btnRecord.textContent = &apos;Stop Record&apos;;</span><br><span class="line">		btnPlay.disabled = true;</span><br><span class="line">		btnDownload.disabled = true;</span><br><span class="line">	&#125;else&#123;</span><br><span class="line">	</span><br><span class="line">		stopRecord();</span><br><span class="line">		btnRecord.textContent = &apos;Start Record&apos;;</span><br><span class="line">		btnPlay.disabled = false;</span><br><span class="line">		btnDownload.disabled = false;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">btnPlay.onclick = ()=&gt; &#123;</span><br><span class="line">	var blob = new Blob(buffer, &#123;type: &apos;video/webm&apos;&#125;);	// webm 是一种开放的媒体文件格式，专门设计用于互联网上的视频和音频内容 </span><br><span class="line">	/*</span><br><span class="line">		WebP 和 WebM 都是由谷歌推动的开源项目，它们都旨在优化网络上的媒体内容传输，但分别用于不同的媒体类型：</span><br><span class="line"></span><br><span class="line">		WebP：是一种主要针对图像的文件格式，支持无损和有损压缩。WebP 提供的压缩效率通常优于传统的 JPEG 和 PNG 格式，</span><br><span class="line">		并且支持动画和透明度（alpha transparency），这使得它成为一个非常适合网络使用的图像格式。WebP 的目标是减小图像文件的大小，</span><br><span class="line">		从而加快网页加载速度，并减少带宽使用。</span><br><span class="line"></span><br><span class="line">		WebM：是一种视频容器格式，它主要用于包含视频和音频流，特别是在网络应用中。WebM 使用 VP8 或 VP9 作为视频编解码器，Vorbis 或 Opus 为音频编解码器。</span><br><span class="line">		WebM 格式因其开放性和高效的编解码性能，常被用于视频流和网页视频播放。</span><br><span class="line">	*/</span><br><span class="line"></span><br><span class="line">	recvideo.src = window.URL.createObjectURL(blob);</span><br><span class="line">	recvideo.srcObject = null;</span><br><span class="line">	recvideo.controls = true;</span><br><span class="line">	recvideo.play();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">btnDownload.onclick = ()=&gt; &#123;</span><br><span class="line">	var blob = new Blob(buffer, &#123;type: &apos;video/webm&apos;&#125;);	// https://zh.wikipedia.org/wiki/%E4%BA%92%E8%81%94%E7%BD%91%E5%AA%92%E4%BD%93%E7%B1%BB%E5%9E%8B#Type_video</span><br><span class="line">	var url = window.URL.createObjectURL(blob);</span><br><span class="line">	var a = document.createElement(&apos;a&apos;);</span><br><span class="line"></span><br><span class="line">	a.href = url;</span><br><span class="line">	a.style.display = &apos;none&apos;;</span><br><span class="line">	a.download = &apos;aaa.webm&apos;;</span><br><span class="line">	a.click();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="demo部署"><a href="#demo部署" class="headerlink" title="demo部署"></a>demo部署</h4><p>备注: 需要https证书</p>
+<p><a href="https://www.oneyearago.me/webrtc_01.html" target="_blank" rel="noopener">webrtc第一个实验</a></p>
 <script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
 </script>
 
@@ -387,7 +374,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/golang/" rel="tag">#golang</a>
+            <a href="/tags/音视频/" rel="tag">#音视频</a>
           
         </div>
       
@@ -396,13 +383,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2022/12/16/go_sched_02/" rel="prev">Go语言 goroutine调度</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2022/11/11/go_chan_03/" rel="next">Go语言 - 从 channel 接收数据</a>
+              <a href="/2023/06/06/vedio-basic-04/" rel="next">音视频基础- rtmp协议</a>
             
           </div>
         </div>
@@ -636,7 +621,7 @@
           <div class="post-toc">
             
             
-              <p class="post-toc-empty">This post does not have a Table Of Contents</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#整体架构"><span class="nav-number">1.</span> <span class="nav-text">整体架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#整体设计图"><span class="nav-number">1.0.1.</span> <span class="nav-text">整体设计图</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#示例"><span class="nav-number">2.</span> <span class="nav-text">示例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#进行视频采集"><span class="nav-number">2.0.1.</span> <span class="nav-text">进行视频采集</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#demo部署"><span class="nav-number">2.0.2.</span> <span class="nav-text">demo部署</span></a></li></ol></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
