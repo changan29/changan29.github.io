@@ -31,7 +31,7 @@
 
 
 
-  <meta name="keywords" content="IPC,pipe," />
+  <meta name="keywords" content="音视频," />
 
 
 
@@ -40,20 +40,18 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="历史UNIX两大贡献者贝尔实验室和BSD，在进程之间通信侧重不同，前者基于内核对进程之间的通信手段进行了改进，形成了“System V IPC”，而后者则是基于网络形成了套接字。 而POSIX则是IEEE制定的标准，目的是为运行在不同操作系统上的软件提供统一的接口，实现者则是不同的操作系统内核开发人员。 System V 以及POSIX 对信号量、共享内存、消息队列等进程之间共享方式提供了自己的解">
-<meta name="keywords" content="IPC,pipe">
+<meta name="description" content="直播业务直播的业务一般包括：推流，拉流/播放，回源，录制，时移，转码。 推流直播推流是指通过推流协议，把音视频数据推送到CDN的服务器。 推流协议主要是RTMP，也可以使用WebRTC。 推流端需要把音视频数据封装成FLV格式或者RTP格式的数据。 推流端需要选择最近的一个节点推送数据。 拉流/播放拉流：服务器之间读取实时流数据进行回源。 播放：客户端读取实时流数据进行播放。 拉流/播放可以使用服">
+<meta name="keywords" content="音视频">
 <meta property="og:type" content="article">
-<meta property="og:title" content="进程通信 &amp; PIPE">
-<meta property="og:url" content="http://oneyearago.me/2019/10/24/IPC_and_pipe/index.html">
+<meta property="og:title" content="音视频基础- 直播业务">
+<meta property="og:url" content="http://oneyearago.me/2024/03/15/vedio-basic-07/index.html">
 <meta property="og:site_name" content="changan&#39;s blog">
-<meta property="og:description" content="历史UNIX两大贡献者贝尔实验室和BSD，在进程之间通信侧重不同，前者基于内核对进程之间的通信手段进行了改进，形成了“System V IPC”，而后者则是基于网络形成了套接字。 而POSIX则是IEEE制定的标准，目的是为运行在不同操作系统上的软件提供统一的接口，实现者则是不同的操作系统内核开发人员。 System V 以及POSIX 对信号量、共享内存、消息队列等进程之间共享方式提供了自己的解">
+<meta property="og:description" content="直播业务直播的业务一般包括：推流，拉流/播放，回源，录制，时移，转码。 推流直播推流是指通过推流协议，把音视频数据推送到CDN的服务器。 推流协议主要是RTMP，也可以使用WebRTC。 推流端需要把音视频数据封装成FLV格式或者RTP格式的数据。 推流端需要选择最近的一个节点推送数据。 拉流/播放拉流：服务器之间读取实时流数据进行回源。 播放：客户端读取实时流数据进行播放。 拉流/播放可以使用服">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="https://201910-1251969284.cos.ap-shanghai.myqcloud.com/socket_pair_pipe.bmp">
-<meta property="og:updated_time" content="2022-11-24T13:55:54.212Z">
+<meta property="og:updated_time" content="2024-07-02T11:54:23.180Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="进程通信 &amp; PIPE">
-<meta name="twitter:description" content="历史UNIX两大贡献者贝尔实验室和BSD，在进程之间通信侧重不同，前者基于内核对进程之间的通信手段进行了改进，形成了“System V IPC”，而后者则是基于网络形成了套接字。 而POSIX则是IEEE制定的标准，目的是为运行在不同操作系统上的软件提供统一的接口，实现者则是不同的操作系统内核开发人员。 System V 以及POSIX 对信号量、共享内存、消息队列等进程之间共享方式提供了自己的解">
-<meta name="twitter:image" content="https://201910-1251969284.cos.ap-shanghai.myqcloud.com/socket_pair_pipe.bmp">
+<meta name="twitter:title" content="音视频基础- 直播业务">
+<meta name="twitter:description" content="直播业务直播的业务一般包括：推流，拉流/播放，回源，录制，时移，转码。 推流直播推流是指通过推流协议，把音视频数据推送到CDN的服务器。 推流协议主要是RTMP，也可以使用WebRTC。 推流端需要把音视频数据封装成FLV格式或者RTP格式的数据。 推流端需要选择最近的一个节点推送数据。 拉流/播放拉流：服务器之间读取实时流数据进行回源。 播放：客户端读取实时流数据进行播放。 拉流/播放可以使用服">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -63,7 +61,7 @@
   };
 </script>
 
-  <title> 进程通信 & PIPE | changan's blog </title>
+  <title> 音视频基础- 直播业务 | changan's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -313,7 +311,7 @@
           
           
             
-              进程通信 & PIPE
+              音视频基础- 直播业务
             
           
         </h1>
@@ -322,8 +320,8 @@
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2019-10-24T23:58:45+08:00" content="2019-10-24">
-            2019-10-24
+          <time itemprop="dateCreated" datetime="2024-03-15T20:20:39+08:00" content="2024-03-15">
+            2024-03-15
           </time>
         </span>
 
@@ -332,20 +330,8 @@
             &nbsp; | &nbsp; In
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/IPC/" itemprop="url" rel="index">
-                  <span itemprop="name">IPC</span>
-                </a>
-              </span>
-
-              
-              
-                , 
-              
-
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/IPC/pipe/" itemprop="url" rel="index">
-                  <span itemprop="name">pipe</span>
+                <a href="/categories/音视频/" itemprop="url" rel="index">
+                  <span itemprop="name">音视频</span>
                 </a>
               </span>
 
@@ -368,14 +354,68 @@
       
 
       
-        <span itemprop="articleBody"><h3 id="历史"><a href="#历史" class="headerlink" title="历史"></a>历史</h3><p>UNIX两大贡献者贝尔实验室和BSD，在进程之间通信侧重不同，前者基于内核对进程之间的通信手段进行了改进，形成了“System V IPC”，而后者则是基于网络形成了套接字。</p>
-<p>而POSIX则是IEEE制定的标准，目的是为运行在不同操作系统上的软件提供统一的接口，实现者则是不同的操作系统内核开发人员。</p>
-<p>System V 以及POSIX 对信号量、共享内存、消息队列等进程之间共享方式提供了自己的解决方案。</p>
-<p>在观察使用进程间通信手段后，会发现在多线程中使用的基本是POSIX标准提供的接口函数，而多进程则是基于System V。</p>
-<h3 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h3><p>pipe和fifo用的不多了，让我们从Nginx那里学一个 全双工的管道: socketpair<br><img src="https://201910-1251969284.cos.ap-shanghai.myqcloud.com/socket_pair_pipe.bmp" alt="image"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;sys/uio.h&gt;</span><br><span class="line">#include &lt;sys/socket.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line">ssize_t</span><br><span class="line">sock_fd_write(int sock, void *buf, ssize_t buflen, int fd)</span><br><span class="line">&#123;</span><br><span class="line">  ssize_t     size;</span><br><span class="line">  struct msghdr   msg;</span><br><span class="line">  struct iovec    iov;</span><br><span class="line">  union &#123;</span><br><span class="line">    struct cmsghdr  cmsghdr;</span><br><span class="line">    char        control[CMSG_SPACE(sizeof (int))];</span><br><span class="line">  &#125; cmsgu;</span><br><span class="line">  struct cmsghdr  *cmsg;</span><br><span class="line"></span><br><span class="line">  iov.iov_base = buf;</span><br><span class="line">  iov.iov_len = buflen;</span><br><span class="line"></span><br><span class="line">  msg.msg_name = NULL;</span><br><span class="line">  msg.msg_namelen = 0;</span><br><span class="line">  msg.msg_iov = &amp;iov;</span><br><span class="line">  msg.msg_iovlen = 1;</span><br><span class="line"></span><br><span class="line">  if (fd != -1) &#123;</span><br><span class="line">    msg.msg_control = cmsgu.control;</span><br><span class="line">    msg.msg_controllen = sizeof(cmsgu.control);</span><br><span class="line"></span><br><span class="line">    cmsg = CMSG_FIRSTHDR(&amp;msg);</span><br><span class="line">    cmsg-&gt;cmsg_len = CMSG_LEN(sizeof (int));</span><br><span class="line">    cmsg-&gt;cmsg_level = SOL_SOCKET;</span><br><span class="line">    cmsg-&gt;cmsg_type = SCM_RIGHTS;</span><br><span class="line"></span><br><span class="line">    printf (&quot;passing fd %d\n&quot;, fd);</span><br><span class="line">    *((int *) CMSG_DATA(cmsg)) = fd;</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    msg.msg_control = NULL;</span><br><span class="line">    msg.msg_controllen = 0;</span><br><span class="line">    printf (&quot;not passing fd\n&quot;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  size = sendmsg(sock, &amp;msg, 0);</span><br><span class="line"></span><br><span class="line">  if (size &lt; 0)</span><br><span class="line">    perror (&quot;sendmsg&quot;);</span><br><span class="line">  return size;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ssize_t</span><br><span class="line">sock_fd_read(int sock, void *buf, ssize_t bufsize, int *fd)</span><br><span class="line">&#123;</span><br><span class="line">  ssize_t     size;</span><br><span class="line"></span><br><span class="line">  if (fd) &#123;</span><br><span class="line">    struct msghdr   msg;</span><br><span class="line">    struct iovec    iov;</span><br><span class="line">    union &#123;</span><br><span class="line">      struct cmsghdr  cmsghdr;</span><br><span class="line">      char        control[CMSG_SPACE(sizeof (int))];</span><br><span class="line">    &#125; cmsgu;</span><br><span class="line">    struct cmsghdr  *cmsg;</span><br><span class="line"></span><br><span class="line">    iov.iov_base = buf;</span><br><span class="line">    iov.iov_len = bufsize;</span><br><span class="line"></span><br><span class="line">    msg.msg_name = NULL;</span><br><span class="line">    msg.msg_namelen = 0;</span><br><span class="line">    msg.msg_iov = &amp;iov;</span><br><span class="line">    msg.msg_iovlen = 1;</span><br><span class="line">    msg.msg_control = cmsgu.control;</span><br><span class="line">    msg.msg_controllen = sizeof(cmsgu.control);</span><br><span class="line">    size = recvmsg (sock, &amp;msg, 0);</span><br><span class="line">    if (size &lt; 0) &#123;</span><br><span class="line">      perror (&quot;recvmsg&quot;);</span><br><span class="line">      exit(1);</span><br><span class="line">    &#125;</span><br><span class="line">    cmsg = CMSG_FIRSTHDR(&amp;msg);</span><br><span class="line">    if (cmsg &amp;&amp; cmsg-&gt;cmsg_len == CMSG_LEN(sizeof(int))) &#123;</span><br><span class="line">      if (cmsg-&gt;cmsg_level != SOL_SOCKET) &#123;</span><br><span class="line">        fprintf (stderr, &quot;invalid cmsg_level %d\n&quot;,</span><br><span class="line">                 cmsg-&gt;cmsg_level);</span><br><span class="line">        exit(1);</span><br><span class="line">      &#125;</span><br><span class="line">      if (cmsg-&gt;cmsg_type != SCM_RIGHTS) &#123;</span><br><span class="line">        fprintf (stderr, &quot;invalid cmsg_type %d\n&quot;,</span><br><span class="line">                 cmsg-&gt;cmsg_type);</span><br><span class="line">        exit(1);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      *fd = *((int *) CMSG_DATA(cmsg));</span><br><span class="line">      printf (&quot;received fd %d\n&quot;, *fd);</span><br><span class="line">    &#125; else</span><br><span class="line">      *fd = -1;</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    size = read (sock, buf, bufsize);</span><br><span class="line">    if (size &lt; 0) &#123;</span><br><span class="line">      perror(&quot;read&quot;);</span><br><span class="line">      exit(1);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  return size;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void</span><br><span class="line">child(int sock)</span><br><span class="line">&#123;</span><br><span class="line">  int fd;</span><br><span class="line">  char    buf[16];</span><br><span class="line">  ssize_t size;</span><br><span class="line"></span><br><span class="line">  sleep(1);</span><br><span class="line">  for (;;) &#123;</span><br><span class="line">    size = sock_fd_read(sock, buf, sizeof(buf), &amp;fd);</span><br><span class="line">    if (size &lt;= 0)</span><br><span class="line">      break;</span><br><span class="line">    printf (&quot;read %d\n&quot;, (int) size);</span><br><span class="line">    if (fd != -1) &#123;</span><br><span class="line">      write(fd, &quot;hello, world\n&quot;, 13);</span><br><span class="line">      close(fd);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void</span><br><span class="line">parent(int sock)</span><br><span class="line">&#123;</span><br><span class="line">  ssize_t size;</span><br><span class="line">  int i;</span><br><span class="line">  int fd;</span><br><span class="line"></span><br><span class="line">  fd = 1;</span><br><span class="line">  size = sock_fd_write(sock, (void *) &quot;1&quot;, 1, 1);</span><br><span class="line">  printf (&quot;wrote %d\n&quot;, (int) size);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int</span><br><span class="line">main(int argc, char **argv)</span><br><span class="line">&#123;</span><br><span class="line">  int sv[2];</span><br><span class="line">  int pid;</span><br><span class="line"></span><br><span class="line">  if (socketpair(AF_UNIX, SOCK_DGRAM, 0, sv) &lt; 0) &#123;</span><br><span class="line">    perror(&quot;socketpair&quot;);</span><br><span class="line">    exit(1);</span><br><span class="line">  &#125;</span><br><span class="line">  switch ((pid = fork())) &#123;</span><br><span class="line">  case 0:</span><br><span class="line">    close(sv[0]);</span><br><span class="line">    child(sv[1]);</span><br><span class="line">    break;</span><br><span class="line">  case -1:</span><br><span class="line">    perror(&quot;fork&quot;);</span><br><span class="line">    exit(1);</span><br><span class="line">  default:</span><br><span class="line">    close(sv[1]);</span><br><span class="line">    parent(sv[0]);</span><br><span class="line">    break;</span><br><span class="line">  &#125;</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <span itemprop="articleBody"><h2 id="直播业务"><a href="#直播业务" class="headerlink" title="直播业务"></a>直播业务</h2><p>直播的业务一般包括：推流，拉流/播放，回源，录制，时移，转码。</p>
+<h3 id="推流"><a href="#推流" class="headerlink" title="推流"></a>推流</h3><p>直播推流是指通过推流协议，把音视频数据推送到CDN的服务器。</p>
+<p>推流协议主要是RTMP，也可以使用WebRTC。</p>
+<p>推流端需要把音视频数据封装成FLV格式或者RTP格式的数据。</p>
+<p>推流端需要选择最近的一个节点推送数据。</p>
+<h3 id="拉流-播放"><a href="#拉流-播放" class="headerlink" title="拉流/播放"></a>拉流/播放</h3><p>拉流：服务器之间读取实时流数据进行回源。</p>
+<p>播放：客户端读取实时流数据进行播放。</p>
+<p>拉流/播放可以使用服务器支持的不同的协议，服务器根据使用的协议返回相应的数据。</p>
+<p>拉流/播放端需要选择最优的节点读取实时流数据。</p>
+<h3 id="回源"><a href="#回源" class="headerlink" title="回源"></a>回源</h3><p>客户端向一个服务器请求某个流时，服务器有这个流就马上返回数据；服务器没有这个流，就需要去中心服务器请求这个流的数据，这就是回源。</p>
+<p>回源可能是多级的，也可以是多协议支持的。</p>
+<h3 id="录制"><a href="#录制" class="headerlink" title="录制"></a>录制</h3><p>在直播过程中，可以把直播产生的音视频数据保存下来，这个过程就是录制。</p>
+<p>录制完成后，可以回放直播过程。</p>
+<p>录制文件格式有hls,flv,以及mp4。</p>
+<h3 id="时移"><a href="#时移" class="headerlink" title="时移"></a>时移</h3><p>在直播过程中，可能需要查看前面一段时间的数据，或者从前面几秒开始查看直播，这个就是时移做的功能。</p>
+<p>时移是通过录制产生的切片信息实现的，所以时移使用是的HLS协议。</p>
+<p>时移一般有两种播放方式：</p>
+<ul>
+<li>播放过去的一段时间</li>
+<li>从过去的哪个时间点一直往后播放，直到结束</li>
+</ul>
+<h3 id="转码"><a href="#转码" class="headerlink" title="转码"></a>转码</h3><p>在拉流/播放过程中，服务器遇到不支持的编码请求或者不同的分辨率，或者其他情况，就会触发转码。</p>
+<p>转码就是通过程序，把不符合要求的流，转码成符合要求的流。</p>
+<p>转码一般使用ffmpeg进行，同时也可以使用显卡进行硬件加速。</p>
+<h3 id="CDN分发"><a href="#CDN分发" class="headerlink" title="CDN分发"></a>CDN分发</h3><p>主播推流，一般只推送到一个服务器，而播放却是在全国各地，这就需要CDN把流传输到各地的服务器，这就是CDN分发。</p>
+<p>CDN分发一般是被动的，有访问需求才进行回源；也可以主动下发进行预热。</p>
+<h3 id="CDN加速"><a href="#CDN加速" class="headerlink" title="CDN加速"></a>CDN加速</h3><p>客户端的网络环境差异很大，为了优化播放端的体验，CDN需要把播放引导到离客户最近的，网速最快的服务器，相当于CDN给客户端提升了速度，这就是CDN加速。</p>
+<p>CDN加速主要是通过减少访问服务器的距离，提供大带宽的服务，选择相同的运营商，选择延时低的流媒体协议等手段来实现内容的加速。</p>
+<h2 id="x20-开播到看播的流程"><a href="#x20-开播到看播的流程" class="headerlink" title="&#x20;开播到看播的流程"></a>&#x20;开播到看播的流程</h2><p>一个主播启动直播，到用户进行播放，这中间发生过什么事？为什么需要直播分发和直播加速？</p>
+<h3 id="推流端"><a href="#推流端" class="headerlink" title="推流端"></a>推流端</h3><p>主播通过直播APP主动发起直播请求，直播APP启动音视频采集，然后采集的数据编码成H264/AAC，接下来封装成推流协议的数据格式，把数据推送到边缘服务器。</p>
+<h4 id="采集"><a href="#采集" class="headerlink" title="采集"></a>采集</h4><p>一般通过手机摄像头或者采集卡采集到视频数据，原始数据是一幅幅的图片，通过硬件编码，编码成H264/H265格式的视频数据。</p>
+<p>音频是通过麦克风采集，通过硬件编码，编码成AAC格式的音频数据。</p>
+<h4 id="推流协议封装"><a href="#推流协议封装" class="headerlink" title="推流协议封装"></a>推流协议封装</h4><p>直播APP根据使用的推流协议，把编码后的视频数据和音频数据封装成推流协议需要的格式</p>
+<h4 id="推流-1"><a href="#推流-1" class="headerlink" title="推流"></a>推流</h4><p>直播APP通过推流域名获取到最优的推流服务器，使用推流协议连接上推流服务器，把封装好的数据推送到服务器。</p>
+<p>一般云厂商会做DNS负载调度，根据访问DNS服务器的IP，选择相同运营商，距离最近，负载最轻的服务器。</p>
+<p>选择合适的推流协议，选择合适的推流服务器，都是为了解决<code>第一公里</code>的问题。</p>
+<h3 id="推流服务器"><a href="#推流服务器" class="headerlink" title="推流服务器"></a>推流服务器</h3><h4 id="解封装"><a href="#解封装" class="headerlink" title="解封装"></a>解封装</h4><p>推流服务器根据推流协议，跟直播APP建立连接，接收推送过来的数据，并且解开封装，得到音频和视频数据，以及Meta信息。</p>
+<h4 id="通知索引服务器"><a href="#通知索引服务器" class="headerlink" title="通知索引服务器"></a>通知索引服务器</h4><p>推流服务器接收到一路推流后，会通知索引服务器，并带上流的各种信息。</p>
+<p>索引服务器收到通知后，会记录这种流，以便其他服务器过来查寻时，能够返回正确的推流服务器地址。</p>
+<p>索引服务器也可以通知业务服务器，新增加了一路直播流，直播APP就可以刷新看到这路新的流。</p>
+<h3 id="播放端"><a href="#播放端" class="headerlink" title="播放端"></a>播放端</h3><h4 id="播放"><a href="#播放" class="headerlink" title="播放"></a>播放</h4><p>直播APP刷新后，出现了新推上来的直播流，点击播放，直播APP通过直播流的域名，获取到最优的播放服务器。</p>
+<p>直播APP根据获取到的播放服务器地址，使用播放协议（HLS/RTMP/HTTP-FLV）建立连接，接收数据。</p>
+<p>播放器接收到数据后，进行解封装，解编码格式，渲染输出画面，用户就能看到界面</p>
+<h4 id="最后一公里"><a href="#最后一公里" class="headerlink" title="最后一公里"></a>最后一公里</h4><p><code>最后一公里</code>是指播放服务器到用户端的过程。</p>
+<p>直播APP根据播放域名，从DNS服务器获取最优的播放服务器地址（也有可能是通过访问负载均衡服务器）进行播放；而DNS服务器（或者负载均衡服务器）需要从运营商，IP距离，负载情况等多方面考虑，选择最优的一个服务器。</p>
+<p>同时，直播APP要根据业务需求，用户网络环境等选择合适的播放协议进行播放。</p>
+<p><code>最后一公里</code>需要直播系统和直播APP，业务设计等多方面共同参与优化，给用户最好的体验。</p>
+<h3 id="CDN"><a href="#CDN" class="headerlink" title="CDN"></a>CDN</h3><h4 id="回源-1"><a href="#回源-1" class="headerlink" title="回源"></a>回源</h4><p>当直播APP向边缘节点（DNS返回的播放服务器）请求这个直播流时，边缘节点会先检测本地有没有这个流；如果没有找到，则需要向回源服务器请求数据。</p>
+<p>边缘节点接收到回源数据后，马上会返回给直播APP，这样用户就可以及时看到画面。</p>
+<h4 id="中转"><a href="#中转" class="headerlink" title="中转"></a>中转</h4><p>边缘节点的运营商，可能跟推流服务器的运营商不一样，这时候就需要中转服务器来处理。</p>
+<p>首先，中转服务器都是多线服务器，即中转服务器有多个网卡，每个网卡接一个运营商。</p>
+<p>其次，边缘节点向中转服务器请求，是从边缘节点相同的运营商的线路发起请求。</p>
+<p>最后，中转服务器推流服务器拉流时，是从推流服务器相同的运营商线路发起拉流请求。</p>
+<p>所以，通过中转服务器处理后，边缘节点和推流服务器的运营商差异就被屏蔽了，用户是无感知的。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>一个直播，从终端到CDN，再从CDN到终端，每个环节都涉及很多技术，都是必不可少的。</p>
+<p>直播系统在这个过程中，提供了推流功能，CDN分发，CDN加速功能，以及播放功能。</p>
+<p>如果主播还需要录视频，CDN还需要启动录制功能。</p>
+<p>直播平台需要对内容进行审查，则需要时移及其他定制的功能。</p>
+<p>用户播放这个主播的流，手机屏幕不一样，手机芯片不一样，可能需要不一样的分辨率，不一样的编码格式，这时候直播CDN就需要为这个流提供转码的能力。</p>
 <script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
 </script>
+
 </span>
       
     </div>
@@ -384,9 +424,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/IPC/" rel="tag">#IPC</a>
-          
-            <a href="/tags/pipe/" rel="tag">#pipe</a>
+            <a href="/tags/音视频/" rel="tag">#音视频</a>
           
         </div>
       
@@ -395,13 +433,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/10/29/awk/" rel="prev">awk note</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/10/24/linux_timer/" rel="next">linux定时器时间轮算法</a>
+              <a href="/2024/03/10/vedio-basic-06/" rel="next">音视频基础- 流媒体协议</a>
             
           </div>
         </div>
@@ -635,7 +671,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#历史"><span class="nav-number">1.</span> <span class="nav-text">历史</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#管道"><span class="nav-number">2.</span> <span class="nav-text">管道</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#直播业务"><span class="nav-number">1.</span> <span class="nav-text">直播业务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#推流"><span class="nav-number">1.1.</span> <span class="nav-text">推流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#拉流-播放"><span class="nav-number">1.2.</span> <span class="nav-text">拉流/播放</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#回源"><span class="nav-number">1.3.</span> <span class="nav-text">回源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#录制"><span class="nav-number">1.4.</span> <span class="nav-text">录制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#时移"><span class="nav-number">1.5.</span> <span class="nav-text">时移</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#转码"><span class="nav-number">1.6.</span> <span class="nav-text">转码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CDN分发"><span class="nav-number">1.7.</span> <span class="nav-text">CDN分发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CDN加速"><span class="nav-number">1.8.</span> <span class="nav-text">CDN加速</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#x20-开播到看播的流程"><span class="nav-number">2.</span> <span class="nav-text"> 开播到看播的流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#推流端"><span class="nav-number">2.1.</span> <span class="nav-text">推流端</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#采集"><span class="nav-number">2.1.1.</span> <span class="nav-text">采集</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#推流协议封装"><span class="nav-number">2.1.2.</span> <span class="nav-text">推流协议封装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#推流-1"><span class="nav-number">2.1.3.</span> <span class="nav-text">推流</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#推流服务器"><span class="nav-number">2.2.</span> <span class="nav-text">推流服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#解封装"><span class="nav-number">2.2.1.</span> <span class="nav-text">解封装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通知索引服务器"><span class="nav-number">2.2.2.</span> <span class="nav-text">通知索引服务器</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#播放端"><span class="nav-number">2.3.</span> <span class="nav-text">播放端</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#播放"><span class="nav-number">2.3.1.</span> <span class="nav-text">播放</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#最后一公里"><span class="nav-number">2.3.2.</span> <span class="nav-text">最后一公里</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CDN"><span class="nav-number">2.4.</span> <span class="nav-text">CDN</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#回源-1"><span class="nav-number">2.4.1.</span> <span class="nav-text">回源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#中转"><span class="nav-number">2.4.2.</span> <span class="nav-text">中转</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">2.5.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
