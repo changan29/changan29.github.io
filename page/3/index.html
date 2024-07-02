@@ -3391,6 +3391,92 @@
           
           
             
+              <a class="post-title-link" href="/2022/11/06/go_chan_01/" itemprop="url">
+                Go语言 channel底层结构
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2022-11-06T18:20:39+08:00" content="2022-11-06">
+            2022-11-06
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/golang/" itemprop="url" rel="index">
+                  <span itemprop="name">golang</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            数据结构底层数据结构需要看源码，版本为 go 1.9.2：
+1234567891011121314151617181920212223242526type hchan struct &#123;	// chan 里元素数量	qcount   uint	// chan 底层循环数组的长度	dataqs
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2022/11/06/go_chan_01/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2022/06/23/contract_transaction_system/" itemprop="url">
                 数字货币交易系统设计与开发
               </a>
@@ -4208,95 +4294,6 @@ stream的缺点
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2021/04/17/redis-persistence/" itemprop="url">
-                redis持久化
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2021-04-17T11:40:39+08:00" content="2021-04-17">
-            2021-04-17
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/redis/" itemprop="url" rel="index">
-                  <span itemprop="name">redis</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            AOF 机制 (Append Only File)
-flush时间配置AOF 配置项 appendfsync 的三个可选值:
-
-Always，同步写回：每个写命令执行完，立马同步地将日志写回磁盘；
-Everysec，每秒写回：每个写命令执行完，只是先把日志写到 AOF 文件的内存缓冲区，每隔一秒把缓
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2021/04/17/redis-persistence/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -4333,7 +4330,7 @@ Everysec，每秒写回：每个写命令执行完，只是先把日志写到 AO
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">89</span>
+              <span class="site-state-item-count">90</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
