@@ -31,7 +31,7 @@
 
 
 
-  <meta name="keywords" content="little," />
+  <meta name="keywords" content="音视频," />
 
 
 
@@ -40,21 +40,18 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="认识的人来公司 490天，70个星期，不算短了，从一个角色到另一个角色，我也要重新出发啊">
-<meta name="keywords" content="little">
+<meta name="description" content="&amp;#x20;why rate controlRate control is a crucial step in determining that tradeoff between size and quality. Rate Control ModesCQP(Constant QP)恒定QP，所有编码图像区域，编码帧，编码片段都用相同的QP  画质不恒定- 人类视觉主观特性，对不同纹理，运动快慢敏">
+<meta name="keywords" content="音视频">
 <meta property="og:type" content="article">
-<meta property="og:title" content="公司20周年">
-<meta property="og:url" content="http://oneyearago.me/2018/11/11/tencent_20th/index.html">
+<meta property="og:title" content="音视频基础- 编解码 码控">
+<meta property="og:url" content="http://oneyearago.me/2024/03/26/vedio_codec_01/index.html">
 <meta property="og:site_name" content="changan&#39;s blog">
-<meta property="og:description" content="认识的人来公司 490天，70个星期，不算短了，从一个角色到另一个角色，我也要重新出发啊">
+<meta property="og:description" content="&amp;#x20;why rate controlRate control is a crucial step in determining that tradeoff between size and quality. Rate Control ModesCQP(Constant QP)恒定QP，所有编码图像区域，编码帧，编码片段都用相同的QP  画质不恒定- 人类视觉主观特性，对不同纹理，运动快慢敏">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="http://oss01-1251969284.cosgz.myqcloud.com/t20.jpg">
-<meta property="og:image" content="http://oss01-1251969284.cosgz.myqcloud.com/tsvr.jpg">
-<meta property="og:updated_time" content="2022-11-24T13:55:54.316Z">
+<meta property="og:updated_time" content="2024-07-05T03:47:02.129Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="公司20周年">
-<meta name="twitter:description" content="认识的人来公司 490天，70个星期，不算短了，从一个角色到另一个角色，我也要重新出发啊">
-<meta name="twitter:image" content="http://oss01-1251969284.cosgz.myqcloud.com/t20.jpg">
+<meta name="twitter:title" content="音视频基础- 编解码 码控">
+<meta name="twitter:description" content="&amp;#x20;why rate controlRate control is a crucial step in determining that tradeoff between size and quality. Rate Control ModesCQP(Constant QP)恒定QP，所有编码图像区域，编码帧，编码片段都用相同的QP  画质不恒定- 人类视觉主观特性，对不同纹理，运动快慢敏">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -64,7 +61,7 @@
   };
 </script>
 
-  <title> 公司20周年 | changan's blog </title>
+  <title> 音视频基础- 编解码 码控 | changan's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -314,7 +311,7 @@
           
           
             
-              公司20周年
+              音视频基础- 编解码 码控
             
           
         </h1>
@@ -323,8 +320,8 @@
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2018-11-11T01:23:45+08:00" content="2018-11-11">
-            2018-11-11
+          <time itemprop="dateCreated" datetime="2024-03-26T18:20:39+08:00" content="2024-03-26">
+            2024-03-26
           </time>
         </span>
 
@@ -333,8 +330,8 @@
             &nbsp; | &nbsp; In
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/little/" itemprop="url" rel="index">
-                  <span itemprop="name">little</span>
+                <a href="/categories/音视频/" itemprop="url" rel="index">
+                  <span itemprop="name">音视频</span>
                 </a>
               </span>
 
@@ -357,10 +354,185 @@
       
 
       
-        <span itemprop="articleBody"><h3 id="认识的人"><a href="#认识的人" class="headerlink" title="认识的人"></a>认识的人</h3><p>来公司 490天，70个星期，不算短了，从一个角色到另一个角色，我也要重新出发啊<br><img src="http://oss01-1251969284.cosgz.myqcloud.com/t20.jpg" alt="image"></p>
-<p><img src="http://oss01-1251969284.cosgz.myqcloud.com/tsvr.jpg" alt="image"></p>
+        <span itemprop="articleBody"><h3 id="x20-why-rate-control"><a href="#x20-why-rate-control" class="headerlink" title="&#x20;why rate control"></a>&#x20;why rate control</h3><p>Rate control is a crucial step in determining that tradeoff between size and quality.</p>
+<h3 id="Rate-Control-Modes"><a href="#Rate-Control-Modes" class="headerlink" title="Rate Control Modes"></a>Rate Control Modes</h3><h4 id="CQP-Constant-QP"><a href="#CQP-Constant-QP" class="headerlink" title="CQP(Constant QP)"></a>CQP(Constant QP)</h4><p>恒定QP，所有编码图像区域，编码帧，编码片段都用相同的QP</p>
+<ul>
+<li>画质不恒定<br>- 人类视觉主观特性，对不同纹理，运动快慢敏感度不同，相同QP对不同的区域编码，主观视觉体验不一致；<br>- 对平滑的画面，失真相对变化剧烈的画面失真要少，画质更好</li>
+<li>码率不固定，内容相关</li>
+<li>比特浪费</li>
+<li>可用于算法验证或者测试，或者高质量的录制，如抖音的录制配置</li>
+</ul>
+<h4 id="CBR-constant-bitrate"><a href="#CBR-constant-bitrate" class="headerlink" title="CBR(constant bitrate):"></a>CBR(constant bitrate):</h4><p>恒定码率，就是编码过程要求恒定码率；<br>1. 不管是运动的片段还是比较静止的片段，都分配相同的码率，会导致因不同片段之间画质变化导致的主观体验较差；<br>2. 在恒定码率较高的时候，在静止片段，画质/比特边际收益较低，造成不必要的比特浪费<br>3. 使用场景，网络带宽要求较高，</p>
+<h4 id="VBR-Variable-bitrate"><a href="#VBR-Variable-bitrate" class="headerlink" title="VBR(Variable bitrate):"></a>VBR(Variable bitrate):</h4><p>可变码率，编码过程根据实际编码帧、编码片段的内容特性，来分配合理的比特，在保证给定码率的前提下，尽可能提升画质主客观指标<br>常用的VBR 有crf, crf + VBV, abr, abr+vbv， abr + 2pass</p>
+<h4 id="CRF-Constant-rate-factor"><a href="#CRF-Constant-rate-factor" class="headerlink" title="CRF(Constant rate factor):"></a>CRF(Constant rate factor):</h4><p>基于恒定质量因子来对不同内容特性计算最佳的QP<br>1. 人类主观特性<br>- 对平坦图像区域比较敏感，如天空，草原等，表征在编码器内部，Intra 模式的cost较小；<br>- 对细节比较丰富的区域不敏感，如小树叶等，表征在编码器内部，Intra 模式的cost 较大；<br>- 对运动缓慢的片段比较敏感，比如微风轻拂的花圃，表征在编码器内部，帧间的相似度较高，inter cost 较小；<br>- 对运动剧烈的片段比较不敏感，比如高铁窗外的电线杆，表征在编码器内部，帧间的相似度较小，inter cost 较大；<br>基于以上编码器在不同场景下的特性：<br>编码决策如下：<br>- 会对Cost 较大的区域或者视频片段，分配较小的码率，也就是是对应的QP较高；<br>- 对Cost 较小的区域，分配较多的码率，QP较小；<br>- 总体上编码视频片段在主观上相近</p>
+<h4 id="ABR-Average-Bitrate"><a href="#ABR-Average-Bitrate" class="headerlink" title="ABR (Average Bitrate)"></a>ABR (Average Bitrate)</h4><p>平均码率，是VBR的一种，就是设定编码文件的平均码率，在编码过程中根据编码图像内容，分配不同的码率，在最终编码结束后，达到设定目标码率大小；<br>由于编码过程中，未编码的图像特性未知，所以编码器在编码过程中会基于已编码帧的统计，做出保守的决策，所以往往会对一些复杂的视频，做2pass 编码，基于第1 pass 编码统计特性，来做全局优化；<br>例子如下：<br>- 目标码率1000kbps, 第50帧平均800kbps，后续51帧会降低QP，提升后面片段码率<br>- 特殊case：前100帧平缓画面，后面100帧运动较大的画面，为了达到目标码率，后面片段画质较差，因为前面比较保守，后面没有更多可用的码率分配；<br>- 上述case 需要2pass<br>- 目标码率1000kbps, 第100帧平均1200kbps，后续101帧会增加QP，降低后面片段码率，<br>- 同上</p>
+<h4 id="VBV（Video-buffer-verifier）"><a href="#VBV（Video-buffer-verifier）" class="headerlink" title="VBV（Video buffer verifier）"></a>VBV（Video buffer verifier）</h4><p>是在点播场景下衍生出来的一种码控模型； Video buffer 可以对应我们点播场景，比如快手、西瓜视频，爱奇艺，优酷，腾讯视频等，在用户观看下一个视频的时候，App 提前加载了一定数量的视频文件数据，以保证用户在观看过程中不会卡顿。 通常会用如下参数：&#x20;</p>
+<ul>
+<li>MinBitrate, 用户最小的下载速度；&#x20;</li>
+<li>MaxBitrate, 用户最大的下载速度；&#x20;</li>
+<li>VBVBuffSize, App在用户观看前预加载了多少的视频数据&#x20;</li>
+</ul>
+<p>用泳池充水和放水作比喻：&#x20;</p>
+<ul>
+<li>入水口： 用户的下载速度（MaxBitrate、MinBitrate）&#x20;</li>
+<li>出水口：编码器实际编码的码率,也对应播放器播放消耗的码率&#x20;</li>
+<li><p>水池：VBVBufferFill&#x20;</p>
+<ul>
+<li>- 水池没水：VBVBufferFill &lt;= 0; underflow，用户端卡顿&#x20;</li>
+<li>水池满水：VBVBufferFill &gt;  VBVBuffSize, 也就是下载下来的数据没来得及播放，只能丢弃， 现代播放器一般不会出现这种case, 因为bufferSize 会比较大</li>
+</ul>
+</li>
+</ul>
+<h4 id="x20-总结"><a href="#x20-总结" class="headerlink" title="&#x20;总结"></a>&#x20;总结</h4><table>
+<thead>
+<tr>
+<th style="text-align:left">码控模式</th>
+<th style="text-align:left">画质</th>
+<th style="text-align:left">中间码率</th>
+<th style="text-align:left">平均码率</th>
+<th style="text-align:left">是否有卡顿</th>
+<th style="text-align:left">码率是否</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">CQP</td>
+<td style="text-align:left">不固定</td>
+<td style="text-align:left">不固定</td>
+<td style="text-align:left">不固定</td>
+<td style="text-align:left">无保证</td>
+<td style="text-align:left">码率浪费</td>
+</tr>
+<tr>
+<td style="text-align:left">CRF</td>
+<td style="text-align:left">固定</td>
+<td style="text-align:left">不固定</td>
+<td style="text-align:left">不固定</td>
+<td style="text-align:left">无保证</td>
+<td style="text-align:left">最佳分配</td>
+</tr>
+<tr>
+<td style="text-align:left">CBR</td>
+<td style="text-align:left">不固定</td>
+<td style="text-align:left">固定</td>
+<td style="text-align:left">固定</td>
+<td style="text-align:left">保证</td>
+<td style="text-align:left">码率浪费</td>
+</tr>
+<tr>
+<td style="text-align:left">ABR</td>
+<td style="text-align:left">不固定</td>
+<td style="text-align:left">不固定，但基本在目标码率上下浮动</td>
+<td style="text-align:left">固定</td>
+<td style="text-align:left">无保证</td>
+<td style="text-align:left">看视频内容</td>
+</tr>
+<tr>
+<td style="text-align:left">ABR 2pas</td>
+<td style="text-align:left">不固定</td>
+<td style="text-align:left">不固定</td>
+<td style="text-align:left">固定</td>
+<td style="text-align:left">无保证</td>
+<td style="text-align:left">最佳分配</td>
+</tr>
+<tr>
+<td style="text-align:left">ABR+VBV</td>
+<td style="text-align:left">不固定</td>
+<td style="text-align:left">不固定，比ABR浮动更小</td>
+<td style="text-align:left">固定</td>
+<td style="text-align:left">保证</td>
+<td style="text-align:left">看视频内容</td>
+</tr>
+<tr>
+<td style="text-align:left">CRF +VBV</td>
+<td style="text-align:left">不固定，在保证VBV前提下，画质固定</td>
+<td style="text-align:left">不固定</td>
+<td style="text-align:left">不固定</td>
+<td style="text-align:left">保证</td>
+<td style="text-align:left">无浪费</td>
+</tr>
+</tbody>
+</table>
+<h3 id="encoding-scenario"><a href="#encoding-scenario" class="headerlink" title="encoding scenario"></a>encoding scenario</h3><table>
+<thead>
+<tr>
+<th style="text-align:left">码控模式</th>
+<th style="text-align:left">直播</th>
+<th style="text-align:left">实时通信</th>
+<th style="text-align:left">点播</th>
+<th style="text-align:left">存档</th>
+<th style="text-align:left">存档</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">CQP</td>
+<td style="text-align:left">不适用</td>
+<td style="text-align:left">不适用</td>
+<td style="text-align:left">不适用</td>
+<td style="text-align:left">可用</td>
+<td style="text-align:left">不适用</td>
+</tr>
+<tr>
+<td style="text-align:left">CRF</td>
+<td style="text-align:left">不适用</td>
+<td style="text-align:left">不适用</td>
+<td style="text-align:left">不适用</td>
+<td style="text-align:left">推荐使用</td>
+<td style="text-align:left">不适用</td>
+</tr>
+<tr>
+<td style="text-align:left">CBR</td>
+<td style="text-align:left">可用</td>
+<td style="text-align:left">可用</td>
+<td style="text-align:left">可用</td>
+<td style="text-align:left">不适用</td>
+<td style="text-align:left">可用</td>
+</tr>
+<tr>
+<td style="text-align:left">ABR</td>
+<td style="text-align:left">推荐使用</td>
+<td style="text-align:left">推荐使用</td>
+<td style="text-align:left">可用</td>
+<td style="text-align:left">不适用</td>
+<td style="text-align:left">可用</td>
+</tr>
+<tr>
+<td style="text-align:left">ABR 2pass</td>
+<td style="text-align:left">不适用</td>
+<td style="text-align:left">不适用</td>
+<td style="text-align:left">可用</td>
+<td style="text-align:left">可用</td>
+<td style="text-align:left">推荐使用</td>
+</tr>
+<tr>
+<td style="text-align:left">ABR+VBV</td>
+<td style="text-align:left">可用</td>
+<td style="text-align:left">可用</td>
+<td style="text-align:left">可用</td>
+<td style="text-align:left">可用</td>
+<td style="text-align:left">可用</td>
+</tr>
+<tr>
+<td style="text-align:left">CRF +VBV</td>
+<td style="text-align:left">不适用</td>
+<td style="text-align:left">不适用</td>
+<td style="text-align:left">推荐使用</td>
+<td style="text-align:left">可用</td>
+<td style="text-align:left">不适用</td>
+</tr>
+</tbody>
+</table>
+<h3 id="x20-引用"><a href="#x20-引用" class="headerlink" title="&#x20;引用"></a>&#x20;引用</h3><ul>
+<li><a href="https://slhck.info/video/2017/03/01/rate-control.html" target="_blank" rel="noopener">https://slhck.info/video/2017/03/01/rate-control.html</a></li>
+<li><a href="https://jvet.hhi.fraunhofer.de/" target="_blank" rel="noopener">https://jvet.hhi.fraunhofer.de/</a></li>
+<li><a href="https://gitlab.lms.tf.fau.de/LMS/vtm-analyzer" target="_blank" rel="noopener">https://gitlab.lms.tf.fau.de/LMS/vtm-analyzer</a></li>
+<li><a href="https://github.com/ultravideo/kvazaar" target="_blank" rel="noopener">https://github.com/ultravideo/kvazaar</a></li>
+<li><a href="https://soaringlee.blog.csdn.net/?type=blog" target="_blank" rel="noopener">https://soaringlee.blog.csdn.net/?type=blog</a></li>
+</ul>
 <script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async>
 </script>
+
 </span>
       
     </div>
@@ -369,7 +541,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/little/" rel="tag">#little</a>
+            <a href="/tags/音视频/" rel="tag">#音视频</a>
           
         </div>
       
@@ -378,13 +550,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/01/04/vmstat/" rel="prev">vmstat</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/05/20/linux_file_system/" rel="next">linux_file_system</a>
+              <a href="/2024/03/15/vedio-basic-07/" rel="next">音视频基础- 直播业务</a>
             
           </div>
         </div>
@@ -618,7 +788,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#认识的人"><span class="nav-number">1.</span> <span class="nav-text">认识的人</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#x20-why-rate-control"><span class="nav-number">1.</span> <span class="nav-text"> why rate control</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rate-Control-Modes"><span class="nav-number">2.</span> <span class="nav-text">Rate Control Modes</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CQP-Constant-QP"><span class="nav-number">2.1.</span> <span class="nav-text">CQP(Constant QP)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CBR-constant-bitrate"><span class="nav-number">2.2.</span> <span class="nav-text">CBR(constant bitrate):</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#VBR-Variable-bitrate"><span class="nav-number">2.3.</span> <span class="nav-text">VBR(Variable bitrate):</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CRF-Constant-rate-factor"><span class="nav-number">2.4.</span> <span class="nav-text">CRF(Constant rate factor):</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ABR-Average-Bitrate"><span class="nav-number">2.5.</span> <span class="nav-text">ABR (Average Bitrate)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#VBV（Video-buffer-verifier）"><span class="nav-number">2.6.</span> <span class="nav-text">VBV（Video buffer verifier）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#x20-总结"><span class="nav-number">2.7.</span> <span class="nav-text"> 总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#encoding-scenario"><span class="nav-number">3.</span> <span class="nav-text">encoding scenario</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#x20-引用"><span class="nav-number">4.</span> <span class="nav-text"> 引用</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
