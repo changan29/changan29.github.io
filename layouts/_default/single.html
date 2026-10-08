@@ -4,5 +4,6 @@
 <div class="prose">{{ .Content }}</div>
 {{ with .GetTerms "tags" }}<div class="chips post-tags">{{ range . }}<a href="{{ .RelPermalink }}"># {{ .LinkTitle }}</a>{{ end }}</div>{{ end }}
 {{ if eq .Section "posts" }}<nav class="post-neighbors" aria-label="相邻文章">{{ with .PrevInSection }}<a href="{{ .RelPermalink }}"><small>上一篇</small>{{ .Title }}</a>{{ end }}{{ with .NextInSection }}<a href="{{ .RelPermalink }}"><small>下一篇</small>{{ .Title }}</a>{{ end }}</nav>{{ end }}
+{{ if eq .Section "posts" }}<section class="comments" aria-label="文章评论"><script src="https://giscus.app/client.js" data-repo="changan29/changan29.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category="Announcements" data-category-id="DIC_kwDOC6bf5s4CSvAi" data-mapping="url" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async></script></section>{{ end }}
 </article>
 {{ end }}

@@ -9,7 +9,7 @@ tags:
 - c++
 ---
 
-### shared\_ptr
+### shared\_ptr {#shared-ptr}
 
 ```plain
 template< class T > class shared_ptr; (C++11 起)
@@ -17,7 +17,7 @@ template< class T > class shared_ptr; (C++11 起)
 
 多个shared\_ptr管理同一个指针，仅当最后一个shared\_ptr析构时，指针才被delete。这是怎么实现的呢？答案是：引用计数（reference counting）。引用计数指的是，所有管理同一个裸指针（raw pointer）的shared\_ptr，都共享一个引用计数器，每当一个shared\_ptr被赋值（或拷贝构造）给其它shared\_ptr时，这个共享的引用计数器就加1，当一个shared\_ptr析构或者被用于管理其它裸指针时，这个引用计数器就减1，如果此时发现引用计数器为0，那么说明它是管理这个指针的最后一个shared\_ptr了，于是我们释放指针指向的资源。
 
-#### shared\_ptr的简单实现
+#### shared\_ptr的简单实现 {#shared-ptr的简单实现}
 
 ```plain
 #include<iostream>
@@ -95,9 +95,9 @@ private:
 };
 ```
 
-### 错误用法
+### 错误用法 {#错误用法}
 
-#### 1. 循环引用
+#### 1. 循环引用 {#1-循环引用}
 
 ```plain
 struct ListNode
@@ -124,7 +124,7 @@ int main()
 
 解决方案：在引用计数的场景下，把节点中的\_prev和\_next改成weak\_ptr就可以了
 
-#### 2. 多个无关的shared\_ptr管理同一裸指针
+#### 2. 多个无关的shared\_ptr管理同一裸指针 {#2-多个无关的shared-ptr管理同一裸指针}
 
 只能通过复制构造或复制赋值其值给另一 shared\_ptr ，将对象所有权与另一 shared\_ptr 共享。用另一 shared\_ptr 所占有的底层指针创建新的 shared\_ptr 导致未定义行为。  
 
@@ -134,7 +134,7 @@ std::shared_ptr<int> p1(a);
 std::shared_ptr<int> p2(a);
 ```
 
-#### 3. 直接用new构造多个shared\_ptr作为实参
+#### 3. 直接用new构造多个shared\_ptr作为实参 {#3-直接用new构造多个shared-ptr作为实参}
 
 ```plain
 // 声明
@@ -150,13 +150,13 @@ void f(shared_ptr<A> p1, shared_ptr<B> p2);
 f(shared_ptr<A>(new A), shared_ptr<B>(new B));              <-- √
 ```
 
-#### tips
+#### tips {#tips}
 
 - 用shared\_ptr，不用new
 - 使用weak\_ptr来打破循环引用
 - 用make\_shared来生成shared\_ptr
 
-### ref
+### ref {#ref}
 
 - <https://heleifz.github.io/14696398760857.html>
 - <https://zh.cppreference.com/w/cpp/memory/shared_ptr>

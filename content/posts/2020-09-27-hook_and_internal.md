@@ -11,13 +11,13 @@ tags:
 - hook
 ---
 
-### 概述
+### 概述 {#概述}
 
 对于大型的工程项目，依赖许多人的配合，包含大量不同的代码库与服务，有的我们能够访问程序的源代码，有的可以访问程序的可重定位文件，有的可以访问到可执行文件及其环境，假如我们想在在不同的层面改变或者添加一些逻辑，操作系统、编译器以及程序语言、代码库等都提供了 一些机制使得 开发者可以 方便的 增加或替换代码逻辑，对于逻辑调试、测试、性能分析、版本兼容等都有比较好的效果。
 
-### 编译器支持
+### 编译器支持 {#编译器支持}
 
-#### Function Attribute
+#### Function Attribute {#Function-Attribute}
 
 GNU C 使用attribute 可以设置函数属性（Function Attribute ）、变量属性（Variable Attribute ）和类型属性（Type Attribute ）。 **attribute**前后都有两个下划线，并且后面会紧跟一对原括弧，括弧里面是相应的**attribute**参数。
 
@@ -52,11 +52,11 @@ int main()
 
 参考: <https://gcc.gnu.org/onlinedocs/gcc-4.7.0/gcc/Function-Attributes.html>
 
-### 库打桩机制
+### 库打桩机制 {#库打桩机制}
 
 linux 链接器支持一个很强大的技术，称为库打桩机制，它允许你截获对共享库函数的调用，取而代之执行自己的代码。使用打桩机制，你可以追踪对某个特殊库函数的调用次数、验证和追踪它的输入和输出，甚至可以把它替换成一个完全不同的实现。
 
-#### 编译时
+#### 编译时 {#编译时}
 
 ```plain
 /main.c/
@@ -118,7 +118,7 @@ gcc -I. -o a.out main.c my_malloc.o
 
 由于有 I. 参数，所以会进行打桩，它告诉C预处理器，在搜索通常的系统目录之前，现在当前的目录查找malloc.h
 
-#### 链接时
+#### 链接时 {#链接时}
 
 linux的静态链接器支持使用 –wrap f标志进行连接时打桩，这个标志告诉链接器，把对符号 f 的引用 解析成 **wrap\_f 还要把对符号** real\_f的 引用解析成 f 。
 
@@ -156,7 +156,7 @@ gcc -c main.c
 gcc -Wl,--wrap,malloc -Wl,--wrap,free -o a.out main.o  link.o
 ```
 
-#### 运行时
+#### 运行时 {#运行时}
 
 编译时打桩需要能够访问程序的源代码，链接时打桩需要能够访问程序的可重定位文件。不过，有一种机制能够在运行时打桩，只需能够访问可执行目标文件。 运行时打桩基于动态链接器的 LD\_PRELOAD 环境变量。
 
@@ -187,9 +187,9 @@ gcc -shared -fPIC unrandom.c -o unrandom.so
 export LD_PRELOAD=your_path
 ```
 
-### 动态库加载特性 - got 替换
+### 动态库加载特性 - got 替换 {#动态库加载特性-got-替换}
 
-#### ELF文件格式
+#### ELF文件格式 {#ELF文件格式}
 
 ELF格式通常有linking view和execution view，即编译时和运行时，一般链接时统称 section , 运行时称segment，segment是运行时把权限相同的section合并了加载到内存，从视图上看，两个视图数据是一样的，只不过有两种形态。
 
@@ -252,11 +252,11 @@ ELF文件是连接编译链接与运行的数据存在，其中里面的 .text �
 先直观的看一下有这几个表，他们基本都与重定位有关，需要看下重定位的概念。  
 ![image](https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/dynlink.png)
 
-#### 重定位与动态链接
+#### 重定位与动态链接 {#重定位与动态链接}
 
 当多个 .o 文件链接或 运行时需要动态库的时候，都有重定位的概念，在链接的时候，多个.o之间 相互依赖的变量和函数 要找到实际的地址， 同样运行时依赖动态库中的函数，一般是记录在全局偏移表中，运行之前或运行时 找到实际地址，记录到偏移表，运行的时候通过 全局偏移表找到实际地址，从而执行。
 
-###### 重定位表:
+###### 重定位表: {#重定位表}
 
 重定位表是”.rel.dyn”和”.rel.plt”，它们分别相当于静态链接中的”.rel.data”和”.rel.text”。”.rel.dyn”实际上是对数据引用的修正，它所修正的位置相当于”.got “以及数据段；而”.rel.plt”则是对函数引用的修正，所修正的位置位于”.got.plt”。使用”readelf -r”命令，查看重定位表
 
@@ -290,7 +290,7 @@ Relocation section '.rela.plt' at offset 0x5b0 contains 19 entries:
 0000006020a8  001300000007 R_X86_64_JUMP_SLO 0000000000000000 rand + 0
 ```
 
-###### GOT 及 PLT 表
+###### GOT 及 PLT 表 {#GOT-及-PLT-表}
 
 在Linux下，GOT被拆分成”.got”和”.got.plt”2个表。其中”.got”用来保存全局变量引用的地址，”.got.plt”用来保存函数引用的地址  
 GOT表项还保留了３个公共表项，也即got的前３项，分别保存：
@@ -314,7 +314,7 @@ gdb调试 plt懒加载过程：
 
 ![image](https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/pltgot2.png)
 
-#### 重定位类型及偏移表
+#### 重定位类型及偏移表 {#重定位类型及偏移表}
 
 我们如何计算GOT表应该偏移多少呢，又有哪些偏移的类型呢？ 参考： <http://www.ucw.cz/~hubicka/papers/abi/node19.html>
 
@@ -322,7 +322,7 @@ gdb调试 plt懒加载过程：
 
 比如rand , 我们直接用 rel表的地址
 
-#### GOT表项替换
+#### GOT表项替换 {#GOT表项替换}
 
 全局符号表(GOT表)hook实际是通过解析SO文件，将待hook函数在got表的地址替换为自己函数的入口地址，这样目标进程每次调用待hook函数时，实际上是执行了我们自己的函数。
 
@@ -340,9 +340,9 @@ gdb调试 plt懒加载过程：
 
 详细代码: <https://github.com/changan29/playcpp/tree/master/hook/got_hook>
 
-### 内核调试接口
+### 内核调试接口 {#内核调试接口}
 
-#### ptrace 系统调用
+#### ptrace 系统调用 {#ptrace-系统调用}
 
 有很多大家所常用的工具都基于ptrace来实现，如strace和gdb。
 
@@ -351,9 +351,9 @@ ptrace系统调从名字上看是用于进程跟踪的，它提供了父进程�
 使用ptrace 可以动态调试进程，可以做到自定义gdb的某些功能，参考：  
 <https://www.cnblogs.com/tangr206/articles/3094358.html>
 
-### 跳转代码修改
+### 跳转代码修改 {#跳转代码修改}
 
-#### inline hook
+#### inline hook {#inline-hook}
 
 详细代码: <https://github.com/changan29/playcpp/tree/master/hook/inline-hook>
 
@@ -408,7 +408,7 @@ void hooker::HookerX64::doHook(void *func,void *newAddr,void **origFunc) const {
   }
 ```
 
-#### inline-hook的注意点
+#### inline-hook的注意点 {#inline-hook的注意点}
 
 具体代码见附件。  
 执行完inline hook , 保存了原函数，只不过，此时的原函数内容 被拷贝到了其他的地方，再次调用原函数的时候，有的时候会core
@@ -419,14 +419,14 @@ void hooker::HookerX64::doHook(void *func,void *newAddr,void **origFunc) const {
 
 ![image](https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/inlinehook_adjust.png)
 
-### 其他
+### 其他 {#其他}
 
 - 基于虚拟机提供能力、Java语言特性、消息hook(特别操作系统支持)等机制，Windows及Android上常用的hook机制。
 - Android的 xposed 、 jni hook等
 
 这一部分最近没有使用，后面有用到再实践。
 
-### 引用
+### 引用 {#引用}
 
 - <http://www.ucw.cz/~hubicka/papers/abi/node19.html>
 - <http://www.wireghost.cn/2015/04/01/ELF%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84%E8%AF%A6%E8%A7%A3/>

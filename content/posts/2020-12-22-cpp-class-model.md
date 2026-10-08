@@ -9,13 +9,13 @@ tags:
 - c++
 ---
 
-### 概述
+### 概述 {#概述}
 
 首先,相较于C语言，C++语言并没有额外增加内存消耗(确切说，在没有虚函数情况下)。 对于一个C++类对象,每个对象有独立的数据成员(非static),但是内存中成员函数只有一份,该类的所有对象共享成员函数。
 
 编译器在编译阶段,进行函数的重构，即将成员函数进行非成员化。通过将this指针作为函数的第一个参数,通过this指针即可以找到对象的数据成员
 
-### 使用GDB调试 C++ 虚函数
+### 使用GDB调试 C++ 虚函数 {#使用GDB调试-C-虚函数}
 
 ```plain
 class Base
@@ -115,16 +115,16 @@ vtable for 'Test' @ 0x400a00 (subobject @ 0x603028):
 
 ![image](https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/post-cpp-multi-inherit.png)
 
-#### 构造函数与虚函数表
+#### 构造函数与虚函数表 {#构造函数与虚函数表}
 
 虚函数表创建时机是在编译期间。 编译期间编译器就为每个类确定好了对应的虚函数表里的内容。 所以在程序运行时，编译器会把虚函数表的首地址赋值给虚函数表指针，所以，这个虚函数表指针就有值了。
 
 ![image](https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/c%2B%2B_class_model.png)
 
-### ref
+### ref {#ref}
 
 - <https://tangocc.github.io/2018/03/20/cpp-class-memory-struct/>
 
-### TODO
+### TODO {#TODO}
 
 菱形继承于虚继承这里没写，使用gdb也可以很快找到，编译器的规则而已，同理，后面这两种知道规则就可以了，在语言的框架下理解就可以了。

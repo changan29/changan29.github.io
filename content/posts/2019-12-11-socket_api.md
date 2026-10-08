@@ -9,9 +9,9 @@ tags:
 - socket
 ---
 
-### socket是网络协议栈的抽象
+### socket是网络协议栈的抽象 {#socket是网络协议栈的抽象}
 
-### socket api在tcp中的体现
+### socket api在tcp中的体现 {#socket-api在tcp中的体现}
 
 ![image](https://201911-1251969284.cos.ap-shanghai.myqcloud.com/tcp-sync-queue-and-accept-queue.jpg)
 
@@ -22,7 +22,7 @@ TCP三次握手后有个accept队列，进到这个队列才能从Listen变成ac
 
 当接收到3次握手中的ACK分组时，将它们移动到accept队列。 显而易见，accept系统调用只是简单地从完成队列中取出连接。 在这种情况下，listen syscall的backlog参数表示完成队列的大小。
 
-### code
+### code {#code}
 
 ```plain
 /*
@@ -113,7 +113,7 @@ int main()
 }
 ```
 
-### REF
+### REF {#REF}
 
 - [关于TCP 半连接队列和全连接队列](http://jm.taobao.org/2017/05/25/525-1/)
 - [How TCP backlog works in Linux](http://veithen.io/2014/01/01/how-tcp-backlog-works-in-linux.html)

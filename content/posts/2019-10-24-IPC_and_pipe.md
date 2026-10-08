@@ -11,7 +11,7 @@ tags:
 - pipe
 ---
 
-### 历史
+### 历史 {#历史}
 
 UNIX两大贡献者贝尔实验室和BSD，在进程之间通信侧重不同，前者基于内核对进程之间的通信手段进行了改进，形成了“System V IPC”，而后者则是基于网络形成了套接字。
 
@@ -21,7 +21,7 @@ System V 以及POSIX 对信号量、共享内存、消息队列等进程之间�
 
 在观察使用进程间通信手段后，会发现在多线程中使用的基本是POSIX标准提供的接口函数，而多进程则是基于System V。
 
-### 管道
+### 管道 {#管道}
 
 pipe和fifo用的不多了，让我们从Nginx那里学一个 全双工的管道: socketpair  
 ![image](https://201910-1251969284.cos.ap-shanghai.myqcloud.com/socket_pair_pipe.bmp)

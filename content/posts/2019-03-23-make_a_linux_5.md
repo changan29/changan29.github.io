@@ -11,7 +11,7 @@ tags:
 - kernel
 ---
 
-### 熟悉MBR引导
+### 熟悉MBR引导 {#熟悉MBR引导}
 
 MBR的512字节里面也是代码，他被BIOS加载执行，自身执行的时候加载操作系统的loader，我们在没有操作系统loader的情况下先写一段测试程序，体验一下。
 
@@ -19,7 +19,7 @@ MBR的512字节里面也是代码，他被BIOS加载执行，自身执行的时�
 
 BIOS 加载 MBR中的代码，执行，用BIOS 中断 INT 0x10显示字符串
 
-#### MBR的代码
+#### MBR的代码 {#MBR的代码}
 
 ```plain
 ;主引导程序 
@@ -66,19 +66,19 @@ SECTION MBR vstart=0x7c00
    db 0x55,0xaa
 ```
 
-#### 编译成二进制
+#### 编译成二进制 {#编译成二进制}
 
 ```plain
 nasm -o mbr.bin mbr.S
 ```
 
-#### 将二进制文件存储到MBR扇区
+#### 将二进制文件存储到MBR扇区 {#将二进制文件存储到MBR扇区}
 
 ```plain
 dd if=./mbr.bin  of=./hd30M.img bs=512 count=1 conv=notrunc
 ```
 
-#### 调试 MBR 代码
+#### 调试 MBR 代码 {#调试-MBR-代码}
 
 在 bochs的配置文件中配好 MBR扇区对应的磁盘，启动bochs
 
@@ -88,6 +88,6 @@ ata0-master: type=disk, mode=flat, path="/root/data/bochs/bin/hd30M.img"
 ./bochs -f bochsrc-sample.txt
 ```
 
-#### 在虚拟机中调试
+#### 在虚拟机中调试 {#在虚拟机中调试}
 
 ![image](http://201904-1251969284.cossh.myqcloud.com/MBR_DEBUG.png)

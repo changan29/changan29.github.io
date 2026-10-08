@@ -11,9 +11,9 @@ tags:
 - kernel
 ---
 
-## 操作系统引导
+## 操作系统引导 {#操作系统引导}
 
-### MBR
+### MBR {#MBR}
 
   接上一篇BIOS启动，BIOS完成了基础的硬件检测和硬件的中断向量表的初始化，然后BIOS找到MBR并且把MBR加载在内存中，跳转到该位置。加载的位置在内存中的0x7C00,至于为什么是这个位置，主要是因为历史的原因吧，最初的内存只有32K,历史选择了0x7C00(31k)。
 
@@ -27,7 +27,7 @@ tags:
 
   为了方便MBR找到内核加载器，约定好加载器就存储在各分区的开始扇区，这个扇区被称为操作系统引导扇区也称为OBR(OS Boot Record), 扇区里面的程序便是内核加载器，比如我们常见的x86平台上的grub或者arm平台上的uboot，这个程序负责的主要工作是加载kernel image 并解压缩。
 
-### BootLoader
+### BootLoader {#BootLoader}
 
   Bootloader 主要完成了下面几项工作：
 
@@ -38,30 +38,30 @@ tags:
   GRUB 是我们现在 Linux 发行版系统中最常用到的 Bootloader，它的优势在于它可以识别 Linux 文件系统，例如 ext3，ext4 格式的文件系统。  
 GRUB 可以从 ext3 或者 ext4 格式文件系统的磁盘分区中加载 Linux Kernel 镜像。
 
-### Linux Kernel 镜像
+### Linux Kernel 镜像 {#Linux-Kernel-镜像}
 
   Linux 内核有多种格式的镜像，例如 vmlinux、Image、zImage、bzImage、uImage、xipImage、bootpImage 等。
 
-#### vmlinux
+#### vmlinux {#vmlinux}
 
   vmlinux 是可引导的、未压缩、可压缩的内核镜像，vm 代表Virtual Memory，Linux 支持虚拟内存，因此得名 vm。它是由用户对内核源码编译得到，实质是 ELF 格式的文件，也就是说vmlinux 是编译出来的最原始的内核文件，未被压缩过。
 
-#### zImage
+#### zImage {#zImage}
 
   zImage 是 ARM Linux 常用的一种压缩镜像文件，它是由vmlinux 加上解压代码经 gzip 压缩而成，命令格式是 make zImage，这种格式的 Linux 内核镜像文件多存放在 NAND Flash 上。
 
-#### bzImage
+#### bzImage {#bzImage}
 
   bzImage 不是用 bzip2 压缩的，bz 表示 big zImage,其格式与 zImage 类似，但采用了不同的压缩算法，注意，bzImage 的压缩率更高是压缩的内核映像。
 
   zImage vs bzImage：它们不仅是一个压缩文件，而且在这两个文件的开头部分内嵌有解压缩代码。两者的不同之处在于，老的zImage 解压缩内核到低端内存(第一个 640K)，bzImage解压缩内核到高端内存(1M以上)。如果内核比较小，那么可以采用 zImage 或 bzImage 之一，两种方式引导的系统运行时是相同的。大的内核采用 bzImage，不能采用 zImage。
 
-#### 实例
+#### 实例 {#实例}
 
 [root@xxx /boot]# file vmlinuz-3.10.104-1-tlinux2\_kvm\_guest-0021.tl1  
 vmlinuz-3.10.104-1-tlinux2\_kvm\_guest-0021.tl1: Linux kernel x86 boot executable bzImage, version 3.10.104-1-tlinux2\_kvm\_guest-00, RO-rootFS, swap\_dev 0x4, Normal VGA
 
-### 内核启动
+### 内核启动 {#内核启动}
 
   内核镜像并非直接可以运行，而是一个被压缩过的。通常情况下，它是一个通过zlib压缩的zImage（compressed image小于51KB）或者bzImage（big compressed image，大于512KB）文件。在内核镜像的开头是一个小程序，该程序对硬件进行简单的配置并将压缩过的内核解压到高内存地址空间中。
 
@@ -69,6 +69,6 @@ vmlinuz-3.10.104-1-tlinux2\_kvm\_guest-0021.tl1: Linux kernel x86 boot executabl
 
   在./init/main.c:start\_kernl()函数中，一长串的初始化函数将会被调用到用于设置中断、执行更详细的内存配置、加载initial RAM disk等。接着，将会调用./arch/i386/kernel/process.c:kernel\_thread()函数来启动第一个用户空间进程，该进程的执行函数是init。最后，idle进程（cpu\_idle）将会被启动，并且调度器其将接管整个系统。当中断使能时，可抢占的调度器周期性地接管系统，用于提供多任务同时运行的能力。
 
-### 参考
+### 参考 {#参考}
 
 - <https://www.ibm.com/developerworks/library/l-linuxboot/>

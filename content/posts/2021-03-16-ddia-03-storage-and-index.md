@@ -10,6 +10,6 @@ tags:
 - ddia
 ---
 
-### 存储与检索
+### 存储与检索 {#存储与检索}
 
 ![image](https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/os/storage-and-index.svg)

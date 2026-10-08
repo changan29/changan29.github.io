@@ -9,20 +9,20 @@ tags:
 - algorithm
 ---
 
-## 可变基数树分享
+## 可变基数树分享 {#可变基数树分享}
 
 使用可变基数树优化交易订单簿以及使用SIMD硬件加速查找  
 ![](https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/orderbook.jpeg)  
 主要参考论文: <https://db.in.tum.de/~leis/papers/ART.pdf>
 
-### 背景
+### 背景 {#背景}
 
 - 内存变得容量更大更便宜，整个数据库/存储引擎可以放到内存
 - 传统的内存数据索引一般是平衡二叉树 在现代的硬件上效率不高
 - 另一类索引结构，hash表 只支持单点查找，范围查找不好
 - 索引效率是决定性能的关键因素
 
-  ### 前言
+  ### 前言 {#前言}
 - T树和二叉树 硬件支持不好 on modern hardware architectures
 - B+ tree 缓存敏感，但是update代价比较大
 - The k-ary search tree and the Fast Architecture Sensitive Tree (FAST) 使用数据级并行性与单指令多数据 (SIMD) 指令同时执行多重比较。此外，FAST 使用的数据布局通过优化利用缓存行和 TLB 来避免缓存未命中。但两种数据结构都不能支持增量更新。
@@ -34,7 +34,7 @@ tags:
   Trie 大多数研究都集中在索引字符串上，但我们的目标是索引其他数据类型。因此，我们更喜欢术语基数树而不是 trie，因为它强调了与基数排序算法的相似性，并强调可以索引任意数据而不仅仅是字符串。  
   在实际实现上，“基” 一般是 2^K中的 K，下面解释。
 
-### 基数数是什么结构？
+### 基数数是什么结构？ {#基数数是什么结构？}
 
 按字母顺序排列的字典书中的拇指索引。一个词的第一个字符可以直接用来跳到所有以该字符开始的词。在计算机中，这个过程可以用接下来的字符重复进行，直到找到一个匹配的字符。作为这个过程的结果，所有的操作都有O(k)的复杂性，其中k是key的长度。
 
@@ -50,11 +50,11 @@ tags:
 - 不需要平衡
 - Key按字典顺序存储
 
-  #### 可伸缩的node
+  #### 可伸缩的node {#可伸缩的node}
 
   ![](https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/003.png)
 
-#### node span
+#### node span {#node-span}
 
 ![](https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/004.png)
 
@@ -68,18 +68,18 @@ tags:
 -> 可变基数树 node类型可变  
 处于性能考虑，节点的类型比较少，如果是几十类，resize的代价会很高
 
-#### Inner Nodes
+#### Inner Nodes {#Inner-Nodes}
 
 ![](https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/006.png)
 
 1. 插入时，当前node大小没有空间，扩展到大一级的node,同样，缩小时resize到小一级的node。
 2. each inner node has at least two children.
 
-   #### Leaf Nodes
+   #### Leaf Nodes {#Leaf-Nodes}
 
 ![](https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/007.png)
 
-### 简单的例子
+### 简单的例子 {#简单的例子}
 
 ```java
 put(0x3FAA01L,"0x3FAA01L");
@@ -89,7 +89,7 @@ put(0x4FAA03L,"0x4FAA03L");
 
 ![](https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/008.png)
 
-### 例子二
+### 例子二 {#例子二}
 
 ```java
 map.put(2,"2");
@@ -109,9 +109,9 @@ for(int i = 0;i<20;i++){
 
 ![](https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/009.png)
 
-### 算法
+### 算法 {#算法}
 
-##### search
+##### search {#search}
 
 ```java
 get(key)
@@ -129,7 +129,7 @@ get(key)
 
 ![](https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/010.png)
 
-##### Insert
+##### Insert {#Insert}
 
 ```java
 put(key , value){
@@ -163,7 +163,7 @@ put(key , value){
 }
 ```
 
-##### grow & shrink
+##### grow & shrink {#grow-amp-shrink}
 
 ```java
 grow(){
@@ -184,7 +184,7 @@ grow(){
 }
 ```
 
-##### 分裂
+##### 分裂 {#分裂}
 
 ![](https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/011.png)
 
@@ -197,7 +197,7 @@ int checkPrefix(long key) {
 // depth=6带一个Leaf, 再添加一个Leaf，创建一个node4 挂到 parent节点  如上例
 ```
 
-## 性能数据对比
+## 性能数据对比 {#性能数据对比}
 
 | random | ART(ms) | TreeMap(ms) | diff |
 | --- | --- | --- | --- |
@@ -220,7 +220,7 @@ int checkPrefix(long key) {
 | put (650K keys) | 174 | 191 | 9% |
 | foreach (650K keys) | 17 | 35 | 100% |
 
-## 分析性能产生的原因
+## 分析性能产生的原因 {#分析性能产生的原因}
 
 1. key越多，差距越大
 2. 随机的比连续的差距大
@@ -232,7 +232,7 @@ int checkPrefix(long key) {
 
 ![](https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/013.png)
 
-### 高速缓存存储器结构
+### 高速缓存存储器结构 {#高速缓存存储器结构}
 
 撮合服务器 CPU型号是 Intel(R) Xeon(R) Platinum 8369B CPU @ 2.70GHz, intel官网没有（ L3 cache是49M，见附录），应该是订制的，找同类型的CPU参数:
 
@@ -247,7 +247,7 @@ int checkPrefix(long key) {
 
 ![](https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/018.png)
 
-##### 不命中时的行替换
+##### 不命中时的行替换 {#不命中时的行替换}
 
 替换组中的哪一行（没有空行）？替换策略：
 
@@ -256,21 +256,21 @@ int checkPrefix(long key) {
 
 所有这些策略都需要额外的时间和硬件。
 
-### 另外的优化途径-SIMD
+### 另外的优化途径-SIMD {#另外的优化途径-SIMD}
 
-#### 硬件支持
+#### 硬件支持 {#硬件支持}
 
 ![](https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/019.png)  
 ![](https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/radixtree/021.png)
 
-#### 语言支持
+#### 语言支持 {#语言支持}
 
 Java JEP 417: Vector API (Third Incubator) on jdk17/18
 
 - <https://openjdk.org/jeps/414>
 - <https://openjdk.org/jeps/417>
 
-  #### 例子
+  #### 例子 {#例子}
 
   ```java
   static final VectorSpecies<Integer> SPECIES = IntVector.SPECIES_256;
@@ -290,7 +290,7 @@ Java JEP 417: Vector API (Third Incubator) on jdk17/18
   }
   ```
 
-#### Vector Api
+#### Vector Api {#Vector-Api}
 
 | 组件 | items |
 | --- | --- |
@@ -299,7 +299,7 @@ Java JEP 417: Vector API (Third Incubator) on jdk17/18
 | VectorMask | firstTrue() , trueCount() , anyTrue()… |
 | VectorOperators | EQ , LT, GT… |
 
-#### 用SIMD 优化 radix tree的查询
+#### 用SIMD 优化 radix tree的查询 {#用SIMD-优化-radix-tree的查询}
 
 ```java
    short[] sss = new short[16];
@@ -314,11 +314,11 @@ Java JEP 417: Vector API (Third Incubator) on jdk17/18
    int idx = vecArrays.compare(VectorOperators.EQ,51).firstTrue();
 ```
 
-##### node 48、256 search
+##### node 48、256 search {#node-48、256-search}
 
 由于VectorApi不支持指针和bool， 对于children多的node，维护一个与children对应的bool flags[childrens]，通过 SIMD批量获取 index后，children.get(index)。
 
-## 总结
+## 总结 {#总结}
 
 - 适合Key⻓度固定或较短的场景
 - 较大的Span和垂直压缩显著提高性能
@@ -327,7 +327,7 @@ Java JEP 417: Vector API (Third Incubator) on jdk17/18
 - 只支持字典序，不适合BigDecimal
 - 可变Node与node256 性能近似，与TreeMap比显著提升
 
-## 引用
+## 引用 {#引用}
 
 - <https://www.intel.com/content/www/us/en/products/sku/120504/intel-xeon-platinum-8168-processor-33m-cache-2-70-ghz/specifications.html>
 - 志强铂金8280: <https://en.wikichip.org/wiki/intel/xeon_platinum/8280>

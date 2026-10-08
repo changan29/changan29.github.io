@@ -9,9 +9,9 @@ tags:
 - gdb
 ---
 
-### gdb单步调试
+### gdb单步调试 {#gdb单步调试}
 
-#### 原来服务的的启动方式
+#### 原来服务的的启动方式 {#原来服务的的启动方式}
 
 ```plain
 /data/home/2333/xx/matchsvr/bin/matchsvr --noloadconf --conf-file=../conf/matchsvr_conf.xml 
@@ -19,7 +19,7 @@ tags:
     --business-id=0  -D restart
 ```
 
-#### gdb拉起，设置命令行参数
+#### gdb拉起，设置命令行参数 {#gdb拉起，设置命令行参数}
 
 ```plain
 $ gdb matchsvr
@@ -27,11 +27,11 @@ set args --noloadconf --conf-file=../conf/matchsvr_conf.xml
     --log-file=../log --tlogconf=../conf/tlogconf.xml --id=28.233.0.1 --business-id=0  -D restart
 ```
 
-#### 处理守护进程
+#### 处理守护进程 {#处理守护进程}
 
 对于守护进程，实际服务的进程是fork两次后的子进程，我们在父进程打断点是起不到作用的
 
-#### set follow-fork-mode [parent|child]
+#### set follow-fork-mode [parent|child] {#set-follow-fork-mode-parent-child}
 
 parent: fork之后继续调试父进程，子进程不受影响。
 
@@ -46,7 +46,7 @@ child: fork之后调试子进程，父进程不受影响。
 (gdb) set follow-fork-mode child
 ```
 
-#### 打断点的几种方式
+#### 打断点的几种方式 {#打断点的几种方式}
 
 ```plain
 (gdb) b tbuspphook::hook_tbuspp::Peek   
@@ -58,7 +58,7 @@ child: fork之后调试子进程，父进程不受影响。
 $1 = (int (tbuspphook::hook_tbuspp::*)(tbuspphook::hook_tbuspp * const, int *, const char **...
 ```
 
-#### 设置单步调试
+#### 设置单步调试 {#设置单步调试}
 
 ```plain
 (gdb) set disassemble-next-line on
@@ -79,6 +79,6 @@ $1 = (int (tbuspphook::hook_tbuspp::*)(tbuspphook::hook_tbuspp * const, int *, c
    0x00007ffff7556ab4 <hook_tbuspp::Peek(int*)+86>:     48 89 c2        mov    %rax,%rdx
 ```
 
-##### 看崩溃在哪一条指令
+##### 看崩溃在哪一条指令 {#看崩溃在哪一条指令}
 
 ![image](https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/work/gdb-step-debug.png)

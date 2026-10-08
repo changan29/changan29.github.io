@@ -9,7 +9,7 @@ tags:
 - hook
 ---
 
-### hook的并发症
+### hook的并发症 {#hook的并发症}
 
 可以理解成一个有意思的问题，假如地址 addr1 上有一个函数func1，长度为len, 将这个函数 整体换一个位置，挪到 addr2, 移动之后的函数成为func2
 
@@ -32,7 +32,7 @@ func2(arg1 , arg2 , arg3);
 
 假如把 func1 的开头 修改为特定的 shellcode，改成 跳转 + 目标跳转地址(比如 0xFF2500000000 + func\_addr)的格式，就是传统的 inline hook， 但是这种hook将 原来函数的指令 挪了位置，再次调用有的时候会崩溃， 有的时候称这种情况为 hook的 并发症。
 
-### 思路
+### 思路 {#思路}
 
 ==以下仅讨论 x86\_64的情况，不涉及arm及其他体系结构。==
 
@@ -93,7 +93,7 @@ rip\_next = 0x402e65， CPU并不是直接计算出 \_ZN19ZoneActRunActCmdReqC1E
 
 提到的 修正 offset的方式，就是修正 rip relative 的指令的偏移，一般在 inline hook的时候，会有指令的替换和挪动位置，指令调整是 解决这类并发症的一个方式，有成熟的hook库 完成了这类操作，比如polyhook， 其中的一个特性就是 解决了 inline Hook中的 rip relative 的指令的 位移修正。
 
-#### 那么，如何修正rip relative指令呢？
+#### 那么，如何修正rip relative指令呢？ {#那么，如何修正rip-relative指令呢？}
 
 1. 需要找到 哪些指令会涉及rip relative
 2. 如何找到 rip relative 指令
@@ -104,7 +104,7 @@ rip\_next = 0x402e65， CPU并不是直接计算出 \_ZN19ZoneActRunActCmdReqC1E
 
 那么，需要学一下 CPU的指令集，参考的东西比较少，主要是Intel的CPU文档。
 
-### 指令格式概述
+### 指令格式概述 {#指令格式概述}
 
 指令包括可选的指令前缀 (in any order)，主要操作码字节 (up to three bytes)，由ModR / M字节以及有时由SIB（Scale-Index-Base）组成的寻址形式说明符 (if required) ，位移字段 (if required)和立即数据字段 (if required)。
 
@@ -117,17 +117,17 @@ rip\_next = 0x402e65， CPU并不是直接计算出 \_ZN19ZoneActRunActCmdReqC1E
 
 我们来具体的看一下 其中的每个部分。
 
-#### Instruction Prefixes
+#### Instruction Prefixes {#Instruction-Prefixes}
 
 指令前缀码，不包括 REX 前缀码部分
 
 ![image](https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/intel-instruction-format-prefixs.png)
 
-#### opcode
+#### opcode {#opcode}
 
 ![image](https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/Instruction-format-opcode.png)
 
-#### ModR/M and SIB Bytes
+#### ModR/M and SIB Bytes {#ModR-M-and-SIB-Bytes}
 
 很多指令都是有操作数的，寻址是个很频繁的操作，操作数可以是立即数、寄存器、内存地址，或者是几种操作数的组合，ModR/M and SIB Bytes 表示的是 寻址模式标识字节，不是特别好理解，通过一个例子看一下：
 
@@ -171,7 +171,7 @@ mov (%ecx*4+%eax) , %edi
 
 不过我统计了一下，类似这种指令生成的不多，编译器应该偏向于生成 短小易于编解码的 指令，两个短的比一个长的 执行的机器周期短。
 
-#### REX Prefixes 开启64位计算的基石
+#### REX Prefixes 开启64位计算的基石 {#REX-Prefixes-开启64位计算的基石}
 
 AMD 在x86体系的32位计算扩展为64位计算, AMD64体系的64位计算是这样设计：操作数的Default Operand-Size是32位，而Address-Size是固定为64位的，这里就引发3个问题要解决的：
 
@@ -182,7 +182,7 @@ AMD 在x86体系的32位计算扩展为64位计算, AMD64体系的64位计算是
 那么在64位Long模式下，为什么不将操作数的Default Operand-Size设计为64位呢？那是由于体系限制，本来AMD64就是在x86的基础上扩展为64位的。x86体系当初设计时就没想到有会被扩展到64位的时候。所以在Segment-Descriptor（段描述符）里就没有可以扩展为64位的标志位。DS.D位只有置1时是32位，清0时为16位，这两种情况。  
 　　AMD在保持兼容的大提前下，只好令谋计策，AMD的解决方案是：增加一个64位模式下特有Prefix，以起到扩展访问64位的能力。这就是 REX prefix。
 
-##### REX prefix 的具体格式及含义
+##### REX prefix 的具体格式及含义 {#REX-prefix-的具体格式及含义}
 
 REX prefix的取值范围是：40 ~ 4F（0100 0000 ~ 0100 1111），来看下原来opcode取值范围的40 ~ 4F的是什么指令：  
 Opcode为40 ~ 47在x86下是inc eax ~ inc edi　指令，48 ~ 4F在x86下是dec eax ~ dec edi　指令。在64位模式下，40 ~ 4F 就已经不是指令而变身为 prefix了。
@@ -209,7 +209,7 @@ mov %r13,%rsi的机器码是: 4c 89 ee, 原来查找寄存器的 ModR/M 字段�
 查询的表格见:  
 <https://wiki.osdev.org/X86-64_Instruction_Encoding#Registers>
 
-#### RIP-Relative Addressing
+#### RIP-Relative Addressing {#RIP-Relative-Addressing}
 
 一种新的寻址形式，即RIP相对（相对指令指针）寻址，是在64位模式下实现的。通过在下一条指令的64位RIP上添加位移来形成有效地址。
 
@@ -223,11 +223,11 @@ mov %r13,%rsi的机器码是: 4c 89 ee, 原来查找寄存器的 ModR/M 字段�
 
 > RIP-relative addressing is enabled by 64-bit mode, not by a 64-bit address-size. The use of the address-size prefix does not disable RIP-relative addressing. The effect of the address-size prefix is to truncate and zero-extend the computed effective address to 32 bits.
 
-### 如何识别各种指令格式
+### 如何识别各种指令格式 {#如何识别各种指令格式}
 
 以上介绍了各种指令的格式，目前我们服务器 一般都是用的是 Intel i7 64位的 CPU了， 指令集有几百个，opcode 有一个字节的，两个字节、三个字节的，还有各种前缀后缀， 给出一串二进制判断是什么指令以及操作数 是个查表的过程，已经有 反汇编器帮我们实现了识别的逻辑。
 
-#### 反汇编器
+#### 反汇编器 {#反汇编器}
 
 常用的反汇编器有很多:
 
@@ -247,11 +247,11 @@ mov %r13,%rsi的机器码是: 4c 89 ee, 原来查找寄存器的 ModR/M 字段�
 
 详细可以参考: <https://github.com/stevemk14ebr/PolyHook>
 
-### 整体流程
+### 整体流程 {#整体流程}
 
 ![image](https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/inline-hook-process.png)
 
-### REF
+### REF {#REF}
 
 - <https://en.wikipedia.org/wiki/X86_instruction_listings>
 - <https://bbs.pediy.com/thread-77824.htm>

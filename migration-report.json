@@ -4,8 +4,23 @@
     "title": "音视频基础- 编解码 码控",
     "source": "content/posts/2024-03-26-vedio_codec_01.md",
     "recovered_from_history": true,
+    "legacy": false,
     "images": 0,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "x20-why-rate-control",
+      "Rate-Control-Modes",
+      "CQP-Constant-QP",
+      "CBR-constant-bitrate",
+      "VBR-Variable-bitrate",
+      "CRF-Constant-rate-factor",
+      "ABR-Average-Bitrate",
+      "VBV（Video-buffer-verifier）",
+      "x20-总结",
+      "encoding-scenario",
+      "x20-引用"
+    ],
     "source_sha256": "1eebed6a8e6a5d3d3cf56635ffa4158d7304052b26fb99992dde0146fb531e91"
   },
   {
@@ -13,8 +28,36 @@
     "title": "音视频基础- 直播业务",
     "source": "content/posts/2024-03-15-vedio-basic-07.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 0,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "直播业务",
+      "推流",
+      "拉流-播放",
+      "回源",
+      "录制",
+      "时移",
+      "转码",
+      "CDN分发",
+      "CDN加速",
+      "x20-开播到看播的流程",
+      "推流端",
+      "采集",
+      "推流协议封装",
+      "推流-1",
+      "推流服务器",
+      "解封装",
+      "通知索引服务器",
+      "播放端",
+      "播放",
+      "最后一公里",
+      "CDN",
+      "回源-1",
+      "中转",
+      "总结"
+    ],
     "source_sha256": "91ac671e591185694e88eb1cbb5ab2f431085bf88e29d6495548a4484585c1a4"
   },
   {
@@ -22,8 +65,39 @@
     "title": "音视频基础- 流媒体协议",
     "source": "content/posts/2024-03-10-vedio-basic-06.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 0,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "流媒体协议",
+      "HLS",
+      "HLS协议",
+      "HTTP传输",
+      "M3U8",
+      "TS",
+      "HLS优点和缺点",
+      "RTMP",
+      "RTMP协议",
+      "握手",
+      "组块",
+      "AMF",
+      "消息",
+      "RTMP优点和缺点",
+      "HTTP-FLV",
+      "HTTP-FLV原理",
+      "HTTP-FLV优点和缺点",
+      "HTTP-MPEGTS",
+      "HTTP-MPEGTS工作原理",
+      "HTTP-MPEGTS优点和缺点",
+      "WEBRTC",
+      "WebRTC工作原理",
+      "DTLS",
+      "SDP",
+      "SRTP-SRTCP",
+      "ICE-STUN-TURN",
+      "WebRTC优点和缺点"
+    ],
     "source_sha256": "93dad89432ec52010d7f78816723ac6fd163ecd0c3d22774f89ebdd5f9cbd91b"
   },
   {
@@ -31,8 +105,14 @@
     "title": "webrtc 03 - 常见webrtc流媒体服务器的设计",
     "source": "content/posts/2024-03-03-webrtc_03.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 4,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "x20-流行的-webrtc-流媒体服务器",
+      "x20-webrtc流媒体服务器和-SRS的区别和联系"
+    ],
     "source_sha256": "07969e2fb09a75015adac2114c19c5157afd23cd098a0ed883bcf129b182a9b3"
   },
   {
@@ -40,8 +120,39 @@
     "title": "webrtc 02 - NAT网络和P2P打洞",
     "source": "content/posts/2024-02-15-webrtc_02.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 5,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "x20-NAT-原理",
+      "1-全锥形NAT（Full-Cone-NAT）",
+      "特点：",
+      "工作原理：",
+      "优点：",
+      "缺点：",
+      "2-地址受限锥形NAT（Addr-Restricted-Cone-NAT）",
+      "特点：-1",
+      "工作原理：-1",
+      "优点：-1",
+      "缺点：-1",
+      "3-端口受限锥形NAT（Port-Restricted-Cone-NAT）",
+      "特点：-2",
+      "工作原理：-2",
+      "优点：-2",
+      "缺点：-2",
+      "4-对称NAT（Symmetric-NAT）",
+      "特点：-3",
+      "工作原理：-3",
+      "优点：-3",
+      "缺点：-3",
+      "STUN服务器基本原理",
+      "判断NAT类型的步骤",
+      "x20-协议",
+      "RFC3489-STUN-x9",
+      "RFC5389-STUN-x9",
+      "常用工具"
+    ],
     "source_sha256": "864d9ed2693807cf4ea396bea41a007a1286ae7d86074e9e449b9a5ea3d6c681"
   },
   {
@@ -49,8 +160,20 @@
     "title": "webrtc-01 视频采集和录制",
     "source": "content/posts/2024-02-06-webrtc_01.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 1,
     "code_blocks": 2,
+    "code_hashes": [
+      "745c259c3ae730bc7ad97b203f29d82f8c246e503d24170f7c962320d487f8ac",
+      "6c5e5265951c60f95d6444beb57630cd6ca92988b2d2baeb3a016bc6a52c6ef9"
+    ],
+    "heading_ids": [
+      "整体架构",
+      "整体设计图",
+      "示例",
+      "进行视频采集",
+      "demo部署"
+    ],
     "source_sha256": "8e6815540aa30d875c719926faf1040d2bf9cff547a7f03aae4956b9d854c2c4"
   },
   {
@@ -58,8 +181,16 @@
     "title": "音视频基础- rtmp协议",
     "source": "content/posts/2023-06-06-vedio-basic-04.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 10,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "RTMP",
+      "推流-拉流",
+      "消息格式",
+      "FLV-协议"
+    ],
     "source_sha256": "6cfbbe188b17fba40c19dd21bf715d3f2da9f3b197ac7c4accc92275278a9193"
   },
   {
@@ -67,8 +198,13 @@
     "title": "音视频基础- 直播系统",
     "source": "content/posts/2023-06-05-vedio-basic-05.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 6,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "直播系统简述"
+    ],
     "source_sha256": "574a24a7aa332111946490938d4fb3481b13cb2908e78b30529ef6d1004df718"
   },
   {
@@ -76,8 +212,15 @@
     "title": "音视频基础- H264码流结构",
     "source": "content/posts/2023-06-02-vedio-basic-03.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 13,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "H264码流结构",
+      "案例",
+      "SPS-amp-PPS"
+    ],
     "source_sha256": "9d198c30fa760711f40d4fb8f2a063dfd2ee26a6d90ded266b028e3d12eadb7a"
   },
   {
@@ -85,8 +228,17 @@
     "title": "音视频基础- H264视频编码",
     "source": "content/posts/2023-04-26-vedio-basic-02.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 27,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "有损压缩",
+      "帧内压缩",
+      "帧间压缩",
+      "案例",
+      "无损压缩"
+    ],
     "source_sha256": "768c137ea4cb370a831e0d7bd7cebead9f788e44b76713b6dc61f55a67d43924"
   },
   {
@@ -94,8 +246,11 @@
     "title": "音视频基础-视频基础-01",
     "source": "content/posts/2023-04-19-vedio-basic-01.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 8,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [],
     "source_sha256": "76558a12adc5826531d694d940d4f9b11ac5de363e8af4cb877646df14441d47"
   },
   {
@@ -103,8 +258,13 @@
     "title": "音视频基础-音频基础-04",
     "source": "content/posts/2023-04-13-audio-basic-04.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 8,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "音频重采样"
+    ],
     "source_sha256": "c8ccefccdcd01b7bef509a61a1c3e722632b6484d75b09750c95bb1c7fefb635"
   },
   {
@@ -112,8 +272,18 @@
     "title": "音视频基础-音频基础-03",
     "source": "content/posts/2023-04-12-audio-basic-03.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 3,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "音频编码基本原理",
+      "（1）-音频信号的冗余信息",
+      "（a）频谱掩蔽效应",
+      "（b）-时域掩蔽效应",
+      "（2）-压缩编码方法",
+      "引用"
+    ],
     "source_sha256": "359eb81217f3d982153b52f1e28fabdd193d065d282211b2ba5fbe968e24dad9"
   },
   {
@@ -121,8 +291,17 @@
     "title": "音视频基础-音频基础-02",
     "source": "content/posts/2023-04-09-audio-basic-02.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 3,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "怎样对声音进行数字化？",
+      "采样率",
+      "量化位深（采样大小）",
+      "声道",
+      "PCM"
+    ],
     "source_sha256": "f840f63b2755ce5e8298ebb8c48bd1bac7d1f7651e98edfb8cf451cb71aefe8f"
   },
   {
@@ -130,8 +309,14 @@
     "title": "音视频基础-音频基础-01",
     "source": "content/posts/2023-04-06-audio_basic_01.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 5,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "1、声音的定义是什么？",
+      "2、声音有哪些特征？"
+    ],
     "source_sha256": "5a61245b21611b6221b828dcc11d84dc51d8879b3c9dba42c5ccb913d2922f98"
   },
   {
@@ -139,8 +324,93 @@
     "title": "FFMPEG常用命令",
     "source": "content/posts/2023-03-26-FFMPEG_commands.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 0,
     "code_blocks": 63,
+    "code_hashes": [
+      "bf9e7282a9df389f94f14d4baae39d04929d880e8c338f04fae4b88e2a93373f",
+      "9a98f4f8e51c2a86ef850b30fb28d689612239f7fb18330dddb3847bfa54b907",
+      "4ca02a5c6afd96b5ba919ee3c4aeac8a7fff64487ddbbeb12c43e1bff044e0cd",
+      "6fd318be6c996622a44c3ab8dcf551f524f4f208891d663b2c4f0c9cf7187a1f",
+      "9c9b57570f0301a4d469c274eb1effd4da25915230ced722228f4181748a6d5b",
+      "2e14fffa16188b00c42706aec936921ee5d811ffd8c73a769f9fe8accca4be73",
+      "4e690f6568baa8e10151f96c24cc2544894f16663db54f9c4afed3af48aacb31",
+      "84bd53b4f2d2627f1a59be907cb365e2d3bc049cb90ddfbead724047ee454580",
+      "55c561d23e8ea4834daa8ce61f78b3e9089b5ff30435d536b6059aaf985c7e31",
+      "52168c5125b998c8e26c6c876eaf8ae5a62cf97adfe24de061dd8bb87dbb933f",
+      "443dbf834518e5ec5ebd143dd001deec03bb601d0f3ab0f4977ed14ee362ea68",
+      "0451a66535ea7930fd9c4ee62cddd2b457190d914f1f0bcaf4b28e8e3aa0b6b8",
+      "b417b6f789a81e0c6e0ce4cb108bdca46297c29cb5e7ff011a249f056d0324da",
+      "17986a92c9bde0e021ab003dfb99e0a0612b85f4d593a0644b82c7fc823dd208",
+      "4faea4a2c83a10a040769a52b5645fd8e92fa4467c2baf4a30355d68a7ae6ab2",
+      "f687f12bcb1bc96c98ec6ebf58efaf853b25ecb633b289a36f7d2f10a92339a5",
+      "64e448232caaaa32f41b6110c95efb5842ff0e41b2ad5caf6ed24520de65521e",
+      "35e72c3e5f7fd02f85bc09612e319411cc09413c5d1ca3f4e84f64b48db8155c",
+      "636920fd22ff67724a91d0837d2771c6f580fb4157186746407136d3c027ca4f",
+      "801965aae24a9ea0ec0869d5c1c983a32405d843284ba3bda2d9a5400ba6b354",
+      "c30b115034c429167cbb0635efe0ff379d47883f7b271acdc4763776ffc89e18",
+      "27afef46fab983cf9e4a313d810f5170469dc363e5dd3e4d447fcd4b40013f45",
+      "50b4f7236db698c1011f5006e7ddbe4484ecd7b5f931274cb789213c275f6e67",
+      "2a551ee55bfed2db55946b93c2269fa5a673da53125d98750668216d0e2146f4",
+      "e19dd370abd31359a3df0819d1a8426adef0d6b8fab5bfe909bd610ec45eab89",
+      "d52c079941c9edfcf9ad6883b08cbd74c7701010785a7d2958f0336f8d9dd3ac",
+      "90eb6834e1259842cad0a3f9772db9185a38b897fee4e68e21e78b1eadd6e91d",
+      "604cb1da34b9b899d58c0d2c6b41a8e035078996e17fca5bd6a47c28e0e78845",
+      "b2f761618b9c325d9d120997aaa0d9581c37decbbfa6cff19bc4dd5267f1d898",
+      "4bdf3b08a2648ca9048eb6da682f83bd0fe7c2e0bd9f7a82ed496f428726eac5",
+      "0a15a83ed635f163a0f1d713b57d0580ce7b5baba3e3c4e503d50614bcb4cbe9",
+      "3a5448779838e9e64fcceb035681325bfb3ab43e21de9248fb1080f3eeeffdc7",
+      "fe77a89f04bb028d0f57da4e2c741223e2a89a814c36f63214eac14d59c3805f",
+      "81dd0246f2ba5d90f1d35c2b65157009a4dc211d6b8951261626e7006a0039a2",
+      "fc01529d9df0c3c463befd9c9508e55879079ae0fe204de2819c14c351313e81",
+      "9ac6937f4df079ec21be419f8b83d134ca15b1df876be13d4e7bf2cca8379c12",
+      "b6c6621e0ad5b77eecde9881ffc77e53d66c4f2f459c9438e9c4f00e67105107",
+      "b979f752df2255519983f9056587cac2c0e86d7fe37d206272070249d6e4e7ae",
+      "33911dca4b61f42d9f016afb4a1a06574eb24ac2ee4b77b3a6d5d6e8d0be8b92",
+      "9bfbf4a2b6bb3ced01f418d03ebd5d12c47f7f3c127fdcf2808eea375a4fa7d5",
+      "3254739ddc7c3a3773eb024bab220c42d3c679fe9a30fd1a1a342f86d3926eb8",
+      "9182c9522ba787a36b6a03a3b199bec0a748af9886d95c60b2cdfe8857e68971",
+      "cc4088f91e1f20f044217758aed22218a7b60c6607aed13845d947243285e80c",
+      "63c6179e219e848dfb9e900890ad786a08985eb30bd2a264abd7dc8135e5cc49",
+      "502fe5bd12c4067fedfebae5a47adec6d7511cda623ef8b78bc9b874440d3646",
+      "fd283b4660fde87dc78fd1ede4f5e9da190fd98d05b842dadbba4d719ded0f18",
+      "b98f484ed9620946c8da515cf12a7a22560894eb5615a4e195725f65c469d26c",
+      "34e30b5f1d374cfccc89119f4d9544843844d9f972a1a47c0d096cce8a149c66",
+      "0dc05372cbb89928a4121ef29fa166ae93d6f1bc7ca36d05b111a729f67811cd",
+      "489fc60ebd6302febd72276d424c20701e5465623ba43a755c7b5143be6f4254",
+      "8f24f4ccd15a8b8fa3f9782ddad85b7026136e3a25281b679923b707118701fd",
+      "e0eac3cea0184e3c21d0b85e145a64e9d75475a7f09562e5c29f393597610cd4",
+      "fdb3032d4a62a3199f3c8b261d1500bf72f2212b754e3a81730f11fc6cb0b59f",
+      "a10325fe6a62c871c248931de3410031cea598a4b0b23a27fba73f763b573bc7",
+      "ee5587e267bbf83808e027d7902d338e72b59a719e15823f534299c54ef012ff",
+      "f1c21bde947e6bdc9221831eb9117bd9a1c2df98ce1316be14f5e46986b5ac29",
+      "f83d672196e7b65525fce9b263863930ca7172450e9757c718aa81e340cbff9f",
+      "4529f1321c29ec8aa17eceaf1a1b1fb13f93ef65e2be3dcc95bd157792b59119",
+      "8972025bd41f44a6b71bd2b98cbce685d5222cd95bd9ebb067a81d0e6e7c34cb",
+      "ab39efa344bffefad039e8cb8df02149c7f8ed6a3ec8adb2748d04febd46430c",
+      "b5c6822e3984e32da2f2baa56b1d5a797bf6d6384d7eb0353e5afc94cea78a6e",
+      "e879c853576c59e44f405172ed24e69aa4e0574b96ab49b358df0b4021492082",
+      "865617e4a233917d7cc3582e1e77fb57491a2b99fc69bdb7e0078219b611bab5"
+    ],
+    "heading_ids": [
+      "FFMPEG常用命令",
+      "FFMPEG-目录及作用",
+      "FFMPEG基本概念",
+      "FFMPEG-命令",
+      "基本信息查询命令",
+      "命令基本格式及参数",
+      "主要参数",
+      "视频参数",
+      "音频参数",
+      "分解与复用",
+      "处理原始数据",
+      "滤镜",
+      "简单滤镜",
+      "复杂滤镜",
+      "一些比较有意思的滤镜",
+      "音视频的拼接与裁剪",
+      "ffplay"
+    ],
     "source_sha256": "095b1a8cfdb034fd87c3f6e8712fd8c3d147b3deca23b217eb0646ee4e1cf356"
   },
   {
@@ -148,8 +418,29 @@
     "title": "数字货币交易撮合引擎demo",
     "source": "content/posts/2023-02-05-Design_of_Digital_Currency_Exchange_Matching_Engine.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 2,
     "code_blocks": 15,
+    "code_hashes": [
+      "104650b20dd28d1ac731f65d8578ef6839909c725935dd22d1fb7b057b47e21f",
+      "6ede8155e17c852e5561506833364af29e45af99e5d34b0b3167b5bc824700fb",
+      "2f9f3cc10264daf68ab2dd028f9f1942afbdb69f3fa6166812b86625764f92c0",
+      "3d6ddc2d415d74b82b452b85a5d63e437ec08158cbffaf45f917db8d6d930675",
+      "8faf510f1c0bfdf379ca382a758ba1b2c83ed2679390b40e34db2fd95ae4b8a7",
+      "2ce4702144faf8c04938aa7ca201ec0003f3e7490f4a5d58ebc16df6407820c2",
+      "f978ce30122ba5d92e3aae0fb4e9aed9845f51e09a0fb8eeabe11ddac7bc35e4",
+      "ee54a0c4c992a26a6866b21fbdb7ea162882cb7b574ada651fa3a6c15f098801",
+      "97a5c699196a6f82e664d7132025b76f0881f64889ed9c790db62fd01a9a40b8",
+      "e91860bc548629fdab907619afd928a7aab10a47ed659d3ba6dce9e9faa6541e",
+      "2f2cafa735340a0dddcd3c1e04b8c12291fdaf79afb4b258d5611e8f1bb32572",
+      "b6c21efced36a528b08e110a8d9f0e2de6597ca36077d07afdd70203abac09e1",
+      "c9617520e0e31d9f30a196a16c34ee67455424528bb9cb44e4160b02f4c55398",
+      "370b9d6d3ad43ba8a1c73fa6c8af415fd73afa5671800b7d6a2e1baa5d54aecb",
+      "6328b461ed474643d9ce74d5bdf95976f479bb585486e12ec317f4276346846d"
+    ],
+    "heading_ids": [
+      "小结"
+    ],
     "source_sha256": "030e0376c8b42b62a81841354285469ee2a338d79a4ba512bbaef142b6d20133"
   },
   {
@@ -157,8 +448,49 @@
     "title": "可变基数树技术分享",
     "source": "content/posts/2023-01-12-principle_and_optimization_of_radix_tree.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 23,
     "code_blocks": 8,
+    "code_hashes": [
+      "36cb87703f923b66c133e1c407ce699e521663246d144bc3f62c372c86e26eff",
+      "8bce4f4d3848d1333c15add8775e1a59a08d99c6877daf61124cecb0fd6af356",
+      "9722cda665ca2adc4cb4653d70696246cf6cc3a9529f9a1316e08ac304093a32",
+      "ea152237e6e4d787a3ec995171e027dd8667fffdbf3453cfdf1e1c4e8223505f",
+      "fccda964a40c113878c0fc3009037a82771b31be2e3d8ee0607b45433986feab",
+      "729e1fd21aff385d63b98c5a9cade76057d0e82ba201b52e6973a040d4068f82",
+      "b74cc8735d0aee7fe819f072179508bfbe68a5aa52f54b06250476f0925e435f",
+      "fc5a961f264640ddbb42a82a94eee110397097adbe442cb619d067dbc2729852"
+    ],
+    "heading_ids": [
+      "可变基数树分享",
+      "背景",
+      "前言",
+      "基数数是什么结构？",
+      "可伸缩的node",
+      "node-span",
+      "Inner-Nodes",
+      "Leaf-Nodes",
+      "简单的例子",
+      "例子二",
+      "算法",
+      "search",
+      "Insert",
+      "grow-amp-shrink",
+      "分裂",
+      "性能数据对比",
+      "分析性能产生的原因",
+      "高速缓存存储器结构",
+      "不命中时的行替换",
+      "另外的优化途径-SIMD",
+      "硬件支持",
+      "语言支持",
+      "例子",
+      "Vector-Api",
+      "用SIMD-优化-radix-tree的查询",
+      "node-48、256-search",
+      "总结",
+      "引用"
+    ],
     "source_sha256": "510e9b7bd31b6671c33a25c30c1d95c476a0e5914609c2e0cee0ff275f91d215"
   },
   {
@@ -166,8 +498,19 @@
     "title": "我的程序员生涯_雷军",
     "source": "content/posts/2023-01-02-programmer_leijun.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 0,
     "code_blocks": 1,
+    "code_hashes": [
+      "0d4ec1516da60a4b3deaadc1a8539406baef49171b6a82a285d7de70251024c6"
+    ],
+    "heading_ids": [
+      "我的程序人生路",
+      "程序员活在自己想象的王国里",
+      "我爱编程这个工作，可以肯定我会干上一辈子",
+      "高级程序员不是追求的目标",
+      "编程不仅仅是技术，还是艺术"
+    ],
     "source_sha256": "6143e276e3f6b5778f58860d505a8e68fdf927e195d3126e230373819764bfa0"
   },
   {
@@ -175,8 +518,17 @@
     "title": "Go语言 goroutine调度",
     "source": "content/posts/2022-12-16-go_sched_02.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 4,
     "code_blocks": 5,
+    "code_hashes": [
+      "fd87ea992639769f17a35225773c969c5e40909afe061bdb148e725e7f333bb9",
+      "eb7f9555301d16b0f41efdca5a0c93b827de212890406e4ebe2c932aad8c3e74",
+      "c59a1e2271042a87d545247d2294c43d96475a2d20d87f5154040cc337334c03",
+      "64d382db354978b7fa54b4d0f2f1b6c061ffad283a1c714007180ed1c9784829",
+      "b9b2d99bfb48f8d994d29a4283e962e5edf8fddf29ebae1e91d8f40c49b84c09"
+    ],
+    "heading_ids": [],
     "source_sha256": "6e4293bd78a168a10d2d587f03997409eea9a74948a23adc1596d3e958268709"
   },
   {
@@ -184,8 +536,11 @@
     "title": "Go语言 goroutine VS thread",
     "source": "content/posts/2022-11-16-go_sched_01.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 0,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [],
     "source_sha256": "348f55934fdd26141d392b80c03d09ab9903fa880a4561b50caab350475418ac"
   },
   {
@@ -193,8 +548,23 @@
     "title": "Go语言 - 从 channel 接收数据",
     "source": "content/posts/2022-11-11-go_chan_03.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 8,
     "code_blocks": 7,
+    "code_hashes": [
+      "67921f5448eea40143c3ecf19aa7656debd521b07a37a6cf775ceeeb14a8f142",
+      "985036cedfd34267e9a65b47f5b108b42258a3991f9c1fa174a2d5163e9648e3",
+      "691d227b965c34881d9d164fdb7232d524de1659223bdaebb4e55379b3e0a3f4",
+      "719b8532d734b178a562d350a9b05cf8631123b8fe4c82f64283d2744be67489",
+      "7a708a23014d992f4a518cfa6405587ce797bdf230f001c5ed5823385b698133",
+      "c012fd2e1453b6b0d49cf6fff37084fc9211d9d9fd1748dd9f270bc3ec383548",
+      "b94ed12bdb87097ea82354148c77b651c3897b024557170a4c14e24aef9ba1aa"
+    ],
+    "heading_ids": [
+      "源码分析",
+      "案例分析",
+      "参考资料"
+    ],
     "source_sha256": "db87b547f6708701aeec4edde366f1a9298cf91e8d9492cf9245c61204c52659"
   },
   {
@@ -202,8 +572,22 @@
     "title": "Go语言 - 向 channel 发送数据",
     "source": "content/posts/2022-11-10-go_chan_02.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 2,
     "code_blocks": 6,
+    "code_hashes": [
+      "d0516d82e6014e9e65b63882810350b7962ebeaa52c64f02bac564fbd84935ac",
+      "b056c1e02d220ab9807c049740c64b16d27bda5382b34cfbd35a7ed8ef67f012",
+      "35052178c5d82ac36971dfc1a5866a0eceba173e6dab0266113b6003ffef87f9",
+      "b7cb716ac95a6fa8f6b653545a7ef3c9ee05d50eca7fb446cce9bc152eccc0ef",
+      "6413ae93344d242c280b32fb555f9788c8260245b2dd912f187734f8c0f8d11c",
+      "45d9606d0fa7f08a3c551b20bb7e5d55c9ccf3774fb729450cd9246b807063bf"
+    ],
+    "heading_ids": [
+      "源码分析",
+      "案例分析",
+      "参考资料"
+    ],
     "source_sha256": "46c5105954e7f9a94a9257a68e0372c75f61bedc0b048284c5662ba92ff14602"
   },
   {
@@ -211,8 +595,21 @@
     "title": "Go语言 channel底层结构",
     "source": "content/posts/2022-11-06-go_chan_01.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 2,
     "code_blocks": 5,
+    "code_hashes": [
+      "a38cf89e76c446576580a7771184020557fcef6cd6ae7ec8eaeae4c2d8c9f329",
+      "a55adb58e97bc1749d9b1a8ec268c68c530736bb18db0dd60a0070a0604297f2",
+      "90d8e4d489aee61525792c66b9609057a5f51c581a2167237510db09d465d64b",
+      "02c35dfef96c68b700cd091c4cb082dfc850ef24e6ed93a0dd4e786e945ed76b",
+      "22936116ae6e3495e4ecd6e62fbce9fffe2944450d7b1ae80d54b20510c20e9a"
+    ],
+    "heading_ids": [
+      "数据结构",
+      "创建",
+      "参考资料"
+    ],
     "source_sha256": "bfa840942958ea50eb01120eadc4f7f6d5433a5fd3c49d49ddaf3dedae8dddda"
   },
   {
@@ -220,8 +617,15 @@
     "title": "C++内存问题排错小工具",
     "source": "content/posts/2022-09-10-cpp_fsanitize.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 0,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "AddressSanitizer-的主要功能",
+      "fsanitize-address-的影响",
+      "使用场景"
+    ],
     "source_sha256": "8ccdf4d5f127272f071996d4865b5d9a3cf50bf42d447b2c04f341da32991442"
   },
   {
@@ -229,8 +633,15 @@
     "title": "数字货币交易系统设计与开发",
     "source": "content/posts/2022-06-23-contract_transaction_system.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 1,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "期货合约",
+      "期货合约交易系统",
+      "爆仓"
+    ],
     "source_sha256": "f41c8457ff245d7315250eae641f2af3a39d5a44eda2a230f1988054c7d08629"
   },
   {
@@ -238,8 +649,26 @@
     "title": "C++程序内存泄露工具",
     "source": "content/posts/2022-05-02-heap_profiler.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 0,
     "code_blocks": 2,
+    "code_hashes": [
+      "c94afc572b4140f11b2c1ee72aa6c258b2bcba2d261148296fc2934102ad6037",
+      "b142b30d24187274407f197a52177a3bab58b8dae08f12875e8d0f1f7baf1825"
+    ],
+    "heading_ids": [
+      "详细步骤",
+      "1-启动内存分析",
+      "2-生成内存描述文件",
+      "3-分析和对比描述文件",
+      "4-理解输出",
+      "原理",
+      "原理和操作的底层函数",
+      "记录内存活动：",
+      "生成堆描述文件：",
+      "调用栈捕获：",
+      "如何实现"
+    ],
     "source_sha256": "de125e50da70aae41af96c0b408631b41f904fbe563f422795e8a2beddc41178"
   },
   {
@@ -247,8 +676,26 @@
     "title": "基于protobuf 的 rpc",
     "source": "content/posts/2021-07-25-protobuf-rpc.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 0,
     "code_blocks": 6,
+    "code_hashes": [
+      "4d61b33560881a1ffc30936c36da916f253dfb92e8eee70bf199a32756ff7e57",
+      "b45edd67ecb6c0bcc9b5d03b4dd2930452e211e2bbbea96fd14e9067da7defdc",
+      "173d3cd897858a3aa2cd8e0428a8d3c6f8e3d73f65274f75ac53503f2689c2d9",
+      "197ca7ae39779a817e30de725e8c88ecc7e5baf6a54b8cd8cea1ded095a8008a",
+      "2e90997fdb6f5cafe53761d312ab76009a43eb9c00b0a85158e9d01525524510",
+      "4bc275413067c64be3c61ca5f4b61f92dddcbe7d55f84e06eb14d15e71da7179"
+    ],
+    "heading_ids": [
+      "基于protobuf-的-rpc",
+      "protoc-自动生成的代码",
+      "例子",
+      "服务器",
+      "客户端",
+      "几个基类",
+      "总结"
+    ],
     "source_sha256": "da5198d39882204f623909c1c10a4644d306655b0804a861f9a348190a9d208e"
   },
   {
@@ -256,8 +703,31 @@
     "title": "汇率、资产与货币",
     "source": "content/posts/2021-07-08-money-and-assets.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 5,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "汇率跟什么有因素关系",
+      "1-经济增速跟汇率相关吗？",
+      "关于顺周期与逆周期：",
+      "2-地方政府的债务问题，债务高，汇率就会低吗？",
+      "债务与利率之间略有负相关",
+      "3-产业转移资本外流对汇率的影响",
+      "4-M2-GDP对汇率的影响",
+      "5-与什么有关",
+      "中国被动成为最大外汇储备国",
+      "巨额的外汇储备不是大国的标志，而是附庸国的象征",
+      "中国的外汇储备是如何形成的",
+      "作用",
+      "弊端",
+      "人民币升值的外部和内部压力",
+      "稳定升值",
+      "铸币税与财富再分配",
+      "个人如此，国家亦如此",
+      "外汇占款带来的货币扩张帮助了谁",
+      "越难复制的资产，保值能力就越强"
+    ],
     "source_sha256": "f272e8f5aa7d7aed7d26f4b70bdac52128b2276be2b9514acb8c153ed32ca320"
   },
   {
@@ -265,8 +735,22 @@
     "title": "用strip和objcopy精简二进制",
     "source": "content/posts/2021-06-19-strip-and-objcopy.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 1,
     "code_blocks": 4,
+    "code_hashes": [
+      "7339d2f596d3c61c692ef0be55ec86652b70a4ce86b66df5b689ad1b18b9c588",
+      "2875007a84d89a1fd9f7d361fed60029da7cd2bb2eb033b4c9eae9b666b0d765",
+      "b9c97f1d1ff0844e4c7d2e27736577dfb56bb1dcfb644a5a07204239dbe925ef",
+      "6686ca6b20b10c5631724a881cf1cdf2ba282b7b6c0a816ff1830beb9adc9ff6"
+    ],
+    "heading_ids": [
+      "问题-设置到-LD-PRELOAD的动态库-找不到符号",
+      "agent-api-init-在静态库和动态库中都存在",
+      "使用strip-可以指定删减-符号表",
+      "objcopy-不能去除-重定位的符号表",
+      "也可以直接去掉动态库的符号"
+    ],
     "source_sha256": "e3a4c2b40a0623e9bd77d20b1a0d79d72254b2ebb967bdf2f9945be3e5a18793"
   },
   {
@@ -274,8 +758,28 @@
     "title": "渴望明天",
     "source": "content/posts/2021-06-07-tcp.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 7,
     "code_blocks": 1,
+    "code_hashes": [
+      "0315ee1fc1749bc7467cb2a22a12bc05f57cbabb68471486f9a49b687ecbc3dd"
+    ],
+    "heading_ids": [
+      "渴望明天",
+      "哈哈哈-TCP",
+      "三次握手主要做什么",
+      "四次挥手一定是四次吗？",
+      "MSS-amp-MTU",
+      "尽可能避免IP的分片",
+      "MSS",
+      "Path-MTU-Discovery",
+      "TIME-WAIT-status",
+      "还有一个状态是-CLOSE-WAIT",
+      "SACK",
+      "延迟-ACK",
+      "cwnd-congestion-window",
+      "参考"
+    ],
     "source_sha256": "3b2bbddc0b0109a4d6f5956fb2acdb3a2290912e95531de2c9781c3b559e52eb"
   },
   {
@@ -283,8 +787,23 @@
     "title": "tcpdump note",
     "source": "content/posts/2021-05-30-tcpdump.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 2,
     "code_blocks": 5,
+    "code_hashes": [
+      "11354474ad0fcf16fa395ab71e7ec32ae896bb43bac309f6f4a7e6774ff3ebca",
+      "81a454b842c77aa7cc6863af8d930ad7bbe2c9d50f05f082009affcb0080e21c",
+      "a570b34c039d19e540c6e1a45a5645005d694e900554d8161b2ddbf724310275",
+      "80eda614f9fa10782a86addaa2082a424ec85b76c54f7c5f40fbfe1ac961f82b",
+      "f00b5ad80a5f8516d2d2111070b5485ea367a8184dd92f0af0f0605d1582223b"
+    ],
+    "heading_ids": [
+      "选项",
+      "过滤",
+      "按照协议过滤",
+      "按照-host-和-端口",
+      "高阶过滤的方式"
+    ],
     "source_sha256": "cec9c9c42c36325c9b3a1eab77d08c270a51eebf2a06700e5b78137b581fa5c8"
   },
   {
@@ -292,8 +811,27 @@
     "title": "gdb指令级别单步调试",
     "source": "content/posts/2021-05-18-gdb-step-debug.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 1,
     "code_blocks": 6,
+    "code_hashes": [
+      "c4e253277bc24bbaa36d594315ece5fd1fc30e729d050fe33d0161ac13eca7fa",
+      "a8ea986e12d87a36633f256b35ec089ba351b560f7df83e0d3b6e2eb172cc12e",
+      "f6ec240be7cb6065d6a5465e44444b380832ea8beba67a6e4f4d34a5fd9e5490",
+      "00b6e8f6a182134a0607afd40ccdb04de284c17eb172714017ecaaaeb667ac53",
+      "c5d90752dd5c05d56bbbecf08b1f6aafdbbc0387fbc0446136cb6b4d9ff3e296",
+      "c3b56e516e2531bd9981ead818430ea9065cfc79a67475b7cd265e2478c8650f"
+    ],
+    "heading_ids": [
+      "gdb单步调试",
+      "原来服务的的启动方式",
+      "gdb拉起，设置命令行参数",
+      "处理守护进程",
+      "set-follow-fork-mode-parent-child",
+      "打断点的几种方式",
+      "设置单步调试",
+      "看崩溃在哪一条指令"
+    ],
     "source_sha256": "a384cccc9f542e6a3cb192c4807f6406f22d602fc66fd5f47c3ea0302592413a"
   },
   {
@@ -301,8 +839,17 @@
     "title": "redis消息队列",
     "source": "content/posts/2021-04-20-redis-mq.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 3,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "消息队列的特征",
+      "消息保序",
+      "重复消息",
+      "可靠性",
+      "用-List-和-Streams-实现消息队列的特点和区别"
+    ],
     "source_sha256": "a96863ef6c9526ce5dc6749136c1d8706fdae60fb73ba99deed62c8d8a1b8c30"
   },
   {
@@ -310,8 +857,24 @@
     "title": "redis数据冗余与分片",
     "source": "content/posts/2021-04-19-redis-replica-and-redundancy.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 7,
     "code_blocks": 2,
+    "code_hashes": [
+      "61ae698e582ca8ebf5a4e645fa2e3b72cfb4153f29375d7b3128ecf8634d191e",
+      "7da3623b06c923359cf1deba62ca360b2e5a8558a16b54c05d997bea2dcaac12"
+    ],
+    "heading_ids": [
+      "redis数据冗余与分片",
+      "数据冗余-主从复制",
+      "主从库间如何进行第一次同步？",
+      "断网增量更新",
+      "主从全量同步使用RDB而不使用AOF的原因",
+      "哨兵机制",
+      "如何选定新主库？",
+      "数据分片",
+      "客户端如何定位数据？"
+    ],
     "source_sha256": "b5a6308bb62bd06967c6c0a7d018d79a009591c0af3341039a1613e484b31d97"
   },
   {
@@ -319,8 +882,19 @@
     "title": "redis持久化",
     "source": "content/posts/2021-04-17-redis-persistence.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 3,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "AOF-机制-Append-Only-File",
+      "flush时间配置",
+      "aof-重写机制",
+      "AOF-重写的操作系统过程",
+      "快照",
+      "混合使用-AOF-日志和内存快照",
+      "风险"
+    ],
     "source_sha256": "5aa326f555ede12fcf0be06417e2942c9289f23ad1da146e5ae57458b759ec8c"
   },
   {
@@ -328,8 +902,21 @@
     "title": "redis基础",
     "source": "content/posts/2021-04-10-redis-basic.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 5,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "如果你只是急于解决太多细微的问题，能力就很难得到质的提升",
+      "Redis-学习的路线",
+      "底层数据结构",
+      "基础数据结构",
+      "key-value的管理方式",
+      "跳表",
+      "skiplist与平衡树、哈希表的比较",
+      "redis的线程模型",
+      "ref"
+    ],
     "source_sha256": "63d81bf985c64a902efff9741f603484a93ea8660e100dcd56a5793f883e0ca7"
   },
   {
@@ -337,8 +924,24 @@
     "title": "C++ 11 Atomic",
     "source": "content/posts/2021-03-23-c++11-atomic.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 0,
     "code_blocks": 4,
+    "code_hashes": [
+      "5c0ae3c287e3455f7cd0739946df609c0b36836ae625b5c5136ea7bdf25458e4",
+      "820b744fa8e5b7def2118b8c289a9895d95a3d9620897e94059da8c07d427e47",
+      "90d924998d83b2e3eab80cd1a0313b0f3f79b2b64a65c77c2ccaa787958c04ad",
+      "8022cf86141e934655454e9b5d0adadcfcfa593f531bfe30d6a5f3381c875094"
+    ],
+    "heading_ids": [
+      "引入的原子指令",
+      "C-封装",
+      "Cacheline",
+      "Memory-fence",
+      "wait-free-amp-lock-free",
+      "理解C-的原子操作",
+      "引用"
+    ],
     "source_sha256": "f2ec93e226bed784c6f74b3adbe5adc68b0fed988be5536f9d2ee0b173d25d08"
   },
   {
@@ -346,8 +949,23 @@
     "title": "C++11 lambda",
     "source": "content/posts/2021-03-23-c++11-lambda.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 0,
     "code_blocks": 3,
+    "code_hashes": [
+      "d8a4fa8697421bbc10c3a0c4980b3bef3e29bda10c9b07c36c02304dc124fc1d",
+      "99e24b6f956ae94d976ff8c78c55aa8a7abe4b45d69c0a4a1564fa6c4ee0b18e",
+      "07971871002113136490e1a77b3c4602a52891dceb878d5ec74b44698156d7ef"
+    ],
+    "heading_ids": [
+      "Introduction",
+      "Capture-By-Value",
+      "Capture-By-Reference",
+      "结论",
+      "闭包-利用函数对象记住状态数据",
+      "std-bind和闭包",
+      "引用"
+    ],
     "source_sha256": "fce4a9f2ea2da2382dc9b4d13b907eb00264e82deb49df05673965c3e1cb05ff"
   },
   {
@@ -355,8 +973,22 @@
     "title": "ddia-事务",
     "source": "content/posts/2021-03-20-ddia-7-transaction.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 4,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "transaction",
+      "脏读",
+      "脏写",
+      "读取偏差（不可重复读）",
+      "更新丢失",
+      "写偏差",
+      "幻读",
+      "可序列化与两阶段锁",
+      "实现两阶段锁",
+      "例子"
+    ],
     "source_sha256": "ed1361dff4249a1f1d319ee02bdb1aaf1478386e381add6dd851556663ed8b52"
   },
   {
@@ -364,8 +996,13 @@
     "title": "ddia 存储与检索",
     "source": "content/posts/2021-03-16-ddia-03-storage-and-index.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 1,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "存储与检索"
+    ],
     "source_sha256": "b30cb37d307bb41f0f6c6674c584ba8b91d87d8fdf853fd8c43d6c6b4a4de22c"
   },
   {
@@ -373,8 +1010,21 @@
     "title": "理解右值引用",
     "source": "content/posts/2021-03-08-understand-r-reference.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 0,
     "code_blocks": 4,
+    "code_hashes": [
+      "1aecfd91efaa39a63f00cdb82d6eb936ac152d6b91d2fe3a4ae3031085ce6c72",
+      "6d5a512dac41ac2bf072007f60d580b40851f488649f639a06b797e1aa5ef6a1",
+      "d8c415f388bb7120da6976a8f62e19c06ffabfca0d74c2fcbb82a8746cdc66e4",
+      "7aa5f921ece3d0600e9523ec01061c01bd0ad2892f5fa042f3e2e1819beb7547"
+    ],
+    "heading_ids": [
+      "一句话概述",
+      "实现移动语义",
+      "实例：vector-push-back使用std-move提高性能",
+      "ref"
+    ],
     "source_sha256": "ccd25e0d62b552b5df9ff6d21dc778d01c45272ae317c3b99f6283628ec0dc1d"
   },
   {
@@ -382,8 +1032,27 @@
     "title": "一个Linux 动态库常见bug",
     "source": "content/posts/2021-01-13-a-linux-shared-lib-bug.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 1,
     "code_blocks": 7,
+    "code_hashes": [
+      "05e9e3da6f0142d595e3ebccb24b134909348eedd7962c06dda960a29783c168",
+      "9e5bd56719a5357cbf4f053d06b82ff82f63eae0c402c342225e463d363d9123",
+      "c7cea2b173e4dbbcf89c5a29874f0d5a2c85adfb9ff6d894ba53df69f887496b",
+      "72ce11e82bada6142325fb986a26f2990624b00abd4651fccbf59f39a3198ae1",
+      "210b27900de486db5cd467f6e7386acd72f11ed2c7afbc3aa0ab7af02e8d1d40",
+      "6f7494bc75645b4c47b98c0295061183f5a7026c961918b08a8ef706d281400b",
+      "151d9bcb76213770092b728817c3733cc22b9c57652cb9a7876586b9ff693a0a"
+    ],
+    "heading_ids": [
+      "遇到的问题",
+      "case",
+      "简介",
+      "产生原因",
+      "解决方案",
+      "引用相同文件",
+      "结论"
+    ],
     "source_sha256": "19a63758f7acbd4c5135e534da2a98f357991a6cb064402add4dea7ecfd06e28"
   },
   {
@@ -391,8 +1060,22 @@
     "title": "c++虚函数表",
     "source": "content/posts/2020-12-22-cpp-class-model.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 4,
     "code_blocks": 4,
+    "code_hashes": [
+      "37059690562ade44128e0e6ff08aaa746b519fd3f15011e37b1379248d1fa139",
+      "228f67b48f37101a6ba5afd881204ad1f70fa91862c22ec57cd7862184ce1de5",
+      "c2ec5757779f64fbc11b1cb8d8073bf594fcbc001402a9e8522389a301d0a5c7",
+      "b809068fbf20aec898647a436106b0ca33b048a38ce7f6f1c906cbf12b80cdb0"
+    ],
+    "heading_ids": [
+      "概述",
+      "使用GDB调试-C-虚函数",
+      "构造函数与虚函数表",
+      "ref",
+      "TODO"
+    ],
     "source_sha256": "dd3e8b31e6584468ddd2d5e4cd24db1c72da21313d76d030bc2e71345ab723f5"
   },
   {
@@ -400,8 +1083,27 @@
     "title": "std::shared_ptr",
     "source": "content/posts/2020-12-16-shared_ptr.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 0,
     "code_blocks": 6,
+    "code_hashes": [
+      "1a048eb4c72725a0715299e907e499da480a14b619af264dc7ce87aed8c866b2",
+      "52cc69c9680c0070eb70c8f4290ddacc16dd21f0ac171cc990ec76083a0a2bd5",
+      "feb87a5200aabf784dd9cab8f7857ef9d141c40018c41148425c0b9e190530cc",
+      "c575b1cef825541d3dbffc81486c65f4a343ace0b1dbfa75071f76531935216e",
+      "d81b97499edf3d71f5e954047647128b7a64f7dd324eff68e8b14cfcd69a4329",
+      "bd48853c0925a776b0e1c05aa74164cbbf2abd1c69962fe2e129fcc7124143bc"
+    ],
+    "heading_ids": [
+      "shared-ptr",
+      "shared-ptr的简单实现",
+      "错误用法",
+      "1-循环引用",
+      "2-多个无关的shared-ptr管理同一裸指针",
+      "3-直接用new构造多个shared-ptr作为实参",
+      "tips",
+      "ref"
+    ],
     "source_sha256": "aeaaf2b700e0a33baa926fca080b443a846faf1106a486062e35210969805871"
   },
   {
@@ -409,8 +1111,39 @@
     "title": "从hook的并发症理解x64指令格式",
     "source": "content/posts/2020-11-26-hook-complications-and-x64-instrcution-format.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 13,
     "code_blocks": 12,
+    "code_hashes": [
+      "59958841637ff4b89cb0093f309483287c2cc98f8845f69aa400863384edb140",
+      "da5b348c0bd2839fb4e85414c3af8eef3dfb71b390fbce964704d12325a413b3",
+      "e2271867d3d0e1d18456481b7db388131cb7e40c0aff465ef35938d1fc96034b",
+      "f3078fae9da30bd2eeaa54d6f51fb17f46848c31178aecc790bc67bd7321f979",
+      "66d179fac1438f29e69c07b287cbb49345f119f54e2e915b72eadfc2b2a14aa7",
+      "772ff74c05f2e0e748ae18ded06cf6a73406ff8888c5ac530e8a596cf5fdc6a3",
+      "e705e2d6b1b80451dcf234290e9dfc12c6fd37373f25af8b812ee8ac7bc857b0",
+      "a3767223f73b49bb8ff4a43753eed5a998311bdf5674b28c813ac87571c41dfc",
+      "b046cb362aa90e1ce24abfebc713b93e28e4e5e5c224d8371e77e80f07f30b6a",
+      "ee5551cc1c670bfdc2b955c6f0f5c6e816366eb7e7968a96a24916c3b8af2a78",
+      "609d0b47ca4aeed2bf29d6296364b08bfd260bc55e2c6ba11e84a9135ff3b18d",
+      "258d2462cab1a618d5cf23829cd28e49a3af9cc9ef38f5fb503843a0454f16ff"
+    ],
+    "heading_ids": [
+      "hook的并发症",
+      "思路",
+      "那么，如何修正rip-relative指令呢？",
+      "指令格式概述",
+      "Instruction-Prefixes",
+      "opcode",
+      "ModR-M-and-SIB-Bytes",
+      "REX-Prefixes-开启64位计算的基石",
+      "REX-prefix-的具体格式及含义",
+      "RIP-Relative-Addressing",
+      "如何识别各种指令格式",
+      "反汇编器",
+      "整体流程",
+      "REF"
+    ],
     "source_sha256": "ce095448899672e040ccf4ddc63ad13adb1937134e7284cca358f8d02078fa5e"
   },
   {
@@ -418,8 +1151,26 @@
     "title": "网络游戏同步模型",
     "source": "content/posts/2020-11-18-game-sync-modle.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 3,
     "code_blocks": 2,
+    "code_hashes": [
+      "7fbe7e12fe47e3b97d326af9d4fb85662667cd3876726dbcb4bea8582660ac9a",
+      "8a97c328e4a7f3b7009e09fe3d007692a890432a84cd8eadfeee0f9d05639b83"
+    ],
+    "heading_ids": [
+      "常见的网络游戏同步模型",
+      "二、TCP-or-UDP",
+      "三、基于UDP开发的协议",
+      "1-连接",
+      "2-可靠性",
+      "2-1-QOS",
+      "2-2-重传机制",
+      "3-包的结构",
+      "4-数据压缩",
+      "5-加密",
+      "REF"
+    ],
     "source_sha256": "0de66d5834d1bc991391e71080e1f79a22346f46dddcc1a584ee043eae2197c3"
   },
   {
@@ -427,8 +1178,11 @@
     "title": "画画",
     "source": "content/posts/2020-11-11-painting.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 3,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [],
     "source_sha256": "baae7503499d49d080afecf8be443a92cff625ae721a37e0e3536a2ab8973e8d"
   },
   {
@@ -436,8 +1190,26 @@
     "title": "程序的机器级表示",
     "source": "content/posts/2020-11-03-csapp-3-asm.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 7,
     "code_blocks": 3,
+    "code_hashes": [
+      "207ab73d05b91a19fd3f7a76d76950fb5722349298db9ccb7511d462fd328044",
+      "750146cc4192be96029d81d6fb6677acb93567f548785f225d3067d69c8459bc",
+      "f25a14beaff0488b034163dde65a553c2c5ec5810445f9584150e502ec0987f3"
+    ],
+    "heading_ids": [
+      "CSAPP",
+      "机器级表示",
+      "汇编",
+      "访问信息",
+      "控制",
+      "过程",
+      "结构与数组",
+      "过程的详细解释",
+      "栈描述",
+      "gdb-调试"
+    ],
     "source_sha256": "d644d0d4947647cb829e3db0387849bc3381619ce7973fa3c994a90c34f01d51"
   },
   {
@@ -445,8 +1217,22 @@
     "title": "多进程游戏压测工具",
     "source": "content/posts/2020-10-02-press_robots.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 4,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "概述",
+      "接入层",
+      "内存池缓存数据",
+      "通信协议",
+      "服务器逻辑",
+      "压测概述与思路",
+      "共享内存通道",
+      "定时器",
+      "链表的实现",
+      "协程"
+    ],
     "source_sha256": "b3e85968c19ee8f0fb639463ece0a31d1547b3cacf993b25c3ce3f9ff098601b"
   },
   {
@@ -454,8 +1240,48 @@
     "title": "hook的几种方式及原理学习",
     "source": "content/posts/2020-09-27-hook_and_internal.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 9,
     "code_blocks": 14,
+    "code_hashes": [
+      "fa553751917507c9bda144f4055a3fc3654c4c40e83c9ce011e472b25939dbfd",
+      "059d47d723e17cbd263bd1b1518f07ac1a07051c6303308726740ec5b8773795",
+      "f05b1c7fd1a3f892365d62889328fbf3d1b14b65cda4b313e3799ec5c9db07f3",
+      "9e75e6312aac993b14af0277b13c5aa65d4ce1d2609b73b7629daa5525ab41cc",
+      "3a8f72c28eee5c9f302e4599a2e57598e88d05de1dff405338d445359707e5ea",
+      "9f47563ad5fd61e84bb20a9555066d29b9ead0e89c5b597cfcc83eef23dbc01c",
+      "2751677cd58623e7751f5f9a5abe0b07d71a526486cc78143f4ca35ec1ec3876",
+      "181ef1b9fac874ce5c24c65b88ad698c8d18dd515c6beec9743bb7cbbb0c515d",
+      "4edc783a24b6d6ab6ee6cb5a32f12a24306f0f39b573b8a5fbfc4aa15ca59465",
+      "d926884fd4458866753bd2a6e8cfb5191a4acf1e88a59406dd0fc4426024211d",
+      "7d1f83a7154c5a947a05213f87258c5922ae17d79d232a805f6b4fadcff94a96",
+      "e9ba90750823801a61ad20873c54f92231310c2b273d8b90af192c712675e879",
+      "01ed86fbeb5b2fbd47279f40d99cb5fd10081e85bfd14a900a38b814235771f4",
+      "799facd5cd78ae4029c53bcdb32dc3f00c235fc17c0931c10df4baa090a62c3a"
+    ],
+    "heading_ids": [
+      "概述",
+      "编译器支持",
+      "Function-Attribute",
+      "库打桩机制",
+      "编译时",
+      "链接时",
+      "运行时",
+      "动态库加载特性-got-替换",
+      "ELF文件格式",
+      "重定位与动态链接",
+      "重定位表",
+      "GOT-及-PLT-表",
+      "重定位类型及偏移表",
+      "GOT表项替换",
+      "内核调试接口",
+      "ptrace-系统调用",
+      "跳转代码修改",
+      "inline-hook",
+      "inline-hook的注意点",
+      "其他",
+      "引用"
+    ],
     "source_sha256": "9ee398baaaf42d6ab3aaf34073907724e30c94d336a7abfd8a1a285f43c51179"
   },
   {
@@ -463,8 +1289,22 @@
     "title": "去看天问一号发射",
     "source": "content/posts/2020-07-23-tianwen-1-wenchang.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 14,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "天问一号发射",
+      "卫星发射时间表",
+      "文昌卫星发射中心和文昌、龙楼镇",
+      "封路",
+      "最佳观测点",
+      "这大海有点漂亮",
+      "普通手机拍出来的效果",
+      "遇到的追星的人",
+      "找队友",
+      "出门-list"
+    ],
     "source_sha256": "179f3d6e6d2e6db11f8156ea06463a32a278037ae94d94b739be2f58241851c7"
   },
   {
@@ -472,8 +1312,20 @@
     "title": "Linux中的段",
     "source": "content/posts/2020-06-26-linux-segment.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 2,
     "code_blocks": 2,
+    "code_hashes": [
+      "65328f8ab908ca7f8ee75b7a60cc0a0bf4bce8832c5c2f9f6b63d71cc85d4d0a",
+      "5e0451b0b5c25c23088acc3d468d3627a67db9f56e68602966d6b05702655cb6"
+    ],
+    "heading_ids": [
+      "Linux中的段",
+      "linux的GDT",
+      "段寄存器与段选择子",
+      "学而不思则罔",
+      "参考"
+    ],
     "source_sha256": "ffe0d835fe7458d92701d2314bd8c4a477d3e31da3c763f8ce06acaac42d69b5"
   },
   {
@@ -481,8 +1333,20 @@
     "title": "附近的人",
     "source": "content/posts/2020-06-22-geohash.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 5,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "why",
+      "我们如何知道自己在世界上的位置",
+      "附近的人需要的前置基础设施有哪些",
+      "geohash：经纬度的一维状态",
+      "根据经纬度计算GeoHash二进制编码",
+      "GeoHash-Base32编码长度与精度",
+      "降维与Z阶曲线",
+      "参考"
+    ],
     "source_sha256": "6bcc644cdf59d9adf13c0fb49d66e5f53695dcd74b4c0eb8634a9602d862a7c0"
   },
   {
@@ -490,8 +1354,19 @@
     "title": "ucontext",
     "source": "content/posts/2020-05-26-ucontext_01.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 0,
     "code_blocks": 2,
+    "code_hashes": [
+      "7cbdb0dcd3007376a6198680ac36f2aed27f4958dc4f2edf85a3ee31a440c1fc",
+      "2eab28fce73b62eb13a93985740d68d67e38602ebc1a1b8db7a75e1dad2b0e26"
+    ],
+    "heading_ids": [
+      "概述",
+      "主要的4个函数",
+      "内部结构",
+      "例子"
+    ],
     "source_sha256": "fd7bd2ec6b8be97e301010615fde1dd0f19959476d01af8d54194b39edbebfac"
   },
   {
@@ -499,8 +1374,17 @@
     "title": "程序员的自我修养 - 系统调用及原理",
     "source": "content/posts/2020-02-16-syscall_and_innner.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 1,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "什么是系统调用",
+      "Linux系统调用",
+      "系统调用原理",
+      "切换堆栈",
+      "Linux新型系统调用机制"
+    ],
     "source_sha256": "fd44bcd58c53fe6347d266b47afd5ba4c4219230ed6dbbf9ad5b3c0cec01ed5d"
   },
   {
@@ -508,8 +1392,19 @@
     "title": "程序员的自我修养 - 可执行文件的装载与进程",
     "source": "content/posts/2020-02-15-loader_and_start_process.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 4,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "进程的建立",
+      "首先是创建虚拟地址空间",
+      "虚拟空间与文件映射",
+      "执行可执行文件",
+      "ELF文件映射",
+      "进程栈初始化",
+      "linux内核装载ELF过程"
+    ],
     "source_sha256": "2bf0a5a1858eeb1ad8ac9d2db2cf8946b10bb3dc9e1e3ad5482da04adeb4c9ab"
   },
   {
@@ -517,8 +1412,22 @@
     "title": "程序员的自我修养-线程安全",
     "source": "content/posts/2020-02-04-Thread-safe.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 0,
     "code_blocks": 2,
+    "code_hashes": [
+      "a519b80f1fddb6e9d696cc7eb3f5b7545f05ed300c7de43bb5f6fbdf2f9aff61",
+      "eea60d2911f237ec4f6ed0419cf059c2cc36b1966e7001c5096f67d9eb61e91a"
+    ],
+    "heading_ids": [
+      "原子操作",
+      "同步与锁",
+      "互斥量-mutex",
+      "临界区-Critical-section",
+      "读写锁",
+      "过度优化",
+      "cpu-乱序执行"
+    ],
     "source_sha256": "cbfe623071da4cee894f3860324059ef42453051dc5cbf58e4a8c7b24e7b4ad3"
   },
   {
@@ -526,8 +1435,21 @@
     "title": "一种定时器的实现",
     "source": "content/posts/2019-12-30-linklist_timer.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 1,
     "code_blocks": 3,
+    "code_hashes": [
+      "3a187510ad39f77941023d176cd661fe5af21af590363f8ddbb8362690309277",
+      "2ee6d0a331a9019b602b246870ca702043d9c35106a5b76612b7c3015eed3e4d",
+      "3aa5dcc1e4d1ed7f62dee58576da611cb281269598efff95115c72f757f2fcca"
+    ],
+    "heading_ids": [
+      "概述",
+      "链表的实现",
+      "执行方式",
+      "example",
+      "code"
+    ],
     "source_sha256": "b61d7513a1e688de529d81e4f60aa0ea23f5256774f0b76820d3406ac4127063"
   },
   {
@@ -535,8 +1457,18 @@
     "title": "tcp socket api",
     "source": "content/posts/2019-12-11-socket_api.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 1,
     "code_blocks": 1,
+    "code_hashes": [
+      "6a3e9ba1eb75e175fa51a7d5e775e00a4f12397eb73beb30546c74ab1def4159"
+    ],
+    "heading_ids": [
+      "socket是网络协议栈的抽象",
+      "socket-api在tcp中的体现",
+      "code",
+      "REF"
+    ],
     "source_sha256": "8c4a5b34c0870f99ef0041337a5cf467bf075c120697a284c332eddec5997896"
   },
   {
@@ -544,8 +1476,25 @@
     "title": "Understanding TCPIP Network Stack",
     "source": "content/posts/2019-11-28-Understanding_TCPIP_Network_Stack.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 4,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "概述",
+      "网卡-network-interface-card",
+      "优化后",
+      "1、首先，内核在主内存中为收发数据建立一个环形的缓冲队列（通常叫DMA环形缓冲区）",
+      "包含数据和元数据",
+      "如何增加或删除头",
+      "如何合并或切分数据包",
+      "快速分配和释放",
+      "2、内核将这个缓冲区通过DMA映射，把这个队列交给网卡",
+      "3、网卡收到数据，就直接放进这个环形缓冲区了——也就是直接放进主内存了；然后，向系统产生一个中断",
+      "4、内核收到这个中断，就取消DMA映射，这样，内核就直接从主内存中读取数据",
+      "TCP-tcp-control-block",
+      "REF"
+    ],
     "source_sha256": "84812ba3f99999f37fa20753418820d91fa0f7c0659ff2baf76c470f3f39936f"
   },
   {
@@ -553,8 +1502,24 @@
     "title": "TCP的几个问题",
     "source": "content/posts/2019-11-25-net_shake_hand.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 4,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "IP-header",
+      "UDP-header",
+      "TCP-header",
+      "MTU-amp-MSS",
+      "三次握手",
+      "四次挥手",
+      "2MSL等待状态",
+      "Nagle算法",
+      "滑动窗口",
+      "流量控制",
+      "拥塞控制",
+      "状态图"
+    ],
     "source_sha256": "56470077176ace3514864a650fd52955af871b8e79e0ae6bd22f060cc88cfa7e"
   },
   {
@@ -562,8 +1527,26 @@
     "title": "awk note",
     "source": "content/posts/2019-10-29-awk.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 0,
     "code_blocks": 7,
+    "code_hashes": [
+      "4f43741d9925d0edadae461aa7716d1383ffb735b5f7ae23c776df9d23290352",
+      "0b3e17bd94c9f8146a37481928bec2fba488cc8807955e5565a036692e623e44",
+      "d10d8f0b0bb8328540eb876f3a04aa7740880c5deb0b4e0acdb6d6c8a30c57e6",
+      "667141d166053d1328a726ae3b94aab93a81e71ca786a3feead8d9646435dd4f",
+      "670f12f94b522b8ceb3eff58840006899f4adeb2f50e48c89e9dce6c0b889eb0",
+      "15d2a58eac27b9f6c3eef4c5d5c525b12ba9766b5d3316d8348cd65d7c3aad72",
+      "477e3366a0ee40be2c32b01c46748445eae70696d4e6a955aef01e8d7f1ee79e"
+    ],
+    "heading_ids": [
+      "处理流程",
+      "内置变量",
+      "内置函数",
+      "组合使用",
+      "next",
+      "REF"
+    ],
     "source_sha256": "4d1a2be83f035f3f1de8b8073ed660c5a8a21bb5c6fd3278e102a2577cbe8cb0"
   },
   {
@@ -571,8 +1554,18 @@
     "title": "linux定时器时间轮算法",
     "source": "content/posts/2019-10-24-linux_timer.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 3,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "时间轮实现",
+      "简单的单时间轮",
+      "改进的单时间轮",
+      "多时间轮",
+      "对比",
+      "引用"
+    ],
     "source_sha256": "81accb26f474069b9c891c209614f274908443547ad93cfff03c8df457603318"
   },
   {
@@ -580,8 +1573,16 @@
     "title": "进程通信 & PIPE",
     "source": "content/posts/2019-10-24-IPC_and_pipe.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 1,
     "code_blocks": 1,
+    "code_hashes": [
+      "4863df43b20eaa3f0481044f13a3d21d00746b8d5c24280dbb516b44b657faa1"
+    ],
+    "heading_ids": [
+      "历史",
+      "管道"
+    ],
     "source_sha256": "8df67f3b3a1cbfcaf2ef4e133a93ec3c3b61bfd7ed31ef38615a197fd5e62b4a"
   },
   {
@@ -589,8 +1590,18 @@
     "title": "临界区、信号量、互斥锁、自旋锁与原子操作",
     "source": "content/posts/2019-08-18-Mutex.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 0,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "临界区、信号量、互斥锁、自旋锁与原子操作",
+      "临界区",
+      "信号量",
+      "自旋锁",
+      "互斥锁",
+      "原子操作"
+    ],
     "source_sha256": "3a43a31f346e3f7955c9a7eea618677233984017fb6f8c1f9b9f5af5b586be01"
   },
   {
@@ -598,8 +1609,21 @@
     "title": "xargs note",
     "source": "content/posts/2019-06-23-xargs.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 0,
     "code_blocks": 3,
+    "code_hashes": [
+      "ed7649848347fef1cbf6a472468c41ce28c9ff0a68325b40d85cc76d062e4e61",
+      "018ce2d4953e290be3671b4e91856f9056afd1abfbbeafd4399fb099d0f06996",
+      "022a867e3a887beee73c6eac59abfe2d20ceec25fa8a8737136eadb436a3f3b5"
+    ],
+    "heading_ids": [
+      "作用",
+      "与管道的区别",
+      "分隔符",
+      "find-and-xargs",
+      "other-options"
+    ],
     "source_sha256": "be925237ac3d5954408d9907fa465b1aad2011242780c8397df5abd73a216874"
   },
   {
@@ -607,8 +1631,11 @@
     "title": "江湖爱情故事",
     "source": "content/posts/2019-05-28-history_and_love_of_peole.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 1,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [],
     "source_sha256": "44611f60d31019d69c73d50d8be174baba90550c11386236eac3c382ba1b5dd3"
   },
   {
@@ -616,8 +1643,19 @@
     "title": "写一个操作系统_15 内存管理初步",
     "source": "content/posts/2019-04-27-make_a_linux_15.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 1,
     "code_blocks": 2,
+    "code_hashes": [
+      "b918989c6d28ae9f166d987797f94f1fe591666f461f95b9407c3d7b43a62bc8",
+      "b134c4af0bc4a7d97eeba8b4d41f4ef64328b59892b84327cb6581fbbe4564c6"
+    ],
+    "heading_ids": [
+      "内存管理初步",
+      "物理内存",
+      "虚拟内存",
+      "分配物理内存"
+    ],
     "source_sha256": "5ee0e6433857778b2c6817a8f620743e6c13f5277f662664f6d9826b28a4f5c6"
   },
   {
@@ -625,8 +1663,22 @@
     "title": "写一个操作系统_14 C 链接与系统调用",
     "source": "content/posts/2019-04-24-make_a_linux_14.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 0,
     "code_blocks": 4,
+    "code_hashes": [
+      "a9cb1156f9d293fe75b2ac19d81a95b1351ed46733e326b7109deb9fe2748e82",
+      "3b3203dc00f8a25ed0e5971c8fddbd490cc6e2977cda0b33bca27e27ada9ee97",
+      "3706de1e5d1863e9268e8ada18f616ff702abb8e1f12e85d7fad6235a08da5bd",
+      "5d4482085f06a453be83e395aa392f519fb5f1c136ea81b087794a2e6415e32c"
+    ],
+    "heading_ids": [
+      "用C语言写内核",
+      "加载并执行-ELF-kernrl",
+      "调试",
+      "函数调用约定-以-cdecl-为例",
+      "系统调用"
+    ],
     "source_sha256": "b39889b9f67073b0b0ac095f4611167bbd3b3980787103a2ecbd6b1a468a077a"
   },
   {
@@ -634,8 +1686,20 @@
     "title": "写一个操作系统_13 内核的宏观视角",
     "source": "content/posts/2019-04-23-make_a_linux_13.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 4,
     "code_blocks": 1,
+    "code_hashes": [
+      "45c068b52e8cdce1ddfc39e428ba463b1c75bff336ec1aeddad948d9b7eb9f46"
+    ],
+    "heading_ids": [
+      "规划内核的内存分布",
+      "MBR、loader部分",
+      "分离用户空间和内核空间",
+      "二级页表设计",
+      "涉及的寄存器",
+      "code"
+    ],
     "source_sha256": "639b1188a13281277c8c88da791f7c4c4ca9c2966149cc33bb77c590686178c3"
   },
   {
@@ -643,8 +1707,18 @@
     "title": "写一个操作系统_12 linux 原始的几个进程",
     "source": "content/posts/2019-04-20-make_a_linux_12.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 1,
     "code_blocks": 1,
+    "code_hashes": [
+      "07bdad67efa056385ca622c51de0014bfeb66b1c4d4e6d491b12c21b5f474997"
+    ],
+    "heading_ids": [
+      "原始进程",
+      "启动初始化进程",
+      "确定运行级别",
+      "加载开机启动程序"
+    ],
     "source_sha256": "fa1f5d57ea38ac097c397cd99d3de0908949c5039003c6c2c0dde775308317f3"
   },
   {
@@ -652,8 +1726,16 @@
     "title": "写一个操作系统_11 Linux是怎么实现线程的",
     "source": "content/posts/2019-04-11-make_a_linux_11.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 0,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "Linux2-6以前的线程",
+      "Native-POSIX-Thread-Library",
+      "用户级线程",
+      "参考资料"
+    ],
     "source_sha256": "82068ad6136481c8c7ab6c545b59a6d855cdf7105a53099df5fdd4ac4de0f71b"
   },
   {
@@ -661,8 +1743,21 @@
     "title": "写一个操作系统_10 操作系统是由中断驱动的",
     "source": "content/posts/2019-04-08-make_a_linux_10.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 1,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "中断分类",
+      "外部中断",
+      "可屏蔽中断",
+      "不可屏蔽中断",
+      "内部中断",
+      "软中断",
+      "异常",
+      "中断描述符",
+      "中断时候的栈变化"
+    ],
     "source_sha256": "8f7d171bd966ba58c37cfecf2b887e39a0a19effe3cefc4354ab4ece255e26dd"
   },
   {
@@ -670,8 +1765,17 @@
     "title": "2019年4月",
     "source": "content/posts/2019-04-07-201904.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 11,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "2019年4月",
+      "上交拜访颢C",
+      "和大学室友爬黄山",
+      "黄山周边",
+      "遇到一个可爱的小妹妹"
+    ],
     "source_sha256": "821c7419c51c97610d8f4f4d202a3700cf8860a5dc19b8631e548055ceab1b3c"
   },
   {
@@ -679,8 +1783,18 @@
     "title": "写一个操作系统_09 C语言和汇编语言",
     "source": "content/posts/2019-04-02-make_a_linux_9.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 1,
     "code_blocks": 2,
+    "code_hashes": [
+      "bc0357af2c0286890d4826d9d4e4184da8822ae0fc3caf7986c46acf101a5f63",
+      "c6a79ba32e3c0d74b371de8b8ddd07dea047ac7f01f3b0a416b577b996adff2a"
+    ],
+    "heading_ids": [
+      "函数调用约定",
+      "C-amp-ASM-混合",
+      "内联汇编及其扩展"
+    ],
     "source_sha256": "f969ab27a199e197d63e5c23d0a8b39cfa7bdcde1e5effd9f80dee401b81ba62"
   },
   {
@@ -688,8 +1802,25 @@
     "title": "文件描述符限制",
     "source": "content/posts/2019-03-30-file_handler_limit.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 0,
     "code_blocks": 5,
+    "code_hashes": [
+      "d6b7fc5d58c0298622a597daeeebc1e3a93373f493be3eba832896b48d5592d5",
+      "c178823e37fcd06cb8be3fdee9d670a7abcc9196fc99396eeb3d7a65e0e6350d",
+      "6b652b794c7259e17248c24effb8792138add7b0b7145d9f0ce67b51efa948e9",
+      "afeadeeae1c5bba73e89e3e04c2d5c42160f2e6bedb152c55fc0f0ae543b2716",
+      "713d97a52375449ef78988c53d751840d87ae922174f56bfb8942aeea80cde02"
+    ],
+    "heading_ids": [
+      "文件描述符限制",
+      "文件描述符",
+      "文件描述符限制-1",
+      "file-max",
+      "file-nr",
+      "nr-open",
+      "soft-limit-amp-amp-hard-limit"
+    ],
     "source_sha256": "3802bd1569d53131f6373a39786745e487335e0b40fbbf23e968576d3fb5ca4f"
   },
   {
@@ -697,8 +1828,23 @@
     "title": "写一个操作系统_08 内核与C语言",
     "source": "content/posts/2019-03-29-make_a_linux_8.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 0,
     "code_blocks": 4,
+    "code_hashes": [
+      "e70c3e4c8b9c06383ff766d5ae7a0c49eea080f030a6f7ddebb6a2e855b11853",
+      "30c98d9ddcb381aef33e65a8f3abb484c964269a6d8e7e0593228bbdcdb35ca4",
+      "2be13e3d1c32eb6f20e3761a36a7feeaebbee574582cf1104a6cb838bac72d87",
+      "859b3238cb4b26c37d3f6d2d8adad73425d327d871c18ba9f6a165133e0839a1"
+    ],
+    "heading_ids": [
+      "内核与C语言",
+      "写内核能用C标准库吗？",
+      "编译32位程序",
+      "C运行时库",
+      "ELF文件",
+      "如何在没有操作系统的时候调试"
+    ],
     "source_sha256": "392eb79ff2548e590bffb9d082be100f5d43f26ab7cade71711035e5f673c5dd"
   },
   {
@@ -706,8 +1852,17 @@
     "title": "写一个操作系统_07 设计自己的页表",
     "source": "content/posts/2019-03-28-make_a_linux_7.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 1,
     "code_blocks": 2,
+    "code_hashes": [
+      "c42c3451938b1940bbf2e975c98c0797aa203c78fc2a3ee307ae329c1d0632a0",
+      "a2ef0bc014b05477a4d9ac569f1a49dbffd416fb0ea03378647af90a9a770bd4"
+    ],
+    "heading_ids": [
+      "设计自己的页表",
+      "总体布局"
+    ],
     "source_sha256": "85ebec78b8f6b66ce98e872e04e91ba4bc51f2b3e1279563aaf863ba9a2e4d29"
   },
   {
@@ -715,8 +1870,30 @@
     "title": "写一个操作系统_06 内存寻址",
     "source": "content/posts/2019-03-26-make_a_linux_6.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 7,
     "code_blocks": 1,
+    "code_hashes": [
+      "559c5cd5b4a70a75157a210e75fc60004c55fa6be7aa63bd8aff481969ce8cea"
+    ],
+    "heading_ids": [
+      "保护模式",
+      "为什么要有保护模式",
+      "保护模式的寄存器扩展",
+      "模式转换",
+      "内存寻址",
+      "地址转换",
+      "全局描述符表",
+      "内存分页",
+      "为什么要分页",
+      "分页机制",
+      "一级页表",
+      "二级页表",
+      "为什么要二级页表",
+      "页目录项结构",
+      "页表项结构",
+      "REF"
+    ],
     "source_sha256": "9f67893a661115e779fb09cac92edfdb7cdc4d20c0d4f077300cdda632b0c70b"
   },
   {
@@ -724,8 +1901,23 @@
     "title": "写一个操作系统_05 调试MBR",
     "source": "content/posts/2019-03-23-make_a_linux_5.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 1,
     "code_blocks": 4,
+    "code_hashes": [
+      "56db3e37b036ddd6a9eb6af514ad777041fd0d6d96d4c18e1980f7ea71eeffbe",
+      "e5569eaab4f990714fb2d11276d47ab0400e48f6bbda9844e21817d926f5c0a2",
+      "06d80afe8ebaafcfb1210aac75404d45c55bc3146c7a41aa0d16c3bfaa965b21",
+      "b0637fdbb467c6df22f11a40188785a736d48a2bb966f7215bb223aaeb6a8036"
+    ],
+    "heading_ids": [
+      "熟悉MBR引导",
+      "MBR的代码",
+      "编译成二进制",
+      "将二进制文件存储到MBR扇区",
+      "调试-MBR-代码",
+      "在虚拟机中调试"
+    ],
     "source_sha256": "021c3b30b6ff69338708a98396682d1da37b3193038d6f05707b6bc145c00870"
   },
   {
@@ -733,8 +1925,29 @@
     "title": "写一个操作系统_04 内核调试环境搭建",
     "source": "content/posts/2019-03-20-make_a_linux_4.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 3,
     "code_blocks": 6,
+    "code_hashes": [
+      "d08b417a6e72ecf02b56bd6bc7501b2170ef7e43b3ebbbc96731168d7b210fa5",
+      "5dba0f485344f4a068e93ee1e374c44659bb45b1671b3efc8d64ec5ebeae9669",
+      "38da3edd72a52bccc18f13199bde9a5fe07485648d5f133090e174572bd0f9eb",
+      "b7102bcaf4007ddb3f7246d034f027cb1103f3586300c8b99855c9c27f052e6e",
+      "16cbd8c1751ced7acbe4d54e2c3ec65bd216fca77f71a8ec516cc39773318a54",
+      "17f6718eec09fdcc5443d761f8155b891c3fd70e9980b23ca2daa1d42e7545da"
+    ],
+    "heading_ids": [
+      "环境准备工作",
+      "虚拟机",
+      "CentOS配置",
+      "需要的编译软件",
+      "安装Gnome",
+      "编译安装bochs",
+      "bochs运行报错",
+      "从硬盘启动",
+      "制作启动盘",
+      "Next"
+    ],
     "source_sha256": "c9d6790e4403554cd2b996f29570ff1326feef0c7c64658322c5388b9e24dc0a"
   },
   {
@@ -742,8 +1955,22 @@
     "title": "写一个操作系统_03 引导内核",
     "source": "content/posts/2019-03-18-make_a_linux_3.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 0,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "操作系统引导",
+      "MBR",
+      "BootLoader",
+      "Linux-Kernel-镜像",
+      "vmlinux",
+      "zImage",
+      "bzImage",
+      "实例",
+      "内核启动",
+      "参考"
+    ],
     "source_sha256": "323de356575a914f17e62056ef2e2ee3339b1542d01b661067742ec37fc3486f"
   },
   {
@@ -751,8 +1978,11 @@
     "title": "东西冲海岸线",
     "source": "content/posts/2019-03-17-Coastline.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 9,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [],
     "source_sha256": "4d0c25c96d7656309c36673d3e0db18642077bc9abfc7ea98db43c3f699a6518"
   },
   {
@@ -760,8 +1990,17 @@
     "title": "写一个操作系统_02 硬件与BIOS",
     "source": "content/posts/2019-03-14-make_a_linux_2.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 2,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "硬件与BIOS流程",
+      "硬件",
+      "CPU的第一条指令",
+      "BIOS的工作",
+      "完成历史使命"
+    ],
     "source_sha256": "bf5e040ca058b8c3335cf9e1c713477e445f814210e3989e969347c65022abaa"
   },
   {
@@ -769,8 +2008,13 @@
     "title": "男人与婚姻",
     "source": "content/posts/2019-01-24-about_marriage.md",
     "recovered_from_history": false,
+    "legacy": false,
     "images": 0,
     "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "REF"
+    ],
     "source_sha256": "1c5a4665011dbbf88505b41aace184440b55a1ac58c29aecdb33997b82f26bfe"
   },
   {
@@ -778,8 +2022,1696 @@
     "title": "vmstat",
     "source": "content/posts/2019-01-04-vmstat.md",
     "recovered_from_history": true,
+    "legacy": false,
     "images": 0,
     "code_blocks": 2,
+    "code_hashes": [
+      "8b0730a9ce2ca1af346e6c6128dbe4a9291950edb3db0c012d8aeb833cb82c4a",
+      "0b54ef2d468c655ac0c00957223a78fab22b53e593ab18d27fde5349efb70d71"
+    ],
+    "heading_ids": [
+      "快速上手",
+      "第一行数字",
+      "怎么算正常，什么情况是有问题"
+    ],
     "source_sha256": "4035cbd1f4dff632c03b89ef708e586a27ce0cec15bdd8fdb54b354ca744084d"
+  },
+  {
+    "url": "/2018/12/26/mq/",
+    "title": "消息队列的使用场景是怎样的？",
+    "source": "content/legacy/2018-12-26-mq.md",
+    "recovered_from_history": true,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [],
+    "source_sha256": "9d26f0b673e2e7c1417dcdf57dad301d3432c02692c16e829c866c6963f79cb9"
+  },
+  {
+    "url": "/2018/06/01/How-to-become-a-good-engineer/",
+    "title": "如何成为一个优秀的工程师？--陆奇",
+    "source": "content/legacy/2018-06-01-How-to-become-a-good-engineer.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "Believe-in-技术",
+      "站在巨人的肩膀上做创新",
+      "追求-Engineering-Excellence",
+      "每天学习",
+      "Ownership",
+      "summary"
+    ],
+    "source_sha256": "a0713ba6287c474705685b0014468757c22d10f51f67cfc6fc90ae21a2360290"
+  },
+  {
+    "url": "/2018/06/04/protobuf_0.0.1/",
+    "title": "学习protobuf",
+    "source": "content/legacy/2018-06-04-protobuf_0.0.1.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 9,
+    "code_hashes": [
+      "35d50f296aabba15df219315cb559b310a1c17d76756d61cabc3f9aa233146c9",
+      "112a36fabdb574b77de4f7c9e4a0cfaeec53d6db8a22dd3446cebee50e6e6189",
+      "b42de7e75a2a5ce68e69cbce2fe9e5e4a2f7db2f3f3cfba41329ef9478ad784d",
+      "8bbf4dddb5b0a29d664b627511e09e471fc8c444bc9730b8f0bf4dfea3a6dd6a",
+      "52f50e3fb5386251e4d977522f89a054a24dbe7d538a3d15d9aa93fee51d90ac",
+      "2b5bfa3f5f5fdc4d43fe769408f8fcad6f4847c148d9b5d1a012e715c2a07204",
+      "ef38f8c38b94447ba86c0cd1ba57b244b2c59ceee705fed09830d9c6a9cfeef4",
+      "2e1ddf5c3706d1a7771fd59da0bca0b656d94a0122084014ef0849c2130e92c8",
+      "d1557af5d8cf52543d445ece42afd24f0ecc8d9f691e174b6e996b0e79649328"
+    ],
+    "heading_ids": [
+      "引用",
+      "Standard-Message-Methods",
+      "Parsing-and-Serialization",
+      "Advanced-Usage",
+      "一个例子",
+      "proto-2-3-的差别",
+      "Reflection"
+    ],
+    "source_sha256": "79c489af9d34f8662a410e35a611c071ba1df55c6f1ad85cef6e2589595dbf8b"
+  },
+  {
+    "url": "/2018/08/25/weibo_website/",
+    "title": "大型网站技术架构读书笔记 -  微博的发展",
+    "source": "content/legacy/2018-08-25-weibo_website.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 1,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "大型网站技术架构读书笔记-微博的发展",
+      "微博的发展",
+      "系统分层",
+      "推和拉",
+      "使用缓存",
+      "微创新",
+      "Sat-Aug-25-16-27-20-CST-2018-SHENZHEN"
+    ],
+    "source_sha256": "7609d3f952d29e973594809e101bc7ff161f525b18a48801231001b5fbbf4b48"
+  },
+  {
+    "url": "/2018/08/25/weibo_intro/",
+    "title": "大型网站技术架构读书笔记",
+    "source": "content/legacy/2018-08-25-weibo_intro.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 2,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "大型网站技术架构",
+      "概述",
+      "一图胜千言",
+      "互联网示例",
+      "深入一点去看",
+      "响应时间",
+      "常用系统操作响应时间表",
+      "针对并发和响应时间的优化",
+      "高可用",
+      "负载均衡",
+      "分布式缓存及其伸缩性",
+      "案例",
+      "Sat-Aug-25-22-12-18-CST-2018-SHENZHEN"
+    ],
+    "source_sha256": "65f36f942c7256d7f61357da0f79d626f7a6f01a07198002ef473d600c14de3a"
+  },
+  {
+    "url": "/2018/08/24/coding_and_other/",
+    "title": "软技能：代码之外的生存指南 读书笔记",
+    "source": "content/legacy/2018-08-24-coding_and_other.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "软技能：代码之外的生存指南",
+      "投资-和-健身-再实践吧",
+      "Fri-Aug-24-13-06-24-CST-2018-SHENZHEN"
+    ],
+    "source_sha256": "f4e64ab1434606e920ecd531c66cdecd4d1bd4ff88533c7fae777ce46a032b2a"
+  },
+  {
+    "url": "/2018/08/11/cmake╤з╧░/",
+    "title": "learn_cmake",
+    "source": "content/legacy/2018-08-11-cmake╤з╧░.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 8,
+    "code_hashes": [
+      "52af6d3dcf565dd2b6709bc298f23229df6b62a11b61e63882676facc1d150c2",
+      "974516ed6714c2038b7522608b5053c57e77436ec9d3f09a914d0a5ef87117ed",
+      "45afe24e16b245cf97f02f6cd273da237a68166fd5f3754b1df633947ad31743",
+      "2462a869ebfdfa329731a4ad68a4120914b2550d2f430c7bf1f965a6205a2782",
+      "8417e3b3f48f912073e8f2fd12585380713fc2889cf7b56994e84fb87d4f9b86",
+      "99467b600dff9752028cad5a61f53fa3d472e0c1dcf3e11f84b0887af3c20e9e",
+      "39101cbe790ea8ba62a6162e7d87a01133c722a71467c4d81b5b0abc04a3495d",
+      "71a43385ea4b85daf25ca385ac4e88b539b670c84b0142209323b71b35f41d48"
+    ],
+    "heading_ids": [
+      "最简单的-cmakelist",
+      "内部编译和外部编译",
+      "看着正规一点-工程化",
+      "编译库",
+      "使用头文件和库",
+      "主要指令",
+      "代码"
+    ],
+    "source_sha256": "88cd3b56ea4d968a6a75c632334c26508376c874936c8394c3578203b7eb7dbb"
+  },
+  {
+    "url": "/2018/09/07/elasticsearch/",
+    "title": "Elasticsearch实践",
+    "source": "content/legacy/2018-09-07-elasticsearch.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 1,
+    "code_blocks": 2,
+    "code_hashes": [
+      "f8df71df147bd0f7fb048a6d597123068056eb1d2a15681c6b15a1fed4cb96ac",
+      "361f64ce459da0998f84f034046f97e80bfce60db15a934dc06f45de1cef9385"
+    ],
+    "heading_ids": [
+      "概览",
+      "Elasticsearch-是什么",
+      "面向文档",
+      "分析数据",
+      "分布式特征",
+      "一些概念",
+      "Node-与-Cluster",
+      "Index",
+      "Document",
+      "集群",
+      "上手试一试",
+      "坑",
+      "TODO",
+      "Fri-Sep-7-20-54-43-CST-2018-SHENZHEN"
+    ],
+    "source_sha256": "b3b524effbf7ae43762d8d0b19634f421787bc4b9195d14bdcfd440e19a9e518"
+  },
+  {
+    "url": "/2018/09/16/concurrent_overview/",
+    "title": "concurrent overview",
+    "source": "content/legacy/2018-09-16-concurrent_overview.md",
+    "recovered_from_history": true,
+    "legacy": true,
+    "images": 1,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "并发",
+      "并发模型",
+      "tips",
+      "挖坑",
+      "附-阻塞非阻塞与同步异步的区别",
+      "先说结论"
+    ],
+    "source_sha256": "c1eca5e3fa1622367e48e6044611bfea2ddaeaa9dd887da0329d98c903d2c20a"
+  },
+  {
+    "url": "/2018/09/18/csapp.0/",
+    "title": "csapp.0",
+    "source": "content/legacy/2018-09-18-csapp.0.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 3,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "计算机系统的硬件组成",
+      "cpu",
+      "cpu的行为",
+      "抽象"
+    ],
+    "source_sha256": "7907d7f8edfdf1981553e6e404004195606c3c1a6c615cb70805097161e4be6d"
+  },
+  {
+    "url": "/2018/10/13/csapp.2/",
+    "title": "csapp.2",
+    "source": "content/legacy/2018-10-13-csapp.2.md",
+    "recovered_from_history": true,
+    "legacy": true,
+    "images": 5,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "1978",
+      "大洋彼岸",
+      "我们"
+    ],
+    "source_sha256": "1b887907d2dff7f0cca6d1acf78b8f4ad93f594680020b8020e04913eadd48e4"
+  },
+  {
+    "url": "/2018/10/08/csapp.1/",
+    "title": "csapp.1",
+    "source": "content/legacy/2018-10-08-csapp.1.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 1,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "历史"
+    ],
+    "source_sha256": "411dcea9a7dd09a889f9edac9a73c833a11423dcac5e3887db339579cb4deb73"
+  },
+  {
+    "url": "/2018/11/11/wujun/",
+    "title": "君子不器-吴军",
+    "source": "content/legacy/2018-11-11-wujun.md",
+    "recovered_from_history": true,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "why",
+      "wiki",
+      "理性-amp-人文",
+      "教育环境",
+      "职业和谋生手段可以分开",
+      "浮躁，是因为红利得来太容易",
+      "公民意识是文明的体现",
+      "Ref"
+    ],
+    "source_sha256": "5fb7a334c64b3932c418561e6cdbeb043139c1925b36a1ac33c8baaab73be23a"
+  },
+  {
+    "url": "/2018/05/06/JavaScript_event_loop_thought/",
+    "title": "JavaScript事件随想",
+    "source": "content/legacy/2018-05-06-JavaScript_event_loop_thought.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 3,
+    "code_blocks": 1,
+    "code_hashes": [
+      "194e55bd815a1b47503a0e88126e0065af0eebf2de773e281a8783b060bb0d0e"
+    ],
+    "heading_ids": [
+      "问题起因",
+      "问题",
+      "理清这个思路",
+      "首先几个概念",
+      "windows-程序-最基本的窗口",
+      "浏览器处理消息",
+      "参考"
+    ],
+    "source_sha256": "0922dfb326f65a1d1e671032f06dfef113796b6152929ead815764580cbf5cab"
+  },
+  {
+    "url": "/2018/05/26/unity3d_from_0_to_0.01/",
+    "title": "unity3d 手游从0到0.01",
+    "source": "content/legacy/2018-05-26-unity3d_from_0_to_0.01.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 6,
+    "code_blocks": 3,
+    "code_hashes": [
+      "c14c8747dd28f845786d9f465310021efdb066d5a4ec22debdfc2a2340dce37e",
+      "0861f93ddf76872733b210d393462eaacb4b73d5bb8408f4277697610680bea1",
+      "e0b10396494951ea2bd510111f1727ea253d90e96dba5f8e1197ab5749f472ef"
+    ],
+    "heading_ids": [
+      "why？",
+      "王者荣耀里面的安其拉原型是怎么做出来的",
+      "怎么通过-Unity-编写游戏客户端",
+      "游戏里面的人物-怎么控制其射击，放技能",
+      "一款游戏的代码断点调试",
+      "参考"
+    ],
+    "source_sha256": "081355b97ac9d2b4c514641170ef4ef01fc139a53d949cf9217177209159e8af"
+  },
+  {
+    "url": "/2018/05/20/linux_file_system/",
+    "title": "linux_file_system",
+    "source": "content/legacy/2018-05-20-linux_file_system.md",
+    "recovered_from_history": true,
+    "legacy": true,
+    "images": 3,
+    "code_blocks": 7,
+    "code_hashes": [
+      "52f201304c8bacbd5f9d092105e0fa7bd9b651db87fd7d60b0a3098cce5ab4f2",
+      "7bfcd2d5403aab16a3b0659eb99fa55da1e8959e6596fbffb396b1089973f3a9",
+      "3b8787a1ccb99760f203b716a495bcbebcca80fb2adff3c65f2508ae579ed3a7",
+      "1991fa37c2c35c607d0db32c31ad2f25bc5a4167f58c08b40bec3fd6e529a4b3",
+      "8965aa54a6b46abc0ece1ab81b4d3e75f179419a81c3bcd603c11779bceefc46",
+      "dd646e8e5854f5fd395acfa2a3537691cb4d4d83b3d2f22d233f18dfef8b818e",
+      "b2981ce47fc67c2b97b8b7b68f3172d4023f6067d61f944bf2c89cb538e6e376"
+    ],
+    "heading_ids": [
+      "引言",
+      "主要思路",
+      "准备工作",
+      "文件操作分析",
+      "VFS",
+      "引用"
+    ],
+    "source_sha256": "7fb2e08cc56c3e63eaa3311154df498ff87b3f0ff60018495c3c09246767b3de"
+  },
+  {
+    "url": "/2018/04/17/└э╜тCGI/",
+    "title": "理解CGI",
+    "source": "content/legacy/2018-04-17-└э╜тCGI.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 1,
+    "code_blocks": 5,
+    "code_hashes": [
+      "b3eccad81f27b72206a190be8174fe830106541cf399865cf7b9c56914b70d52",
+      "d881e2a11a7bcb4514d7ce81fbf03a60839d1f02659db4a076ada2ad5015318a",
+      "27ef45aebe0374fed820c87a068cbfb53193dd377e6620ab07a9df6c5d8e5cc8",
+      "f454211aad32da3f982550b013e20750c70a93c1d62456f8dd070e1d9a07cb59",
+      "2d68eff9e87385dc9024bad80bfa510eba1d7b06e3d03326bf50f5fc5c71fd8e"
+    ],
+    "heading_ids": [
+      "遇到的问题",
+      "报错",
+      "cgi-流程",
+      "拓展"
+    ],
+    "source_sha256": "0a63e0f19f9d23dfcb1c5fb278c1947940b2f01ad950077695581aaee716eb64"
+  },
+  {
+    "url": "/2018/04/29/April_in_shenzhen/",
+    "title": "April_in_shenzhen",
+    "source": "content/legacy/2018-04-29-April_in_shenzhen.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 3,
+    "code_blocks": 1,
+    "code_hashes": [
+      "31cec5c0c5f53de981c5df36c27ec35ba5643f4ced78923e44dcdefe584886ed"
+    ],
+    "heading_ids": [
+      "杂记",
+      "磨坊百公里",
+      "get",
+      "深圳的海",
+      "渔人码头"
+    ],
+    "source_sha256": "11b38c2bcd5557341e5779276ede0cca74253ef59548fad5c4e340cd9bfadf64"
+  },
+  {
+    "url": "/2018/04/29/linux_init_and_systemd/",
+    "title": "linux_init_and_systemd",
+    "source": "content/legacy/2018-04-29-linux_init_and_systemd.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 1,
+    "code_blocks": 2,
+    "code_hashes": [
+      "588333d28da65d22f420143c9aaf58658a4afdd33acae2eef0f7b6b8059a0b2a",
+      "fef7d6b68592d5c5162c7c3cbfda4a943a2d9d073d111ebfaf242845510c42e2"
+    ],
+    "heading_ids": [
+      "一个问题",
+      "什么是-System-V",
+      "什么是-是systemd",
+      "趋势",
+      "发展的过程"
+    ],
+    "source_sha256": "6ebdb4b33460b08d1d381b785318277da245fbda55f8d9186d8e7aea980aad5a"
+  },
+  {
+    "url": "/2018/03/18/hello-world/",
+    "title": "Hello World",
+    "source": "content/legacy/2018-03-18-hello-world.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 4,
+    "code_hashes": [
+      "89318de7c63aded3fda7009e5c15ffa1ecff296149f36e8a31bad0d8baa78b0e",
+      "69d92afed736afc42ea1d542fd28de3bc9987233d3fea1f9d98aafe47382f3c9",
+      "48f2a44300cc7499ce2809bec4ee503679b2040c641caae37b95804789f655a9",
+      "259973fb489c2d0e440de06b60a59bff2fe207fec5c994bad83c41c3e608cc24"
+    ],
+    "heading_ids": [
+      "Quick-Start",
+      "Create-a-new-post",
+      "Run-server",
+      "Generate-static-files",
+      "Deploy-to-remote-sites"
+    ],
+    "source_sha256": "b0666b1b80c23ac8ccefee707947d392bb41cf94415e31fb8834a7c0ca55632c"
+  },
+  {
+    "url": "/2020/12/18/rvalue_constructor/",
+    "title": "右值引用和构造",
+    "source": "content/legacy/2020-12-18-rvalue_constructor.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 2,
+    "code_hashes": [
+      "669b7941361dcd092d663c68b885f283687ef1b0686aebbc3b9344d74bb92613",
+      "0814a4ba9a7977840cd8a59a7f24a522e657fea83885ae6c14c8c1ae69734572"
+    ],
+    "heading_ids": [
+      "copy-constructor-assign-amp-move-constructor-assign",
+      "C-的移动-move-是怎么运作的？"
+    ],
+    "source_sha256": "b0be0c9b0d86f600489039ad84081269b5bd5841259f64574900c67e6e7c4302"
+  },
+  {
+    "url": "/2020/12/05/children-coding/",
+    "title": "感受一把少儿编程",
+    "source": "content/legacy/2020-12-05-children-coding.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 9,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "感受",
+      "少儿编程",
+      "10岁的小朋友搞出来的东西有时候感觉不像他们能做出来",
+      "有的确实不是他们做出来的，比赛的可能是教练吧",
+      "小朋友就要有小朋友该有的样子",
+      "家长在孩子身上给予了太多的厚望",
+      "视频"
+    ],
+    "source_sha256": "fb092911aeb46a2a7ec58ed7ec9486d187da8c3c733a306ff2fc6ff81040ff28"
+  },
+  {
+    "url": "/2020/06/10/game_match_making/",
+    "title": "竞技游戏匹配系统",
+    "source": "content/legacy/2020-06-10-game_match_making.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 4,
+    "code_blocks": 3,
+    "code_hashes": [
+      "ab0a1e0bdeceeb172cb63e1430687e12555af360737bbc909c96557ebf5914ca",
+      "845a59d050f5eadf1abb2bbfeff70d7ac960382ebd12f43eeaa8413ed8b7f492",
+      "0bfbdffc37c27d1f06e3b0ea48ca5df68d6df5e88845de2d3acf947f2b3f36ce"
+    ],
+    "heading_ids": [
+      "概述",
+      "如何评价一个人的强弱",
+      "匹配分-–-ELO评分机制",
+      "计分方法",
+      "游戏的做法",
+      "吃鸡类和Moba游戏的ELO",
+      "匹配的其他因素与实现",
+      "匹配中需要考虑的因素：",
+      "一个实际的匹配服务",
+      "其他",
+      "引用"
+    ],
+    "source_sha256": "5ad4e6f1908eff421dc278e80d6599fdf0c1e4808d90d5265715e90f43991295"
+  },
+  {
+    "url": "/2020/06/16/replay/",
+    "title": "游戏业务流量录制回放",
+    "source": "content/legacy/2020-06-16-replay.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 8,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "前置知识",
+      "录制",
+      "回放",
+      "应用"
+    ],
+    "source_sha256": "581c9f6413de4dbec55b8e95b4c2acabc0ff0f0d0866c9c91469e367266f3141"
+  },
+  {
+    "url": "/2020/06/04/Multi-process-pressure-measurement-tool-implementation/",
+    "title": "多进程游戏压测工具的实现",
+    "source": "content/legacy/2020-06-04-Multi-process-pressure-measurement-tool-implementation.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 4,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "概述",
+      "接入层",
+      "内存池缓存数据",
+      "通信协议",
+      "服务器逻辑",
+      "压测概述与思路",
+      "共享内存通道",
+      "定时器",
+      "链表的实现",
+      "协程"
+    ],
+    "source_sha256": "333e9c74d6e7515bcc0496fa1cb30b7a0e2ebaee1d1edc4a2103cd818c6d5f2e"
+  },
+  {
+    "url": "/2020/01/22/protobuf_Serialize_file/",
+    "title": "protobuf 序列化到文件及反序列化",
+    "source": "content/legacy/2020-01-22-protobuf_Serialize_file.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 4,
+    "code_hashes": [
+      "b496629898d969286d95fa93a8ba823911a065aa77e58a79d47d2b33bc74e41b",
+      "d97e6759aed41f2c93e62a0ee17bd369c0173ac55a7b9a8cbd9e4ea647326964",
+      "f3e759257506293d2045a45ea3af14f3bca74107967550741c540ff5788b805b",
+      "26ddbb01c9035a73f2d4e4ff76d159fbacb425c5e5d2f1ee401128eb0bc395db"
+    ],
+    "heading_ids": [
+      "项目应用",
+      "pvp对局服务器，产生数据",
+      "录像服务器，专门写文件",
+      "解析对局数据，用于回放或性能测试"
+    ],
+    "source_sha256": "d9750a2d33d07163181e0b3f2f7b144ee00295f1be9fdb2f754d8fcd0fb1d556"
+  },
+  {
+    "url": "/2020/01/26/mq2/",
+    "title": "消息队列的使用场景是怎样的？",
+    "source": "content/legacy/2020-01-26-mq2.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [],
+    "source_sha256": "9545101cc475f68374e85bb9a58cca4dfe8bb01c9fa17ffa805cbd3ccb76dcb8"
+  },
+  {
+    "url": "/2020/01/28/hello-world/",
+    "title": "Hello World",
+    "source": "content/legacy/2020-01-28-hello-world.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 4,
+    "code_hashes": [
+      "89318de7c63aded3fda7009e5c15ffa1ecff296149f36e8a31bad0d8baa78b0e",
+      "69d92afed736afc42ea1d542fd28de3bc9987233d3fea1f9d98aafe47382f3c9",
+      "48f2a44300cc7499ce2809bec4ee503679b2040c641caae37b95804789f655a9",
+      "259973fb489c2d0e440de06b60a59bff2fe207fec5c994bad83c41c3e608cc24"
+    ],
+    "heading_ids": [
+      "Quick-Start",
+      "Create-a-new-post",
+      "Run-server",
+      "Generate-static-files",
+      "Deploy-to-remote-sites"
+    ],
+    "source_sha256": "c164845aa4916127e0f962c91a8a2668c39f34f30cdb7ee9564d6fd63eb7c6bf"
+  },
+  {
+    "url": "/2020/08/02/The-histor-of-cancer-1/",
+    "title": "《癌症传-1》",
+    "source": "content/legacy/2020-08-02-The-histor-of-cancer-1.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "引子",
+      "血液化脓",
+      "叶酸-与-化疗",
+      "法伯能治疗白血病",
+      "为什么癌症在近代才有",
+      "外科手术",
+      "射线管与放疗",
+      "染色与死亡",
+      "不仅是科学的挑战"
+    ],
+    "source_sha256": "1990edb4d0bd8f26b2bd796276b945a863f861c5bff834c8dddbdf6077543bc6"
+  },
+  {
+    "url": "/2020/08/04/history-of-cancer-2/",
+    "title": "《癌症传-2》",
+    "source": "content/legacy/2020-08-04-history-of-cancer-2.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 1,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "写在前面",
+      "统计癌症",
+      "预防就是治疗",
+      "旧癌症的新药物",
+      "我不是药神-–-格列宁",
+      "深入基因的探索",
+      "格列宁",
+      "基因工程"
+    ],
+    "source_sha256": "2c826fd2c99dec569479aea7f5bb52c456782a6724ed8ed2d84956c84fa556fa"
+  },
+  {
+    "url": "/2020/10/14/c++-network-lib/",
+    "title": "那些年我们追过的...",
+    "source": "content/legacy/2020-10-14-c++-network-lib.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 1,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "那些年我们追过的网络库",
+      "为什么要用-C-编写服务端程序？",
+      "为什么要用asio这个库？",
+      "那些年我们用过的网络库",
+      "悳瑟的-ACE",
+      "原始的-libevent",
+      "禁锢的-libev",
+      "混乱的-libuv",
+      "ASIO-腾空出世",
+      "前摄者？为什么是演员",
+      "宇宙级异步核心",
+      "闭包和协程",
+      "缓冲区",
+      "REF"
+    ],
+    "source_sha256": "b7518be2d178e5887d9138db488a76861661d23b29eb77fcbfc8d8f968bff75b"
+  },
+  {
+    "url": "/2020/11/17/perf-flame-graph/",
+    "title": "perf火焰图 wiki",
+    "source": "content/legacy/2020-11-17-perf-flame-graph.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 1,
+    "code_blocks": 1,
+    "code_hashes": [
+      "7be605ff4835666869256ee5f388ae66b5ebaa13938e8f51d3ce600ae03f061d"
+    ],
+    "heading_ids": [
+      "火焰图-wiki",
+      "使用perf-生成火焰图",
+      "注意点"
+    ],
+    "source_sha256": "12d91edcea352291651ba369be61bbc907b4a6f71b2ceb96cd0e58beb3c63a77"
+  },
+  {
+    "url": "/2020/11/20/hook-complications-and-x64-instrcution-format/",
+    "title": "从hook的并发症理解x64指令格式",
+    "source": "content/legacy/2020-11-20-hook-complications-and-x64-instrcution-format.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 4,
+    "code_blocks": 3,
+    "code_hashes": [
+      "59958841637ff4b89cb0093f309483287c2cc98f8845f69aa400863384edb140",
+      "da5b348c0bd2839fb4e85414c3af8eef3dfb71b390fbce964704d12325a413b3",
+      "e2271867d3d0e1d18456481b7db388131cb7e40c0aff465ef35938d1fc96034b"
+    ],
+    "heading_ids": [
+      "hook的并发症",
+      "指令格式",
+      "Instruction-Prefixes",
+      "opcode",
+      "TODO"
+    ],
+    "source_sha256": "906611151afc4b641af133835bd32851dd631d3b36b260c0781a2dcd439027ae"
+  },
+  {
+    "url": "/2020/03/02/shadowsocks_json_reflect_0/",
+    "title": "shadowsocks-src config&reflect",
+    "source": "content/legacy/2020-03-02-shadowsocks_json_reflect_0.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 2,
+    "code_hashes": [
+      "c031ad34881c0afe9ba3e899d0c3b907ad2440eab145266ed5bd2e79fcc02987",
+      "b80d3547937667d296f6eddf23f45a90089d6ee8998dfc777bb018c832d20eb1"
+    ],
+    "heading_ids": [
+      "shadowsocks-0-维护配置"
+    ],
+    "source_sha256": "65383b2a0183e8296d7b034f5f19361f514fc661b2a03d08d04aad276649d207"
+  },
+  {
+    "url": "/2020/03/04/shadowsocks-src/",
+    "title": "科学上网与源码分析",
+    "source": "content/legacy/2020-03-04-shadowsocks-src.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 1,
+    "code_blocks": 9,
+    "code_hashes": [
+      "ebcd3c46ff2de2fa6c8ecac0725195ad14f228711cd7445a107ddaded714e29d",
+      "dd79faf7aa7b0bde52a3a08f3eb9fd0078256b904a5b8f88e946d1c25573c568",
+      "3a1d115bb84485806dc58825020711436c67d8ceaad50fd5b635b5b7606c9a19",
+      "64de485418e4144eea3586ddfa6384f3293da95e4b5f0cf0a608bef8d4918ded",
+      "2fa593d7cfb08460796a14b6c513dc94e43afbde7232d31b2a05ba5e5f566089",
+      "916ca01e44f0807903763c5f7651b3513c0c1978258917359f230117e2a9548c",
+      "8d1f2e1d9fbf74744b7a5f82016312a35f809fafaf4a193e4f89bb92286c318c",
+      "2a2e4928366364f93021da1becaa406bb1967523705092c742e932fe00897fc4",
+      "e9501005b9fb8abb0b83584f0d69f4141a84c2612f6ba2f9aa1ecd550511191c"
+    ],
+    "heading_ids": [
+      "概述",
+      "Procedure-for-TCP-based-clients",
+      "客户端告诉代理服务器自已支持的验证方式",
+      "代理服务器收到上面的报文，选择自已所能支持的验证方式",
+      "两者版本与验证方式的确认-代码",
+      "客户端发送要建立的的代理连接的地址及端口",
+      "local收到客户端的请求后，创建到目标机器的连接",
+      "收发数据",
+      "ss-server",
+      "感受",
+      "REF"
+    ],
+    "source_sha256": "0730cd9b3f7bb00d16eb635f4e8778c3ecc1ecc4f7680650e1246813eab3a8d3"
+  },
+  {
+    "url": "/2021/05/11/goroutine-test/",
+    "title": "从一个小例子看go的调度",
+    "source": "content/legacy/2021-05-11-goroutine-test.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 2,
+    "code_hashes": [
+      "6153febaf6ca9b4e3b5d4bf48a5caf1d4a594391cfbb76213d7f13acc9c586d4",
+      "5e13c632a02a637590c9321926909dadf93c24f8f2d2cf5ab086ac2b9c7d85d3"
+    ],
+    "heading_ids": [
+      "从一个小例子看go的调度",
+      "问题",
+      "解释",
+      "一句话解释",
+      "长解释"
+    ],
+    "source_sha256": "73512556421dbf1f3f16aefcf1d07313d058e4b0b623744d978165fb068ecacf"
+  },
+  {
+    "url": "/2021/04/17/redis-basic/",
+    "title": "redis基础",
+    "source": "content/legacy/2021-04-17-redis-basic.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 5,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "如果你只是急于解决太多细微的问题，能力就很难得到质的提升",
+      "Redis-学习的路线",
+      "底层数据结构",
+      "基础数据结构",
+      "key-value的管理方式",
+      "跳表",
+      "skiplist与平衡树、哈希表的比较",
+      "redis的线程模型",
+      "ref"
+    ],
+    "source_sha256": "ed5b12b25d68b396c00cb11068abb7900e591762a40e03d8aceefda132d37a9d"
+  },
+  {
+    "url": "/2019/06/14/learn_gwf/",
+    "title": "G.F.W的原理",
+    "source": "content/legacy/2019-06-14-learn_gwf.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 5,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "GFW的原理",
+      "分析",
+      "DNS-查询",
+      "HTTP-请求",
+      "对翻墙流量的分析识别",
+      "措施",
+      "封IP",
+      "DNS劫持",
+      "TCP-RST阻断",
+      "封端口",
+      "翻墙原理"
+    ],
+    "source_sha256": "6b42bbfc7c98e68c58d4d6b17fc61371f288e4e23165ff622e23a4e1a9bad71a"
+  },
+  {
+    "url": "/2019/01/01/20190101/",
+    "title": "2018年终总结",
+    "source": "content/legacy/2019-01-01-20190101.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "2018年终总结",
+      "工作",
+      "思维",
+      "未来-计划",
+      "感情",
+      "END"
+    ],
+    "source_sha256": "e5dd19aba7b70f58a7ab61ab483ded0a6be6bb0f9fe6a3c552d43f02e6e6253a"
+  },
+  {
+    "url": "/2019/01/21/20thcentury/",
+    "title": "《20世纪简史》",
+    "source": "content/legacy/2019-01-21-20thcentury.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "工业革命的红利",
+      "星条旗",
+      "两个天才的竞争",
+      "红星照耀中国",
+      "新月再次闪耀",
+      "回顾20世纪"
+    ],
+    "source_sha256": "42c99004f6c8669797cf3fa638f7aea9e8b9a2d07797865b72b9e11804a9f221"
+  },
+  {
+    "url": "/2019/01/20/Napoli/",
+    "title": "那不勒斯四部曲--意大利",
+    "source": "content/legacy/2019-01-20-Napoli.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 2,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "写在前面",
+      "功课",
+      "意大利",
+      "旅游"
+    ],
+    "source_sha256": "06d2e3e97183b4dbcc31526359b7894d71154474a33a88060c6bd5bb5c3c6caf"
+  },
+  {
+    "url": "/2019/08/29/fork/",
+    "title": "进程",
+    "source": "content/legacy/2019-08-29-fork.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 2,
+    "code_blocks": 6,
+    "code_hashes": [
+      "18e48f9c41c39b8ac2ee5585b83e7232b071f71a3e625baa75e42d85989d9db9",
+      "f6e7b6a3a99b826955d519f22363998d4e6aa95e65c38dd76973dd5dfcc9539d",
+      "2c52841724d07ff13504d301e342507b81b14dcadec4cd214ce717a979346c75",
+      "da4771f56527118a8a47af50201b1c4bfa5bd21c5e53169aa5bc7b4b83712dc5",
+      "b216bfb239148d6029e8de03e02a9be0832d8c3e89161a6c674f80e0dad8620d",
+      "f7f39deaaff7fd9d0fc7718f59d217ca48e5eb385880a4ca593a9d88579936df"
+    ],
+    "heading_ids": [
+      "进程环境",
+      "进程控制",
+      "fork",
+      "vfork",
+      "clone",
+      "3个fork",
+      "waitpid",
+      "REF"
+    ],
+    "source_sha256": "c4b2851cc928d04732349fc348ec03f108765a23e7b527ef35b7bbca30da1f8a"
+  },
+  {
+    "url": "/2019/10/30/network_review_01/",
+    "title": "network review 01",
+    "source": "content/legacy/2019-10-30-network_review_01.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 3,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "计算机网络复习",
+      "概览",
+      "网络结构",
+      "网络编程",
+      "2019"
+    ],
+    "source_sha256": "72ee8865334bb1bc31aeb75474dde66755f03002821d3559644e3f321ea9e0ec"
+  },
+  {
+    "url": "/2019/11/06/network_tcp/",
+    "title": "network review TCP",
+    "source": "content/legacy/2019-11-06-network_tcp.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 1,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "传输层",
+      "笔记脑图"
+    ],
+    "source_sha256": "3dd5e7758fafa2d264fd7b448a8dd3840f8aa08e57e1edfc8908c57426144f44"
+  },
+  {
+    "url": "/2019/11/11/socket_api/",
+    "title": "tcp socket api",
+    "source": "content/legacy/2019-11-11-socket_api.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 1,
+    "code_blocks": 1,
+    "code_hashes": [
+      "6a3e9ba1eb75e175fa51a7d5e775e00a4f12397eb73beb30546c74ab1def4159"
+    ],
+    "heading_ids": [
+      "socket是网络协议栈的抽象",
+      "socket-api在tcp中的体现",
+      "code",
+      "REF"
+    ],
+    "source_sha256": "6fe5cac6c49bb17eb7e9b911445eb7025a6cd8b5d94f1ec6b74efd67bfaa1026"
+  },
+  {
+    "url": "/2019/11/27/ssr/",
+    "title": "抽中一张橙卡",
+    "source": "content/legacy/2019-11-27-ssr.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 1,
+    "code_hashes": [
+      "14ea0fd26454f75d7bbb2275c51b798613c2b1d0198025e32e7f38e984e2a281"
+    ],
+    "heading_ids": [],
+    "source_sha256": "046256d6b25c263f099c0174f4f2ca72ce943695ede5ea0039addf23c368112b"
+  },
+  {
+    "url": "/2019/02/06/1G╡╜5G/",
+    "title": "无线通信：从1G到5G",
+    "source": "content/legacy/2019-02-06-1G╡╜5G.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 9,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "无线通信：从1G到5G",
+      "电磁波",
+      "1和0",
+      "关键技术",
+      "又是芯片",
+      "标准",
+      "场景和意义"
+    ],
+    "source_sha256": "a2965796699947ff30ba4137ffb967e5f25acca33d48ce841f947628898313dd"
+  },
+  {
+    "url": "/2019/02/09/happy_rode/",
+    "title": "《长乐路》",
+    "source": "content/legacy/2019-02-09-happy_rode.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 1,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "长乐路",
+      "城市-让生活更美好",
+      "热闹",
+      "再教育",
+      "改造",
+      "80后",
+      "文艺青年"
+    ],
+    "source_sha256": "dcb3f99c5143482eb928b0085663e0cf9faf5b071dca5596d4e52b3b0a7cb40d"
+  },
+  {
+    "url": "/2019/02/11/jidang/",
+    "title": "《激荡三十年》",
+    "source": "content/legacy/2019-02-11-jidang.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 1,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "英雄",
+      "父辈的年轻时代",
+      "红利",
+      "2019年",
+      "再添加"
+    ],
+    "source_sha256": "9ad873f048a8ea55c9f6b42ea630988892f58db613c3546b9250327e6e326d75"
+  },
+  {
+    "url": "/2019/05/25/algorithm_sort/",
+    "title": "排序与突破O(n2)",
+    "source": "content/legacy/2019-05-25-algorithm_sort.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 5,
+    "code_blocks": 5,
+    "code_hashes": [
+      "b3d18084565026893fe579ddd48f23c7655b39af7b361331f18312329c5f83c9",
+      "1043467cb150efa17eafc3ea70bcbebd27ca636077f040bfbfbcddc53816b8c7",
+      "69f8c2e3882f14623ba61173a39ff085141282f1de90c520b8edc2552100db1e",
+      "231fe680253e856c1523cf1c7f1deda75d860ab15d48e58f8a398b9d082518f9",
+      "060f2054195762e47ae327fc116004aef267c42ff5c63a4a286e6ce31224d240"
+    ],
+    "heading_ids": [
+      "复杂度",
+      "常用排序",
+      "Bubble-Sort",
+      "Selection-Sort",
+      "Insertion-Sort",
+      "Shell-Sort",
+      "Merge-Sort",
+      "Quick-Sort",
+      "Heap-Sort",
+      "突破-O-n2"
+    ],
+    "source_sha256": "d2b8a931fb0665bab76cba890fe31e1f3b87141a06dd32eb6a5982863dd12cd2"
+  },
+  {
+    "url": "/2019/03/12/LeetCode26_remove-duplicates-from-sorted-array/",
+    "title": "LeetCode_26 Remove Duplicates from Sorted Array",
+    "source": "content/legacy/2019-03-12-LeetCode26_remove-duplicates-from-sorted-array.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 3,
+    "code_hashes": [
+      "bd72a89ea1025c2a3cd344f3f7750da6fbb762d77fc62d9e596304357da369dc",
+      "b19e89061c1c16c370a0058c3a9ac2fdfb27fd851a67d708844b65f7771f842d",
+      "36f983fc11ee456aa3cb198c60771e2cd7059c23b44f6853500a7e6754f35983"
+    ],
+    "heading_ids": [
+      "Remove-Duplicates-from-Sorted-Array"
+    ],
+    "source_sha256": "6fecd667648d0d5cc78a03cca78e1f4f49ed045d95f91fecb81ce4e4a813737b"
+  },
+  {
+    "url": "/2019/03/09/make_a_linux/",
+    "title": "写一个操作系统_01 一个和操作系统有关的故事",
+    "source": "content/legacy/2019-03-09-make_a_linux.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 3,
+    "code_blocks": 1,
+    "code_hashes": [
+      "8815ff5bb05ca1302444c73eb2c6137bad1a365ac9a5bf07d848930b2dbc4a82"
+    ],
+    "heading_ids": [
+      "写一个操作系统",
+      "作者简介",
+      "一个中专生的奋斗，只为不负时光",
+      "半平米的梦想——该书背后的故事",
+      "技术道路真不好走，劝你不要再坚持了"
+    ],
+    "source_sha256": "3bb108333a1f0b10aa4e965927a49a7841686408d0ca44b145c9f1b748c76f58"
+  },
+  {
+    "url": "/2019/03/11/LeetCode20_Valid_Parentheses/",
+    "title": "LeetCode_20 Valid Parentheses",
+    "source": "content/legacy/2019-03-11-LeetCode20_Valid_Parentheses.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 1,
+    "code_hashes": [
+      "53cdbe0fa3f6dbe23e256f2fbbe5ef22fae47ca7c50921001b4ba7958e30143d"
+    ],
+    "heading_ids": [
+      "Valid-Parentheses"
+    ],
+    "source_sha256": "bea9a4c8881efd5592492d0ae8de943c3d2bd28b0657fc17df69d234de896b76"
+  },
+  {
+    "url": "/2019/03/11/LeetCode21 Merge Two Sorted Lists/",
+    "title": "LeetCode_21 Merge Two Sorted Lists",
+    "source": "content/legacy/2019-03-11-LeetCode21 Merge Two Sorted Lists.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 1,
+    "code_hashes": [
+      "820b47b1840375aca0622768458c7c72ac69e4560f7f6c5584e9af04d133bddb"
+    ],
+    "heading_ids": [
+      "Valid-Parentheses"
+    ],
+    "source_sha256": "7ad137e121b09eda29c445cd5981f52ff5f57e9cac5abcc2a275cd96619ed73c"
+  },
+  {
+    "url": "/2023/12/21/PromptEngineering4Developers/",
+    "title": "ChatGPT Prompt Engineering for Developers",
+    "source": "content/legacy/2023-12-21-PromptEngineering4Developers.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 30,
+    "code_hashes": [
+      "888d16c4dd7d373d39b9d294f06723ada9032459f4e5420e6177ab6e64c7fffd",
+      "10d2bfebbf4c565c96a5807b541e6d4aa33a2e39b7b60a799c294880ed7ee04a",
+      "de1cfe4279610a8ab98e008a01a1281a4de27331ef6db88a7dee5c80b9e668d7",
+      "24a747b3d3944ca2631a5ef9120a05ac475844976bc40e9b6c48118489a2106d",
+      "f4cb39df394172ba1915f943c4ce20c147e813b99c653ecc4c11340f9d7f4cc8",
+      "f9586032359f2c66fd419e047b6bb91cfd3fbc5ae0293c0e6641fd9c01db4335",
+      "2903e3506c26f4f1a446355c9e9f8558b515dd23e373056b02382f0e6d2ca4dc",
+      "eabfbb817b628a14bd9ec935135a9fe1041a929876fc260f12b094e388d35481",
+      "70811d1f4702f3617972c9a6ed7f0aa9f5060e2cabedfc42bad82c6bcaed0e66",
+      "e1c19e2027438a7e13539b0399229a0681b1145b4c3bb81545943120db448f52",
+      "615371541220b6eb82db4a5a04149f145c7948f4c6ca7cbf918c718f35f9b449",
+      "744c404e4076054705b3415c94afca6d7c25d4df2423884eb366ca248e8ece1e",
+      "9e22c75c05b6adb0d50506edbea96e56cc2956105779c1c8696472417cdad3eb",
+      "23fe2e469b3be29acae898eb3cda26cfa0b7a2cbabb54d801f5fedc9d561a6e5",
+      "2a305fda5f1a0eb4ea9f56a53316f6dd3ada83e5bbe84e6e6f341999c9f57b41",
+      "92b8ff1182df1e98170e1dfd18d894f283e313fb0ba560f7bc7b0dc50e2e687b",
+      "b42aeeade446dd0318fabe4005c7e0204c619b748f182afa61c37507b8a9b125",
+      "d64b203c64efc3b8c042e5f1d7d68cc903d916aede6c8bf803bf3e5674176646",
+      "6b681c024a4157288eedb7fff1c17cdc6472d0dafded1b9b8909e54afff66252",
+      "67ea4227e704b8a34d75e53b54582ddaa0f0c2bd72fd1a26200736b228e2e790",
+      "add3fdb3b63fcfa2cd7796752d3ffeadea1eb65a8dc325a342c9fb34fc6d8a01",
+      "2b29e64a22f9d60c4778db54f8d2cb8ba17528ca599ee8b4300f3d064a510953",
+      "130880d6cc9943fbc9fe79d1f8c280cb5190eb8ad2fdfdf9d92cdbaf6490c99c",
+      "d1fa744c9d363ff817e1fd6c516818308aac500a2ce683f04b656256161a9d9e",
+      "ce00f9cf5082556782951d2989d97361029c4af8d497c5ce2a34c98b1838b579",
+      "7d6a7d6f4b7145187628e20047001e5e7ae65a034fcf9d4f05b47aae5dab20c6",
+      "8affe2912c12f24a5d3a93e286697865bbe7954830f854552a1ea63b1696b5b3",
+      "cf1c99a968626e980d5f3a49ce98275fb3de6b8f60d0a0e45bddd0caa206f525",
+      "aa07a90a77b7bd6bd9a68f9114086cf1a2bb7a180a325f4228e7b799442de25d",
+      "16e3c4f5ecad3fa306a8b1173ec1f4b2b203e8bc342c16b546068cb8858dde38"
+    ],
+    "heading_ids": [
+      "提示词工程-学习笔记",
+      "1-简介",
+      "2-编写-Prompt-的原则",
+      "2-1-环境配置",
+      "2-2-两个基本原则",
+      "2-2-1-编写清晰、具体的指令",
+      "2-3-局限性",
+      "3-迭代优化",
+      "3-1-任务-从产品说明书生成一份营销产品描述",
+      "3-1-1-问题一：生成文本太长",
+      "3-1-2-问题二：文本关注在错误的细节上",
+      "3-1-3-问题三：需要一个表格形式的描述",
+      "4-文本概括",
+      "4-1-单一文本概括Prompt实验",
+      "4-1-1-限制输出文本长度",
+      "4-2-多条文本概括Prompt实验",
+      "5-4-识别愤怒",
+      "5-6-一次完成多项任务",
+      "5-9-为特定主题制作新闻提醒",
+      "6-2-语气-风格调整",
+      "7-文本扩展",
+      "7-1-定制客户邮件",
+      "7-2-使用温度系数",
+      "8-对话聊天",
+      "8-1-聊天机器人",
+      "8-2-订餐机器人",
+      "9-总结"
+    ],
+    "source_sha256": "1f630f7517c9faf9e6800468b0961a62a5792068591c52175c7df5239451597b"
+  },
+  {
+    "url": "/2023/06/05/vedio-basic-04/",
+    "title": "音视频基础- rtmp协议",
+    "source": "content/legacy/2023-06-05-vedio-basic-04.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 10,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "RTMP",
+      "推流-拉流",
+      "消息格式",
+      "FLV-协议"
+    ],
+    "source_sha256": "64fd1cb25e96f87d4c6a91f35414aa01ca3acf2f759e66adbb8f27ab4b97ea5d"
+  },
+  {
+    "url": "/2023/08/15/history-of-reactjs/",
+    "title": "Web发展史 - React的前世今生",
+    "source": "content/legacy/2023-08-15-history-of-reactjs.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 2,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "历史",
+      "历史解读",
+      "react编程思想",
+      "单向数据流",
+      "虚拟-DOM",
+      "组件化"
+    ],
+    "source_sha256": "305303fd540c76fee53b8797e5a75a4afeae092c48f4aabd8aeed9fc9c0c6d03"
+  },
+  {
+    "url": "/2023/08/02/typeScript-config-note/",
+    "title": "TypeScript配置笔记",
+    "source": "content/legacy/2023-08-02-typeScript-config-note.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 3,
+    "code_hashes": [
+      "3bc56ccd557aef00ec6b286bc58a7f0315f976fecb49016b5dd6d56d88fb6518",
+      "5f9925f158034c2630f76a2f5ba1ac490952d3026afc2626ee153b6dba652e9f",
+      "a4216e53b614032c7e565dd720aca5b493ff93c01a0d27e05000f5583a4a13c7"
+    ],
+    "heading_ids": [
+      "创建",
+      "项目文件",
+      "基础知识",
+      "tsconfig-json",
+      "tsconfig中各种不同的配置属性。",
+      "第一个，”target”-“es5”",
+      "第二个，-lib-属性，",
+      "第三个：”allowJs”-true",
+      "第四个：”esModuleInterop”-true",
+      "第五个，”module”-“esnext”",
+      "第六个，”moduleResolution”-“node”",
+      "第七个：”isolatedModules”-true",
+      "8-“noEmit”-true",
+      "9-“jsx”-“react”",
+      "10-“include”-“src-”",
+      "11-“files”-“-file1-ts”-“-file2-d-ts”-…",
+      "12-“exclude”-“node-modules”-“-test-ts”"
+    ],
+    "source_sha256": "34c5e6aec5f0f7a0c343618ba31a50eadb33ee9bfe2b460eeb6880d49c24b33d"
+  },
+  {
+    "url": "/2023/04/15/audio-basic-03/",
+    "title": "音视频基础-音频基础-03",
+    "source": "content/legacy/2023-04-15-audio-basic-03.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 3,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "音频编码基本原理",
+      "（1）-音频信号的冗余信息",
+      "（a）频谱掩蔽效应",
+      "（b）-时域掩蔽效应",
+      "（2）-压缩编码方法",
+      "引用"
+    ],
+    "source_sha256": "62603fe03142f1a649a88897b9c8853b22079d765b85d5ed2149f63d88dd70be"
+  },
+  {
+    "url": "/2023/04/09/audio-basic-03/",
+    "title": "音视频基础-音频基础-03",
+    "source": "content/legacy/2023-04-09-audio-basic-03.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 3,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "音频编码基本原理",
+      "（1）-音频信号的冗余信息",
+      "（a）频谱掩蔽效应",
+      "（b）-时域掩蔽效应",
+      "（2）-压缩编码方法",
+      "引用"
+    ],
+    "source_sha256": "c386675ee6718d006634bece7cf661039cc49feac6a58313dc794795398586ca"
+  },
+  {
+    "url": "/2023/04/10/audio-basic-03/",
+    "title": "音视频基础-音频基础-03",
+    "source": "content/legacy/2023-04-10-audio-basic-03.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 3,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "音频编码基本原理",
+      "（1）-音频信号的冗余信息",
+      "（a）频谱掩蔽效应",
+      "（b）-时域掩蔽效应",
+      "（2）-压缩编码方法",
+      "引用"
+    ],
+    "source_sha256": "c0606d6f3c612d2af5bcc6202a6f2e34a2e600d41b89f45e12bbd239ca1068ba"
+  },
+  {
+    "url": "/2023/04/10/audio-basic-02/",
+    "title": "音视频基础-音频基础-02",
+    "source": "content/legacy/2023-04-10-audio-basic-02.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 3,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "怎样对声音进行数字化？",
+      "采样率",
+      "量化位深（采样大小）",
+      "声道",
+      "PCM"
+    ],
+    "source_sha256": "6b9741ecff70caed7d047a34d4f115c007b652d2f1fa4fea8c328aeb4fe7e5a2"
+  },
+  {
+    "url": "/2023/03/05/Design_of_Digital_Currency_Exchange_Matching_Engine/",
+    "title": "数字货币交易撮合引擎设计",
+    "source": "content/legacy/2023-03-05-Design_of_Digital_Currency_Exchange_Matching_Engine.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 2,
+    "code_blocks": 15,
+    "code_hashes": [
+      "104650b20dd28d1ac731f65d8578ef6839909c725935dd22d1fb7b057b47e21f",
+      "6ede8155e17c852e5561506833364af29e45af99e5d34b0b3167b5bc824700fb",
+      "2f9f3cc10264daf68ab2dd028f9f1942afbdb69f3fa6166812b86625764f92c0",
+      "3d6ddc2d415d74b82b452b85a5d63e437ec08158cbffaf45f917db8d6d930675",
+      "8faf510f1c0bfdf379ca382a758ba1b2c83ed2679390b40e34db2fd95ae4b8a7",
+      "2ce4702144faf8c04938aa7ca201ec0003f3e7490f4a5d58ebc16df6407820c2",
+      "f978ce30122ba5d92e3aae0fb4e9aed9845f51e09a0fb8eeabe11ddac7bc35e4",
+      "ee54a0c4c992a26a6866b21fbdb7ea162882cb7b574ada651fa3a6c15f098801",
+      "97a5c699196a6f82e664d7132025b76f0881f64889ed9c790db62fd01a9a40b8",
+      "e91860bc548629fdab907619afd928a7aab10a47ed659d3ba6dce9e9faa6541e",
+      "2f2cafa735340a0dddcd3c1e04b8c12291fdaf79afb4b258d5611e8f1bb32572",
+      "b6c21efced36a528b08e110a8d9f0e2de6597ca36077d07afdd70203abac09e1",
+      "c9617520e0e31d9f30a196a16c34ee67455424528bb9cb44e4160b02f4c55398",
+      "370b9d6d3ad43ba8a1c73fa6c8af415fd73afa5671800b7d6a2e1baa5d54aecb",
+      "6328b461ed474643d9ce74d5bdf95976f479bb585486e12ec317f4276346846d"
+    ],
+    "heading_ids": [
+      "小结"
+    ],
+    "source_sha256": "85b49d4780e40ee9a8d07dd809722007e9e30cd6b09de52327df0818fbf0527d"
+  },
+  {
+    "url": "/2024/02/10/webrtc_02/",
+    "title": "webrtc 02 - NAT网络和P2P打洞",
+    "source": "content/legacy/2024-02-10-webrtc_02.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 5,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "x20-NAT-原理",
+      "1-全锥形NAT（Full-Cone-NAT）",
+      "特点：",
+      "工作原理：",
+      "优点：",
+      "缺点：",
+      "2-地址受限锥形NAT（Addr-Restricted-Cone-NAT）",
+      "特点：-1",
+      "工作原理：-1",
+      "优点：-1",
+      "缺点：-1",
+      "3-端口受限锥形NAT（Port-Restricted-Cone-NAT）",
+      "特点：-2",
+      "工作原理：-2",
+      "优点：-2",
+      "缺点：-2",
+      "4-对称NAT（Symmetric-NAT）",
+      "特点：-3",
+      "工作原理：-3",
+      "优点：-3",
+      "缺点：-3",
+      "STUN服务器基本原理",
+      "判断NAT类型的步骤",
+      "x20-协议",
+      "RFC3489-STUN-x9",
+      "RFC5389-STUN-x9",
+      "常用工具"
+    ],
+    "source_sha256": "aef257003b61ac1ea15f36845b89ba74813d1552d83c42a995c0fd07abeab2bc"
+  },
+  {
+    "url": "/2024/02/02/typeScript-config-note/",
+    "title": "TypeScript配置笔记",
+    "source": "content/legacy/2024-02-02-typeScript-config-note.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 3,
+    "code_hashes": [
+      "3bc56ccd557aef00ec6b286bc58a7f0315f976fecb49016b5dd6d56d88fb6518",
+      "5f9925f158034c2630f76a2f5ba1ac490952d3026afc2626ee153b6dba652e9f",
+      "a4216e53b614032c7e565dd720aca5b493ff93c01a0d27e05000f5583a4a13c7"
+    ],
+    "heading_ids": [
+      "创建",
+      "项目文件",
+      "基础知识",
+      "tsconfig-json",
+      "tsconfig中各种不同的配置属性。",
+      "第一个，”target”-“es5”",
+      "第二个，-lib-属性，",
+      "第三个：”allowJs”-true",
+      "第四个：”esModuleInterop”-true",
+      "第五个，”module”-“esnext”",
+      "第六个，”moduleResolution”-“node”",
+      "第七个：”isolatedModules”-true",
+      "8-“noEmit”-true",
+      "9-“jsx”-“react”",
+      "10-“include”-“src-”",
+      "11-“files”-“-file1-ts”-“-file2-d-ts”-…",
+      "12-“exclude”-“node-modules”-“-test-ts”"
+    ],
+    "source_sha256": "03f6080b0935193be91b995833e7e5128eb45ac6d63b63513f2c0c5e8edf49b0"
+  },
+  {
+    "url": "/2022/09/10/redis-basic-01/",
+    "title": "redis",
+    "source": "content/legacy/2022-09-10-redis-basic-01.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 5,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [
+      "如果你只是急于解决太多细微的问题，能力就很难得到质的提升",
+      "Redis-学习的路线",
+      "底层数据结构",
+      "基础数据结构",
+      "key-value的管理方式",
+      "跳表",
+      "skiplist与平衡树、哈希表的比较",
+      "redis的线程模型",
+      "ref"
+    ],
+    "source_sha256": "125d487843502ddaa31d4cc6aa92763cad2391e0f554d9187128cbf6f0bbc185"
+  },
+  {
+    "url": "/2022/10/02/Market_Making_Guide/",
+    "title": "做市指南",
+    "source": "content/legacy/2022-10-02-Market_Making_Guide.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [],
+    "source_sha256": "70f435d0763ebf7f82146ec37abbbf2efb09fa98b1d08a2a8c3147693efdde89"
+  },
+  {
+    "url": "/2022/10/04/principle_and_optimization_of_radix_tree/",
+    "title": "radix tree原理与优化",
+    "source": "content/legacy/2022-10-04-principle_and_optimization_of_radix_tree.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 22,
+    "code_blocks": 8,
+    "code_hashes": [
+      "36cb87703f923b66c133e1c407ce699e521663246d144bc3f62c372c86e26eff",
+      "8bce4f4d3848d1333c15add8775e1a59a08d99c6877daf61124cecb0fd6af356",
+      "9722cda665ca2adc4cb4653d70696246cf6cc3a9529f9a1316e08ac304093a32",
+      "ea152237e6e4d787a3ec995171e027dd8667fffdbf3453cfdf1e1c4e8223505f",
+      "fccda964a40c113878c0fc3009037a82771b31be2e3d8ee0607b45433986feab",
+      "729e1fd21aff385d63b98c5a9cade76057d0e82ba201b52e6973a040d4068f82",
+      "b74cc8735d0aee7fe819f072179508bfbe68a5aa52f54b06250476f0925e435f",
+      "fc5a961f264640ddbb42a82a94eee110397097adbe442cb619d067dbc2729852"
+    ],
+    "heading_ids": [
+      "radix-tree原理与优化",
+      "background",
+      "introduction",
+      "radix-tree",
+      "Adaptive-Nodes",
+      "node-span",
+      "Inner-Nodes",
+      "Leaf-Nodes",
+      "easy-example",
+      "example-2",
+      "Algorithms",
+      "search",
+      "Insert",
+      "grow-amp-shrink",
+      "分裂",
+      "evaluation",
+      "分析性能产生的原因",
+      "高速缓存存储器结构",
+      "不命中时的行替换",
+      "另外的优化途径-SIMD",
+      "硬件支持",
+      "语言支持",
+      "例子",
+      "Vector-Api",
+      "用SIMD-优化-radix-tree的查询",
+      "node-48、256-search",
+      "summary",
+      "引用",
+      "论文",
+      "参考实现"
+    ],
+    "source_sha256": "6871993bc59c21faaa7f1186c330cbe7315b4ce373383f7ecc0bbe6187e62aa4"
+  },
+  {
+    "url": "/2022/02/18/muiti-thread-by-cpp/",
+    "title": "使用 C++11 编写 Linux 多线程程序",
+    "source": "content/legacy/2022-02-18-muiti-thread-by-cpp.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 10,
+    "code_hashes": [
+      "30d94b0a00b7a3f941fc339a6436585eaebb14e6e6abfb39dbe9f2d094d0cd98",
+      "3363a07752816bae12cb4bd5956217292afc413a85f8a7557ece93df6c7323b2",
+      "e1567958380224dd38f8f31816edeabbc38d51e8f1c59429c7d6fc77d55297ef",
+      "13d2dfce1a87881c2a152c18acce905237badb278f5aff73752bff145741afd6",
+      "20e9d6d9a45a5f593b286cf35a15e40ca70d64c0a6ec6e906072663d025d15e0",
+      "c33387d5b20f959f6d7179808f05aa4b7065c1c62ef87c22e002c1c7c1f88ec4",
+      "6e3ef23b6ecb19894b9877827937941a0ab7b7b623beacd89c91151fb9684e26",
+      "b06908f195785344790cf887188c2b6950b3c66510dbb28b722d5747bf26aa6b",
+      "23500fb07f3ddde9da571dd4468de2867fca69cd97509a3c59435c8362bdea7c",
+      "db23addb783c2340a0efce1eee4c3cbd0b020ee8a4fcbeeafe3b635354bda1be"
+    ],
+    "heading_ids": [
+      "前言",
+      "线程间的数据交互和数据争用",
+      "几个高级概念",
+      "几个需要注意的地方",
+      "编译与调试"
+    ],
+    "source_sha256": "c706d15d3812fe72411c8622b089a9db1dc0e0a5ba6dfdb8a85595951cca7165"
+  },
+  {
+    "url": "/2022/03/23/Thinking_about_credit_digital_currency/",
+    "title": "信用数字货币的思考",
+    "source": "content/legacy/2022-03-23-Thinking_about_credit_digital_currency.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [],
+    "source_sha256": "fdfe0d7f9ff1ba786f8aea37f1a58cc9fb3ce24a9063c4a0274b357a9feb0331"
+  },
+  {
+    "url": "/2022/03/21/Thinking_about_credit_digital_currency/",
+    "title": "信用数字货币的思考",
+    "source": "content/legacy/2022-03-21-Thinking_about_credit_digital_currency.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 0,
+    "code_hashes": [],
+    "heading_ids": [],
+    "source_sha256": "f6f02d0e29cb219d993929aee705ede16bfa47d2361e58966514c67203524ee2"
+  },
+  {
+    "url": "/2022/03/26/FFMPEG_commands/",
+    "title": "FFMPEG常用命令",
+    "source": "content/legacy/2022-03-26-FFMPEG_commands.md",
+    "recovered_from_history": false,
+    "legacy": true,
+    "images": 0,
+    "code_blocks": 63,
+    "code_hashes": [
+      "bf9e7282a9df389f94f14d4baae39d04929d880e8c338f04fae4b88e2a93373f",
+      "9a98f4f8e51c2a86ef850b30fb28d689612239f7fb18330dddb3847bfa54b907",
+      "4ca02a5c6afd96b5ba919ee3c4aeac8a7fff64487ddbbeb12c43e1bff044e0cd",
+      "6fd318be6c996622a44c3ab8dcf551f524f4f208891d663b2c4f0c9cf7187a1f",
+      "9c9b57570f0301a4d469c274eb1effd4da25915230ced722228f4181748a6d5b",
+      "2e14fffa16188b00c42706aec936921ee5d811ffd8c73a769f9fe8accca4be73",
+      "4e690f6568baa8e10151f96c24cc2544894f16663db54f9c4afed3af48aacb31",
+      "84bd53b4f2d2627f1a59be907cb365e2d3bc049cb90ddfbead724047ee454580",
+      "55c561d23e8ea4834daa8ce61f78b3e9089b5ff30435d536b6059aaf985c7e31",
+      "52168c5125b998c8e26c6c876eaf8ae5a62cf97adfe24de061dd8bb87dbb933f",
+      "443dbf834518e5ec5ebd143dd001deec03bb601d0f3ab0f4977ed14ee362ea68",
+      "0451a66535ea7930fd9c4ee62cddd2b457190d914f1f0bcaf4b28e8e3aa0b6b8",
+      "b417b6f789a81e0c6e0ce4cb108bdca46297c29cb5e7ff011a249f056d0324da",
+      "17986a92c9bde0e021ab003dfb99e0a0612b85f4d593a0644b82c7fc823dd208",
+      "4faea4a2c83a10a040769a52b5645fd8e92fa4467c2baf4a30355d68a7ae6ab2",
+      "f687f12bcb1bc96c98ec6ebf58efaf853b25ecb633b289a36f7d2f10a92339a5",
+      "64e448232caaaa32f41b6110c95efb5842ff0e41b2ad5caf6ed24520de65521e",
+      "35e72c3e5f7fd02f85bc09612e319411cc09413c5d1ca3f4e84f64b48db8155c",
+      "636920fd22ff67724a91d0837d2771c6f580fb4157186746407136d3c027ca4f",
+      "801965aae24a9ea0ec0869d5c1c983a32405d843284ba3bda2d9a5400ba6b354",
+      "c30b115034c429167cbb0635efe0ff379d47883f7b271acdc4763776ffc89e18",
+      "27afef46fab983cf9e4a313d810f5170469dc363e5dd3e4d447fcd4b40013f45",
+      "50b4f7236db698c1011f5006e7ddbe4484ecd7b5f931274cb789213c275f6e67",
+      "2a551ee55bfed2db55946b93c2269fa5a673da53125d98750668216d0e2146f4",
+      "e19dd370abd31359a3df0819d1a8426adef0d6b8fab5bfe909bd610ec45eab89",
+      "d52c079941c9edfcf9ad6883b08cbd74c7701010785a7d2958f0336f8d9dd3ac",
+      "90eb6834e1259842cad0a3f9772db9185a38b897fee4e68e21e78b1eadd6e91d",
+      "604cb1da34b9b899d58c0d2c6b41a8e035078996e17fca5bd6a47c28e0e78845",
+      "b2f761618b9c325d9d120997aaa0d9581c37decbbfa6cff19bc4dd5267f1d898",
+      "4bdf3b08a2648ca9048eb6da682f83bd0fe7c2e0bd9f7a82ed496f428726eac5",
+      "0a15a83ed635f163a0f1d713b57d0580ce7b5baba3e3c4e503d50614bcb4cbe9",
+      "3a5448779838e9e64fcceb035681325bfb3ab43e21de9248fb1080f3eeeffdc7",
+      "fe77a89f04bb028d0f57da4e2c741223e2a89a814c36f63214eac14d59c3805f",
+      "81dd0246f2ba5d90f1d35c2b65157009a4dc211d6b8951261626e7006a0039a2",
+      "fc01529d9df0c3c463befd9c9508e55879079ae0fe204de2819c14c351313e81",
+      "9ac6937f4df079ec21be419f8b83d134ca15b1df876be13d4e7bf2cca8379c12",
+      "b6c6621e0ad5b77eecde9881ffc77e53d66c4f2f459c9438e9c4f00e67105107",
+      "b979f752df2255519983f9056587cac2c0e86d7fe37d206272070249d6e4e7ae",
+      "33911dca4b61f42d9f016afb4a1a06574eb24ac2ee4b77b3a6d5d6e8d0be8b92",
+      "9bfbf4a2b6bb3ced01f418d03ebd5d12c47f7f3c127fdcf2808eea375a4fa7d5",
+      "3254739ddc7c3a3773eb024bab220c42d3c679fe9a30fd1a1a342f86d3926eb8",
+      "9182c9522ba787a36b6a03a3b199bec0a748af9886d95c60b2cdfe8857e68971",
+      "cc4088f91e1f20f044217758aed22218a7b60c6607aed13845d947243285e80c",
+      "63c6179e219e848dfb9e900890ad786a08985eb30bd2a264abd7dc8135e5cc49",
+      "502fe5bd12c4067fedfebae5a47adec6d7511cda623ef8b78bc9b874440d3646",
+      "fd283b4660fde87dc78fd1ede4f5e9da190fd98d05b842dadbba4d719ded0f18",
+      "b98f484ed9620946c8da515cf12a7a22560894eb5615a4e195725f65c469d26c",
+      "34e30b5f1d374cfccc89119f4d9544843844d9f972a1a47c0d096cce8a149c66",
+      "0dc05372cbb89928a4121ef29fa166ae93d6f1bc7ca36d05b111a729f67811cd",
+      "489fc60ebd6302febd72276d424c20701e5465623ba43a755c7b5143be6f4254",
+      "8f24f4ccd15a8b8fa3f9782ddad85b7026136e3a25281b679923b707118701fd",
+      "e0eac3cea0184e3c21d0b85e145a64e9d75475a7f09562e5c29f393597610cd4",
+      "fdb3032d4a62a3199f3c8b261d1500bf72f2212b754e3a81730f11fc6cb0b59f",
+      "a10325fe6a62c871c248931de3410031cea598a4b0b23a27fba73f763b573bc7",
+      "ee5587e267bbf83808e027d7902d338e72b59a719e15823f534299c54ef012ff",
+      "f1c21bde947e6bdc9221831eb9117bd9a1c2df98ce1316be14f5e46986b5ac29",
+      "f83d672196e7b65525fce9b263863930ca7172450e9757c718aa81e340cbff9f",
+      "4529f1321c29ec8aa17eceaf1a1b1fb13f93ef65e2be3dcc95bd157792b59119",
+      "8972025bd41f44a6b71bd2b98cbce685d5222cd95bd9ebb067a81d0e6e7c34cb",
+      "ab39efa344bffefad039e8cb8df02149c7f8ed6a3ec8adb2748d04febd46430c",
+      "b5c6822e3984e32da2f2baa56b1d5a797bf6d6384d7eb0353e5afc94cea78a6e",
+      "e879c853576c59e44f405172ed24e69aa4e0574b96ab49b358df0b4021492082",
+      "865617e4a233917d7cc3582e1e77fb57491a2b99fc69bdb7e0078219b611bab5"
+    ],
+    "heading_ids": [
+      "FFMPEG常用命令",
+      "FFMPEG-目录及作用",
+      "FFMPEG基本概念",
+      "FFMPEG-命令",
+      "基本信息查询命令",
+      "命令基本格式及参数",
+      "主要参数",
+      "视频参数",
+      "音频参数",
+      "分解与复用",
+      "处理原始数据",
+      "滤镜",
+      "简单滤镜",
+      "复杂滤镜",
+      "一些比较有意思的滤镜",
+      "音视频的拼接与裁剪",
+      "ffplay"
+    ],
+    "source_sha256": "3149044fbbcedc172ad004be0b93c317a8c123d5770df284b644d9093ebc8187"
   }
 ]

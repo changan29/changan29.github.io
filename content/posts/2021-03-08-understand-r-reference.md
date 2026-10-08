@@ -10,14 +10,14 @@ tags:
 - C++11
 ---
 
-#### 一句话概述
+#### 一句话概述 {#一句话概述}
 
 std::move本身只做类型转换，对性能无影响。  
 我们可以在自己的类中实现移动语义，避免深拷贝，充分利用右值引用和std::move的语言特性。
 
 移动语义目的就是用浅拷贝代替深拷贝，右值引用跟深拷贝放到同一场景才是有意义的。
 
-#### 实现移动语义
+#### 实现移动语义 {#实现移动语义}
 
 在没有右值引用之前，一个简单的数组类通常实现如下，有构造函数、拷贝构造函数、赋值运算符重载、析构函数等。深拷贝/浅拷贝在此不做讲解
 
@@ -125,7 +125,7 @@ public:
 };
 ```
 
-#### 实例：vector::push\_back使用std::move提高性能
+#### 实例：vector::push\_back使用std::move提高性能 {#实例：vector-push-back使用std-move提高性能}
 
 ```plain
 // 例2：std::vector和std::string的实际例子
@@ -148,7 +148,7 @@ void emplace_back (Args&&... args);
 
 在vector和string这个场景，加个std::move会调用到移动语义函数，避免了深拷贝。
 
-#### ref
+#### ref {#ref}
 
 - KM
 - <https://zh.cppreference.com/w/cpp/language/reference>

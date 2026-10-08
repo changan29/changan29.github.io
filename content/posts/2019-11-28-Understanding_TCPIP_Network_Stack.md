@@ -9,11 +9,11 @@ tags:
 - TCPIP
 ---
 
-### 概述
+### 概述 {#概述}
 
 TCP & socket 总结，
 
-### 网卡 network interface card
+### 网卡 network interface card {#网卡-network-interface-card}
 
 ![image](https://201911-1251969284.cos.ap-shanghai.myqcloud.com/network_interface.png)
 
@@ -29,7 +29,7 @@ TCP & socket 总结，
 
 另一个问题，就是从网卡的I/O区域，包括I/O寄存器或I/O内存中去读取数据，这都要CPU去读，也要占用CPU资源，“CPU从I/O区域 读，然后把它放到内存（这个内存指的是系统本身的物理内存，跟外设的内存不相干，也叫主内存）中”。于是自然地，就想到了DMA技术——让网卡直接从主内 存之间读写它们的I/O数据。
 
-#### 优化后
+#### 优化后 {#优化后}
 
 ![image](https://201911-1251969284.cos.ap-shanghai.myqcloud.com/ring-buffer.png)
 
@@ -37,41 +37,41 @@ NIC (network interface card) 在系统启动过程中会向系统注册自己的
 
 Ring Buffer 队列内存放的是一个个 Packet Descriptor ，其有两种状态： ready 和 used 。初始时 Descriptor 是空的，指向一个空的 sk\_buff，处在 ready 状态。当有数据时，DMA 负责从 NIC 取数据，并在 Ring Buffer 上按顺序找到下一个 ready 的 Descriptor，将数据存入该 Descriptor 指向的 sk\_buff 中，并标记槽为 used。因为是按顺序找 ready 的槽，所以 Ring Buffer 是个 FIFO 的队列。
 
-#### 1、首先，内核在主内存中为收发数据建立一个环形的缓冲队列（通常叫DMA环形缓冲区）
+#### 1、首先，内核在主内存中为收发数据建立一个环形的缓冲队列（通常叫DMA环形缓冲区） {#1、首先，内核在主内存中为收发数据建立一个环形的缓冲队列（通常叫DMA环形缓冲区）}
 
 Linux内核中，用skb来描述一个缓存，所谓分配，就是建立一定数量的skb，然后把它们组织成一个双向链表。sk\_buff结构或skb结构代表一个数据包,它们也变得更复杂了。
 
 sk\_buff\_structure
 
-##### 包含数据和元数据
+##### 包含数据和元数据 {#包含数据和元数据}
 
 ![image](https://201911-1251969284.cos.ap-shanghai.myqcloud.com/sk_buff_structure.png)
 
 一些必要的信息比如头和内容长度被保存在元数据区。例如，在图6中，mac\_header、network\_header和transport\_header都有相应的指针，指向链路头、IP头和TCP头的起始地址。这种方式让TCP协议处理过程变得简单。
 
-##### 如何增加或删除头
+##### 如何增加或删除头 {#如何增加或删除头}
 
 数据包在网络栈的各层中上升或下降时会增加或删除数据头。为了更有效率的处理而使用了指针。例如，要删除链路头只需要修改head pointer的值。
 
-##### 如何合并或切分数据包
+##### 如何合并或切分数据包 {#如何合并或切分数据包}
 
 为了更有效率的执行把数据包增到或从socket缓冲区中删除这类操作而使用了链表，或者叫数据包链。next和prev指针用于这个场景。
 
-##### 快速分配和释放
+##### 快速分配和释放 {#快速分配和释放}
 
 无论何时创建数据包都会分配一个数据结构，此时会用到快速分配器。比如，如果数据通过10Gb的以太网传输，每秒会有超过一百万个对象被创建和销毁。
 
-#### 2、内核将这个缓冲区通过DMA映射，把这个队列交给网卡
+#### 2、内核将这个缓冲区通过DMA映射，把这个队列交给网卡 {#2、内核将这个缓冲区通过DMA映射，把这个队列交给网卡}
 
 内核操作，双向映射
 
-#### 3、网卡收到数据，就直接放进这个环形缓冲区了——也就是直接放进主内存了；然后，向系统产生一个中断
+#### 3、网卡收到数据，就直接放进这个环形缓冲区了——也就是直接放进主内存了；然后，向系统产生一个中断 {#3、网卡收到数据，就直接放进这个环形缓冲区了——也就是直接放进主内存了；然后，向系统产生一个中断}
 
 硬件行为
 
-#### 4、内核收到这个中断，就取消DMA映射，这样，内核就直接从主内存中读取数据
+#### 4、内核收到这个中断，就取消DMA映射，这样，内核就直接从主内存中读取数据 {#4、内核收到这个中断，就取消DMA映射，这样，内核就直接从主内存中读取数据}
 
-### TCP tcp control block
+### TCP tcp control block {#TCP-tcp-control-block}
 
 ![image](https://201911-1251969284.cos.ap-shanghai.myqcloud.com/tcp_control_block.png)
 
@@ -83,7 +83,7 @@ socket 发送缓存和接收缓存就是 sk\_buff 列表，它们也保存了 tc
 
 最后，我们来看看 TCP 连接查找表（lookup table），这是一个哈希表，用来搜索接收到的报文属于哪个 TCP 连接。哈希值是通过报文的  四元组和 Jenkins 哈希算法计算的，据说使用这个算法是为了应对对哈希表的攻击。
 
-### REF
+### REF {#REF}
 
 - [理解TCP](https://cizixs.com/2017/07/27/understand-tcp-ip-network-stack/)
 - [Understanding TCP/IP Network Stack](https://www.cubrid.org/blog/understanding-tcp-ip-network-stack)

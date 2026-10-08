@@ -1,0 +1,57 @@
+---
+title: redis基础
+date: '2021-04-17T11:40:39+08:00'
+url: /2021/04/17/redis-basic/
+draft: false
+categories: []
+tags: []
+build:
+  list: never
+  render: always
+---
+
+### 如果你只是急于解决太多细微的问题，能力就很难得到质的提升 {#如果你只是急于解决太多细微的问题，能力就很难得到质的提升}
+
+### Redis 学习的路线 {#Redis-学习的路线}
+
+![image](https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/redis_overview.jpg)
+
+### 底层数据结构 {#底层数据结构}
+
+#### 基础数据结构 {#基础数据结构}
+
+![image](https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/rds-data-struct.jpg)
+
+#### key-value的管理方式 {#key-value的管理方式}
+
+![image](https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/rds-kv-hash.jpg)
+
+如果哈希表里写入的数据越来越多，哈希冲突可能也会越来越多，这就会导致某些哈希冲突链过长，进而导致这个链上的元素查找耗时长，效率降低。Redis 默认使用了两个全局哈希表：哈希表 1 和哈希表 2。一开始，当你刚插入数据时，默认使用哈希表 1，此时的哈希表 2 并没有被分配空间。随着数据逐步增多，Redis 开始执行 rehash，
+
+- 给哈希表 2 分配更大的空间，例如是当前哈希表 1 大小的两倍；
+- 把哈希表 1 中的数据重新映射并拷贝到哈希表 2 中；
+- 释放哈希表 1 的空间。
+
+#### 跳表 {#跳表}
+
+skiplist不要求上下相邻两层链表之间的节点个数有严格的对应关系，而是为每个节点随机出一个层数(level)。比如，一个节点随机出的层数是3，那么就把它链入到第1层到第3层这三层链表中。为了表达清楚，下图展示了如何通过一步步的插入操作从而形成一个skiplist的过程：  
+![image](https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/skiplist_insertions.png)
+
+##### skiplist与平衡树、哈希表的比较 {#skiplist与平衡树、哈希表的比较}
+
+- skiplist和各种平衡树（如AVL、红黑树等）的元素是有序排列的，而哈希表不是有序的。因此，在哈希表上只能做单个key的查找，不适宜做范围查找。所谓范围查找，指的是查找那些大小在指定的两个值之间的所有节点。
+- 在做范围查找的时候，平衡树比skiplist操作要复杂。在平衡树上，我们找到指定范围的小值之后，还需要以中序遍历的顺序继续寻找其它不超过大值的节点。如果不对平衡树进行一定的改造，这里的中序遍历并不容易实现。而在skiplist上进行范围查找就非常简单，只需要在找到小值之后，对第1层链表进行若干步的遍历就可以实现。
+- 平衡树的插入和删除操作可能引发子树的调整，逻辑复杂，而skiplist的插入和删除只需要修改相邻节点的指针，操作简单又快速。
+- 从内存占用上来说，skiplist比平衡树更灵活一些。一般来说，平衡树每个节点包含2个指针（分别指向左右子树），而skiplist每个节点包含的指针数目平均为1/(1-p)，具体取决于参数p的大小。如果像Redis里的实现一样，取p=1/4，那么平均每个节点包含1.33个指针，比平衡树更有优势。
+- 查找单个key，skiplist和平衡树的时间复杂度都为O(log n)，大体相当；而哈希表在保持较低的哈希值冲突概率的前提下，查找时间复杂度接近O(1)，性能更高一些。所以我们平常使用的各种Map或dictionary结构，大都是基于哈希表实现的。
+
+### redis的线程模型 {#redis的线程模型}
+
+Redis 是单线程，主要是指 Redis 的网络 IO 和键值对读写是由一个线程来完成的，这也是 Redis 对外提供键值存储服务的主要流程。但 Redis 的其他功能，比如持久化、异步删除、集群数据同步等，其实是由额外的线程执行的。
+
+![image](https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/redis/rds-epoll-io.jpg)
+
+### ref {#ref}
+
+- <http://zhangtielei.com/posts/blog-redis-skiplist.html>
+- <https://lotabout.me/2018/skip-list/>

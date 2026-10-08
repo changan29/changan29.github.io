@@ -9,7 +9,7 @@ tags:
 - timer
 ---
 
-### 概述
+### 概述 {#概述}
 
 一个Timer的实现需要具备以下几个行为:
 
@@ -27,14 +27,14 @@ tags:
 
 具体的代码实现思路就是：在StartTimer的时候，把 当前时间 + Interval 作为key放入一个容器，然后在Loop的每次Tick里，从容器里面选出一个最小的key与当前时间比较，如果key小于当前时间，则这个key代表的timer就是expired，需要执行它的ExpiryAction(一般为回调)。
 
-### 链表的实现
+### 链表的实现 {#链表的实现}
 
 - 精度是 1ms
 - 最长时间是10min,延长时间可以增加 slot数量,slot时间的间隔是 1ms
 - 通过继承Timer父类，在子类重写timeout实现 超时回调
 - 每次都需要遍历超过时间的所有链表，时间复杂度为O(n)
 
-### 执行方式
+### 执行方式 {#执行方式}
 
 每次从上次执行的时间，遍历每个链表上挂的timer是不是到期，如果到期了，就执行对应的超时函数，并移除定时器，把这个环拉直看就可以了:  
 ![image](https://201910-1251969284.cos.ap-shanghai.myqcloud.com/time_round_1.jpg)  
@@ -88,7 +88,7 @@ int TimerMgr::TimeRun()
 }
 ```
 
-### example
+### example {#example}
 
 子类:  
 
@@ -152,6 +152,6 @@ robot->RobotWait(1234);
 ...
 ```
 
-### code
+### code {#code}
 
 - <https://github.com/changan29/codeLib/tree/master/timer>

@@ -9,13 +9,13 @@ tags:
 - ffmpeg
 ---
 
-# FFMPEG常用命令
+# FFMPEG常用命令 {#FFMPEG常用命令}
 
 FFMPEG是特别强大的专门用于处理音视频的开源库。你既可以使用它的API对音视频进行处理，也可以使用它提供的工具，如 ffmpeg, ffplay, ffprobe，来编辑你的音视频文件。
 
 本文将简要介绍一下 FFMPEG 库的基本目录结构及其功能，然后详细介绍一下我们在日常工作中，如何使用 ffmpeg 提供的工具来处理音视频文件。
 
-# FFMPEG 目录及作用
+# FFMPEG 目录及作用 {#FFMPEG-目录及作用}
 
 - libavcodec： 提供了一系列编码器的实现。
 - libavformat： 实现在流协议，容器格式及其本IO访问。
@@ -25,7 +25,7 @@ FFMPEG是特别强大的专门用于处理音视频的开源库。你既可以�
 - libswresample： 实现了混音和重采样。
 - libswscale： 实现了色彩转换和缩放工能。
 
-# FFMPEG基本概念
+# FFMPEG基本概念 {#FFMPEG基本概念}
 
 在讲解 FFMPEG 命令之前，我们先要介绍一些音视频格式的基要概念。
 
@@ -41,7 +41,7 @@ FFMPEG是特别强大的专门用于处理音视频的开源库。你既可以�
 
 > channel是音频中的概念，称之为声道。在一路音频流中，可以有单声道，双声道或立体声。
 
-# FFMPEG 命令
+# FFMPEG 命令 {#FFMPEG-命令}
 
 我们按使用目的可以将 FFMPEG 命令分成以下几类：
 
@@ -85,7 +85,7 @@ ffmpeg调用libavformat库（包含demuxers）来读取输入文件并获取包�
 
 下面我们就来详细介绍一下这些命令。
 
-## 基本信息查询命令
+## 基本信息查询命令 {#基本信息查询命令}
 
 FFMPEG 可以使用下面的参数进行基本信息查询。例如，想查询一下现在使用的 FFMPEG 都支持哪些 filter，就可以用 `ffmpeg -filters` 来查询。详细参数说明如下：
 
@@ -109,7 +109,7 @@ FFMPEG 可以使用下面的参数进行基本信息查询。例如，想查询�
 
 接下来介绍的是 FFMPEG 处理音视频时使用的命令格式与参数。
 
-## 命令基本格式及参数
+## 命令基本格式及参数 {#命令基本格式及参数}
 
 下面是 FFMPEG 的基本命令格式：
 
@@ -126,7 +126,7 @@ ffmpeg 通过 -i 选项读取输任意数量的输入“文件”（可以是常
 
 上面就是 FFMPEG 处理音视频的常用命令，下面是一些常用参数：
 
-### 主要参数
+### 主要参数 {#主要参数}
 
 | 参数 | 说明 |
 | --- | --- |
@@ -141,7 +141,7 @@ ffmpeg 通过 -i 选项读取输任意数量的输入“文件”（可以是常
 | -frames [：stream\_specifier] framecount（output，per-stream） | 停止在帧计数帧之后写入流。 |
 | -filter [：stream\_specifier] filtergraph（output，per-stream） | 创建由filtergraph指定的过滤器图，并使用它来过滤流。filtergraph是应用于流的filtergraph的描述，并且必须具有相同类型的流的单个输入和单个输出。在过滤器图形中，输入与标签中的标签相关联，标签中的输出与标签相关联。有关filtergraph语法的更多信息，请参阅ffmpeg-filters手册。 |
 
-### 视频参数
+### 视频参数 {#视频参数}
 
 | 参数 | 说明 |
 | --- | --- |
@@ -153,7 +153,7 @@ ffmpeg 通过 -i 选项读取输任意数量的输入“文件”（可以是常
 | -vcodec编解码器（输出） | 设置视频编解码器。这是-codec：v的别名。 |
 | -vf filtergraph（输出） | 创建由filtergraph指定的过滤器图，并使用它来过滤流。 |
 
-### 音频参数
+### 音频参数 {#音频参数}
 
 | 参数 | 说明 |
 | --- | --- |
@@ -227,7 +227,7 @@ ffmpeg -f avfoundation -i :0 out.wav
 ffmpeg  -f avfoundation -i :0 -ar 44100 -f s16le out.pcm
 ```
 
-## 分解与复用
+## 分解与复用 {#分解与复用}
 
 流拷贝是通过将 copy 参数提供给-codec选项来选择流的模式。它使得ffmpeg省略了指定流的解码和编码步骤，所以它只能进行多路分解和多路复用。 这对于更改容器格式或修改容器级元数据很有用。 在这种情况下，上图将简化为：
 
@@ -273,7 +273,7 @@ ffmpeg -i out.mp4 -vcodec copy -acodec copy out.flv
 ffmpeg -i out.h264 -i out.aac -vcodec copy -acodec copy out.mp4
 ```
 
-## 处理原始数据
+## 处理原始数据 {#处理原始数据}
 
 **提取YUV数据**
 
@@ -304,11 +304,11 @@ ffplay -ar 44100 -ac 2 -f s16le -i out.pcm
 ffmpeg -f s16be -ar 8000 -ac 2 -acodec pcm_s16be -i input.raw output.wav
 ```
 
-## 滤镜
+## 滤镜 {#滤镜}
 
 在编码之前，ffmpeg可以使用libavfilter库中的过滤器处理原始音频和视频帧。 几个链式过滤器形成一个过滤器图形。 ffmpeg区分两种类型的过滤器图形：简单和复杂。
 
-### 简单滤镜
+### 简单滤镜 {#简单滤镜}
 
 简单的过滤器图是那些只有一个输入和输出，都是相同的类型。 在上面的图中，它们可以通过在解码和编码之间插入一个额外的步骤来表示：
 
@@ -336,7 +336,7 @@ ffmpeg -f s16be -ar 8000 -ac 2 -acodec pcm_s16be -i input.raw output.wav
 
 请注意，某些滤镜会更改帧属性，但不会改变帧内容。 例如。 上例中的fps过滤器会改变帧数，但不会触及帧内容。 另一个例子是setpts过滤器，它只设置时间戳，否则不改变帧。
 
-### 复杂滤镜
+### 复杂滤镜 {#复杂滤镜}
 
 复杂的过滤器图是那些不能简单描述为应用于一个流的线性处理链的过滤器图。 例如，当图形有多个输入和/或输出，或者当输出流类型与输入不同时，就是这种情况。 他们可以用下图来表示：
 
@@ -456,7 +456,7 @@ ffmpeg  -f avfoundation -i "1" -framerate 30 -f avfoundation   -i "0:0" -r 30 -c
 ffmpeg -i killer.mp4 -filter_complex "movie=./logo/daka.png,scale=64:48[w];[0:v]curves=vintage[o];[o][w]overlay=30:10[out]" -map "[out]" -map 0:a test1.mp4
 ```
 
-## 一些比较有意思的滤镜
+## 一些比较有意思的滤镜 {#一些比较有意思的滤镜}
 
 - 镜像
 
@@ -548,7 +548,7 @@ ffmpeg -i killer.mp4 -filter_complex "movie=./logo/daka.png,scale=64:48[w];[0:v]
   curves = ‘none’‘color_negative’
   ```
 
-## 音视频的拼接与裁剪
+## 音视频的拼接与裁剪 {#音视频的拼接与裁剪}
 
 **裁剪**
 
@@ -658,7 +658,7 @@ ffmpeg -i rtmp://server/live/originalStream -c:a copy -c:v copy -f flv rtmp://se
 ffmpeg -framerate 15 -f avfoundation -i "1" -s 1280x720 -c:v libx264  -f  flv rtmp://localhost:1935/live/room
 ```
 
-## ffplay
+## ffplay {#ffplay}
 
 **播放YUV 数据**
 

@@ -11,19 +11,19 @@ tags:
 - rpc
 ---
 
-### 基于protobuf 的 rpc
+### 基于protobuf 的 rpc {#基于protobuf-的-rpc}
 
 protobuf 实现了序列化部分，预留了 RPC 接口，但是没有实现网络交互的部分。  
 基于pb里面的 service 接口，自己实现实际的通信过程，实现一个简易的 rpc是比较容易的， 对我们阅读 brpc、muduo、grpc等著名开源的rpc有很大帮助。
 
 google的 文档这里描述的也比较清楚， 在 google/protobuf/service.h 里，通过一个简单的例子，描述了实现 一个基于pb的RPC的过程。
 
-#### protoc 自动生成的代码
+#### protoc 自动生成的代码 {#protoc-自动生成的代码}
 
 > When you use the protocol compiler to compile a service definition, it generates two classes: An abstract interface for the service (with methods matching the service definition) and a “stub” implementation.  
 > A stub is just a type-safe wrapper around an RpcChannel which emulates a local implementation of the service.
 
-##### 例子
+##### 例子 {#例子}
 
 ```plain
 service MyService {
@@ -33,7 +33,7 @@ service MyService {
 
 会生成两个接口: “MyService” and class “MyService\_Stub”,分别对应服务器和客户端接口。
 
-##### 服务器
+##### 服务器 {#服务器}
 
 对于每个service生成的类，你需要做的是 继承他并重写自己的方法，比如上面的 MyService，你可以这样实现你自己的处理类：
 
@@ -55,7 +55,7 @@ class MyServiceImpl : public MyService {
 };
 ```
 
-##### 客户端
+##### 客户端 {#客户端}
 
 要调用远程 MyServiceImpl，首先需要一个 RpcChannel 连接。如何构造通道同样取决于您的 RPC 实现。  
 这里我们以一个假设的“MyRpcChannel”为例：
@@ -70,7 +70,7 @@ FooRespnose response;
 stub.Foo(&controller, request, &response, NewCallback(HandleResponse));
 ```
 
-### 几个基类
+### 几个基类 {#几个基类}
 
 - Service
 - RpcController
@@ -131,7 +131,7 @@ service->CallMethod(method, *request, response, callback);
 
 [protobuf-rpc-demo](https://github.com/changan29/playcpp/tree/master/protobuf-rpc-demo)
 
-### 总结
+### 总结 {#总结}
 
 基于 protobuf 实现一个 rpc,需要关注的点：
 
