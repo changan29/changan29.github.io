@@ -1,0 +1,37 @@
+baseURL = 'https://www.oneyearago.me/'
+locale = 'zh-CN'
+defaultContentLanguage = 'zh'
+title = "changan's blog"
+timeZone = 'Asia/Shanghai'
+enableRobotsTXT = true
+
+[pagination]
+pagerSize = 10
+
+[taxonomies]
+category = 'categories'
+tag = 'tags'
+
+[permalinks.page]
+posts = '/:year/:month/:day/:slug/'
+
+[params]
+description = '思绪来的快去的也快，偶尔在这里停留'
+author = 'changan'
+
+[outputs]
+home = ['HTML', 'RSS', 'JSON']
+
+[markup.goldmark.renderer]
+unsafe = true
+
+[markup.highlight]
+noClasses = false
+lineNos = false
+
+[markup.tableOfContents]
+startLevel = 2
+endLevel = 3
+
+[sitemap]
+changeFreq = 'weekly'

@@ -1,0 +1,74 @@
+---
+title: 写一个操作系统_03 引导内核
+date: '2019-03-18T21:08:45+08:00'
+url: /2019/03/18/make_a_linux_3/
+draft: false
+categories:
+- kernel
+- OS
+tags:
+- OS
+- kernel
+---
+
+## 操作系统引导
+
+### MBR
+
+  接上一篇BIOS启动，BIOS完成了基础的硬件检测和硬件的中断向量表的初始化，然后BIOS找到MBR并且把MBR加载在内存中，跳转到该位置。加载的位置在内存中的0x7C00,至于为什么是这个位置，主要是因为历史的原因吧，最初的内存只有32K,历史选择了0x7C00(31k)。
+
+  MBR引导扇区的内容是：
+
+- 446字节的引导程序及参数
+- 64字节的分区表（每个分区表项16字节，因此只能有4个主分区）
+- 2字节的结束标志0x55和0xaa
+
+  MBR只是操作系统引导的其中一个环节，并不是最直接的引导代码，MBR的主要作用是加载操作系统提供的bootloader。MBR怎么知道loader存在哪个分区呢？分区表项的 第一个字节就是活动分区标志，如果该分区存储了加载器，该标志被置为0x80，否则是0.如果有多个活动分区，选择第一个活动分区引导。
+
+  为了方便MBR找到内核加载器，约定好加载器就存储在各分区的开始扇区，这个扇区被称为操作系统引导扇区也称为OBR(OS Boot Record), 扇区里面的程序便是内核加载器，比如我们常见的x86平台上的grub或者arm平台上的uboot，这个程序负责的主要工作是加载kernel image 并解压缩。
+
+### BootLoader
+
+  Bootloader 主要完成了下面几项工作：
+
+- bootloder 程序查找 Linux Kernel 镜像在启动盘中的位置（要么存放磁盘中的固定位置，要么通过文件系统去解析）。
+- 将找到的 Linux Kernel 镜像和 initrd 文件加载到物理内存中的指定地址处，并建立运行内核的所需的基本环境。
+- 最后，Bootloader 就将控制权转交到 Linux 内核，然后由内核开始执行。
+
+  GRUB 是我们现在 Linux 发行版系统中最常用到的 Bootloader，它的优势在于它可以识别 Linux 文件系统，例如 ext3，ext4 格式的文件系统。  
+GRUB 可以从 ext3 或者 ext4 格式文件系统的磁盘分区中加载 Linux Kernel 镜像。
+
+### Linux Kernel 镜像
+
+  Linux 内核有多种格式的镜像，例如 vmlinux、Image、zImage、bzImage、uImage、xipImage、bootpImage 等。
+
+#### vmlinux
+
+  vmlinux 是可引导的、未压缩、可压缩的内核镜像，vm 代表Virtual Memory，Linux 支持虚拟内存，因此得名 vm。它是由用户对内核源码编译得到，实质是 ELF 格式的文件，也就是说vmlinux 是编译出来的最原始的内核文件，未被压缩过。
+
+#### zImage
+
+  zImage 是 ARM Linux 常用的一种压缩镜像文件，它是由vmlinux 加上解压代码经 gzip 压缩而成，命令格式是 make zImage，这种格式的 Linux 内核镜像文件多存放在 NAND Flash 上。
+
+#### bzImage
+
+  bzImage 不是用 bzip2 压缩的，bz 表示 big zImage,其格式与 zImage 类似，但采用了不同的压缩算法，注意，bzImage 的压缩率更高是压缩的内核映像。
+
+  zImage vs bzImage：它们不仅是一个压缩文件，而且在这两个文件的开头部分内嵌有解压缩代码。两者的不同之处在于，老的zImage 解压缩内核到低端内存(第一个 640K)，bzImage解压缩内核到高端内存(1M以上)。如果内核比较小，那么可以采用 zImage 或 bzImage 之一，两种方式引导的系统运行时是相同的。大的内核采用 bzImage，不能采用 zImage。
+
+#### 实例
+
+[root@xxx /boot]# file vmlinuz-3.10.104-1-tlinux2\_kvm\_guest-0021.tl1  
+vmlinuz-3.10.104-1-tlinux2\_kvm\_guest-0021.tl1: Linux kernel x86 boot executable bzImage, version 3.10.104-1-tlinux2\_kvm\_guest-00, RO-rootFS, swap\_dev 0x4, Normal VGA
+
+### 内核启动
+
+  内核镜像并非直接可以运行，而是一个被压缩过的。通常情况下，它是一个通过zlib压缩的zImage（compressed image小于51KB）或者bzImage（big compressed image，大于512KB）文件。在内核镜像的开头是一个小程序，该程序对硬件进行简单的配置并将压缩过的内核解压到高内存地址空间中。
+
+  执行bzImage中的代码，完成对内核的解压缩，接着调用kernel/head.S:startup\_32函数开始内核的启动,在新的startup\_32函数（也叫做swapper或者process 0），页表将被初始化并且内存的分页机制将会被使能。物理CPU的类型将会被检测，并且FPU（floating-point unit）也会被检测以便后面使用。然后./init/main.c:start\_kernel()函数将会被调用，开始通用的内核初始化。
+
+  在./init/main.c:start\_kernl()函数中，一长串的初始化函数将会被调用到用于设置中断、执行更详细的内存配置、加载initial RAM disk等。接着，将会调用./arch/i386/kernel/process.c:kernel\_thread()函数来启动第一个用户空间进程，该进程的执行函数是init。最后，idle进程（cpu\_idle）将会被启动，并且调度器其将接管整个系统。当中断使能时，可抢占的调度器周期性地接管系统，用于提供多任务同时运行的能力。
+
+### 参考
+
+- <https://www.ibm.com/developerworks/library/l-linuxboot/>

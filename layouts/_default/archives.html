@@ -1,0 +1,8 @@
+{{ define "main" }}
+{{ $posts := where .Site.RegularPages "Section" "posts" }}
+{{ $year := .Params.archiveYear }}{{ $month := .Params.archiveMonth }}
+{{ if $year }}{{ $posts = where $posts "Date.Year" (int $year) }}{{ end }}
+{{ if $month }}{{ $posts = where $posts "Date.Month" (int (strings.TrimPrefix "0" $month)) }}{{ end }}
+<header class="page-heading"><p class="eyebrow">时间里的足迹</p><h1>{{ .Title }}</h1><p>共 {{ len $posts }} 篇文章</p></header>
+{{ range $posts.ByDate.Reverse.GroupByDate "2006" }}<section class="archive-year"><h2>{{ .Key }}</h2><ul>{{ range .Pages }}<li><time>{{ .Date.Format "01.02" }}</time><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>{{ end }}</ul></section>{{ else }}<p>这个时间段暂无文章。</p>{{ end }}
+{{ end }}

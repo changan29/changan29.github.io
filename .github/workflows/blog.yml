@@ -1,0 +1,96 @@
+name: Build and publish blog
+
+on:
+  push:
+    branches: [blog-source]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: blog-publish
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Install pinned Hugo
+        env:
+          HUGO_VERSION: 0.167.0
+        run: |
+          set -euo pipefail
+          asset="hugo_${HUGO_VERSION}_linux-amd64.tar.gz"
+          release="https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}"
+          curl --fail --location --retry 3 "$release/$asset" -o "$RUNNER_TEMP/$asset"
+          curl --fail --location --retry 3 "$release/hugo_${HUGO_VERSION}_checksums.txt" -o "$RUNNER_TEMP/checksums.txt"
+          (cd "$RUNNER_TEMP"; grep "  $asset$" checksums.txt | sha256sum --check --strict)
+          tar -xzf "$RUNNER_TEMP/$asset" -C "$RUNNER_TEMP" hugo
+          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
+      - name: Build and validate
+        run: |
+          set -euo pipefail
+          hugo --minify
+          python3 scripts/validate_site.py
+          SOURCE_COMMIT="$GITHUB_SHA" python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          Path('public/release.json').write_text(json.dumps({'generator':'hugo','source_commit':os.environ['SOURCE_COMMIT']}))
+          PY
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: generated-blog
+          path: public/
+          retention-days: 30
+      - name: Save generated site
+        if: vars.BLOG_PUBLISH_ENABLED == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh auth setup-git
+          target="$RUNNER_TEMP/generated-site"
+          if git ls-remote --exit-code --heads "https://github.com/$GITHUB_REPOSITORY.git" blog-site >/dev/null; then
+            git clone --quiet --single-branch --branch blog-site "https://github.com/$GITHUB_REPOSITORY.git" "$target"
+          else
+            mkdir -p "$target"
+            git -C "$target" init --quiet --initial-branch=blog-site
+            git -C "$target" remote add origin "https://github.com/$GITHUB_REPOSITORY.git"
+          fi
+          rsync -a --delete --exclude=.git public/ "$target/"
+          git -C "$target" config user.name 'github-actions[bot]'
+          git -C "$target" config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git -C "$target" add --all
+          if ! git -C "$target" diff --cached --quiet; then
+            git -C "$target" commit --quiet -m "Publish blog from $GITHUB_SHA"
+            git -C "$target" push origin blog-site
+          fi
+          echo "SITE_COMMIT=$(git -C "$target" rev-parse HEAD)" >> "$GITHUB_ENV"
+      - name: Deploy and verify live site
+        if: vars.BLOG_PUBLISH_ENABLED == 'true'
+        env:
+          DEPLOY_KEY: ${{ secrets.BLOG_DEPLOY_KEY }}
+          KNOWN_HOSTS: ${{ secrets.BLOG_KNOWN_HOSTS }}
+          DEPLOY_HOST: ${{ vars.BLOG_DEPLOY_HOST }}
+          DEPLOY_USER: ${{ vars.BLOG_DEPLOY_USER }}
+        run: |
+          set -euo pipefail
+          test -n "$DEPLOY_KEY"
+          test -n "$KNOWN_HOSTS"
+          test -n "$DEPLOY_HOST"
+          test -n "$DEPLOY_USER"
+          install -d -m 700 "$HOME/.ssh"
+          printf '%s\n' "$DEPLOY_KEY" > "$HOME/.ssh/blog-deploy"
+          chmod 600 "$HOME/.ssh/blog-deploy"
+          printf '%s\n' "$KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          ssh -i "$HOME/.ssh/blog-deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=15 "$DEPLOY_USER@$DEPLOY_HOST" "deploy $SITE_COMMIT"
+          SOURCE_COMMIT="$GITHUB_SHA" python3 - <<'PY'
+          import json, os, urllib.request
+          with urllib.request.urlopen('https://www.oneyearago.me/release.json', timeout=20) as response:
+              release=json.load(response)
+          assert release['source_commit'] == os.environ['SOURCE_COMMIT'], 'Live site is not the requested release'
+          PY

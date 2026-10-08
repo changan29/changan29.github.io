@@ -1,0 +1,21 @@
+[Unit]
+Description=Blog editor GitHub login
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=blog-oauth
+Group=blog-oauth
+EnvironmentFile=/etc/blog-oauth.env
+ExecStart=/usr/local/bin/blog-oauth
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

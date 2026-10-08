@@ -1,0 +1,4 @@
+{{ define "main" }}
+<header class="page-heading"><p class="eyebrow">浏览文章</p><h1>{{ .Title }}</h1><p>{{ len .Pages }} 项</p></header>
+{{ if eq .Kind "taxonomy" }}<div class="chips term-list">{{ range .Pages }}<a href="{{ .RelPermalink }}">{{ .LinkTitle }} <small>{{ len .Pages }}</small></a>{{ end }}</div>{{ else }}{{ range .Pages.ByDate.Reverse }}{{ partial "post-card.html" . }}{{ end }}{{ end }}
+{{ end }}

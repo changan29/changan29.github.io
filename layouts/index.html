@@ -1,0 +1,10 @@
+{{ define "main" }}
+<section class="intro"><p class="eyebrow">记录 · 思考 · 实践</p><h1>让思绪在这里停留。</h1><p>关于技术、生活，以及一路走来的观察。</p><label class="search-label" for="search">搜索文章</label><input id="search" type="search" placeholder="搜索标题、标签或正文…" autocomplete="off" data-index="{{ "index.json" | relURL }}"><p id="search-status" role="status" aria-live="polite"></p></section>
+<section id="post-list" aria-label="文章列表">
+{{ $pages := where .Site.RegularPages "Section" "posts" }}
+{{ $paginator := .Paginate $pages.ByDate.Reverse }}
+{{ range $paginator.Pages }}{{ partial "post-card.html" . }}{{ end }}
+</section>
+<div id="search-results" hidden></div>
+<nav id="pagination" class="pagination" aria-label="分页">{{ if $paginator.HasPrev }}<a href="{{ $paginator.Prev.URL }}">← 上一页</a>{{ end }}<span>{{ $paginator.PageNumber }} / {{ $paginator.TotalPages }}</span>{{ if $paginator.HasNext }}<a href="{{ $paginator.Next.URL }}">下一页 →</a>{{ end }}</nav>
+{{ end }}

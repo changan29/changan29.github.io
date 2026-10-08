@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>写文章 · changan's blog</title></head>
+<body>
+<script>window.CMS_MANUAL_INIT=true;</script>
+<script src="decap-cms.js"></script>
+<script>
+const demo = ['localhost','127.0.0.1'].includes(location.hostname) && new URLSearchParams(location.search).has('demo');
+if (demo) {
+  const notice=document.createElement('div');notice.textContent='编辑器演示：内容不会上传，也不会发布到正式博客。刷新后演示内容会消失。';notice.style='padding:10px 20px;background:#fff0c7;text-align:center;font-size:13px';document.body.append(notice);
+}
+CMS.init(demo ? {config:{backend:{name:'test-repo'}}} : {});
+CMS.registerPreviewStyle('/css/site.css');
+const PostPreview = createClass({render: function () {
+  const entry=this.props.entry;
+  return h('article', {className:'post container'}, h('header',{className:'post-header'},h('h1',{},entry.getIn(['data','title']))),h('div',{className:'prose'},this.props.widgetFor('body')));
+}});
+CMS.registerPreviewTemplate('posts',PostPreview);
+</script>
+</body></html>

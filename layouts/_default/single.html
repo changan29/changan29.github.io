@@ -1,0 +1,8 @@
+{{ define "main" }}
+<article class="post"><header class="post-header">{{ if eq .Section "posts" }}<div class="post-meta"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01.02" }}</time><span>{{ .ReadingTime }} 分钟阅读</span></div>{{ end }}<h1>{{ .Title }}</h1>{{ with .GetTerms "categories" }}<div class="chips">{{ range . }}<a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}</div>{{ end }}</header>
+{{ if and (eq .Section "posts") (gt .WordCount 300) }}<details class="toc"><summary>本文目录</summary>{{ .TableOfContents }}</details>{{ end }}
+<div class="prose">{{ .Content }}</div>
+{{ with .GetTerms "tags" }}<div class="chips post-tags">{{ range . }}<a href="{{ .RelPermalink }}"># {{ .LinkTitle }}</a>{{ end }}</div>{{ end }}
+{{ if eq .Section "posts" }}<nav class="post-neighbors" aria-label="相邻文章">{{ with .PrevInSection }}<a href="{{ .RelPermalink }}"><small>上一篇</small>{{ .Title }}</a>{{ end }}{{ with .NextInSection }}<a href="{{ .RelPermalink }}"><small>下一篇</small>{{ .Title }}</a>{{ end }}</nav>{{ end }}
+</article>
+{{ end }}

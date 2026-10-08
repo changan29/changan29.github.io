@@ -1,0 +1,6 @@
+---
+archiveMonth: '11'
+archiveYear: '2019'
+layout: archives
+title: 2019 年 11 月
+---

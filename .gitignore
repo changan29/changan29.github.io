@@ -1,0 +1,6 @@
+/public/
+/resources/
+/.hugo_build.lock
+/server/blog-oauth
+*.env
+!*.env.example

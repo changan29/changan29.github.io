@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>{{ if not .IsHome }}{{ .Title }} · {{ end }}{{ .Site.Title }}</title>
+  <meta name="description" content="{{ if .IsPage }}{{ .Summary | plainify | truncate 160 }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+  <link rel="canonical" href="{{ .Permalink }}">
+  <meta property="og:title" content="{{ .Title }}"><meta property="og:url" content="{{ .Permalink }}">
+  <meta property="og:description" content="{{ if .IsPage }}{{ .Summary | plainify | truncate 160 }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+  <link rel="stylesheet" href="{{ "css/site.css" | relURL }}">
+  <link rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" href="{{ "index.xml" | absURL }}">
+  <script src="{{ "js/site.js" | relURL }}" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到正文</a>
+  <header class="site-header"><div class="header-inner">
+    <a class="brand" href="{{ "" | relURL }}">{{ .Site.Title }}<span>{{ .Site.Params.description }}</span></a>
+    <nav aria-label="主导航"><a href="{{ "" | relURL }}">文章</a><a href="{{ "archives/" | relURL }}">归档</a><a href="{{ "categories/" | relURL }}">分类</a><a href="{{ "tags/" | relURL }}">标签</a><a href="{{ "about/" | relURL }}">关于</a><button id="theme-toggle" aria-label="切换明暗主题" title="切换明暗主题">◐</button></nav>
+  </div></header>
+  <main id="main" class="container">{{ block "main" . }}{{ end }}</main>
+  <footer class="site-footer"><span>© {{ now.Year }} {{ .Site.Params.author }}</span><span><a href="{{ "index.xml" | relURL }}">RSS</a> · <a href="{{ "admin/" | relURL }}">写文章</a></span></footer>
+</body></html>
