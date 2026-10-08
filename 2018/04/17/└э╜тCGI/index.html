@@ -1,0 +1,31 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>理解CGI · changan's blog</title><meta name=description content='遇到的问题 apache 配置 python 模式 cgi 网上的教程一般是: 1. 设置 cgi 目录 <Directory "xxxx/cgi-bin/"> AllowOverride all Options Indexes FollowSymLinks ExecCGI Order …'><link rel=canonical href=https://www.oneyearago.me/2018/04/17/%E2%94%94%D1%8D%E2%95%9C%D1%82CGI/><meta property="og:title" content="理解CGI"><meta property="og:url" content="https://www.oneyearago.me/2018/04/17/%E2%94%94%D1%8D%E2%95%9C%D1%82CGI/"><meta property="og:description" content='遇到的问题 apache 配置 python 模式 cgi 网上的教程一般是: 1. 设置 cgi 目录 <Directory "xxxx/cgi-bin/"> AllowOverride all Options Indexes FollowSymLinks ExecCGI Order …'><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><h1>理解CGI</h1></header><div class=prose><h3 id=遇到的问题>遇到的问题</h3><pre tabindex=0><code>apache 配置 python 模式 cgi
+网上的教程一般是:
+</code></pre><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>1. 设置 cgi 目录
+</span></span><span class=line><span class=cl>    &lt;Directory &#34;xxxx/cgi-bin/&#34;&gt;
+</span></span><span class=line><span class=cl>        AllowOverride all
+</span></span><span class=line><span class=cl>        Options Indexes FollowSymLinks ExecCGI
+</span></span><span class=line><span class=cl>        Order allow,deny
+</span></span><span class=line><span class=cl>        Allow from all
+</span></span><span class=line><span class=cl>    &lt;/Directory&gt;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>2. 添加支持的脚本
+</span></span><span class=line><span class=cl>    AddHandler cgi-script .cgi .py
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>3. 添加执行权限 比如创建的脚本是 test.py
+</span></span><span class=line><span class=cl>    chmod +x test.py
+</span></span></code></pre></div><h4 id=报错>报错</h4><pre tabindex=0><code>按照上面设置 然后编辑 test.py 文件， 如下:
+</code></pre><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>#!/usr/bin/python
+</span></span><span class=line><span class=cl># -*- coding: UTF-8 -*-
+</span></span><span class=line><span class=cl>print &#34;hello test&#34;
+</span></span></code></pre></div><p>这样写的话 访问 cgi-bin/test.py 会给一个 500 的报错，内部错误，一般考虑两部分，一是 脚本有执行错误，而是 webserver 和 cgi 交互的过程有问题，这里脚本本身是没有问题的，那就是 交互问题</p><h3 id=cgi-流程>cgi 流程</h3><p>webserver 和 cgi 交互的流程如下:</p><p><img src=http://opq6sfw87.bkt.clouddn.com/cgi.png alt=image></p><p>上面出错的原因是因为 cgi 交互是遵循 一定标准的，参数和范围有固定的格式</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>cgi接口规定，cgi脚本输出的开头应该是http header
+</span></span><span class=line><span class=cl>而hello test 这种字符无法被识别为任何有效的http header， 所以如果访问http://localhost/cgi-bin/test.py，会返回500错误
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>解决办法有两个：
+</span></span><span class=line><span class=cl>1、写上http header。 header与body之间必须有一个空行，以识别前面的是header，后面的是body。 代码改成：
+</span></span><span class=line><span class=cl>#!/usr/bin/python
+</span></span><span class=line><span class=cl>print &#39;Content-Type: text/html\n\nhello test&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>2、空白http header。 不写http header的情况下，apache会自动补上header。 代码改成：
+</span></span><span class=line><span class=cl>#!/usr/bin/python
+</span></span><span class=line><span class=cl>print &#39;\nhello test&#39;
+</span></span></code></pre></div><h3 id=拓展>拓展</h3><p>对于 php，很多时候是和 html 混编的，也就是把数据和样式 混到一起，最后拼成 字符串给到 webserver， 然后给到 浏览器，单纯 cgi 模式的话消耗会比较大，执行方式应该是 webserver最为父进程，fork 出来 一个子进程去 执行 cgi 拿到输出后 结束子进程，下一次请求再 fork 新的进程; 取而代之的是 fastcgi ，作为一个常驻进程存在，接收 webserver 的请求 然后给出输出 还有php-fpm 这种方式，先初始化一个 进程(线程)池，等待接收 webserver的请求</p></div></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>

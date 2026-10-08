@@ -1,0 +1,76 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>learn_cmake · changan's blog</title><meta name=description content='最简单的 cmakelist PROJECT (HELLO) # <projectname>_BINARY_DIR <projectname>_SOURCE_DIR SET(SRC_LIST main.c) MESSAGE(STATUS "This is BINARY dir " …'><link rel=canonical href=https://www.oneyearago.me/2018/08/11/cmake%E2%95%A4%D0%B7%E2%95%A7%E2%96%91/><meta property="og:title" content="learn_cmake"><meta property="og:url" content="https://www.oneyearago.me/2018/08/11/cmake%E2%95%A4%D0%B7%E2%95%A7%E2%96%91/"><meta property="og:description" content='最简单的 cmakelist PROJECT (HELLO) # <projectname>_BINARY_DIR <projectname>_SOURCE_DIR SET(SRC_LIST main.c) MESSAGE(STATUS "This is BINARY dir " …'><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><h1>learn_cmake</h1></header><div class=prose><h3 id=最简单的-cmakelist>最简单的 cmakelist</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>PROJECT (HELLO)
+</span></span><span class=line><span class=cl># &lt;projectname&gt;_BINARY_DIR  &lt;projectname&gt;_SOURCE_DIR
+</span></span><span class=line><span class=cl>SET(SRC_LIST main.c)
+</span></span><span class=line><span class=cl>MESSAGE(STATUS &#34;This is BINARY dir &#34; ${HELLO_BINARY_DIR})
+</span></span><span class=line><span class=cl>MESSAGE(STATUS &#34;This is SOURCE dir &#34;${HELLO_SOURCE_DIR})
+</span></span><span class=line><span class=cl>ADD_EXECUTABLE(hello ${SRC_LIST})
+</span></span></code></pre></div><h3 id=内部编译和外部编译>内部编译和外部编译</h3><p>通过外部编译进行工程构建，PROJECT_SOURCE_DIR仍然指代工程路径，即/backup/cmake/t1</p><p>而PROJECT_BINARY_DIR则指代编译路径，即/backup/cmake/t1/build</p><h3 id=看着正规一点-工程化>看着正规一点 (工程化)</h3><h4 id=编译库>编译库</h4><p>结构</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>.
+</span></span><span class=line><span class=cl>|-- build
+</span></span><span class=line><span class=cl>|-- CMakeLists.txt
+</span></span><span class=line><span class=cl>|-- lib
+</span></span><span class=line><span class=cl>|   |-- libhello.a
+</span></span><span class=line><span class=cl>|   `-- libhello.so
+</span></span><span class=line><span class=cl>`-- libsrc
+</span></span><span class=line><span class=cl>    |-- CMakeLists.txt
+</span></span><span class=line><span class=cl>    |-- hello.c
+</span></span><span class=line><span class=cl>    `-- hello.h
+</span></span></code></pre></div><p>src/cmakelists:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>SET(LIBHELLO_SRC hello.c)
+</span></span><span class=line><span class=cl>ADD_LIBRARY(hello SHARED ${LIBHELLO_SRC})
+</span></span><span class=line><span class=cl>ADD_LIBRARY(hellost STATIC ${LIBHELLO_SRC})
+</span></span><span class=line><span class=cl># set name  为了生成 同名的 静态库和动态库
+</span></span><span class=line><span class=cl>SET_TARGET_PROPERTIES(hellost PROPERTIES OUTPUT_NAME &#34;hello&#34;)
+</span></span><span class=line><span class=cl>SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+</span></span></code></pre></div><p>hello.c</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>#include &#34;hello.h&#34;
+</span></span><span class=line><span class=cl>void HelloFunc()
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    printf(&#34;Hello World\n&#34;);
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><p>hello.h</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>#ifndef HELLO_H
+</span></span><span class=line><span class=cl>#define HELLO_H
+</span></span><span class=line><span class=cl>#include &lt;stdio.h&gt;
+</span></span><span class=line><span class=cl>void HelloFunc();
+</span></span><span class=line><span class=cl>#endif
+</span></span></code></pre></div><h4 id=使用头文件和库>使用头文件和库</h4><p>结构:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>.
+</span></span><span class=line><span class=cl>|-- 3rdparty
+</span></span><span class=line><span class=cl>|   `-- hello.h
+</span></span><span class=line><span class=cl>|-- bin
+</span></span><span class=line><span class=cl>|   `-- main
+</span></span><span class=line><span class=cl>|-- build
+</span></span><span class=line><span class=cl>|-- CMakeLists.txt
+</span></span><span class=line><span class=cl>|-- lib
+</span></span><span class=line><span class=cl>|   |-- libhello.a
+</span></span><span class=line><span class=cl>|   `-- libhello.so
+</span></span><span class=line><span class=cl>`-- src
+</span></span><span class=line><span class=cl>    |-- CMakeLists.txt
+</span></span><span class=line><span class=cl>    `-- main.c
+</span></span></code></pre></div><p>src/cmakelists.txt</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl># 头文件
+</span></span><span class=line><span class=cl>INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/3rdparty)
+</span></span><span class=line><span class=cl># 库文件 路径
+</span></span><span class=line><span class=cl>LINK_DIRECTORIES(${PROJECT_SOURCE_DIR}/lib)
+</span></span><span class=line><span class=cl>ADD_EXECUTABLE(main main.c)
+</span></span><span class=line><span class=cl># 链接的库
+</span></span><span class=line><span class=cl>TARGET_LINK_LIBRARIES(main libhello.so)
+</span></span><span class=line><span class=cl># 指定生成 路径
+</span></span><span class=line><span class=cl>SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+</span></span></code></pre></div><h3 id=主要指令>主要指令</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl># 加入 子路径
+</span></span><span class=line><span class=cl>ADD_SUBDIRECTORY(source_dir [binary_dir] [EXCLUDE_FROM_ALL])
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># 通过SET指令重新定义EXECUTABLE_OUTPUT_PATH 
+</span></span><span class=line><span class=cl>SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
+</span></span><span class=line><span class=cl>SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
+</span></span><span class=line><span class=cl># 在哪里ADD_EXECUTABLE或ADD_LIBRARY，如果需要改变目标存放路径，就在哪里加入上述的定义
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># 编译 静态库
+</span></span><span class=line><span class=cl>ADD_LIBRARY(hello STATIC ${LIBHELLO_SRC})
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># 头文件 搜索路径
+</span></span><span class=line><span class=cl>INCLUDE_DIRECTORIES(/usr/include/hello)
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># 共享库 搜索路径
+</span></span><span class=line><span class=cl>LINK_DIRECTORIES(directory1 directory2 ...)
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># 添加需要链接的共享库
+</span></span><span class=line><span class=cl>TARGET_LINK_LIBRARIES(target library1
+</span></span><span class=line><span class=cl>    &lt;debug | optimized&gt; library2
+</span></span><span class=line><span class=cl>    ...)
+</span></span></code></pre></div><h3 id=代码>代码</h3><p><a href=https://github.com/changan29/playcpp/tree/master/cmake>cmake demo on github</a></p><p>– Sat Aug 11 15:40:48 CST 2018</p></div></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>

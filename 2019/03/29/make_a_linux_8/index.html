@@ -1,0 +1,36 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>写一个操作系统_08 内核与C语言 · changan's blog</title><meta name=description content="内核与C语言 写内核能用C标准库吗？ 我们开发用户应用程序的时候，有标准库可以用，最典型的就是GUN C库，标准库一般是系统调用的封装，表面上是通过标准库访问系统资源，实际上是通过系统调用实现的。Linux的系统调用一般是先往eax寄存器写入系统调用号，然后通过0x80中断来实现。中断向量号为0x80称为系统中断门，更 …"><link rel=canonical href=https://www.oneyearago.me/2019/03/29/make_a_linux_8/><meta property="og:title" content="写一个操作系统_08 内核与C语言"><meta property="og:url" content="https://www.oneyearago.me/2019/03/29/make_a_linux_8/"><meta property="og:description" content="内核与C语言 写内核能用C标准库吗？ 我们开发用户应用程序的时候，有标准库可以用，最典型的就是GUN C库，标准库一般是系统调用的封装，表面上是通过标准库访问系统资源，实际上是通过系统调用实现的。Linux的系统调用一般是先往eax寄存器写入系统调用号，然后通过0x80中断来实现。中断向量号为0x80称为系统中断门，更 …"><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><div class=post-meta><time datetime=2019-03-29>2019.03.29</time><span>1 分钟阅读</span></div><h1>写一个操作系统_08 内核与C语言</h1><div class=chips><a href=/categories/kernel/>Kernel</a><a href=/categories/os/>Os</a></div></header><div class=prose><h3 id=内核与C语言>内核与C语言</h3><h4 id=写内核能用C标准库吗？>写内核能用C标准库吗？</h4><p>我们开发用户应用程序的时候，有标准库可以用，最典型的就是GUN C库，标准库一般是系统调用的封装，表面上是通过标准库访问系统资源，实际上是通过系统调用实现的。Linux的系统调用一般是先往eax寄存器写入系统调用号，然后通过0x80中断来实现。中断向量号为0x80称为系统中断门，更多的中断参考中断描述符表。</p><p>所以自己写内核的话可以用C语言，毕竟可以编译成汇编，跟直接写汇编差不多，但是不能用C标准库，理由如上。</p><h4 id=编译32位程序>编译32位程序</h4><p>默认的GCC编译选项会编译出与系统一致的输出，例如64位直接使用gcc或g++编译出的为64位程序或库，而32位系统编译的是对应32位的。<br>可以通过在编译时添加选项-m32或-m64来指定编译生成的相应版本。</p><p>问题的关键时多数时候会提示缺少库，这里以64位下编译32位程序为例，给出ubuntu和centos下相关依赖包。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>sudo apt-get install build-essential module-assistant
+</span></span><span class=line><span class=cl>sudo apt-get install gcc-multilib g++-multilib
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>yum install glibc-devel.i686 libstdc++-devel.i686
+</span></span></code></pre></div><h4 id=C运行时库>C运行时库</h4><p>C运行时库与标准库不一样，可以理解为与操作系统无关的部分的汇编封装。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>// 32b.c 
+</span></span><span class=line><span class=cl> int main()
+</span></span><span class=line><span class=cl> {
+</span></span><span class=line><span class=cl>     while(1);
+</span></span><span class=line><span class=cl>     return 0;
+</span></span><span class=line><span class=cl> }
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl># gcc -c -o m32b.o 32b.c 
+</span></span><span class=line><span class=cl># ld m32b.o -Ttext 0xc0001500  -o m32.bin  // 默认链接 c-runtime-lib crt.o _start 
+</span></span><span class=line><span class=cl>ld: warning: cannot find entry symbol _start; defaulting to 00000000c0001500
+</span></span><span class=line><span class=cl># ld m32b.o -Ttext 0xc0001500 -e main -o m32.bin   # 指定开始的地址
+</span></span></code></pre></div><h4 id=ELF文件>ELF文件</h4><p>ELF是Linux上的可执行文件，其中Entry point address相当于操作系统与文件的约定，操作系统加载这个可执行文件的时候，去这个地方作为入口点。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>[root@VM_80_251_centos ~]# readelf -e m32.bin 
+</span></span><span class=line><span class=cl>ELF Header:
+</span></span><span class=line><span class=cl>  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00 
+</span></span><span class=line><span class=cl>  Class:                             ELF64
+</span></span><span class=line><span class=cl>  Data:                              2&#39;s complement, little endian
+</span></span><span class=line><span class=cl>  Version:                           1 (current)
+</span></span><span class=line><span class=cl>  OS/ABI:                            UNIX - System V
+</span></span><span class=line><span class=cl>  ABI Version:                       0
+</span></span><span class=line><span class=cl>  Type:                              EXEC (Executable file)
+</span></span><span class=line><span class=cl>  Machine:                           Advanced Micro Devices X86-64
+</span></span><span class=line><span class=cl>  Version:                           0x1
+</span></span><span class=line><span class=cl>  Entry point address:               0xc0001500                 ## 起始地址 &lt;--
+</span></span><span class=line><span class=cl>  Start of program headers:          64 (bytes into file)
+</span></span><span class=line><span class=cl>  Start of section headers:          5792 (bytes into file)
+</span></span><span class=line><span class=cl>  Flags:                             0x0
+</span></span><span class=line><span class=cl>  Size of this header:               64 (bytes)
+</span></span><span class=line><span class=cl>  Size of program headers:           56 (bytes)
+</span></span><span class=line><span class=cl>  Number of program headers:         2
+</span></span><span class=line><span class=cl>  Size of section headers:           64 (bytes)
+</span></span><span class=line><span class=cl>  Number of section headers:         7
+</span></span><span class=line><span class=cl>  Section header string table index: 6
+</span></span></code></pre></div><h4 id=如何在没有操作系统的时候调试>如何在没有操作系统的时候调试</h4><p>我们前面写好了loader, 把他加载到磁盘中，然后根据启动的流程，启动mbr,调用loader等过程，我们写完了C语言程序，设定入口后，需要将入口的虚拟地址映射到一块可以访问的物理内存，将编译完的内核也加载到磁盘，然后从磁盘加载到内存，跳转到入口执行。</p></div><div class="chips post-tags"><a href=/tags/os/># Os</a><a href=/tags/kernel/># Kernel</a></div><nav class=post-neighbors aria-label=相邻文章><a href=/2019/03/28/make_a_linux_7/><small>上一篇</small>写一个操作系统_07 设计自己的页表</a><a href=/2019/03/30/file_handler_limit/><small>下一篇</small>文件描述符限制</a></nav><section class=comments aria-label=文章评论><script src=https://giscus.app/client.js data-repo=changan29/changan29.github.io data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category=Announcements data-category-id=DIC_kwDOC6bf5s4CSvAi data-mapping=url data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=preferred_color_scheme data-lang=zh-CN crossorigin=anonymous async></script></section></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>

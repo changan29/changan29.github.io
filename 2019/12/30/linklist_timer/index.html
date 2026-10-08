@@ -1,0 +1,103 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>一种定时器的实现 · changan's blog</title><meta name=description content="概述 一个Timer的实现需要具备以下几个行为:
+StartTimer(Interval, ExpiryAction) 注册一个时间间隔为 Interval 后执行 ExpiryAction 的定时器实例，其中，返回 TimerId 以区分在定时器系统中的其他定时器实例。
+StopTimer(TimerId) 根据 …"><link rel=canonical href=https://www.oneyearago.me/2019/12/30/linklist_timer/><meta property="og:title" content="一种定时器的实现"><meta property="og:url" content="https://www.oneyearago.me/2019/12/30/linklist_timer/"><meta property="og:description" content="概述 一个Timer的实现需要具备以下几个行为:
+StartTimer(Interval, ExpiryAction) 注册一个时间间隔为 Interval 后执行 ExpiryAction 的定时器实例，其中，返回 TimerId 以区分在定时器系统中的其他定时器实例。
+StopTimer(TimerId) 根据 …"><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><div class=post-meta><time datetime=2019-12-30>2019.12.30</time><span>2 分钟阅读</span></div><h1>一种定时器的实现</h1><div class=chips><a href=/categories/timer/>Timer</a></div></header><div class=prose><h3 id=概述>概述</h3><p>一个Timer的实现需要具备以下几个行为:</p><ul><li>StartTimer(Interval, ExpiryAction)</li></ul><p>注册一个时间间隔为 Interval 后执行 ExpiryAction 的定时器实例，其中，返回 TimerId 以区分在定时器系统中的其他定时器实例。</p><ul><li>StopTimer(TimerId)</li></ul><p>根据 TimerId 找到注册的定时器实例并执行 Stop 。</p><ul><li>PerTickBookkeeping()</li></ul><p>在一个 Tick 时间粒度内，定时器系统需要执行的动作，它最主要的行为，就是检查定时器系统中，是否有定时器实例已经到期。</p><p>具体的代码实现思路就是：在StartTimer的时候，把 当前时间 + Interval 作为key放入一个容器，然后在Loop的每次Tick里，从容器里面选出一个最小的key与当前时间比较，如果key小于当前时间，则这个key代表的timer就是expired，需要执行它的ExpiryAction(一般为回调)。</p><h3 id=链表的实现>链表的实现</h3><ul><li>精度是 1ms</li><li>最长时间是10min,延长时间可以增加 slot数量,slot时间的间隔是 1ms</li><li>通过继承Timer父类，在子类重写timeout实现 超时回调</li><li>每次都需要遍历超过时间的所有链表，时间复杂度为O(n)</li></ul><h3 id=执行方式>执行方式</h3><p>每次从上次执行的时间，遍历每个链表上挂的timer是不是到期，如果到期了，就执行对应的超时函数，并移除定时器，把这个环拉直看就可以了:<br><img src=https://201910-1251969284.cos.ap-shanghai.myqcloud.com/time_round_1.jpg alt=image></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>int TimerMgr::TimeRun()
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>	Tick();
+</span></span><span class=line><span class=cl>	int timeout_count = 0;
+</span></span><span class=line><span class=cl>	int pass = currTime - lastRunTime;
+</span></span><span class=line><span class=cl>	uint64_t time = lastRunTime + 1;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	for (int i = 0; i &lt; pass; i++)
+</span></span><span class=line><span class=cl>	{
+</span></span><span class=line><span class=cl>		int index = time % timeLen;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>		while(slot[index]-&gt;Size() &gt; 0)
+</span></span><span class=line><span class=cl>		{
+</span></span><span class=line><span class=cl>			TimerNode* node = slot[index]-&gt;Serve();
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>			TimerNodeMap::iterator it;
+</span></span><span class=line><span class=cl>			it = nodemap.find(node-&gt;t-&gt;getId());
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>			if (it != nodemap.end())
+</span></span><span class=line><span class=cl>			{
+</span></span><span class=line><span class=cl>				if (node == NULL)
+</span></span><span class=line><span class=cl>				{
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>					ERROR(&#34;node == NULL&#34;);
+</span></span><span class=line><span class=cl>					continue;
+</span></span><span class=line><span class=cl>				}
+</span></span><span class=line><span class=cl>				if (node-&gt;t == NULL)
+</span></span><span class=line><span class=cl>				{
+</span></span><span class=line><span class=cl>					ERROR(&#34;timer == NULL&#34;);
+</span></span><span class=line><span class=cl>					continue;
+</span></span><span class=line><span class=cl>				}
+</span></span><span class=line><span class=cl>				DEBUG(&#34;time out %d&#34;, index);
+</span></span><span class=line><span class=cl>				node-&gt;t-&gt;Timeout();
+</span></span><span class=line><span class=cl>				nodemap.erase(node-&gt;t-&gt;getId());
+</span></span><span class=line><span class=cl>				timeout_count++;
+</span></span><span class=line><span class=cl>			}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>			TimerPool.Free(reinterpret_cast&lt;char*&gt;(node-&gt;t));
+</span></span><span class=line><span class=cl>			NodePool.Free(reinterpret_cast&lt;char*&gt;(node));
+</span></span><span class=line><span class=cl>		}
+</span></span><span class=line><span class=cl>		time++;
+</span></span><span class=line><span class=cl>	}
+</span></span><span class=line><span class=cl>	lastRunTime = currTime;
+</span></span><span class=line><span class=cl>	return timeout_count;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><h3 id=example>example</h3><p>子类:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>template&lt;class T&gt;
+</span></span><span class=line><span class=cl>class RobotTimer:public Timer
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>        typedef void (T::*Method)();
+</span></span><span class=line><span class=cl>        public:
+</span></span><span class=line><span class=cl>        RobotTimer(T * p, Method m):method(m),pRobot(p){}
+</span></span><span class=line><span class=cl>        virtual void Timeout();
+</span></span><span class=line><span class=cl>        private:
+</span></span><span class=line><span class=cl>        Method method;
+</span></span><span class=line><span class=cl>        T* pRobot;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>};
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>template&lt;class T&gt;
+</span></span><span class=line><span class=cl>void RobotTimer&lt;T&gt;::Timeout()
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    (pRobot-&gt;*method)();
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>class BaseRobot
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>public:
+</span></span><span class=line><span class=cl>    BaseRobot()
+</span></span><span class=line><span class=cl>    {
+</span></span><span class=line><span class=cl>        m_id = 0;
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>    void RobotWait(int millseconds);
+</span></span><span class=line><span class=cl>    void Resume()
+</span></span><span class=line><span class=cl>    {
+</span></span><span class=line><span class=cl>        cout&lt;&lt; &#34;BaseRobot::Resume&#34; &lt;&lt; endl;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        TimerMgr::GetInst()-&gt;RemoveTimer(m_id);
+</span></span><span class=line><span class=cl>        cout &lt;&lt; &#34;RemoveTimer&#34;&lt;&lt; m_id &lt;&lt; endl;
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>    uint32_t m_id;
+</span></span><span class=line><span class=cl>};
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>void BaseRobot::RobotWait(int millseconds)
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    RobotTimer&lt;BaseRobot&gt;* t =  reinterpret_cast&lt;RobotTimer&lt;BaseRobot&gt;*&gt;(TimerMgr::GetInst()-&gt;TimerPool.Alloc());
+</span></span><span class=line><span class=cl>    new (t) RobotTimer&lt;BaseRobot&gt;(this, &amp;BaseRobot::Resume);
+</span></span><span class=line><span class=cl>    t-&gt;SetTimer(millseconds);
+</span></span><span class=line><span class=cl>    uint32_t tid = t-&gt;getId();
+</span></span><span class=line><span class=cl>    TimerMgr::GetInst()-&gt;Insert(t);
+</span></span><span class=line><span class=cl>    m_id = tid;
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><p>等待一段时间:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>...
+</span></span><span class=line><span class=cl>unsigned wait = NumberHelper::ARandRange(6, 60000);
+</span></span><span class=line><span class=cl>BaseRobot* robot = new BaseRobot;
+</span></span><span class=line><span class=cl>robot-&gt;RobotWait(1234);
+</span></span><span class=line><span class=cl>...
+</span></span></code></pre></div><h3 id=code>code</h3><ul><li><a href=https://github.com/changan29/codeLib/tree/master/timer>https://github.com/changan29/codeLib/tree/master/timer</a></li></ul></div><div class="chips post-tags"><a href=/tags/timer/># Timer</a></div><nav class=post-neighbors aria-label=相邻文章><a href=/2019/12/11/socket_api/><small>上一篇</small>tcp socket api</a><a href=/2020/02/04/Thread-safe/><small>下一篇</small>程序员的自我修养-线程安全</a></nav><section class=comments aria-label=文章评论><script src=https://giscus.app/client.js data-repo=changan29/changan29.github.io data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category=Announcements data-category-id=DIC_kwDOC6bf5s4CSvAi data-mapping=url data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=preferred_color_scheme data-lang=zh-CN crossorigin=anonymous async></script></section></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>

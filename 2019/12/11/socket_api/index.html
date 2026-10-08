@@ -1,0 +1,91 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>tcp socket api · changan's blog</title><meta name=description content="socket是网络协议栈的抽象 socket api在tcp中的体现 TCP三次握手后有个accept队列，进到这个队列才能从Listen变成accept，默认backlog 值是50。
+如上图所示，这里有两个队列：syns queue(半连接队列）；accept queue（全连接队列）
+三次握手中，在第一步 …"><link rel=canonical href=https://www.oneyearago.me/2019/12/11/socket_api/><meta property="og:title" content="tcp socket api"><meta property="og:url" content="https://www.oneyearago.me/2019/12/11/socket_api/"><meta property="og:description" content="socket是网络协议栈的抽象 socket api在tcp中的体现 TCP三次握手后有个accept队列，进到这个队列才能从Listen变成accept，默认backlog 值是50。
+如上图所示，这里有两个队列：syns queue(半连接队列）；accept queue（全连接队列）
+三次握手中，在第一步 …"><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><div class=post-meta><time datetime=2019-12-11>2019.12.11</time><span>1 分钟阅读</span></div><h1>tcp socket api</h1><div class=chips><a href=/categories/socket/>Socket</a></div></header><div class=prose><h3 id=socket是网络协议栈的抽象>socket是网络协议栈的抽象</h3><h3 id=socket-api在tcp中的体现>socket api在tcp中的体现</h3><p><img src=https://201911-1251969284.cos.ap-shanghai.myqcloud.com/tcp-sync-queue-and-accept-queue.jpg alt=image></p><p>TCP三次握手后有个accept队列，进到这个队列才能从Listen变成accept，默认backlog 值是50。</p><p>如上图所示，这里有两个队列：syns queue(半连接队列）；accept queue（全连接队列）<br>三次握手中，在第一步server收到client的syn后，把相关信息放到半连接队列中，同时回复syn+ack给client，第三步的时候server收到client的ack，如果这时全连接队列没满，那么从半连接队列拿出相关信息放入到全连接队列中。</p><p>当接收到3次握手中的ACK分组时，将它们移动到accept队列。 显而易见，accept系统调用只是简单地从完成队列中取出连接。 在这种情况下，listen syscall的backlog参数表示完成队列的大小。</p><h3 id=code>code</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>/*
+</span></span><span class=line><span class=cl>tcpechosvr.c
+</span></span><span class=line><span class=cl>*/
+</span></span><span class=line><span class=cl>#include &lt;stdio.h&gt;
+</span></span><span class=line><span class=cl>#include &lt;stdlib.h&gt;
+</span></span><span class=line><span class=cl>#include &lt;sys/types.h&gt;
+</span></span><span class=line><span class=cl>#include &lt;sys/socket.h&gt;
+</span></span><span class=line><span class=cl>#include &lt;netinet/in.h&gt;
+</span></span><span class=line><span class=cl>#include &lt;errno.h&gt;
+</span></span><span class=line><span class=cl>#include &lt;string.h&gt;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>#define SRVIP &#34;127.0.0.1&#34;
+</span></span><span class=line><span class=cl>#define SRVPORT 10005
+</span></span><span class=line><span class=cl>#define MAX_NUM 1024
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>int main()
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>   int serverSock = socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
+</span></span><span class=line><span class=cl>    if(serverSock &lt; 0)
+</span></span><span class=line><span class=cl>    {
+</span></span><span class=line><span class=cl>        printf(&#34;socket creation failed\n&#34;);
+</span></span><span class=line><span class=cl>        exit(-1);
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>    printf(&#34;socket create successfully.\n&#34;);
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    struct sockaddr_in serverAddr;
+</span></span><span class=line><span class=cl>    memset(&amp;serverAddr,0,sizeof(serverAddr));
+</span></span><span class=line><span class=cl>    serverAddr.sin_family=AF_INET;
+</span></span><span class=line><span class=cl>    serverAddr.sin_port = htons((u_short)SRVPORT);
+</span></span><span class=line><span class=cl>    serverAddr.sin_addr.s_addr = inet_addr(SRVIP);
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    if(bind(serverSock, (struct sockaddr*)&amp;serverAddr, sizeof(struct sockaddr))==-1)
+</span></span><span class=line><span class=cl>    {
+</span></span><span class=line><span class=cl>        printf(&#34;Bind error.IP[%s], Port[%d]\n&#34;, SRVIP, serverAddr.sin_port);
+</span></span><span class=line><span class=cl>        exit(-1);
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>    printf(&#34;Bind successful.IP[%s], Port[%d]\n&#34;, SRVIP, serverAddr.sin_port);
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        /*  把sock链接进入监听哈希表listening_hash &amp; 创建半连接队列的实例，初始化全连接队列 */
+</span></span><span class=line><span class=cl>    if(listen(serverSock,10)==-1)
+</span></span><span class=line><span class=cl>    {
+</span></span><span class=line><span class=cl>        printf(&#34;Listen error!\n&#34;);
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>    printf(&#34;Listening on port[%d]\n&#34;, serverAddr.sin_port);
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    char recvBuf[MAX_NUM]={0};
+</span></span><span class=line><span class=cl>    while(1)
+</span></span><span class=line><span class=cl>    {
+</span></span><span class=line><span class=cl>        struct sockaddr clientAddr;
+</span></span><span class=line><span class=cl>        int size = sizeof(clientAddr);
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        /* 从全连接队列中取  */
+</span></span><span class=line><span class=cl>        int clientSock = accept(serverSock, &amp;clientAddr, &amp;size);
+</span></span><span class=line><span class=cl>        printf(&#34;***SYS***    New client touched.\n&#34;);
+</span></span><span class=line><span class=cl>        while(1)
+</span></span><span class=line><span class=cl>        {
+</span></span><span class=line><span class=cl>            //一直接收客户端socket的send操作
+</span></span><span class=line><span class=cl>            if(recv(clientSock, recvBuf, MAX_NUM, 0) == -1)
+</span></span><span class=line><span class=cl>            {
+</span></span><span class=line><span class=cl>                printf(&#34;read error.\n&#34;);
+</span></span><span class=line><span class=cl>            }
+</span></span><span class=line><span class=cl>            else
+</span></span><span class=line><span class=cl>            {
+</span></span><span class=line><span class=cl>                printf(&#34;receiv from client:%s\n&#34;,recvBuf);
+</span></span><span class=line><span class=cl>            }
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>            // 向客户端发送套接字
+</span></span><span class=line><span class=cl>            if(send(clientSock, recvBuf , sizeof(recvBuf), MSG_NOSIGNAL) == -1)
+</span></span><span class=line><span class=cl>            {
+</span></span><span class=line><span class=cl>                printf(&#34;Send error!\n&#34;);
+</span></span><span class=line><span class=cl>            }
+</span></span><span class=line><span class=cl>            else
+</span></span><span class=line><span class=cl>            {
+</span></span><span class=line><span class=cl>                printf(&#34;Send to client:%s\n&#34;, recvBuf);
+</span></span><span class=line><span class=cl>            }
+</span></span><span class=line><span class=cl>            if( strcmp(recvBuf, &#34;bye&#34;) == 0)
+</span></span><span class=line><span class=cl>            {
+</span></span><span class=line><span class=cl>                break;
+</span></span><span class=line><span class=cl>            }
+</span></span><span class=line><span class=cl>            memset(recvBuf, 0, sizeof(recvBuf));
+</span></span><span class=line><span class=cl>        }
+</span></span><span class=line><span class=cl>        close(clientSock);
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>    close(serverSock);
+</span></span><span class=line><span class=cl>    return 0;
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><h3 id=REF>REF</h3><ul><li><a href=http://jm.taobao.org/2017/05/25/525-1/>关于TCP 半连接队列和全连接队列</a></li><li><a href=http://veithen.io/2014/01/01/how-tcp-backlog-works-in-linux.html>How TCP backlog works in Linux</a></li></ul></div><div class="chips post-tags"><a href=/tags/socket/># Socket</a></div><nav class=post-neighbors aria-label=相邻文章><a href=/2019/11/28/Understanding_TCPIP_Network_Stack/><small>上一篇</small>Understanding TCPIP Network Stack</a><a href=/2019/12/30/linklist_timer/><small>下一篇</small>一种定时器的实现</a></nav><section class=comments aria-label=文章评论><script src=https://giscus.app/client.js data-repo=changan29/changan29.github.io data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category=Announcements data-category-id=DIC_kwDOC6bf5s4CSvAi data-mapping=url data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=preferred_color_scheme data-lang=zh-CN crossorigin=anonymous async></script></section></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>

@@ -1,0 +1,168 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>进程通信 & PIPE · changan's blog</title><meta name=description content="历史 UNIX两大贡献者贝尔实验室和BSD，在进程之间通信侧重不同，前者基于内核对进程之间的通信手段进行了改进，形成了“System V IPC”，而后者则是基于网络形成了套接字。
+而POSIX则是IEEE制定的标准，目的是为运行在不同操作系统上的软件提供统一的接口，实现者则是不同的操作系统内核开发人员。
+System …"><link rel=canonical href=https://www.oneyearago.me/2019/10/24/IPC_and_pipe/><meta property="og:title" content="进程通信 & PIPE"><meta property="og:url" content="https://www.oneyearago.me/2019/10/24/IPC_and_pipe/"><meta property="og:description" content="历史 UNIX两大贡献者贝尔实验室和BSD，在进程之间通信侧重不同，前者基于内核对进程之间的通信手段进行了改进，形成了“System V IPC”，而后者则是基于网络形成了套接字。
+而POSIX则是IEEE制定的标准，目的是为运行在不同操作系统上的软件提供统一的接口，实现者则是不同的操作系统内核开发人员。
+System …"><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><div class=post-meta><time datetime=2019-10-24>2019.10.24</time><span>2 分钟阅读</span></div><h1>进程通信 & PIPE</h1><div class=chips><a href=/categories/ipc/>IPC</a><a href=/categories/pipe/>Pipe</a></div></header><details class=toc><summary>本文目录</summary><nav id=TableOfContents><ul><li><ul><li><a href=#历史>历史</a></li><li><a href=#管道>管道</a></li></ul></li></ul></nav></details><div class=prose><h3 id=历史>历史</h3><p>UNIX两大贡献者贝尔实验室和BSD，在进程之间通信侧重不同，前者基于内核对进程之间的通信手段进行了改进，形成了“System V IPC”，而后者则是基于网络形成了套接字。</p><p>而POSIX则是IEEE制定的标准，目的是为运行在不同操作系统上的软件提供统一的接口，实现者则是不同的操作系统内核开发人员。</p><p>System V 以及POSIX 对信号量、共享内存、消息队列等进程之间共享方式提供了自己的解决方案。</p><p>在观察使用进程间通信手段后，会发现在多线程中使用的基本是POSIX标准提供的接口函数，而多进程则是基于System V。</p><h3 id=管道>管道</h3><p>pipe和fifo用的不多了，让我们从Nginx那里学一个 全双工的管道: socketpair<br><img src=https://201910-1251969284.cos.ap-shanghai.myqcloud.com/socket_pair_pipe.bmp alt=image></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>#include &lt;iostream&gt;
+</span></span><span class=line><span class=cl>#include &lt;unistd.h&gt;
+</span></span><span class=line><span class=cl>#include &lt;sys/uio.h&gt;
+</span></span><span class=line><span class=cl>#include &lt;sys/socket.h&gt;
+</span></span><span class=line><span class=cl>#include &lt;stdlib.h&gt;
+</span></span><span class=line><span class=cl>#include &lt;stdio.h&gt;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>ssize_t
+</span></span><span class=line><span class=cl>sock_fd_write(int sock, void *buf, ssize_t buflen, int fd)
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>  ssize_t     size;
+</span></span><span class=line><span class=cl>  struct msghdr   msg;
+</span></span><span class=line><span class=cl>  struct iovec    iov;
+</span></span><span class=line><span class=cl>  union {
+</span></span><span class=line><span class=cl>    struct cmsghdr  cmsghdr;
+</span></span><span class=line><span class=cl>    char        control[CMSG_SPACE(sizeof (int))];
+</span></span><span class=line><span class=cl>  } cmsgu;
+</span></span><span class=line><span class=cl>  struct cmsghdr  *cmsg;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  iov.iov_base = buf;
+</span></span><span class=line><span class=cl>  iov.iov_len = buflen;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  msg.msg_name = NULL;
+</span></span><span class=line><span class=cl>  msg.msg_namelen = 0;
+</span></span><span class=line><span class=cl>  msg.msg_iov = &amp;iov;
+</span></span><span class=line><span class=cl>  msg.msg_iovlen = 1;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  if (fd != -1) {
+</span></span><span class=line><span class=cl>    msg.msg_control = cmsgu.control;
+</span></span><span class=line><span class=cl>    msg.msg_controllen = sizeof(cmsgu.control);
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    cmsg = CMSG_FIRSTHDR(&amp;msg);
+</span></span><span class=line><span class=cl>    cmsg-&gt;cmsg_len = CMSG_LEN(sizeof (int));
+</span></span><span class=line><span class=cl>    cmsg-&gt;cmsg_level = SOL_SOCKET;
+</span></span><span class=line><span class=cl>    cmsg-&gt;cmsg_type = SCM_RIGHTS;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    printf (&#34;passing fd %d\n&#34;, fd);
+</span></span><span class=line><span class=cl>    *((int *) CMSG_DATA(cmsg)) = fd;
+</span></span><span class=line><span class=cl>  } else {
+</span></span><span class=line><span class=cl>    msg.msg_control = NULL;
+</span></span><span class=line><span class=cl>    msg.msg_controllen = 0;
+</span></span><span class=line><span class=cl>    printf (&#34;not passing fd\n&#34;);
+</span></span><span class=line><span class=cl>  }
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  size = sendmsg(sock, &amp;msg, 0);
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  if (size &lt; 0)
+</span></span><span class=line><span class=cl>    perror (&#34;sendmsg&#34;);
+</span></span><span class=line><span class=cl>  return size;
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>ssize_t
+</span></span><span class=line><span class=cl>sock_fd_read(int sock, void *buf, ssize_t bufsize, int *fd)
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>  ssize_t     size;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  if (fd) {
+</span></span><span class=line><span class=cl>    struct msghdr   msg;
+</span></span><span class=line><span class=cl>    struct iovec    iov;
+</span></span><span class=line><span class=cl>    union {
+</span></span><span class=line><span class=cl>      struct cmsghdr  cmsghdr;
+</span></span><span class=line><span class=cl>      char        control[CMSG_SPACE(sizeof (int))];
+</span></span><span class=line><span class=cl>    } cmsgu;
+</span></span><span class=line><span class=cl>    struct cmsghdr  *cmsg;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    iov.iov_base = buf;
+</span></span><span class=line><span class=cl>    iov.iov_len = bufsize;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    msg.msg_name = NULL;
+</span></span><span class=line><span class=cl>    msg.msg_namelen = 0;
+</span></span><span class=line><span class=cl>    msg.msg_iov = &amp;iov;
+</span></span><span class=line><span class=cl>    msg.msg_iovlen = 1;
+</span></span><span class=line><span class=cl>    msg.msg_control = cmsgu.control;
+</span></span><span class=line><span class=cl>    msg.msg_controllen = sizeof(cmsgu.control);
+</span></span><span class=line><span class=cl>    size = recvmsg (sock, &amp;msg, 0);
+</span></span><span class=line><span class=cl>    if (size &lt; 0) {
+</span></span><span class=line><span class=cl>      perror (&#34;recvmsg&#34;);
+</span></span><span class=line><span class=cl>      exit(1);
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>    cmsg = CMSG_FIRSTHDR(&amp;msg);
+</span></span><span class=line><span class=cl>    if (cmsg &amp;&amp; cmsg-&gt;cmsg_len == CMSG_LEN(sizeof(int))) {
+</span></span><span class=line><span class=cl>      if (cmsg-&gt;cmsg_level != SOL_SOCKET) {
+</span></span><span class=line><span class=cl>        fprintf (stderr, &#34;invalid cmsg_level %d\n&#34;,
+</span></span><span class=line><span class=cl>                 cmsg-&gt;cmsg_level);
+</span></span><span class=line><span class=cl>        exit(1);
+</span></span><span class=line><span class=cl>      }
+</span></span><span class=line><span class=cl>      if (cmsg-&gt;cmsg_type != SCM_RIGHTS) {
+</span></span><span class=line><span class=cl>        fprintf (stderr, &#34;invalid cmsg_type %d\n&#34;,
+</span></span><span class=line><span class=cl>                 cmsg-&gt;cmsg_type);
+</span></span><span class=line><span class=cl>        exit(1);
+</span></span><span class=line><span class=cl>      }
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>      *fd = *((int *) CMSG_DATA(cmsg));
+</span></span><span class=line><span class=cl>      printf (&#34;received fd %d\n&#34;, *fd);
+</span></span><span class=line><span class=cl>    } else
+</span></span><span class=line><span class=cl>      *fd = -1;
+</span></span><span class=line><span class=cl>  } else {
+</span></span><span class=line><span class=cl>    size = read (sock, buf, bufsize);
+</span></span><span class=line><span class=cl>    if (size &lt; 0) {
+</span></span><span class=line><span class=cl>      perror(&#34;read&#34;);
+</span></span><span class=line><span class=cl>      exit(1);
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>  }
+</span></span><span class=line><span class=cl>  return size;
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>void
+</span></span><span class=line><span class=cl>child(int sock)
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>  int fd;
+</span></span><span class=line><span class=cl>  char    buf[16];
+</span></span><span class=line><span class=cl>  ssize_t size;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  sleep(1);
+</span></span><span class=line><span class=cl>  for (;;) {
+</span></span><span class=line><span class=cl>    size = sock_fd_read(sock, buf, sizeof(buf), &amp;fd);
+</span></span><span class=line><span class=cl>    if (size &lt;= 0)
+</span></span><span class=line><span class=cl>      break;
+</span></span><span class=line><span class=cl>    printf (&#34;read %d\n&#34;, (int) size);
+</span></span><span class=line><span class=cl>    if (fd != -1) {
+</span></span><span class=line><span class=cl>      write(fd, &#34;hello, world\n&#34;, 13);
+</span></span><span class=line><span class=cl>      close(fd);
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>  }
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>void
+</span></span><span class=line><span class=cl>parent(int sock)
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>  ssize_t size;
+</span></span><span class=line><span class=cl>  int i;
+</span></span><span class=line><span class=cl>  int fd;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  fd = 1;
+</span></span><span class=line><span class=cl>  size = sock_fd_write(sock, (void *) &#34;1&#34;, 1, 1);
+</span></span><span class=line><span class=cl>  printf (&#34;wrote %d\n&#34;, (int) size);
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>int
+</span></span><span class=line><span class=cl>main(int argc, char **argv)
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>  int sv[2];
+</span></span><span class=line><span class=cl>  int pid;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  if (socketpair(AF_UNIX, SOCK_DGRAM, 0, sv) &lt; 0) {
+</span></span><span class=line><span class=cl>    perror(&#34;socketpair&#34;);
+</span></span><span class=line><span class=cl>    exit(1);
+</span></span><span class=line><span class=cl>  }
+</span></span><span class=line><span class=cl>  switch ((pid = fork())) {
+</span></span><span class=line><span class=cl>  case 0:
+</span></span><span class=line><span class=cl>    close(sv[0]);
+</span></span><span class=line><span class=cl>    child(sv[1]);
+</span></span><span class=line><span class=cl>    break;
+</span></span><span class=line><span class=cl>  case -1:
+</span></span><span class=line><span class=cl>    perror(&#34;fork&#34;);
+</span></span><span class=line><span class=cl>    exit(1);
+</span></span><span class=line><span class=cl>  default:
+</span></span><span class=line><span class=cl>    close(sv[1]);
+</span></span><span class=line><span class=cl>    parent(sv[0]);
+</span></span><span class=line><span class=cl>    break;
+</span></span><span class=line><span class=cl>  }
+</span></span><span class=line><span class=cl>  return 0;
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div></div><div class="chips post-tags"><a href=/tags/ipc/># IPC</a><a href=/tags/pipe/># Pipe</a></div><nav class=post-neighbors aria-label=相邻文章><a href=/2019/08/18/Mutex/><small>上一篇</small>临界区、信号量、互斥锁、自旋锁与原子操作</a><a href=/2019/10/24/linux_timer/><small>下一篇</small>linux定时器时间轮算法</a></nav><section class=comments aria-label=文章评论><script src=https://giscus.app/client.js data-repo=changan29/changan29.github.io data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category=Announcements data-category-id=DIC_kwDOC6bf5s4CSvAi data-mapping=url data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=preferred_color_scheme data-lang=zh-CN crossorigin=anonymous async></script></section></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>

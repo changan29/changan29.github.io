@@ -1,0 +1,122 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>protobuf 序列化到文件及反序列化 · changan's blog</title><meta name=description content="项目应用 游戏中，将对局的数据保留下来，用于对局回顾及debug等用途，由于协议采用PB，故以二进制的pb格式写入文件，在使用该对局内容的时候，按照格式反序列化出来用于播放对局、压测数据构造等。
+涉及的部分： pvp服务器，产生对局数据，然后通过路由发送到recordsvr，一个专门写文件的服务器，写完文件后，使用时对 …"><link rel=canonical href=https://www.oneyearago.me/2020/01/22/protobuf_Serialize_file/><meta property="og:title" content="protobuf 序列化到文件及反序列化"><meta property="og:url" content="https://www.oneyearago.me/2020/01/22/protobuf_Serialize_file/"><meta property="og:description" content="项目应用 游戏中，将对局的数据保留下来，用于对局回顾及debug等用途，由于协议采用PB，故以二进制的pb格式写入文件，在使用该对局内容的时候，按照格式反序列化出来用于播放对局、压测数据构造等。
+涉及的部分： pvp服务器，产生对局数据，然后通过路由发送到recordsvr，一个专门写文件的服务器，写完文件后，使用时对 …"><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><h1>protobuf 序列化到文件及反序列化</h1></header><div class=prose><h3 id=项目应用>项目应用</h3><p>游戏中，将对局的数据保留下来，用于对局回顾及debug等用途，由于协议采用PB，故以二进制的pb格式写入文件，在使用该对局内容的时候，按照格式反序列化出来用于播放对局、压测数据构造等。</p><p>涉及的部分： pvp服务器，产生对局数据，然后通过路由发送到recordsvr，一个专门写文件的服务器，写完文件后，使用时对文件解析。</p><p>文件的格式: head-data-head-data….</p><p>相关的协议如下：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>message RecordReq
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    optional uint64 game_id = 1;
+</span></span><span class=line><span class=cl>    optional string record_name = 2;
+</span></span><span class=line><span class=cl>    optional bool finish = 3;
+</span></span><span class=line><span class=cl>    optional RecordPkg Pkg = 4;
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>message RecordPkg
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    optional uint32 time_offfect = 1;
+</span></span><span class=line><span class=cl>    optional uint32 cmd = 2;
+</span></span><span class=line><span class=cl>    optional bytes fragment_data = 3;
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>message RecordHead
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    required fixed32 cmd = 1;  
+</span></span><span class=line><span class=cl>    required fixed32 len = 2;
+</span></span><span class=line><span class=cl>    required fixed32 time_offect = 3;
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><h3 id=pvp对局服务器，产生数据>pvp对局服务器，产生数据</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>void CPvPGame::SendRecord(uint16_t uiCmd, const Message* msg, bool bFinish/* = false*/)
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    unsigned int uiNow = CSingletonPvPDateTime::instance()-&gt;GetSec();
+</span></span><span class=line><span class=cl>    uint32_t uiTimeOffset = uiNow - m_battleInfo.battle_base.battle_start_time;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    RecordReq msgReq;
+</span></span><span class=line><span class=cl>    RecordPkg* pPkg = msgReq.mutable_pkg();
+</span></span><span class=line><span class=cl>    if (NULL == pPkg)
+</span></span><span class=line><span class=cl>    {
+</span></span><span class=line><span class=cl>        return;
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>    msgReq.set_game_id(GetGameId());
+</span></span><span class=line><span class=cl>    msgReq.set_record_name(GetRecordName());
+</span></span><span class=line><span class=cl>    msgReq.set_finish(bFinish);
+</span></span><span class=line><span class=cl>    pPkg-&gt;set_time_offfect(uiTimeOffset);
+</span></span><span class=line><span class=cl>    pPkg-&gt;set_cmd(uiCmd);
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    if (GAME_RECORD_START == uiCmd || GAME_RECORD_END == uiCmd)
+</span></span><span class=line><span class=cl>    {
+</span></span><span class=line><span class=cl>        GameDataInfo gameData;
+</span></span><span class=line><span class=cl>        FillGameInfo(&amp;gameData);
+</span></span><span class=line><span class=cl>        //修正starttime
+</span></span><span class=line><span class=cl>        gameData.mutable_game_init_info()-&gt;set_start_time(m_uiStartTime);
+</span></span><span class=line><span class=cl>        gameData.SerializeToString(pPkg-&gt;mutable_fragment_data());
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>    else if (NULL != msg)
+</span></span><span class=line><span class=cl>    {
+</span></span><span class=line><span class=cl>        msg-&gt;SerializeToString(pPkg-&gt;mutable_fragment_data());
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>    else
+</span></span><span class=line><span class=cl>    {
+</span></span><span class=line><span class=cl>        return;
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    int iRet = 0;
+</span></span><span class=line><span class=cl>    iRet = CSingletonPvPProcessor::instance()-&gt;
+</span></span><span class=line><span class=cl>        SendMsgToAllServerByIdc(GetOwer(), RecordSvrCmd::RECORD_REQ, msgReq, SERVER_FAMILY_RECORDSVR);
+</span></span></code></pre></div><h3 id=录像服务器，专门写文件>录像服务器，专门写文件</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>std::stringstream sstrNameTmp;
+</span></span><span class=line><span class=cl>sstrNameTmp &lt;&lt; szRecordDir &lt;&lt; &#34;/tmp_&#34; &lt;&lt; msgReq.game_id() &lt;&lt; &#34;_tmp&#34;;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>RecordHead rHead;
+</span></span><span class=line><span class=cl>rHead.set_cmd(msgReq.pkg().cmd());
+</span></span><span class=line><span class=cl>rHead.set_len(msgReq.pkg().fragment_data().size());
+</span></span><span class=line><span class=cl>rHead.set_time_offect(msgReq.pkg().time_offfect());
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>//std::fstream output(sstrNameTmp.str().c_str(), std::ios::out | std::ios::binary | std::ios::app);
+</span></span><span class=line><span class=cl>std::fstream&amp; output = OpenFile(sstrNameTmp.str().c_str());
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>std::string strout;
+</span></span><span class=line><span class=cl>rHead.SerializeToString(&amp;strout);
+</span></span><span class=line><span class=cl>output &lt;&lt; strout;
+</span></span><span class=line><span class=cl>if (msgReq.pkg().has_fragment_data())
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    output &lt;&lt; msgReq.pkg().fragment_data();
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>//output.close();
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>LOG_DEBUG(0, 0, &#34;write record|%lu|%s&#34;, msgReq.game_id(), sstrNameTmp.str().c_str());
+</span></span><span class=line><span class=cl>LOG_DEBUG(0, 0, &#34;write record|%lu|%d|%s&#34;, msgReq.game_id(), rHead.ByteSize(), rHead.ShortDebugString().c_str());
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>if (msgReq.finish())
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    CloseFile(sstrNameTmp.str().c_str());
+</span></span><span class=line><span class=cl>    rename(sstrNameTmp.str().c_str(), strLogName.c_str());
+</span></span><span class=line><span class=cl>    LOG_DEBUG(0, 0, &#34;rename|%lu|%s|%s&#34;, msgReq.game_id(), sstrNameTmp.str().c_str(), strLogName.c_str());
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><h3 id=解析对局数据，用于回放或性能测试>解析对局数据，用于回放或性能测试</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>  bool Robot::ReadData()
+</span></span><span class=line><span class=cl>  {
+</span></span><span class=line><span class=cl>m_IsInitGameDataInfo = true;
+</span></span><span class=line><span class=cl>      char* writebuff=RunTime::GetInst()-&gt;getwritebuff();
+</span></span><span class=line><span class=cl>      long filelength=RunTime::GetInst()-&gt;getfilelength();
+</span></span><span class=line><span class=cl>      DEBUG(&#34;enter ReadData&#34;);
+</span></span><span class=line><span class=cl>      DEBUG(&#34;writebuff len:%d,length:%ld&#34;,(int)strlen(writebuff),filelength);
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>/*
+</span></span><span class=line><span class=cl>message RecordHead
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>	required fixed32 cmd = 1;  //cmd 为0的时候，包体为GameDataInfo结构
+</span></span><span class=line><span class=cl>	required fixed32 len = 2;
+</span></span><span class=line><span class=cl>	required fixed32 time_offect = 3;
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>*/
+</span></span><span class=line><span class=cl>// 先 算一个包头
+</span></span><span class=line><span class=cl>RecordHead recHead;
+</span></span><span class=line><span class=cl>recHead.set_cmd(869);			// GAME_RECORD_START
+</span></span><span class=line><span class=cl>recHead.set_len(1024);			//  fixed32  any 32 bit
+</span></span><span class=line><span class=cl>recHead.set_time_offect(1024);	// fixed32; any 32 bit
+</span></span><span class=line><span class=cl>std::string strout;
+</span></span><span class=line><span class=cl>recHead.SerializeToString(&amp;strout);
+</span></span><span class=line><span class=cl>int HeadSize = strout.size();
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>recHead.ParseFromArray(writebuff, HeadSize );
+</span></span><span class=line><span class=cl>DEBUG(&#34;RecordHead: %s&#34;, recHead.ShortDebugString().c_str());
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>m_gameDataInfo.ParseFromArray(writebuff + HeadSize, recHead.len());
+</span></span><span class=line><span class=cl>DEBUG(&#34;m_gameDataInfo: %s&#34;, m_gameDataInfo.ShortDebugString().c_str());
+</span></span></code></pre></div></div></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>

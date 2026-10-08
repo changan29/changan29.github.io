@@ -1,0 +1,184 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>shadowsocks-src config&amp;reflect · changan's blog</title><meta name=description content='shadowsocks.0 维护配置 通过 shadowsocks源码学习golang
+json配置 反射更新 逃逸分析 类型判断 类型与反射底层 package main import "encoding/json" import "fmt" import "time" …'><link rel=canonical href=https://www.oneyearago.me/2020/03/02/shadowsocks_json_reflect_0/><meta property="og:title" content="shadowsocks-src config&amp;reflect"><meta property="og:url" content="https://www.oneyearago.me/2020/03/02/shadowsocks_json_reflect_0/"><meta property="og:description" content='shadowsocks.0 维护配置 通过 shadowsocks源码学习golang
+json配置 反射更新 逃逸分析 类型判断 类型与反射底层 package main import "encoding/json" import "fmt" import "time" …'><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><h1>shadowsocks-src config&amp;reflect</h1></header><div class=prose><h3 id=shadowsocks-0-维护配置>shadowsocks.0 维护配置</h3><p>通过 shadowsocks源码学习golang</p><ul><li>json配置</li><li>反射更新</li><li>逃逸分析</li><li>类型判断</li><li><a href=https://draveness.me/golang/docs/part2-foundation/ch04-basic/golang-interface/>类型与反射底层</a></li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>package main
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>import &#34;encoding/json&#34;
+</span></span><span class=line><span class=cl>import &#34;fmt&#34;
+</span></span><span class=line><span class=cl>import &#34;time&#34;
+</span></span><span class=line><span class=cl>import &#34;os&#34;
+</span></span><span class=line><span class=cl>import &#34;flag&#34;
+</span></span><span class=line><span class=cl>import &#34;reflect&#34;
+</span></span><span class=line><span class=cl>import &#34;io/ioutil&#34;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>var readTimeout time.Duration
+</span></span><span class=line><span class=cl>var configFile string
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>type Config struct {
+</span></span><span class=line><span class=cl>	Server       interface{} `json:&#34;server&#34;`
+</span></span><span class=line><span class=cl>	ServerPort   int         `json:&#34;server_port&#34;`
+</span></span><span class=line><span class=cl>	LocalPort    int         `json:&#34;local_port&#34;`
+</span></span><span class=line><span class=cl>	LocalAddress string      `json:&#34;local_address&#34;`
+</span></span><span class=line><span class=cl>	Password     string      `json:&#34;password&#34;`
+</span></span><span class=line><span class=cl>	Method       string      `json:&#34;method&#34;` // encryption method
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	// following options are only used by server
+</span></span><span class=line><span class=cl>	PortPassword map[string]string `json:&#34;port_password&#34;`
+</span></span><span class=line><span class=cl>	Timeout      int               `json:&#34;timeout&#34;`
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	// following options are only used by client
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	// The order of servers in the client config is significant, so use array
+</span></span><span class=line><span class=cl>	// instead of map to preserve the order.
+</span></span><span class=line><span class=cl>	ServerPassword [][]string `json:&#34;server_password&#34;`
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>func ParseConfig(path string) (config *Config, err error) {
+</span></span><span class=line><span class=cl>	file, err := os.Open(path) // For read access.
+</span></span><span class=line><span class=cl>	if err != nil {
+</span></span><span class=line><span class=cl>		return
+</span></span><span class=line><span class=cl>	}
+</span></span><span class=line><span class=cl>	defer file.Close()
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	data, err := ioutil.ReadAll(file)
+</span></span><span class=line><span class=cl>	if err != nil {
+</span></span><span class=line><span class=cl>		return
+</span></span><span class=line><span class=cl>	}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	/*
+</span></span><span class=line><span class=cl>	   https://golang.org/doc/faq#stack_or_heap
+</span></span><span class=line><span class=cl>	   如果一个变量被取地址（has its address taken），并且被逃逸分析（escape analysis）识别为 “逃逸到堆”（escapes to heap）
+</span></span><span class=line><span class=cl>	*/
+</span></span><span class=line><span class=cl>	config = &amp;Config{}
+</span></span><span class=line><span class=cl>	if err = json.Unmarshal(data, config); err != nil {
+</span></span><span class=line><span class=cl>		return nil, err
+</span></span><span class=line><span class=cl>	}
+</span></span><span class=line><span class=cl>	readTimeout = time.Duration(config.Timeout) * time.Second
+</span></span><span class=line><span class=cl>	return
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>/*
+</span></span><span class=line><span class=cl>类型判断:
+</span></span><span class=line><span class=cl>- value , ok:=a.(string)
+</span></span><span class=line><span class=cl>- a.(type) ... switch
+</span></span><span class=line><span class=cl>- reflect.TypeOf
+</span></span><span class=line><span class=cl>*/
+</span></span><span class=line><span class=cl>func (config *Config) GetServerArray() []string {
+</span></span><span class=line><span class=cl>	// Specifying multiple servers in the &#34;server&#34; options is deprecated.
+</span></span><span class=line><span class=cl>	// But for backward compatibility, keep this.
+</span></span><span class=line><span class=cl>	if config.Server == nil {
+</span></span><span class=line><span class=cl>		return nil
+</span></span><span class=line><span class=cl>	}
+</span></span><span class=line><span class=cl>	// fmt.Println(&#34;reflect.TypeOf config.Server: &#34;, reflect.TypeOf( config.Server ) )
+</span></span><span class=line><span class=cl>	_ , ok := config.Server.(string)
+</span></span><span class=line><span class=cl>	if ok {
+</span></span><span class=line><span class=cl>		fmt.Println(&#34;use config.Server.(string) check string pass  &#34;)
+</span></span><span class=line><span class=cl>	} else {
+</span></span><span class=line><span class=cl>		fmt.Println(&#34;config.Server.(string) false &#34;)
+</span></span><span class=line><span class=cl>	}
+</span></span><span class=line><span class=cl>	single, ok := config.Server.(string)
+</span></span><span class=line><span class=cl>	if ok {
+</span></span><span class=line><span class=cl>		return []string{single}
+</span></span><span class=line><span class=cl>	}
+</span></span><span class=line><span class=cl>	arr, ok := config.Server.([]interface{})
+</span></span><span class=line><span class=cl>	if ok {
+</span></span><span class=line><span class=cl>		/*
+</span></span><span class=line><span class=cl>			if len(arr) &gt; 1 {
+</span></span><span class=line><span class=cl>				log.Println(&#34;Multiple servers in \&#34;server\&#34; option is deprecated. &#34; +
+</span></span><span class=line><span class=cl>					&#34;Please use \&#34;server_password\&#34; instead.&#34;)
+</span></span><span class=line><span class=cl>			}
+</span></span><span class=line><span class=cl>		*/
+</span></span><span class=line><span class=cl>		serverArr := make([]string, len(arr), len(arr))
+</span></span><span class=line><span class=cl>		for i, s := range arr {
+</span></span><span class=line><span class=cl>			serverArr[i], ok = s.(string)
+</span></span><span class=line><span class=cl>			if !ok {
+</span></span><span class=line><span class=cl>				goto typeError
+</span></span><span class=line><span class=cl>			}
+</span></span><span class=line><span class=cl>		}
+</span></span><span class=line><span class=cl>		return serverArr
+</span></span><span class=line><span class=cl>	}
+</span></span><span class=line><span class=cl>typeError:
+</span></span><span class=line><span class=cl>	panic(fmt.Sprintf(&#34;Config.Server type error %v&#34;, reflect.TypeOf(config.Server)))
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>/*
+</span></span><span class=line><span class=cl>https://draveness.me/golang/docs/part2-foundation/ch04-basic/golang-interface/
+</span></span><span class=line><span class=cl>https://draveness.me/golang/docs/part2-foundation/ch04-basic/golang-reflect/
+</span></span><span class=line><span class=cl>反射 已经 底层的数据结构，可遍历
+</span></span><span class=line><span class=cl>*/
+</span></span><span class=line><span class=cl>func UpdateConfig(old, new *Config) {
+</span></span><span class=line><span class=cl>	// http://golang.org/doc/articles/laws_of_reflection.html
+</span></span><span class=line><span class=cl>	newVal := reflect.ValueOf(new).Elem()
+</span></span><span class=line><span class=cl>	oldVal := reflect.ValueOf(old).Elem()
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	// typeOfT := newVal.Type()
+</span></span><span class=line><span class=cl>	for i := 0; i &lt; newVal.NumField(); i++ {
+</span></span><span class=line><span class=cl>		newField := newVal.Field(i)
+</span></span><span class=line><span class=cl>		oldField := oldVal.Field(i)
+</span></span><span class=line><span class=cl>		fmt.Fprintf(os.Stdout, &#34;before: newField: %d: %s -&gt; %v; oldField:  %s -&gt; %v\n&#34;, i,oldField.Type(),oldField.Interface(),
+</span></span><span class=line><span class=cl>			newField.Type(), newField.Interface())
+</span></span><span class=line><span class=cl>		switch newField.Kind() {
+</span></span><span class=line><span class=cl>		case reflect.Interface:
+</span></span><span class=line><span class=cl>			if newField.Interface() != nil {
+</span></span><span class=line><span class=cl>				fmt.Println(&#34;newField.Interface: &#34;,
+</span></span><span class=line><span class=cl>					newField.Interface() )
+</span></span><span class=line><span class=cl>				oldField.Set(newField)
+</span></span><span class=line><span class=cl>			}
+</span></span><span class=line><span class=cl>		case reflect.String:
+</span></span><span class=line><span class=cl>			s := newField.String()
+</span></span><span class=line><span class=cl>			if s != &#34;&#34; {
+</span></span><span class=line><span class=cl>				oldField.SetString(s)
+</span></span><span class=line><span class=cl>			}
+</span></span><span class=line><span class=cl>		case reflect.Int:
+</span></span><span class=line><span class=cl>			i := newField.Int()
+</span></span><span class=line><span class=cl>			if i != 0 {
+</span></span><span class=line><span class=cl>				oldField.SetInt(i)
+</span></span><span class=line><span class=cl>			}
+</span></span><span class=line><span class=cl>		}
+</span></span><span class=line><span class=cl>		fmt.Fprintf(os.Stdout, &#34;after: newField: %d: %s -&gt; %v; oldField:  %s -&gt; %v\n&#34;, i,oldField.Type(),oldField.Interface(),
+</span></span><span class=line><span class=cl>			newField.Type(), newField.Interface())
+</span></span><span class=line><span class=cl>	}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	old.Timeout = new.Timeout
+</span></span><span class=line><span class=cl>	readTimeout = time.Duration(old.Timeout) * time.Second
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>func main(){
+</span></span><span class=line><span class=cl>	var cmdConfig Config
+</span></span><span class=line><span class=cl>	flag.StringVar(&amp;configFile, &#34;c&#34;, &#34;config.json&#34;, &#34;specify config file&#34;)
+</span></span><span class=line><span class=cl>	flag.StringVar(&amp;cmdConfig.Method, &#34;m&#34;, &#34;&#34;, &#34;encryption method, default: aes-256-cfb&#34;)
+</span></span><span class=line><span class=cl>	flag.Parse()
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	// use cmdConfig update config
+</span></span><span class=line><span class=cl>	fmt.Println(&#34;cmdConfig:&#34;,cmdConfig)
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	config, err := ParseConfig(configFile)
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	if err != nil {
+</span></span><span class=line><span class=cl>		if !os.IsNotExist(err) {
+</span></span><span class=line><span class=cl>			fmt.Fprintf(os.Stderr, &#34;error reading %s: %v\n&#34;, configFile, err)
+</span></span><span class=line><span class=cl>			os.Exit(1)
+</span></span><span class=line><span class=cl>		}
+</span></span><span class=line><span class=cl>		config = &amp;cmdConfig
+</span></span><span class=line><span class=cl>		UpdateConfig(config, config)
+</span></span><span class=line><span class=cl>	} else {
+</span></span><span class=line><span class=cl>		UpdateConfig(config, &amp;cmdConfig)
+</span></span><span class=line><span class=cl>	}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	fmt.Println(&#34;config content &#34;,config)
+</span></span><span class=line><span class=cl>	config_json , err := json.Marshal(*config)
+</span></span><span class=line><span class=cl>	fmt.Println( string( config_json ) )
+</span></span><span class=line><span class=cl>	fmt.Println(&#34;config.GetServerArray: &#34;, config.GetServerArray() )
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    &#34;server&#34;:&#34;127.0.0.1&#34;,
+</span></span><span class=line><span class=cl>    &#34;server_port&#34;:8388,
+</span></span><span class=line><span class=cl>    &#34;local_port&#34;:1080,
+</span></span><span class=line><span class=cl>    &#34;local_address&#34;:&#34;127.0.0.1&#34;,
+</span></span><span class=line><span class=cl>    &#34;password&#34;:&#34;barfoo!&#34;,
+</span></span><span class=line><span class=cl>    &#34;method&#34;: &#34;aes-128-cfb&#34;,
+</span></span><span class=line><span class=cl>    &#34;timeout&#34;:600
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div></div></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>

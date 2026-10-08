@@ -1,0 +1,87 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>写一个操作系统_15 内存管理初步 · changan's blog</title><meta name=description content="内存管理初步 物理内存 认为的先规划成两部分，用户的物理内存和内核的物理内存，专项专用，内核有方法去占用用户的内存，但是规定两部分内存是专用的，内核只使用自己的物理内存。
+物理内存的内核、用户部分分别用 bitmap 来统计管理。
+虚拟内存 首先，虚拟内存也是需要管理的，毕竟程序要申请堆上的内存，假定我们只支持512M …"><link rel=canonical href=https://www.oneyearago.me/2019/04/27/make_a_linux_15/><meta property="og:title" content="写一个操作系统_15 内存管理初步"><meta property="og:url" content="https://www.oneyearago.me/2019/04/27/make_a_linux_15/"><meta property="og:description" content="内存管理初步 物理内存 认为的先规划成两部分，用户的物理内存和内核的物理内存，专项专用，内核有方法去占用用户的内存，但是规定两部分内存是专用的，内核只使用自己的物理内存。
+物理内存的内核、用户部分分别用 bitmap 来统计管理。
+虚拟内存 首先，虚拟内存也是需要管理的，毕竟程序要申请堆上的内存，假定我们只支持512M …"><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><div class=post-meta><time datetime=2019-04-27>2019.04.27</time><span>2 分钟阅读</span></div><h1>写一个操作系统_15 内存管理初步</h1><div class=chips><a href=/categories/kernel/>Kernel</a><a href=/categories/os/>Os</a></div></header><div class=prose><h3 id=内存管理初步>内存管理初步</h3><h4 id=物理内存>物理内存</h4><p>认为的先规划成两部分，用户的物理内存和内核的物理内存，专项专用，内核有方法去占用用户的内存，但是规定两部分内存是专用的，内核只使用自己的物理内存。</p><p>物理内存的内核、用户部分分别用 bitmap 来统计管理。</p><h4 id=虚拟内存>虚拟内存</h4><p>首先，虚拟内存也是需要管理的，毕竟程序要申请堆上的内存，假定我们只支持512M物理内存，那么我们只要用 4* 4K 就能 记录这512M。</p><p><img src=http://201906-1251969284.cossh.myqcloud.com/bmp_kernel.png alt=image></p><p>备注: 把位图的地址放在这个地方是人为选择，也可以选其他地方</p><p>同样，我们把 内核堆 开始地址 放到 0xc0100000，当然你也可以放到更远。另外，注意到我们的页表就在物理地址1M以上，我们需要把页表的内存算作已经使用的内存。</p><p>/ <em>0xc0000000是内核从虚拟地址3G起. 0x100000意指跨过低端1M内存,使虚拟地址在逻辑上连续</em> /</p><p>#define K_HEAP_START 0xc0100000</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>/* 初始化内存池 */
+</span></span><span class=line><span class=cl>static void mem_pool_init(uint32_t all_mem) {
+</span></span><span class=line><span class=cl>   put_str(&#34;   mem_pool_init start\n&#34;);
+</span></span><span class=line><span class=cl>   uint32_t page_table_size = PG_SIZE * 256;	  // 页表大小= 1页的页目录表+第0和第768个页目录项指向同一个页表+
+</span></span><span class=line><span class=cl>                                                  // 第769~1022个页目录项共指向254个页表,共256个页框
+</span></span><span class=line><span class=cl>   uint32_t used_mem = page_table_size + 0x100000;	  // 0x100000为低端1M内存
+</span></span><span class=line><span class=cl>   uint32_t free_mem = all_mem - used_mem;
+</span></span><span class=line><span class=cl>   uint16_t all_free_pages = free_mem / PG_SIZE;		  // 1页为4k,不管总内存是不是4k的倍数,
+</span></span><span class=line><span class=cl>								  // 对于以页为单位的内存分配策略，不足1页的内存不用考虑了。
+</span></span><span class=line><span class=cl>   uint16_t kernel_free_pages = all_free_pages / 2;
+</span></span><span class=line><span class=cl>   uint16_t user_free_pages = all_free_pages - kernel_free_pages;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>/* 为简化位图操作，余数不处理，坏处是这样做会丢内存。
+</span></span><span class=line><span class=cl>好处是不用做内存的越界检查,因为位图表示的内存少于实际物理内存*/
+</span></span><span class=line><span class=cl>   uint32_t kbm_length = kernel_free_pages / 8;			  // Kernel BitMap的长度,位图中的一位表示一页,以字节为单位
+</span></span><span class=line><span class=cl>   uint32_t ubm_length = user_free_pages / 8;			  // User BitMap的长度.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>   uint32_t kp_start = used_mem;				  // Kernel Pool start,内核内存池的起始地址
+</span></span><span class=line><span class=cl>   uint32_t up_start = kp_start + kernel_free_pages * PG_SIZE;	  // User Pool start,用户内存池的起始地址
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>   kernel_pool.phy_addr_start = kp_start;
+</span></span><span class=line><span class=cl>   user_pool.phy_addr_start   = up_start;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>   kernel_pool.pool_size = kernel_free_pages * PG_SIZE;
+</span></span><span class=line><span class=cl>   user_pool.pool_size	 = user_free_pages * PG_SIZE;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>   kernel_pool.pool_bitmap.btmp_bytes_len = kbm_length;
+</span></span><span class=line><span class=cl>   user_pool.pool_bitmap.btmp_bytes_len	  = ubm_length;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>/*********    内核内存池和用户内存池位图   ***********
+</span></span><span class=line><span class=cl> *   位图是全局的数据，长度不固定。
+</span></span><span class=line><span class=cl> *   全局或静态的数组需要在编译时知道其长度，
+</span></span><span class=line><span class=cl> *   而我们需要根据总内存大小算出需要多少字节。
+</span></span><span class=line><span class=cl> *   所以改为指定一块内存来生成位图.
+</span></span><span class=line><span class=cl> *   ************************************************/
+</span></span><span class=line><span class=cl>// 内核使用的最高地址是0xc009f000,这是主线程的栈地址.(内核的大小预计为70K左右)
+</span></span><span class=line><span class=cl>// 32M内存占用的位图是2k.内核内存池的位图先定在MEM_BITMAP_BASE(0xc009a000)处.
+</span></span><span class=line><span class=cl>   kernel_pool.pool_bitmap.bits = (void*)MEM_BITMAP_BASE;
+</span></span><span class=line><span class=cl>							       
+</span></span><span class=line><span class=cl>/* 用户内存池的位图紧跟在内核内存池位图之后 */
+</span></span><span class=line><span class=cl>   user_pool.pool_bitmap.bits = (void*)(MEM_BITMAP_BASE + kbm_length);
+</span></span><span class=line><span class=cl>   
+</span></span><span class=line><span class=cl> /* 将位图置0*/
+</span></span><span class=line><span class=cl>   bitmap_init(&amp;kernel_pool.pool_bitmap);
+</span></span><span class=line><span class=cl>   bitmap_init(&amp;user_pool.pool_bitmap);
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>   /* 下面初始化内核虚拟地址的位图,按实际物理内存大小生成数组。*/
+</span></span><span class=line><span class=cl>   kernel_vaddr.vaddr_bitmap.btmp_bytes_len = kbm_length;      // 用于维护内核堆的虚拟地址,所以要和内核内存池大小一致
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  /* 位图的数组指向一块未使用的内存,目前定位在内核内存池和用户内存池之外*/
+</span></span><span class=line><span class=cl>   kernel_vaddr.vaddr_bitmap.bits = (void*)(MEM_BITMAP_BASE + kbm_length + ubm_length);
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>   kernel_vaddr.vaddr_start = K_HEAP_START;
+</span></span><span class=line><span class=cl>   bitmap_init(&amp;kernel_vaddr.vaddr_bitmap);
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><h4 id=分配物理内存>分配物理内存</h4><p>malloc分配了虚拟地址，也会为该虚拟地址物理内存。linux的实现上，分配物理地址不是实时的，这里先假设是实时的，并且每次分配是按照页为单位。 关键的一点，分配的物理内存和分配的虚拟内存 要通过 页表 关联上。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>/* 分配pg_cnt个页空间,成功则返回起始虚拟地址,失败时返回NULL */
+</span></span><span class=line><span class=cl>void* malloc_page(enum pool_flags pf, uint32_t pg_cnt) {
+</span></span><span class=line><span class=cl>   ASSERT(pg_cnt &gt; 0 &amp;&amp; pg_cnt &lt; 3840);
+</span></span><span class=line><span class=cl>/***********   malloc_page的原理是三个动作的合成:   ***********
+</span></span><span class=line><span class=cl>      1通过vaddr_get在虚拟内存池中申请虚拟地址
+</span></span><span class=line><span class=cl>      2通过palloc在物理内存池中申请物理页
+</span></span><span class=line><span class=cl>      3通过page_table_add将以上得到的虚拟地址和物理地址在页表中完成映射
+</span></span><span class=line><span class=cl>***************************************************************/
+</span></span><span class=line><span class=cl>   void* vaddr_start = vaddr_get(pf, pg_cnt);
+</span></span><span class=line><span class=cl>   if (vaddr_start == NULL) {
+</span></span><span class=line><span class=cl>      return NULL;
+</span></span><span class=line><span class=cl>   }
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>   uint32_t vaddr = (uint32_t)vaddr_start, cnt = pg_cnt;
+</span></span><span class=line><span class=cl>   struct pool* mem_pool = pf &amp; PF_KERNEL ? &amp;kernel_pool : &amp;user_pool;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>   /* 因为虚拟地址是连续的,但物理地址可以是不连续的,所以逐个做映射*/
+</span></span><span class=line><span class=cl>   while (cnt-- &gt; 0) {
+</span></span><span class=line><span class=cl>      void* page_phyaddr = palloc(mem_pool);
+</span></span><span class=line><span class=cl>      if (page_phyaddr == NULL) {  // 失败时要将曾经已申请的虚拟地址和物理页全部回滚，在将来完成内存回收时再补充
+</span></span><span class=line><span class=cl>	 return NULL;
+</span></span><span class=line><span class=cl>      }
+</span></span><span class=line><span class=cl>      page_table_add((void*)vaddr, page_phyaddr); // 在页表中做映射 
+</span></span><span class=line><span class=cl>      vaddr += PG_SIZE;		 // 下一个虚拟页
+</span></span><span class=line><span class=cl>   }
+</span></span><span class=line><span class=cl>   return vaddr_start;
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div></div><div class="chips post-tags"><a href=/tags/os/># Os</a><a href=/tags/kernel/># Kernel</a></div><nav class=post-neighbors aria-label=相邻文章><a href=/2019/04/24/make_a_linux_14/><small>上一篇</small>写一个操作系统_14 C 链接与系统调用</a><a href=/2019/05/28/history_and_love_of_peole/><small>下一篇</small>江湖爱情故事</a></nav><section class=comments aria-label=文章评论><script src=https://giscus.app/client.js data-repo=changan29/changan29.github.io data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category=Announcements data-category-id=DIC_kwDOC6bf5s4CSvAi data-mapping=url data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=preferred_color_scheme data-lang=zh-CN crossorigin=anonymous async></script></section></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>

@@ -1,0 +1,26 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>xargs note · changan's blog</title><meta name=description content="作用 xargs，是execute arguments的缩写，它的作用是从标准输入中读取内容，并将
+此内容传递给它要协助的命令，并作为那个命令的参数来执行。
+与管道的区别 管道可以实现：将前面的标准输出作为后面的 标准输入 管道无法实现：将前面的标准输出作为后面的 命令参数 $ cat /etc/passwd | …"><link rel=canonical href=https://www.oneyearago.me/2019/06/23/xargs/><meta property="og:title" content="xargs note"><meta property="og:url" content="https://www.oneyearago.me/2019/06/23/xargs/"><meta property="og:description" content="作用 xargs，是execute arguments的缩写，它的作用是从标准输入中读取内容，并将
+此内容传递给它要协助的命令，并作为那个命令的参数来执行。
+与管道的区别 管道可以实现：将前面的标准输出作为后面的 标准输入 管道无法实现：将前面的标准输出作为后面的 命令参数 $ cat /etc/passwd | …"><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><div class=post-meta><time datetime=2019-06-23>2019.06.23</time><span>1 分钟阅读</span></div><h1>xargs note</h1><div class=chips><a href=/categories/shell/>Shell</a></div></header><div class=prose><h3 id=作用>作用</h3><p>xargs，是execute arguments的缩写，它的作用是从标准输入中读取内容，并将<br>此内容传递给它要协助的命令，并作为那个命令的参数来执行。</p><h3 id=与管道的区别>与管道的区别</h3><ul><li>管道可以实现：将前面的标准输出作为后面的 标准输入</li><li>管道无法实现：将前面的标准输出作为后面的 命令参数</li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>$ cat /etc/passwd | grep root
+</span></span><span class=line><span class=cl># grep命令可以接受标准输入作为参数
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>大多数命令都不接受标准输入作为参数，只能直接在命令行输入参数，这导致无法用管道命令传递参数
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>echo &#34;one two three&#34; | xargs mkdir
+</span></span><span class=line><span class=cl># mkdir one two three
+</span></span></code></pre></div><h3 id=分隔符>分隔符</h3><ul><li>xargs会将前一个命令的标准输出转换成命令参数，但很多人可能不知道的是，xargs的标准输入中出现的“换行符、空格、制表符”都将被空格取代</li><li>xargs默认的分隔符是空格</li><li>还可以使用-d选项来指定任何一个符号作为分隔符</li></ul><h3 id=find-and-xargs>find and xargs</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>find . -name &#39;*.log&#39; -print0 | xargs -0 rm -f
+</span></span></code></pre></div><p>xargs提供了-0选项，允许将NULL作为分隔符，而find命令也心有灵犀地提供了对应的选项来产生以NULL字符作为分隔符的输出。</p><p>find命令提供的对应方法是-print0选项，在文件名之后输出NULL，而不像-print选项那样输出换行符（换行符会被xargs替换成空格）。</p><p>xargs的-0选项不仅可以将分隔符从默认的空格变成NULL，还会将单引号、双引号、反斜线等统统默认为是普通字符。所以说，-0选项特别适合处理命令参数中含有引号、空格、反斜线的情况.</p><h3 id=other-options>other options</h3><ul><li>p 参数打印出要执行的命令，询问用户是否要执行</li><li>I 要将命令行参数传给多个命令</li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>$ cat foo.txt
+</span></span><span class=line><span class=cl>one
+</span></span><span class=line><span class=cl>two
+</span></span><span class=line><span class=cl>three
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># -I file表示file是命令行参数的替代字符串
+</span></span><span class=line><span class=cl>$ cat foo.txt | xargs -I file sh -c &#39;echo file; mkdir file&#39;
+</span></span><span class=line><span class=cl>one 
+</span></span><span class=line><span class=cl>two
+</span></span><span class=line><span class=cl>three
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>$ ls 
+</span></span><span class=line><span class=cl>one two three
+</span></span></code></pre></div></div><div class="chips post-tags"><a href=/tags/shell/># Shell</a></div><nav class=post-neighbors aria-label=相邻文章><a href=/2019/05/28/history_and_love_of_peole/><small>上一篇</small>江湖爱情故事</a><a href=/2019/08/18/Mutex/><small>下一篇</small>临界区、信号量、互斥锁、自旋锁与原子操作</a></nav><section class=comments aria-label=文章评论><script src=https://giscus.app/client.js data-repo=changan29/changan29.github.io data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category=Announcements data-category-id=DIC_kwDOC6bf5s4CSvAi data-mapping=url data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=preferred_color_scheme data-lang=zh-CN crossorigin=anonymous async></script></section></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>

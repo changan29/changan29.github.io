@@ -1,0 +1,49 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>写一个操作系统_04 内核调试环境搭建 · changan's blog</title><meta name=description content="环境准备工作 有一台win10的笔记本，调试想选择在Linux环境下，选择配置虚拟机，然后安装bochs调试内核
+需要准备的软件:
+VirtualBox和增加工具包 安装CentOS 6.8minimal 设置CentOS的网卡，使之能上网 用yum安装开发工具和GNOME 安装bochs 进入GNOME，在GNOME …"><link rel=canonical href=https://www.oneyearago.me/2019/03/20/make_a_linux_4/><meta property="og:title" content="写一个操作系统_04 内核调试环境搭建"><meta property="og:url" content="https://www.oneyearago.me/2019/03/20/make_a_linux_4/"><meta property="og:description" content="环境准备工作 有一台win10的笔记本，调试想选择在Linux环境下，选择配置虚拟机，然后安装bochs调试内核
+需要准备的软件:
+VirtualBox和增加工具包 安装CentOS 6.8minimal 设置CentOS的网卡，使之能上网 用yum安装开发工具和GNOME 安装bochs 进入GNOME，在GNOME …"><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><div class=post-meta><time datetime=2019-03-20>2019.03.20</time><span>1 分钟阅读</span></div><h1>写一个操作系统_04 内核调试环境搭建</h1><div class=chips><a href=/categories/kernel/>Kernel</a><a href=/categories/os/>Os</a></div></header><div class=prose><h3 id=环境准备工作>环境准备工作</h3><p>有一台win10的笔记本，调试想选择在Linux环境下，选择配置虚拟机，然后安装bochs调试内核<br>需要准备的软件:</p><ul><li>VirtualBox和增加工具包</li><li>安装CentOS 6.8minimal</li><li>设置CentOS的网卡，使之能上网</li><li>用yum安装开发工具和GNOME</li><li>安装bochs</li><li>进入GNOME，在GNOME中运行bochs</li></ul><h4 id=虚拟机>虚拟机</h4><h5 id=CentOS配置>CentOS配置</h5><ul><li><p>虚拟机设置中连接方式为NAT</p></li><li><p>因为安装的CentOS是minimal版本，所以网卡没有默认设置为启动</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>vi /etc/sysconfig/network-scripts/ifcfg-eth0
+</span></span><span class=line><span class=cl>修改:
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>ONBOOT=&#34;yes&#34;  
+</span></span><span class=line><span class=cl>MM_Controlled=&#34;no&#34;
+</span></span><span class=line><span class=cl># ifconfig eth0 192.168.0.2 netmask 255.255.255.0 //修改ip地址、子网掩码
+</span></span><span class=line><span class=cl># route add default gw 192.168.0.1 dev eth0　　	  //修改网关  
+</span></span><span class=line><span class=cl># hostname centos 　　					          //修改计算机名  
+</span></span><span class=line><span class=cl># service network restart  				          //重启网络
+</span></span><span class=line><span class=cl># ping 192.168.1.1					              //ping网关应正常
+</span></span><span class=line><span class=cl># ping www.163.com				                  //ping外网应正常
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>保证能上外网
+</span></span></code></pre></div></li></ul><h5 id=需要的编译软件>需要的编译软件</h5><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl># yum groupinstall &#34;Development Tools&#34;	//gcc, gcc-c++等常用软件都会装上
+</span></span><span class=line><span class=cl># yum -y install vim*
+</span></span><span class=line><span class=cl># yum install ncurses-devel zlib-devel texinfo gtk2-devel qt-devel
+</span></span><span class=line><span class=cl># yum install tcl-devel   tk-devel kernel-headers kernel-devel				
+</span></span><span class=line><span class=cl># yum install gtk*			//前一行的gtk2-dvel已经安装，此行可不执行
+</span></span><span class=line><span class=cl># yum install build-essential nasm
+</span></span></code></pre></div><h5 id=安装Gnome>安装Gnome</h5><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl># yum grouplist ｜more  					//察看Gnome安装包的名称
+</span></span><span class=line><span class=cl># yum groupinstall &#34;X Window System&#34;		// 安装基本的X系统组件
+</span></span><span class=line><span class=cl># yum groupinstall &#34;Desktop &#34;		
+</span></span><span class=line><span class=cl># startx									//进入Gnome
+</span></span></code></pre></div><h5 id=编译安装bochs>编译安装bochs</h5><p>我是下载了bochs-2.6.7.tar.gz的包通过虚拟机的共享目录转到CentOS下，然后在linux下操作</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>./configure  --prefix=/data/bochs/ --enable-debugger --enable-disasm
+</span></span><span class=line><span class=cl>./configure --enable-iodebug --enable-x86-debugger --with-x --with-x11 
+</span></span><span class=line><span class=cl>make 
+</span></span><span class=line><span class=cl>make install  // sudo
+</span></span></code></pre></div><h5 id=bochs运行报错>bochs运行报错</h5><p>遇到两个错误:</p><ul><li>PANIC ../share/doc/bochs/bochsrc-sample.txt:187: cpu directive malformed.</li></ul><p>    解决的办法: 配置里面的CPU cpu: model=core2_penryn_t9600目前bochs不支持，需要找支持的CPU</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>./bochs -help cpu
+</span></span><span class=line><span class=cl>Supported CPU models:
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>bx_generic
+</span></span><span class=line><span class=cl>pentium
+</span></span><span class=line><span class=cl>pentium_mmx
+</span></span><span class=line><span class=cl>amd_k6_2_chomper
+</span></span><span class=line><span class=cl>p2_klamath
+</span></span><span class=line><span class=cl>p3_katmai
+</span></span><span class=line><span class=cl>p4_willamette
+</span></span><span class=line><span class=cl>core_duo_t2400_yonah
+</span></span><span class=line><span class=cl>atom_n270
+</span></span></code></pre></div><ul><li>PANIC bochsrc.txt:917: Bochs is not compiled with lowlevel sound support</li></ul><p>   声卡不支持，那先不需要声卡，把配置中的声卡先去掉不用</p><h5 id=从硬盘启动>从硬盘启动</h5><p><img src=http://201903-1251969284.cosgz.myqcloud.com/bochs_harddisk.png alt=image></p><p>这个报错跟上面的不一样，接下来要从启动盘启动，没有找到磁盘，接下来需要我们制作启动盘了。</p><h5 id=制作启动盘>制作启动盘</h5><p>执行 bximage 按照步骤可以制作一个启动盘，假如制作的启动盘为 hd30M.img<br>修改配置如下</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl># 设置硬盘
+</span></span><span class=line><span class=cl>ata0: enabled=1,ioaddr1=0x1f0, ioaddr2=0x3f0, irq=14
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># 启动盘信息
+</span></span><span class=line><span class=cl>ata0-master: type=disk, path=&#34;/data/bochs/hd30M.img&#34;, mode=flat
+</span></span></code></pre></div><p>再次启动:<br><img src=http://201903-1251969284.cosgz.myqcloud.com/bochs_create.png alt=image></p><p>出现这用错误的原因是因为我们现在的硬盘还只是一个空的硬盘，没有任何数据，又如何能够运行呢，CPU一下就跑没影了。</p><h5 id=Next>Next</h5><p>接下来我们要加上这个启动设备，拉起内核。期待… :-)</p><p><img src=http://201903-1251969284.cosgz.myqcloud.com/boy.gif alt=image></p></div><div class="chips post-tags"><a href=/tags/os/># Os</a><a href=/tags/kernel/># Kernel</a></div><nav class=post-neighbors aria-label=相邻文章><a href=/2019/03/18/make_a_linux_3/><small>上一篇</small>写一个操作系统_03 引导内核</a><a href=/2019/03/23/make_a_linux_5/><small>下一篇</small>写一个操作系统_05 调试MBR</a></nav><section class=comments aria-label=文章评论><script src=https://giscus.app/client.js data-repo=changan29/changan29.github.io data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category=Announcements data-category-id=DIC_kwDOC6bf5s4CSvAi data-mapping=url data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=preferred_color_scheme data-lang=zh-CN crossorigin=anonymous async></script></section></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>

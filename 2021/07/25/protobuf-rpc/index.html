@@ -1,0 +1,66 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>基于protobuf 的 rpc · changan's blog</title><meta name=description content="基于protobuf 的 rpc protobuf 实现了序列化部分，预留了 RPC 接口，但是没有实现网络交互的部分。
+基于pb里面的 service 接口，自己实现实际的通信过程，实现一个简易的 rpc是比较容易的， 对我们阅读 brpc、muduo、grpc等著名开源的rpc有很大帮助。
+google的 文档这里 …"><link rel=canonical href=https://www.oneyearago.me/2021/07/25/protobuf-rpc/><meta property="og:title" content="基于protobuf 的 rpc"><meta property="og:url" content="https://www.oneyearago.me/2021/07/25/protobuf-rpc/"><meta property="og:description" content="基于protobuf 的 rpc protobuf 实现了序列化部分，预留了 RPC 接口，但是没有实现网络交互的部分。
+基于pb里面的 service 接口，自己实现实际的通信过程，实现一个简易的 rpc是比较容易的， 对我们阅读 brpc、muduo、grpc等著名开源的rpc有很大帮助。
+google的 文档这里 …"><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><div class=post-meta><time datetime=2021-07-25>2021.07.25</time><span>2 分钟阅读</span></div><h1>基于protobuf 的 rpc</h1><div class=chips><a href=/categories/protobuf/>Protobuf</a><a href=/categories/rpc/>Rpc</a></div></header><div class=prose><h3 id=基于protobuf-的-rpc>基于protobuf 的 rpc</h3><p>protobuf 实现了序列化部分，预留了 RPC 接口，但是没有实现网络交互的部分。<br>基于pb里面的 service 接口，自己实现实际的通信过程，实现一个简易的 rpc是比较容易的， 对我们阅读 brpc、muduo、grpc等著名开源的rpc有很大帮助。</p><p>google的 文档这里描述的也比较清楚， 在 google/protobuf/service.h 里，通过一个简单的例子，描述了实现 一个基于pb的RPC的过程。</p><h4 id=protoc-自动生成的代码>protoc 自动生成的代码</h4><blockquote><p>When you use the protocol compiler to compile a service definition, it generates two classes: An abstract interface for the service (with methods matching the service definition) and a “stub” implementation.<br>A stub is just a type-safe wrapper around an RpcChannel which emulates a local implementation of the service.</p></blockquote><h5 id=例子>例子</h5><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>service MyService {
+</span></span><span class=line><span class=cl>  rpc Foo(MyRequest) returns(MyResponse);
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><p>会生成两个接口: “MyService” and class “MyService_Stub”,分别对应服务器和客户端接口。</p><h5 id=服务器>服务器</h5><p>对于每个service生成的类，你需要做的是 继承他并重写自己的方法，比如上面的 MyService，你可以这样实现你自己的处理类：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>// server 的处理
+</span></span><span class=line><span class=cl>// 定义自己的处理类（函数），继承生成的类
+</span></span><span class=line><span class=cl>class MyServiceImpl : public MyService {
+</span></span><span class=line><span class=cl> public:
+</span></span><span class=line><span class=cl>  MyServiceImpl() {}
+</span></span><span class=line><span class=cl>  ~MyServiceImpl() {}
+</span></span><span class=line><span class=cl>  // 实现 MyService::Foo
+</span></span><span class=line><span class=cl>  void Foo(google::protobuf::RpcController* controller,
+</span></span><span class=line><span class=cl>           const MyRequest* request,
+</span></span><span class=line><span class=cl>           MyResponse* response,
+</span></span><span class=line><span class=cl>           Closure* done) {
+</span></span><span class=line><span class=cl>    // ... read request and fill in response ...
+</span></span><span class=line><span class=cl>    done-&gt;Run();
+</span></span><span class=line><span class=cl>  }
+</span></span><span class=line><span class=cl>};
+</span></span></code></pre></div><h5 id=客户端>客户端</h5><p>要调用远程 MyServiceImpl，首先需要一个 RpcChannel 连接。如何构造通道同样取决于您的 RPC 实现。<br>这里我们以一个假设的“MyRpcChannel”为例：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>MyRpcChannel channel(&#34;rpc:hostname:1234/myservice&#34;);
+</span></span><span class=line><span class=cl>MyRpcController controller;
+</span></span><span class=line><span class=cl>MyServiceImpl::Stub stub(&amp;channel);
+</span></span><span class=line><span class=cl>FooRequest request;
+</span></span><span class=line><span class=cl>FooRespnose response;
+</span></span><span class=line><span class=cl>// ... fill in request ...
+</span></span><span class=line><span class=cl>stub.Foo(&amp;controller, request, &amp;response, NewCallback(HandleResponse));
+</span></span></code></pre></div><h3 id=几个基类>几个基类</h3><ul><li>Service</li><li>RpcController</li><li>RpcChannel</li></ul><p>RpcController是处理失败连接以及错误信息用的，对于具体通信，意义不是特别大，我们来看 Service 和 RpcChannel</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>class  Service {
+</span></span><span class=line><span class=cl> public:
+</span></span><span class=line><span class=cl>  inline Service() {}
+</span></span><span class=line><span class=cl>  virtual ~Service();
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  virtual const ServiceDescriptor* GetDescriptor() = 0;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  virtual void CallMethod(const MethodDescriptor* method,
+</span></span><span class=line><span class=cl>                          RpcController* controller,
+</span></span><span class=line><span class=cl>                          const Message* request,
+</span></span><span class=line><span class=cl>                          Message* response,
+</span></span><span class=line><span class=cl>                          Closure* done) = 0;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  virtual const Message&amp; GetRequestPrototype(
+</span></span><span class=line><span class=cl>    const MethodDescriptor* method) const = 0;
+</span></span><span class=line><span class=cl>  virtual const Message&amp; GetResponsePrototype(
+</span></span><span class=line><span class=cl>    const MethodDescriptor* method) const = 0;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>};
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>class  RpcChannel {
+</span></span><span class=line><span class=cl> public:
+</span></span><span class=line><span class=cl>  inline RpcChannel() {}
+</span></span><span class=line><span class=cl>  virtual ~RpcChannel();
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  virtual void CallMethod(const MethodDescriptor* method,
+</span></span><span class=line><span class=cl>                          RpcController* controller,
+</span></span><span class=line><span class=cl>                          const Message* request,
+</span></span><span class=line><span class=cl>                          Message* response,
+</span></span><span class=line><span class=cl>                          Closure* done) = 0;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>};
+</span></span></code></pre></div><p>我们看到 Service类和 RpcChannel类都有一个函数叫 CallMethod， 参数列表也一样，可以这样考虑，RpcChannel是一个通道，可以是socket或者其他方式，你去继承这个类实现 RpcChannel， 这样就可以通过 RpcChannel 发送数据到对端， 这里你是发送方（客户端）； 当你收到消息，解包，按照客户端传过来的 method 调用指定方法， 这里就是Service::CallMethod 做的。</p><p>所以除了 Message 包以外，还需要协议包头去描述 method， 也就是常用的 cmd_id一类的。</p><p>这样，服务器处理请求包的时候，就可以按照 method 去路由，比如：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>const MethodDescriptor* method = service-&gt;GetDescriptor()-&gt;FindMethodByName(&#34;Foo&#34;);
+</span></span><span class=line><span class=cl>Message* request  = stub-&gt;GetRequestPrototype (method)-&gt;New();
+</span></span><span class=line><span class=cl>Message* response = stub-&gt;GetResponsePrototype(method)-&gt;New();
+</span></span><span class=line><span class=cl>request-&gt;ParseFromString(input);
+</span></span><span class=line><span class=cl>service-&gt;CallMethod(method, *request, response, callback);
+</span></span></code></pre></div><p><a href=https://github.com/changan29/playcpp/tree/master/protobuf-rpc-demo>protobuf-rpc-demo</a></p><h3 id=总结>总结</h3><p>基于 protobuf 实现一个 rpc,需要关注的点：</p><ul><li>客户端要实现RpcChannel::CallMethod接口，相当于客户端实现 具体通信过程</li><li>服务端要实现MyService 中定义的Foo， 实现服务器处理逻辑</li><li>框架实现 Service注册和Method区分</li></ul><p>其实除了序列化和网络通信外，RPC框架基本会包括服务发现、高并发线程库、运维工具等，从一个简易的rpc可以先理解rpc的数据流全貌，有助于学习其他rpc框架。</p></div><div class="chips post-tags"><a href=/tags/protobuf/># Protobuf</a><a href=/tags/rpc/># Rpc</a></div><nav class=post-neighbors aria-label=相邻文章><a href=/2021/07/08/money-and-assets/><small>上一篇</small>汇率、资产与货币</a><a href=/2022/05/02/heap_profiler/><small>下一篇</small>C++程序内存泄露工具</a></nav><section class=comments aria-label=文章评论><script src=https://giscus.app/client.js data-repo=changan29/changan29.github.io data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category=Announcements data-category-id=DIC_kwDOC6bf5s4CSvAi data-mapping=url data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=preferred_color_scheme data-lang=zh-CN crossorigin=anonymous async></script></section></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>

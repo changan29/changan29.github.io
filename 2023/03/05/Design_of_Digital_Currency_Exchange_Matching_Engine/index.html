@@ -1,0 +1,169 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>数字货币交易撮合引擎设计 · changan's blog</title><meta name=description content="注：本文是普及金融市场交易的基础知识，不是为了鼓励大家去炒股炒币。相反，通过学习证券知识，理解衍生品原理，可以更好地认识市场风险，自觉放弃杠杆赌博暴富等不切实际的幻想，避免落入各种理财、带单、空气币等诈骗套路。本文一切内容均不构成任何投资意见或建议。
+在证券交易系统中，撮合引擎是实现买卖盘成交的关键组件。本文我们将分析 …"><link rel=canonical href=https://www.oneyearago.me/2023/03/05/Design_of_Digital_Currency_Exchange_Matching_Engine/><meta property="og:title" content="数字货币交易撮合引擎设计"><meta property="og:url" content="https://www.oneyearago.me/2023/03/05/Design_of_Digital_Currency_Exchange_Matching_Engine/"><meta property="og:description" content="注：本文是普及金融市场交易的基础知识，不是为了鼓励大家去炒股炒币。相反，通过学习证券知识，理解衍生品原理，可以更好地认识市场风险，自觉放弃杠杆赌博暴富等不切实际的幻想，避免落入各种理财、带单、空气币等诈骗套路。本文一切内容均不构成任何投资意见或建议。
+在证券交易系统中，撮合引擎是实现买卖盘成交的关键组件。本文我们将分析 …"><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><h1>数字货币交易撮合引擎设计</h1></header><div class=prose><p><strong>注：本文是普及金融市场交易的基础知识，不是为了鼓励大家去炒股炒币。相反，通过学习证券知识，理解衍生品原理，可以更好地认识市场风险，自觉放弃杠杆赌博暴富等不切实际的幻想，避免落入各种理财、带单、空气币等诈骗套路。本文一切内容均不构成任何投资意见或建议。</strong></p><p><img src="https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/web3/gupiao.png#id=pgqp2&amp;originHeight=360&amp;originWidth=640&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;status=done&amp;style=none&amp;title=" alt><br>在证券交易系统中，撮合引擎是实现买卖盘成交的关键组件。本文我们将分析撮合引擎的工作原理，并以最简化的Java代码设计并实现一个撮合引擎。</p><p>在证券市场中，撮合交易是一种微观价格发现模型，它允许买卖双方各自提交买卖订单并报价，按价格优先，时间优先的顺序，凡买单价格大于等于卖单价格时，双方即达成价格协商并成交。在A股身经百战的老股民对此规则应该非常熟悉，这里不再详述。</p><p>我们将讨论如何从技术上来实现它。对于撮合引擎来说，它必须维护两个买卖盘列表，一个买盘，一个卖盘，买盘按价格从高到低排序，确保报价最高的订单排在最前面；卖盘则相反，按照价格从低到高排序，确保报价最低的卖单排在最前面。</p><p>下图是一个实际的买卖盘：<br><img src="https://blog-1251969284.cos.ap-guangzhou.myqcloud.com/web3/gupiaoshendu.png#id=iSce4&amp;originHeight=316&amp;originWidth=147&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;status=done&amp;style=none&amp;title=" alt></p><p>对于买盘来说，上图的订单排序为2086.50，2086.09，2086.06，20860，2085.97，……</p><p>对于卖盘来说，上图的订单排序为2086.55，2086.75，2086.77，2086.90，2086.99，……</p><p>不可能出现买1价格大于等于卖1价格的情况，因为这意味着应该成交的买卖订单没有成交却在订单簿上等待成交。</p><p>对于多个价格相同的订单，例如2086.55，很可能张三卖出1，李四卖出3，累计数量是4。当一个新的买单价格≥2086.55时，到底优先和张三的卖单成交还是优先和李四的卖单成交呢？这要看张三和李四的订单时间谁更靠前。</p><p>有了以上规则，我们先设计一个最简单的订单类<code>Order</code>：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>public class Order {
+</span></span><span class=line><span class=cl>    public final long sequenceId; 
+</span></span><span class=line><span class=cl>    public final Direction direction; 
+</span></span><span class=line><span class=cl>    public final BigDecimal price; 
+</span></span><span class=line><span class=cl>    public BigDecimal amount; 
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    public Order(long sequenceId, Direction direction, BigDecimal price, BigDecimal amount) {
+</span></span><span class=line><span class=cl>        ...
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><p>虽然订单的成交规则遵循价格优先、时间优先的原则，但我们并不会比较两个订单的下单时间，而是给接收到的所有订单依次赋予一个递增的序列号，序列号越小的自然时间越早，因此排在前面。时间本身实际上是订单的一个普通属性，不参与业务排序。</p><p>订单方向用枚举<code>Direction</code>实现，它仅有<code>BUY</code>和<code>SELL</code>两个值：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>public enum Direction {
+</span></span><span class=line><span class=cl>    BUY, SELL;
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><p>价格和数量以<code>BigDecimal</code>表示。不用<code>float</code>或<code>double</code>的原因在于计算机无法进行精确的浮点数运算，而金融交易的价格、数量是不允许有误差的，因此，必须用<code>BigDecimal</code>作为定点数运算。</p><p>下一步是实现订单簿<code>OrderBook</code>的表示。一个直观的想法是使用<code>List&lt;Order></code>，并对订单进行排序。但是，在证券交易中，使用<code>List</code>会导致两个致命问题：</p><ol><li>插入新的订单时，必须从头扫描<code>List&lt;Order></code>，以便在合适的地方插入<code>Order</code>，平均耗时O(N)；</li><li>取消订单时，也必须从头扫描<code>List&lt;Order></code>，平均耗时O(N)。</li></ol><p>更好的方法是使用红黑树，它是一种自平衡的二叉排序树，插入和删除的效率都是O(logN)，对应的Java类是<code>TreeMap</code>。</p><p>所以我们定义<code>OrderBook</code>的结构就是一个<code>TreeMap&lt;OrderKey, Order></code>，它的排序根据<code>OrderKey</code>决定。由业务规则可知，负责排序的<code>OrderKey</code>只需要<code>sequenceId</code>和<code>price</code>即可：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>public class OrderKey {
+</span></span><span class=line><span class=cl>    public final long sequenceId;
+</span></span><span class=line><span class=cl>    public final BigDecimal price;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><p>因此，<code>OrderBook</code>的核心数据结构就可以表示如下：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>public class OrderBook {
+</span></span><span class=line><span class=cl>    public final Direction direction; 
+</span></span><span class=line><span class=cl>    public final TreeMap&lt;OrderKey, Order&gt; book; 
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    public OrderBook(Direction direction) {
+</span></span><span class=line><span class=cl>        this.direction = direction;
+</span></span><span class=line><span class=cl>        this.book = new TreeMap&lt;&gt;(???);
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><p>有的童鞋注意到<code>TreeMap</code>的排序要求实现<code>Comparable</code>接口或者提供一个<code>Comparator</code>。我们之所以没有在<code>OrderKey</code>上实现<code>Comparable</code>接口是因为买卖盘排序的价格规则不同，因此，编写两个<code>Comparator</code>分别用于排序买盘和卖盘：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>private static final Comparator&lt;OrderKey&gt; SORT_SELL = new Comparator&lt;&gt;() {
+</span></span><span class=line><span class=cl>    public int compare(OrderKey o1, OrderKey o2) {
+</span></span><span class=line><span class=cl>        
+</span></span><span class=line><span class=cl>        int cmp = o1.price.compareTo(o2.price);
+</span></span><span class=line><span class=cl>        
+</span></span><span class=line><span class=cl>        return cmp == 0 ? Long.compare(o1.sequenceId, o2.sequenceId) : cmp;
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>};
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>private static final Comparator&lt;OrderKey&gt; SORT_BUY = new Comparator&lt;&gt;() {
+</span></span><span class=line><span class=cl>    public int compare(OrderKey o1, OrderKey o2) {
+</span></span><span class=line><span class=cl>        
+</span></span><span class=line><span class=cl>        int cmp = o2.price.compareTo(o1.price);
+</span></span><span class=line><span class=cl>        
+</span></span><span class=line><span class=cl>        return cmp == 0 ? Long.compare(o1.sequenceId, o2.sequenceId) : cmp;
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>};
+</span></span></code></pre></div><p>这样，<code>OrderBook</code>的<code>TreeMap</code>排序就由<code>Direction</code>指定：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>public OrderBook(Direction direction) {
+</span></span><span class=line><span class=cl>    this.direction = direction;
+</span></span><span class=line><span class=cl>    this.book = new TreeMap&lt;&gt;(direction == Direction.BUY ? SORT_BUY : SORT_SELL);
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><p>这里友情提示Java的<code>BigDecimal</code>比较大小的大坑：比较两个<code>BigDecimal</code>是否值相等，一定要用<code>compareTo()</code>，不要用<code>equals()</code>，因为<code>1.2</code>和<code>1.20</code>因为<code>scale</code>不同导致<code>equals()</code>返回<code>false</code>。</p><p>在Java中比较两个BigDecimal的值只能使用compareTo()，不能使用equals()！</p><p>再给<code>OrderBook</code>添加插入、删除和查找首元素方法：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>public Order getFirst() {
+</span></span><span class=line><span class=cl>    return this.book.isEmpty() ? null : this.book.firstEntry().getValue();
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>public boolean remove(Order order) {
+</span></span><span class=line><span class=cl>    return this.book.remove(new OrderKey(order.sequenceId, order.price)) != null;
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>public boolean add(Order order) {
+</span></span><span class=line><span class=cl>    return this.book.put(new OrderKey(order.sequenceId, order.price), order) == null;
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><p>现在，有了买卖盘，我们就可以编写撮合引擎了。定义<code>MatchEngine</code>核心数据结构如下：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>public class MatchEngine {
+</span></span><span class=line><span class=cl>    public final OrderBook buyBook = new OrderBook(Direction.BUY);
+</span></span><span class=line><span class=cl>    public final OrderBook sellBook = new OrderBook(Direction.SELL);
+</span></span><span class=line><span class=cl>    public BigDecimal marketPrice = BigDecimal.ZERO; 
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><p>一个完整的撮合引擎包含一个买盘、一个卖盘和一个最新成交价（初始值为0）。撮合引擎的输入是一个<code>Order</code>实例，每处理一个<code>Order</code>，就输出撮合结果<code>MatchResult</code>，核心处理方法定义如下：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>public MatchResult processOrder(Order order) {
+</span></span><span class=line><span class=cl>    ...
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><p>下面我们讨论如何处理一个具体的<code>Order</code>。对于撮合交易来说，如果新订单是一个买单，则首先尝试在卖盘中匹配价格合适的卖单，如果匹配成功则成交。一个大的买单可能会匹配多个较小的卖单。当买单被完全匹配后，说明此买单已完全成交，处理结束，否则，如果存在未成交的买单，则将其放入买盘。处理卖单的逻辑是类似的。</p><p>我们把已经挂在买卖盘的订单称为挂单（Maker），当前正在处理的订单称为吃单（Taker），一个Taker订单如果未完全成交则转为Maker挂在买卖盘，因此，处理当前Taker订单的逻辑如下：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>public MatchResult processOrder(Order order) {
+</span></span><span class=line><span class=cl>    switch (order.direction) {
+</span></span><span class=line><span class=cl>    case BUY:
+</span></span><span class=line><span class=cl>        
+</span></span><span class=line><span class=cl>        return processOrder(order, this.sellBook, this.buyBook);
+</span></span><span class=line><span class=cl>    case SELL:
+</span></span><span class=line><span class=cl>        
+</span></span><span class=line><span class=cl>        return processOrder(order, this.buyBook, this.sellBook);
+</span></span><span class=line><span class=cl>    default:
+</span></span><span class=line><span class=cl>        throw new IllegalArgumentException(&#34;Invalid direction.&#34;);
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>/**
+</span></span><span class=line><span class=cl> * @param takerOrder  输入订单
+</span></span><span class=line><span class=cl> * @param makerBook   尝试匹配成交的OrderBook
+</span></span><span class=line><span class=cl> * @param anotherBook 未能完全成交后挂单的OrderBook
+</span></span><span class=line><span class=cl> * @return 成交结果
+</span></span><span class=line><span class=cl> */
+</span></span><span class=line><span class=cl>MatchResult processOrder(Order takerOrder, OrderBook makerBook, OrderBook anotherBook) {
+</span></span><span class=line><span class=cl>    ...
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><p>根据价格匹配，直到成交双方有一方完全成交或成交条件不满足时结束处理，我们直接给出<code>processOrder()</code>的业务逻辑代码：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>MatchResult processOrder(Order takerOrder, OrderBook makerBook, OrderBook anotherBook) {
+</span></span><span class=line><span class=cl>    MatchResult matchResult = new MatchResult(takerOrder);
+</span></span><span class=line><span class=cl>    for (;;) {
+</span></span><span class=line><span class=cl>        Order makerOrder = makerBook.getFirst();
+</span></span><span class=line><span class=cl>        if (makerOrder == null) {
+</span></span><span class=line><span class=cl>            
+</span></span><span class=line><span class=cl>            break;
+</span></span><span class=line><span class=cl>        }
+</span></span><span class=line><span class=cl>        if (takerOrder.direction == Direction.BUY &amp;&amp; takerOrder.price.compareTo(makerOrder.price) &lt; 0) {
+</span></span><span class=line><span class=cl>            
+</span></span><span class=line><span class=cl>            break;
+</span></span><span class=line><span class=cl>        } else if (takerOrder.direction == Direction.SELL &amp;&amp; takerOrder.price.compareTo(makerOrder.price) &gt; 0) {
+</span></span><span class=line><span class=cl>            
+</span></span><span class=line><span class=cl>            break;
+</span></span><span class=line><span class=cl>        }
+</span></span><span class=line><span class=cl>        
+</span></span><span class=line><span class=cl>        this.marketPrice = makerOrder.price;
+</span></span><span class=line><span class=cl>        
+</span></span><span class=line><span class=cl>        BigDecimal matchedAmount = takerOrder.amount.min(makerOrder.amount);
+</span></span><span class=line><span class=cl>        
+</span></span><span class=line><span class=cl>        matchResult.add(makerOrder.price, matchedAmount, makerOrder);
+</span></span><span class=line><span class=cl>        
+</span></span><span class=line><span class=cl>        takerOrder.amount = takerOrder.amount.subtract(matchedAmount);
+</span></span><span class=line><span class=cl>        makerOrder.amount = makerOrder.amount.subtract(matchedAmount);
+</span></span><span class=line><span class=cl>        
+</span></span><span class=line><span class=cl>        if (makerOrder.amount.signum() == 0) {
+</span></span><span class=line><span class=cl>            makerBook.remove(makerOrder);
+</span></span><span class=line><span class=cl>        }
+</span></span><span class=line><span class=cl>        
+</span></span><span class=line><span class=cl>        if (takerOrder.amount.signum() == 0) {
+</span></span><span class=line><span class=cl>            break;
+</span></span><span class=line><span class=cl>        }
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    if (takerOrder.amount.signum() &gt; 0) {
+</span></span><span class=line><span class=cl>        anotherBook.add(takerOrder);
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>    return matchResult;
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><p>可见，撮合匹配的业务逻辑是相对简单的。撮合结果记录在<code>MatchResult</code>中，它可以用一个Taker订单和一系列撮合匹配记录表示：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>public class MatchResult {
+</span></span><span class=line><span class=cl>    public final Order takerOrder;
+</span></span><span class=line><span class=cl>    public final List&lt;MatchRecord&gt; matchRecords = new ArrayList&lt;&gt;();
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><p>撮合记录则由成交双方、成交价格与数量表示：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>public class MatchRecord {
+</span></span><span class=line><span class=cl>    public final BigDecimal price;
+</span></span><span class=line><span class=cl>    public final BigDecimal amount;
+</span></span><span class=line><span class=cl>    public final Order takerOrder;
+</span></span><span class=line><span class=cl>    public final Order makerOrder;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><p>撮合引擎返回的<code>MatchResult</code>包含了本次处理的完整结果，下一步需要把<code>MatchResult</code>发送给清算系统，对交易双方进行清算即完成了整个交易的处理。</p><p>我们可以编写一个简单的测试来验证撮合引擎工作是否正常。假设如下的订单依次输入到撮合引擎：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>buy  2082.34 1
+</span></span><span class=line><span class=cl>sell 2087.6  2
+</span></span><span class=line><span class=cl>buy  2087.8  1
+</span></span><span class=line><span class=cl>buy  2085.01 5
+</span></span><span class=line><span class=cl>sell 2088.02 3
+</span></span><span class=line><span class=cl>sell 2087.60 6
+</span></span><span class=line><span class=cl>buy  2081.11 7
+</span></span><span class=line><span class=cl>buy  2086.0  3
+</span></span><span class=line><span class=cl>buy  2088.33 1
+</span></span><span class=line><span class=cl>sell 2086.54 2
+</span></span><span class=line><span class=cl>sell 2086.55 5
+</span></span><span class=line><span class=cl>buy  2086.55 3
+</span></span></code></pre></div><p>经过撮合后最终买卖盘及市场价如下：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>2088.02 3
+</span></span><span class=line><span class=cl>2087.60 6
+</span></span><span class=line><span class=cl>2086.55 4
+</span></span><span class=line><span class=cl>---------
+</span></span><span class=line><span class=cl>2086.55
+</span></span><span class=line><span class=cl>---------
+</span></span><span class=line><span class=cl>2086.00 3
+</span></span><span class=line><span class=cl>2085.01 5
+</span></span><span class=line><span class=cl>2082.34 1
+</span></span><span class=line><span class=cl>2081.11 7
+</span></span></code></pre></div><p>如果我们仔细观察整个系统的输入和输出，输入实际上是一系列按时间排序后的订单（实际排序按sequenceId），输出是一系列<code>MatchResult</code>，内部状态的变化就是买卖盘以及市场价的变化。如果两个初始状态相同的<code>MatchEngine</code>，输入的订单序列是完全相同的，则我们得到的<code>MatchResult</code>输出序列以及最终的内部状态也是完全相同的，因此，可以轻易地使用两个独立的<code>MatchEngine</code>作为集群，将同一组订单序列分别输入给不同的<code>MatchEngine</code>，取任意一个<code>MatchEngine</code>的输出结果都是正确的。</p><h3 id=小结>小结</h3><p>本文讨论并实现了一个可工作的撮合引擎核心。实现撮合引擎的关键在于将业务模型转换为高效的数据结构。只要保证核心数据结构的简单和高效，撮合引擎的业务逻辑编写是非常容易的。</p></div></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>

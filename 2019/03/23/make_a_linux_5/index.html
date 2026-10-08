@@ -1,0 +1,54 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>写一个操作系统_05 调试MBR · changan's blog</title><meta name=description content="熟悉MBR引导 MBR的512字节里面也是代码，他被BIOS加载执行，自身执行的时候加载操作系统的loader，我们在没有操作系统loader的情况下先写一段测试程序，体验一下。
+实现的功能如下:
+BIOS 加载 MBR中的代码，执行，用BIOS 中断 INT 0x10显示字符串
+MBR的代码 ;主引导程序 ; 起始编 …"><link rel=canonical href=https://www.oneyearago.me/2019/03/23/make_a_linux_5/><meta property="og:title" content="写一个操作系统_05 调试MBR"><meta property="og:url" content="https://www.oneyearago.me/2019/03/23/make_a_linux_5/"><meta property="og:description" content="熟悉MBR引导 MBR的512字节里面也是代码，他被BIOS加载执行，自身执行的时候加载操作系统的loader，我们在没有操作系统loader的情况下先写一段测试程序，体验一下。
+实现的功能如下:
+BIOS 加载 MBR中的代码，执行，用BIOS 中断 INT 0x10显示字符串
+MBR的代码 ;主引导程序 ; 起始编 …"><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><div class=post-meta><time datetime=2019-03-23>2019.03.23</time><span>1 分钟阅读</span></div><h1>写一个操作系统_05 调试MBR</h1><div class=chips><a href=/categories/kernel/>Kernel</a><a href=/categories/os/>Os</a></div></header><div class=prose><h3 id=熟悉MBR引导>熟悉MBR引导</h3><p>MBR的512字节里面也是代码，他被BIOS加载执行，自身执行的时候加载操作系统的loader，我们在没有操作系统loader的情况下先写一段测试程序，体验一下。</p><p>实现的功能如下:</p><p>BIOS 加载 MBR中的代码，执行，用BIOS 中断 INT 0x10显示字符串</p><h4 id=MBR的代码>MBR的代码</h4><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>;主引导程序 
+</span></span><span class=line><span class=cl>; 起始编译地址是 0x7c00
+</span></span><span class=line><span class=cl>SECTION MBR vstart=0x7c00         
+</span></span><span class=line><span class=cl>   mov ax,cs      
+</span></span><span class=line><span class=cl>   mov ds,ax
+</span></span><span class=line><span class=cl>   mov es,ax
+</span></span><span class=line><span class=cl>   mov ss,ax
+</span></span><span class=line><span class=cl>   mov fs,ax
+</span></span><span class=line><span class=cl>   mov sp,0x7c00
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>; 使用BIOS 显示服务（Video Service）--INT 10H 
+</span></span><span class=line><span class=cl>;;;;;;;;;    下面这三行代码是获取光标位置    ;;;;;;;;;
+</span></span><span class=line><span class=cl>;.get_cursor获取当前光标位置,在光标位置处打印字符.
+</span></span><span class=line><span class=cl>   mov ah, 3		; 输入: 3号子功能是获取光标位置,需要存入ah寄存器
+</span></span><span class=line><span class=cl>   mov bh, 0		; bh寄存器存储的是待获取光标的页号
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>   int 0x10		; 输出: ch=光标开始行,cl=光标结束行
+</span></span><span class=line><span class=cl>			; dh=光标所在行号,dl=光标所在列号
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>;;;;;;;;;    获取光标位置结束    ;;;;;;;;;;;;;;;;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>;;;;;;;;;     打印字符串    ;;;;;;;;;;;
+</span></span><span class=line><span class=cl>   ;还是用10h中断,不过这次是调用13号子功能打印字符串
+</span></span><span class=line><span class=cl>   mov ax, message 
+</span></span><span class=line><span class=cl>   mov bp, ax		; es:bp 为串首地址, es此时同cs一致，
+</span></span><span class=line><span class=cl>			; 开头时已经为sreg初始化
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>   ; 光标位置要用到dx寄存器中内容,cx中的光标位置可忽略
+</span></span><span class=line><span class=cl>   mov cx, 8		; cx 为串长度,不包括结束符0的字符个数
+</span></span><span class=line><span class=cl>   mov ax, 0x1301	; 子功能号13是显示字符及属性,要存入ah寄存器,
+</span></span><span class=line><span class=cl>			; al设置写字符方式 ah=01: 显示字符串,光标跟随移动
+</span></span><span class=line><span class=cl>   mov bx, 0x2		; bh存储要显示的页号,此处是第0页,
+</span></span><span class=line><span class=cl>			; bl中是字符属性, 改颜色，要不看不见
+</span></span><span class=line><span class=cl>   int 0x10		; 执行BIOS 0x10 号中断
+</span></span><span class=line><span class=cl>;;;;;;;;;      打字字符串结束	 ;;;;;;;;;;;;;;;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>   jmp $		; ; 死循环
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>   message db &#34;TEST MBR&#34;	; 字符串定义
+</span></span><span class=line><span class=cl>   ; 保证 MBR  512B 
+</span></span><span class=line><span class=cl>   times 510-($-$$) db 0
+</span></span><span class=line><span class=cl>   db 0x55,0xaa
+</span></span></code></pre></div><h4 id=编译成二进制>编译成二进制</h4><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>nasm -o mbr.bin mbr.S
+</span></span></code></pre></div><h4 id=将二进制文件存储到MBR扇区>将二进制文件存储到MBR扇区</h4><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>dd if=./mbr.bin  of=./hd30M.img bs=512 count=1 conv=notrunc
+</span></span></code></pre></div><h4 id=调试-MBR-代码>调试 MBR 代码</h4><p>在 bochs的配置文件中配好 MBR扇区对应的磁盘，启动bochs</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>ata0-master: type=disk, mode=flat, path=&#34;/root/data/bochs/bin/hd30M.img&#34;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>./bochs -f bochsrc-sample.txt
+</span></span></code></pre></div><h4 id=在虚拟机中调试>在虚拟机中调试</h4><p><img src=http://201904-1251969284.cossh.myqcloud.com/MBR_DEBUG.png alt=image></p></div><div class="chips post-tags"><a href=/tags/os/># Os</a><a href=/tags/kernel/># Kernel</a></div><nav class=post-neighbors aria-label=相邻文章><a href=/2019/03/20/make_a_linux_4/><small>上一篇</small>写一个操作系统_04 内核调试环境搭建</a><a href=/2019/03/26/make_a_linux_6/><small>下一篇</small>写一个操作系统_06 内存寻址</a></nav><section class=comments aria-label=文章评论><script src=https://giscus.app/client.js data-repo=changan29/changan29.github.io data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category=Announcements data-category-id=DIC_kwDOC6bf5s4CSvAi data-mapping=url data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=preferred_color_scheme data-lang=zh-CN crossorigin=anonymous async></script></section></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>

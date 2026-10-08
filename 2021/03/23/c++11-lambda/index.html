@@ -1,0 +1,80 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>C++11 lambda · changan's blog</title><meta name=description content="Introduction C ++ 11引入了lambda，该lambda提供了一种语法上轻量级的方式来动态定义函数。它们还可以通过值或引用来捕获（或封闭）周围范围的变量。在本文中，我们将研究lambda与纯函数和函子类（实现的类）在实现方面的区别operator()。
+Capture By Value class …"><link rel=canonical href=https://www.oneyearago.me/2021/03/23/c++11-lambda/><meta property="og:title" content="C++11 lambda"><meta property="og:url" content="https://www.oneyearago.me/2021/03/23/c++11-lambda/"><meta property="og:description" content="Introduction C ++ 11引入了lambda，该lambda提供了一种语法上轻量级的方式来动态定义函数。它们还可以通过值或引用来捕获（或封闭）周围范围的变量。在本文中，我们将研究lambda与纯函数和函子类（实现的类）在实现方面的区别operator()。
+Capture By Value class …"><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><div class=post-meta><time datetime=2021-03-23>2021.03.23</time><span>1 分钟阅读</span></div><h1>C++11 lambda</h1><div class=chips><a href=/categories/c++/>C++</a></div></header><div class=prose><h3 id=Introduction>Introduction</h3><p>C ++ 11引入了lambda，该lambda提供了一种语法上轻量级的方式来动态定义函数。它们还可以通过值或引用来捕获（或封闭）周围范围的变量。在本文中，我们将研究lambda与纯函数和函子类（实现的类）在实现方面的区别operator()。</p><h4 id=Capture-By-Value>Capture By Value</h4><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>class Functor {
+</span></span><span class=line><span class=cl>  public:
+</span></span><span class=line><span class=cl>    Functor(const int x): m_x(x) {}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    int operator()(int a) {
+</span></span><span class=line><span class=cl>      return a + m_x;
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  private:
+</span></span><span class=line><span class=cl>    int m_x;
+</span></span><span class=line><span class=cl>};
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>int main() {
+</span></span><span class=line><span class=cl>  int x = 3;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  auto lambda = [=] (int a) { return a + x; };
+</span></span><span class=line><span class=cl>  Functor functor(x);
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  volatile int y1 = functor(5);
+</span></span><span class=line><span class=cl>  volatile int y2 = lambda(5);
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  return 0;
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><p>按值捕获lambda的工作方式与标准functor几乎相同：它们都分配存储捕获值的对象，并获取指向该对象的隐藏函数参数。lambda和functor的函数调用执行的代码是相同的。唯一的区别是lambda的构造函数被内联到创建lambda的函数中，而不是像函子的构造函数那样是一个单独的函数。</p><h4 id=Capture-By-Reference>Capture By Reference</h4><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>class Functor {
+</span></span><span class=line><span class=cl>  public:
+</span></span><span class=line><span class=cl>    Functor(int&amp; x): m_x(x) {}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    int operator()(int a) {
+</span></span><span class=line><span class=cl>      return a + m_x++;
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  private:
+</span></span><span class=line><span class=cl>    int&amp; m_x;
+</span></span><span class=line><span class=cl>};
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>int main() {
+</span></span><span class=line><span class=cl>  int x = 3;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  auto lambda = [&amp;] (int a) { return a + x++; };
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  Functor functor(x);
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  volatile int y1 = functor(5);
+</span></span><span class=line><span class=cl>  volatile int y2 = lambda(5);
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  return 0;
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><p>当通过引用捕获时，functor和lambda对象包含一个指针而不是一个值，这表明引用的行为是在内部是使用指针实现的。与按值捕获一样，functor和lambda调用代码是等价的，但是lambda的构造函数是内联的，而functor的则不是。</p><h3 id=结论>结论</h3><p>C ++ lambda和函子比相似之处更多。这是预料之中的；lambda的主要目标是成为创建函数和闭包的语法上简单的方法。即使没有捕获任何变量，它们也与普通函数略有不同。总结主要区别：</p><ul><li>1、函子和lambda总是传递一个this指针，而普通函数自然不是。这会消耗一个额外的寄存器和8个字节的堆栈空间。</li><li><ol><li>Lambda“构造函数”被内联到创建Lambda的函数中。这显着减少了执行的复制量（lambda的2条指令，函子的5条指令），以及避免了函数调用的建立和拆卸。</li></ol></li></ul><h3 id=闭包-利用函数对象记住状态数据>闭包 利用函数对象记住状态数据</h3><p>虽然函数对象也可以像函数一样被用来表达一个数据处理过程，但它更大的意义在于，函数对象具有“记忆力”，它可以记住函数执行过程中的状态数据，从而使它可以应用在那些需要记住函数上次执行的状态数据的场景下。对于普通函数而言，函数只是用来表达一个运算的过程，它无法记住运算过程中的一些状态数据。函数就像一个漏斗，数据可以从这个漏洞中流过，发生某些变化，但是这个漏斗什么都不会留下。在大多数情况下，“漏斗式”的普通函数已经完全可以满足需要了，但在某些特殊情况下，下一次的函数执行是在上一次函数执行的结果基础上进行的。这时，函数就需要记住上一次的执行状态数据以备下一次函数执行使用。</p><p>函数对象的出现就是用来弥补函数的这个缺陷的。利用函数对象自身的成员变量，函数可以记住在每次执行过程中的状态数据，找回失去的记忆。</p><h4 id=std-bind和闭包>std::bind和闭包</h4><p>在函数式编程中，通过组合现有的函数，我们可以创造出新的函数。标准库中的std::bind就是可以创造闭包（closure）的工具。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>class Foo
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl> public:
+</span></span><span class=line><span class=cl>  void methodA();
+</span></span><span class=line><span class=cl>  void methodInt(int a);
+</span></span><span class=line><span class=cl>};
+</span></span><span class=line><span class=cl>class Bar
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl> public:
+</span></span><span class=line><span class=cl>  void methodB();
+</span></span><span class=line><span class=cl>};
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>void main()
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    std::function&lt;void()&gt; f1; // 无参数，无返回值
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    Foo foo;
+</span></span><span class=line><span class=cl>    f1 = std::bind(&amp;Foo::methodA, &amp;foo);
+</span></span><span class=line><span class=cl>    f1(); // 调用 foo.methodA();
+</span></span><span class=line><span class=cl>    Bar bar;
+</span></span><span class=line><span class=cl>    f1 = std::bind(&amp;Bar::methodB, &amp;bar);
+</span></span><span class=line><span class=cl>    f1(); // 调用 bar.methodB();
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    f1 = std::bind(&amp;Foo::methodInt, &amp;foo, 42);
+</span></span><span class=line><span class=cl>    f1(); // 调用 foo.methodInt(42);
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    std::function&lt;void(int)&gt; f2; // int 参数，无返回值
+</span></span><span class=line><span class=cl>    f2 = std::bind(&amp;Foo::methodInt, &amp;foo, _1);
+</span></span><span class=line><span class=cl>    f2(53); // 调用 foo.methodInt(53);
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><p>通过std::bind，我们可以为同一个类的不同对象可以分派不同的实现，从而实现不同的行为。这种方式使得我们不在需要设计通过继承与虚函数来实现多态，无疑为程序库设计提供的新的方式。</p><h3 id=引用>引用</h3><ul><li><a href=https://web.mst.edu/~nmjxv3/articles/lambdas.html>https://web.mst.edu/~nmjxv3/articles/lambdas.html</a></li><li><a href=https://zhuanlan.zhihu.com/p/52459169>https://zhuanlan.zhihu.com/p/52459169</a></li></ul></div><div class="chips post-tags"><a href=/tags/c++/># C++</a></div><nav class=post-neighbors aria-label=相邻文章><a href=/2021/03/20/ddia-7-transaction/><small>上一篇</small>ddia-事务</a><a href=/2021/03/23/c++11-atomic/><small>下一篇</small>C++ 11 Atomic</a></nav><section class=comments aria-label=文章评论><script src=https://giscus.app/client.js data-repo=changan29/changan29.github.io data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category=Announcements data-category-id=DIC_kwDOC6bf5s4CSvAi data-mapping=url data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=preferred_color_scheme data-lang=zh-CN crossorigin=anonymous async></script></section></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>

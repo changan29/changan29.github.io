@@ -1,0 +1,107 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>进程 · changan's blog</title><meta name=description content="进程环境 当内核执行C程序时(使用一个exec程序)，在调用main之前调用一个特殊的启动例程。可执行文件将此可执行例程指定为程序的起始地址–这是由链接器设置的，而连接器是有C编译器调用的。启动例程从内核取得命令行参数和环境变量值，然后按上述方式调用main函数。
+进程控制 系统中有一些专用进程，ID为0的进程通常是调 …"><link rel=canonical href=https://www.oneyearago.me/2019/08/29/fork/><meta property="og:title" content="进程"><meta property="og:url" content="https://www.oneyearago.me/2019/08/29/fork/"><meta property="og:description" content="进程环境 当内核执行C程序时(使用一个exec程序)，在调用main之前调用一个特殊的启动例程。可执行文件将此可执行例程指定为程序的起始地址–这是由链接器设置的，而连接器是有C编译器调用的。启动例程从内核取得命令行参数和环境变量值，然后按上述方式调用main函数。
+进程控制 系统中有一些专用进程，ID为0的进程通常是调 …"><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><h1>进程</h1></header><div class=prose><h3 id=进程环境>进程环境</h3><p>当内核执行C程序时(使用一个exec程序)，在调用main之前调用一个特殊的启动例程。可执行文件将此可执行例程指定为程序的起始地址–这是由链接器设置的，而连接器是有C编译器调用的。启动例程从内核取得命令行参数和环境变量值，然后按上述方式调用main函数。</p><h3 id=进程控制>进程控制</h3><p>系统中有一些专用进程，ID为0的进程通常是调度进程，该进程是内核的一部分，它并不执行任何磁盘上的程序。进程为1的进程通常是Init进程，该进程负责在自举内核后启动unix系统，并将系统引导到一个状态，MacOs中的init进程变成了 launchd进程。</p><h4 id=fork>fork</h4><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>pid_t pid = fork();
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>if(pid &lt;0)
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    //error
+</span></span><span class=line><span class=cl>    printf(&#34;fork err\n&#34;);
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>else if( pid == 0 )
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    // child
+</span></span><span class=line><span class=cl>    sleep(50);
+</span></span><span class=line><span class=cl>    printf(&#34;child process by fork\n&#34;);
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>else
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    printf(&#34;fork me\n&#34;);
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><h4 id=vfork>vfork</h4><p>vfork()跟fork()类似，都是创建一个子进程，这两个函数的的返回值也具有相同的含义。但是vfork()创建的子进程基本上只能做一件事，那就是立即调用_exit()函数或者exec函数族成员，调用任何其它函数（包括exit()）、修改任何数据（除了保存vfork()返回值的那个变量）、执行任何其它语句（包括return）都是不应该的。</p><p>此外，调用vfork()之后，父进程会一直阻塞，直到子进程调用_exit()终止，或者调用exec函数族成员。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>pid_t pid = vfork();
+</span></span><span class=line><span class=cl>if( pid == 0 )
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    // child process
+</span></span><span class=line><span class=cl>    printf(&#34;child process run and _exit() \n&#34;);
+</span></span><span class=line><span class=cl>    _exit(0);
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>else if( pid &gt; 0 )
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    // father process
+</span></span><span class=line><span class=cl>    printf(&#34;father process run \n&#34;);
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>else
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    printf(&#34;vfork error&#34;);
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><h4 id=clone>clone</h4><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>void thread(void)
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    int i;
+</span></span><span class=line><span class=cl>    while(1)
+</span></span><span class=line><span class=cl>    {
+</span></span><span class=line><span class=cl>        printf(&#34;This is a pthread.\n&#34;);
+</span></span><span class=line><span class=cl>        sleep(1);
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>int main(int argc,char **argv)
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    pthread_t id;
+</span></span><span class=line><span class=cl>    int i,ret;
+</span></span><span class=line><span class=cl>    ret=pthread_create(&amp;id,NULL,(void *) thread,NULL);
+</span></span><span class=line><span class=cl>    if(ret!=0){
+</span></span><span class=line><span class=cl>        printf (&#34;Create pthread error!\n&#34;);
+</span></span><span class=line><span class=cl>        exit (1);
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    while(1)
+</span></span><span class=line><span class=cl>    {
+</span></span><span class=line><span class=cl>        printf(&#34;This is the main process.\n&#34;);
+</span></span><span class=line><span class=cl>        sleep(1);
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>    pthread_join(id,NULL);
+</span></span><span class=line><span class=cl>    return 0;
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><p>编译,strace跟踪,看pthread_create 的系统调用是 clone, 其比较大的作用是创建线程，当然也能创建子进程<br><a href=https://linux.die.net/man/2/clone>man clone</a></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>clone(child_stack=0x7f61669d6fb0,
+</span></span><span class=line><span class=cl>flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|\
+</span></span><span class=line><span class=cl>CLONE_THREAD|CLONE_SYSVSEM|CLONE_SETTLS|CLONE_PARENT_SETTID|CLONE_CHILD_CLEARTID,
+</span></span><span class=line><span class=cl>parent_tidptr=0x7f61669d79d0, 
+</span></span><span class=line><span class=cl>tls=0x7f61669d7700, 
+</span></span><span class=line><span class=cl>child_tidptr=0x7f61669d79d0) = 22372
+</span></span></code></pre></div><p>看上面这个pthread的例子，只有一个pid,但是下面两个线程，其对应两个内核上的 task_struct</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>[root@VM_8_16_centos ~]# ll /proc/26733/task/
+</span></span><span class=line><span class=cl>total 0
+</span></span><span class=line><span class=cl>dr-xr-xr-x 5 root root 0 Sep 17 12:06 26733
+</span></span><span class=line><span class=cl>dr-xr-xr-x 5 root root 0 Sep 17 12:06 26734
+</span></span></code></pre></div><h4 id=3个fork>3个fork</h4><p>传统的fork()系统调用时在Linux中是用clone()实现的，其中clone()的flags参数指定为SIGCHLD信号及所有清0的clone标志，而它的child_stack参数是父进程当前的堆栈指针。因此，父进程和子进程暂时共享同一个用户堆栈。而由于写时复制技术，当任何一个进程试图改变栈，则立即各自得到用户堆栈的一份拷贝。</p><p>do_fork()函数负责处理clone()、fork()和vfork()系统调用，也就是说，无论是clone()、fork()还是vfork()，都会调用do_fork()函数。</p><p>1:<br><img src=https://201909-1251969284.cos.ap-shanghai.myqcloud.com/do_fork.png alt=image></p><ol start=2><li></li></ol><p><img src=https://201909-1251969284.cos.ap-shanghai.myqcloud.com/copy_process.png alt=image></p><h4 id=waitpid>waitpid</h4><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>int main()
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    pid_t pid = fork();
+</span></span><span class=line><span class=cl>    printf(&#34;pid= %ld\n&#34; , (long) getpid());
+</span></span><span class=line><span class=cl>    if( pid &lt; 0 )
+</span></span><span class=line><span class=cl>    {
+</span></span><span class=line><span class=cl>        printf(&#34;fork error&#34;);
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>    else if( pid == 0 )
+</span></span><span class=line><span class=cl>    {
+</span></span><span class=line><span class=cl>        // child
+</span></span><span class=line><span class=cl>        if( (pid = fork()) &lt; 0 )
+</span></span><span class=line><span class=cl>        {
+</span></span><span class=line><span class=cl>            printf(&#34;fork error&#34;);
+</span></span><span class=line><span class=cl>        }
+</span></span><span class=line><span class=cl>        else if( pid &gt; 0 )
+</span></span><span class=line><span class=cl>        {
+</span></span><span class=line><span class=cl>            printf(&#34;pid= %ld will be exit, before child\n&#34; , (long) getpid());
+</span></span><span class=line><span class=cl>            exit(0);
+</span></span><span class=line><span class=cl>        }
+</span></span><span class=line><span class=cl>        sleep(2);// a time for wait father process exit
+</span></span><span class=line><span class=cl>        printf(&#34;second child ppid= %ld\n&#34; , (long) getppid());
+</span></span><span class=line><span class=cl>        printf(&#34;pid= %ld will be exit as child\n&#34; , (long) getpid());
+</span></span><span class=line><span class=cl>        exit(0);
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    if( waitpid(pid,NULL,0) != pid )
+</span></span><span class=line><span class=cl>    {
+</span></span><span class=line><span class=cl>        printf(&#34;waitpid error&#34;);
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>    printf(&#34;pid= %ld will be exit\n&#34; , (long) getpid());
+</span></span><span class=line><span class=cl>    return 0;
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><h3 id=REF>REF</h3><ul><li><a href=http://guojing.me/linux-kernel-architecture/posts/clone-fork-and-vfork/>daf94cf87</a></li><li><a href=https://www.zhihu.com/question/35128513>zhihu qa</a></li></ul></div></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>

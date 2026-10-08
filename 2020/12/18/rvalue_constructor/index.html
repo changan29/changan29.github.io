@@ -1,0 +1,100 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>右值引用和构造 · changan's blog</title><meta name=description content="copy constructor/assign & move constructor/assign class MClass { public: int* pIntdata; int sz; public: MClass(int size) : sz(size) { pIntdata = new …"><link rel=canonical href=https://www.oneyearago.me/2020/12/18/rvalue_constructor/><meta property="og:title" content="右值引用和构造"><meta property="og:url" content="https://www.oneyearago.me/2020/12/18/rvalue_constructor/"><meta property="og:description" content="copy constructor/assign & move constructor/assign class MClass { public: int* pIntdata; int sz; public: MClass(int size) : sz(size) { pIntdata = new …"><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><h1>右值引用和构造</h1></header><div class=prose><h3 id=copy-constructor-assign-amp-move-constructor-assign>copy constructor/assign & move constructor/assign</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>class MClass
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>public:
+</span></span><span class=line><span class=cl>    int* pIntdata;
+</span></span><span class=line><span class=cl>    int sz;
+</span></span><span class=line><span class=cl>public:
+</span></span><span class=line><span class=cl>    MClass(int size) : sz(size)
+</span></span><span class=line><span class=cl>    {
+</span></span><span class=line><span class=cl>        pIntdata = new int[size];
+</span></span><span class=line><span class=cl>        for(int i=0;i&lt;sz;i++)
+</span></span><span class=line><span class=cl>        {
+</span></span><span class=line><span class=cl>            pIntdata[i] = i;
+</span></span><span class=line><span class=cl>        }
+</span></span><span class=line><span class=cl>        std::cout&lt;&lt; &#34;constructor|addr:&#34; &lt;&lt; this &lt;&lt; std::endl;
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    MClass&amp; operator=(const MClass&amp; h)
+</span></span><span class=line><span class=cl>    {
+</span></span><span class=line><span class=cl>        std::cout&lt;&lt; &#34;copy assign  operator= &#34; &lt;&lt; std::endl;
+</span></span><span class=line><span class=cl>        this-&gt;sz = h.sz;
+</span></span><span class=line><span class=cl>        if(  this-&gt;pIntdata ){ delete [] this-&gt;pIntdata ; this-&gt;pIntdata = NULL; } // instance get own ptr, size maybe change, del previous
+</span></span><span class=line><span class=cl>        
+</span></span><span class=line><span class=cl>        pIntdata = new int[sz];
+</span></span><span class=line><span class=cl>        for(int i=0;i&lt;sz;i++)
+</span></span><span class=line><span class=cl>        {
+</span></span><span class=line><span class=cl>            pIntdata[i] = h.pIntdata[i];
+</span></span><span class=line><span class=cl>        }   
+</span></span><span class=line><span class=cl>        return *this;
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    MClass(const MClass &amp;h) : sz(h.sz ) // copy constructor must pass its first argument by reference 
+</span></span><span class=line><span class=cl>    {
+</span></span><span class=line><span class=cl>        this-&gt;sz = h.sz; 
+</span></span><span class=line><span class=cl>        pIntdata = new int[sz];
+</span></span><span class=line><span class=cl>        for(int i=0;i&lt;sz;i++)
+</span></span><span class=line><span class=cl>        {
+</span></span><span class=line><span class=cl>            pIntdata[i] = h.pIntdata[i];
+</span></span><span class=line><span class=cl>        }
+</span></span><span class=line><span class=cl>        std::cout&lt;&lt; &#34;copy constructor &#34; &lt;&lt; this &lt;&lt; std::endl;
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    MClass( MClass &amp;&amp; h ): sz(h.sz ),pIntdata(h.pIntdata)  // move constructor 
+</span></span><span class=line><span class=cl>    {
+</span></span><span class=line><span class=cl>        std::cout&lt;&lt; &#34;move constructor &#34; &lt;&lt; this &lt;&lt; std::endl;
+</span></span><span class=line><span class=cl>        h.pIntdata = nullptr;               // 处理关联的资源
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>    MClass&amp; operator=( MClass&amp;&amp; h)
+</span></span><span class=line><span class=cl>    {
+</span></span><span class=line><span class=cl>        std::cout&lt;&lt; &#34;move MClass&amp; operator=(const MClass&amp;&amp;) &#34; &lt;&lt; this &lt;&lt; std::endl;
+</span></span><span class=line><span class=cl>        this-&gt;sz = h.sz;
+</span></span><span class=line><span class=cl>        this-&gt;pIntdata = h.pIntdata;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        h.pIntdata = nullptr;
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>    ~MClass()
+</span></span><span class=line><span class=cl>    {
+</span></span><span class=line><span class=cl>        if( pIntdata  )
+</span></span><span class=line><span class=cl>        {
+</span></span><span class=line><span class=cl>            delete [] pIntdata;
+</span></span><span class=line><span class=cl>            pIntdata = NULL;
+</span></span><span class=line><span class=cl>        } 
+</span></span><span class=line><span class=cl>        std::cout&lt;&lt; &#34;destructor &#34; &lt;&lt; this &lt;&lt; std::endl;
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>};
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>MClass GetOne()
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    MClass mc = MClass(42);
+</span></span><span class=line><span class=cl>    std::cout &lt;&lt; &#34;GetOne()::&amp;mc &#34; &lt;&lt;  &amp;mc  &lt;&lt; std::endl;
+</span></span><span class=line><span class=cl>    return mc; 
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>int func(MClass&amp;&amp; mc)
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    std::cout &lt;&lt; &#34;int func(MClass&amp;&amp; mc)|&amp;mc:&#34; &lt;&lt; &amp;mc &lt;&lt; std::endl;
+</span></span><span class=line><span class=cl>    return 0; 
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>int func2(MClass mc)
+</span></span><span class=line><span class=cl>{   
+</span></span><span class=line><span class=cl>    std::cout &lt;&lt; &#34;int func1(MClass&amp;&amp; mc)|&amp;mc:&#34; &lt;&lt; &amp;mc &lt;&lt; std::endl;
+</span></span><span class=line><span class=cl>    return 0;
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>int main()
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    MClass one = GetOne();  // -fno-elide-constructors 编译器优化
+</span></span><span class=line><span class=cl>    std::cout &lt;&lt; &#34;main::&amp;one &#34; &lt;&lt;  &amp;one  &lt;&lt; std::endl;
+</span></span><span class=line><span class=cl>    MClass two = func( std::move(one) );
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    MClass t3(5);
+</span></span><span class=line><span class=cl>    t3 = std::move(one);
+</span></span><span class=line><span class=cl>    return 0;
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><h3 id=C-的移动-move-是怎么运作的？>C++ 的移动 move 是怎么运作的？</h3><p>引入移动构造是为了避免多余的堆申请</p><p>std::move在运行期不做任何事情（不生成任何机器码），在编译期只做一件事情，就是把入参cast成对应类型的rvalue，从而影响其他函数调用的重载决议。你可以理解成std::move其实应该叫做比如说cast_to_rvalue，但是标准委员会认为这个破名字太长不好记。搞清楚这点你就理解了std::move了。</p><p><a href=https://www.zhihu.com/question/277908001>C++ 的移动 move 是怎么运作的？</a><br>C++的move基本啥也没干， 逻辑是自己实现的，参考上面的</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>MClass( MClass &amp;&amp; h ): sz(h.sz ),pIntdata(h.pIntdata)  // move constructor 
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    std::cout&lt;&lt; &#34;move constructor &#34; &lt;&lt; this &lt;&lt; std::endl;
+</span></span><span class=line><span class=cl>    h.pIntdata = nullptr;             
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div></div></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>

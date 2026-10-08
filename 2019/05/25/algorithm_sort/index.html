@@ -1,0 +1,72 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>排序与突破O(n2) · changan's blog</title><meta name=description content="复杂度 常用排序 Bubble Sort 常识，不较介绍了
+Selection Sort 选择最小的一个交换位置，交换次数比较少
+Insertion Sort 不太喜欢这种思路
+Shell Sort 是插入排序的一种更高效的改进版本，跟快排比起来有点尴尬
+假设有这样一组数[ 13 14 94 33 82 25 59 …"><link rel=canonical href=https://www.oneyearago.me/2019/05/25/algorithm_sort/><meta property="og:title" content="排序与突破O(n2)"><meta property="og:url" content="https://www.oneyearago.me/2019/05/25/algorithm_sort/"><meta property="og:description" content="复杂度 常用排序 Bubble Sort 常识，不较介绍了
+Selection Sort 选择最小的一个交换位置，交换次数比较少
+Insertion Sort 不太喜欢这种思路
+Shell Sort 是插入排序的一种更高效的改进版本，跟快排比起来有点尴尬
+假设有这样一组数[ 13 14 94 33 82 25 59 …"><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><h1>排序与突破O(n2)</h1></header><div class=prose><h3 id=复杂度>复杂度</h3><p><img src=http://201905-1251969284.cossh.myqcloud.com/sort_quality.png alt=image></p><h3 id=常用排序>常用排序</h3><h4 id=Bubble-Sort>Bubble Sort</h4><p>常识，不较介绍了</p><p><img src=http://201905-1251969284.cossh.myqcloud.com/Bubble_Sort.gif alt=image></p><h4 id=Selection-Sort>Selection Sort</h4><p>选择最小的一个交换位置，交换次数比较少</p><p><img src=http://201905-1251969284.cossh.myqcloud.com/Selection_Sort.gif alt=image></p><h4 id=Insertion-Sort>Insertion Sort</h4><p>不太喜欢这种思路</p><p><img src=http://201905-1251969284.cossh.myqcloud.com/Insertion_Sort.gif alt=image></p><h4 id=Shell-Sort>Shell Sort</h4><p>是插入排序的一种更高效的改进版本，跟快排比起来有点尴尬</p><p>假设有这样一组数[ 13 14 94 33 82 25 59 94 65 23 45 27 73 25 39 10 ]，如果我们以步长为5开始进行排序，我们可以通过将这列表放在有5列的表中来更好地描述算法，这样他们就应该看起来是这样：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>13 14 94 33 82
+</span></span><span class=line><span class=cl>25 59 94 65 23
+</span></span><span class=line><span class=cl>45 27 73 25 39
+</span></span><span class=line><span class=cl>10
+</span></span></code></pre></div><p>然后我们对每列进行排序：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>10 14 73 25 23
+</span></span><span class=line><span class=cl>13 27 94 33 39
+</span></span><span class=line><span class=cl>25 59 94 65 82
+</span></span><span class=line><span class=cl>45
+</span></span></code></pre></div><p>将上述四行数字，依序接在一起时我们得到：[ 10 14 73 25 23 13 27 94 33 39 25 59 94 65 82 45 ].这时10已经移至正确位置了，然后再以3为步长进行排序：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>10 14 73
+</span></span><span class=line><span class=cl>25 23 13
+</span></span><span class=line><span class=cl>27 94 33
+</span></span><span class=line><span class=cl>39 25 59
+</span></span><span class=line><span class=cl>94 65 82
+</span></span><span class=line><span class=cl>45
+</span></span></code></pre></div><p>最后以1步长进行排序。</p><h4 id=Merge-Sort>Merge Sort</h4><p>过程可视化看这个:</p><p><a href=https://www.bilibili.com/video/av18980253>Merge Sort bilibili</a></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>void merge_sort_recursive(int arr[], int reg[], int start, int end) {
+</span></span><span class=line><span class=cl>    if (start &gt;= end)
+</span></span><span class=line><span class=cl>        return;
+</span></span><span class=line><span class=cl>    int len = end - start, mid = (len &gt;&gt; 1) + start;
+</span></span><span class=line><span class=cl>    int start1 = start, end1 = mid;
+</span></span><span class=line><span class=cl>    int start2 = mid + 1, end2 = end;
+</span></span><span class=line><span class=cl>    merge_sort_recursive(arr, reg, start1, end1);
+</span></span><span class=line><span class=cl>    merge_sort_recursive(arr, reg, start2, end2);
+</span></span><span class=line><span class=cl>    int k = start;
+</span></span><span class=line><span class=cl>    while (start1 &lt;= end1 &amp;&amp; start2 &lt;= end2)
+</span></span><span class=line><span class=cl>        reg[k++] = arr[start1] &lt; arr[start2] ? arr[start1++] : arr[start2++];
+</span></span><span class=line><span class=cl>    while (start1 &lt;= end1)
+</span></span><span class=line><span class=cl>        reg[k++] = arr[start1++];
+</span></span><span class=line><span class=cl>    while (start2 &lt;= end2)
+</span></span><span class=line><span class=cl>        reg[k++] = arr[start2++];
+</span></span><span class=line><span class=cl>    for (k = start; k &lt;= end; k++)
+</span></span><span class=line><span class=cl>        arr[k] = reg[k];
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>void merge_sort(int arr[], const int len) {
+</span></span><span class=line><span class=cl>    int reg[len];
+</span></span><span class=line><span class=cl>    merge_sort_recursive(arr, reg, 0, len - 1);
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><h4 id=Quick-Sort>Quick Sort</h4><p>过程可视化看这个:</p><p><a href=https://www.bilibili.com/video/av39093184>快排 bilibili</a></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>void swap(int *x, int *y) {
+</span></span><span class=line><span class=cl>    int t = *x;
+</span></span><span class=line><span class=cl>    *x = *y;
+</span></span><span class=line><span class=cl>    *y = t;
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>void quick_sort_recursive(int arr[], int start, int end) {
+</span></span><span class=line><span class=cl>    if (start &gt;= end)
+</span></span><span class=line><span class=cl>        return;
+</span></span><span class=line><span class=cl>    int mid = arr[end];
+</span></span><span class=line><span class=cl>    int left = start, right = end - 1;
+</span></span><span class=line><span class=cl>    while (left &lt; right) {
+</span></span><span class=line><span class=cl>        while (arr[left] &lt; mid &amp;&amp; left &lt; right)
+</span></span><span class=line><span class=cl>            left++;
+</span></span><span class=line><span class=cl>        while (arr[right] &gt;= mid &amp;&amp; left &lt; right)
+</span></span><span class=line><span class=cl>            right--;
+</span></span><span class=line><span class=cl>        swap(&amp;arr[left], &amp;arr[right]);
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>    if (arr[left] &gt;= arr[end])
+</span></span><span class=line><span class=cl>        swap(&amp;arr[left], &amp;arr[end]);
+</span></span><span class=line><span class=cl>    else
+</span></span><span class=line><span class=cl>        left++;
+</span></span><span class=line><span class=cl>    if (left)
+</span></span><span class=line><span class=cl>        quick_sort_recursive(arr, start, left - 1);
+</span></span><span class=line><span class=cl>    quick_sort_recursive(arr, left + 1, end);
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><h4 id=Heap-Sort>Heap Sort</h4><p>看这个，很容易懂，利用二叉树这种结构:</p><p><a href="https://www.youtube.com/watch?v=MtQL_ll5KhQ">Heapsort visualization (墙)</a></p><p>然后再看这个，很清晰:</p><p><img src=http://201905-1251969284.cossh.myqcloud.com/Sorting_heapsort_anim.gif alt=image></p><h3 id=突破-O-n2>突破 O(n2)</h3><p>排序能突破O(N^2)的界，可以用逆序数来理解，假设我们要从小到大排序，一个数组中取两个元素如果前面比后面大，则为一个逆序，容易看出排序的本质就是消除逆序数，可以证明对于随机数组，逆序数是O(N^2)的，而如果采用“交换相邻元素”的办法来消除逆序，每次正好只消除一个，因此必须执行O(N^2)的交换次数，这就是为啥冒泡、插入等算法只能到平方级别的原因。</p><p>反过来，基于交换元素的排序要想突破这个下界，必须执行一些比较，交换相隔比较远的元素，使得一次交换能消除一个以上的逆序，归并、快排、堆排等等算法都是交换比较远的元素，只不过规则各不同罢了</p></div></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>

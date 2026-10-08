@@ -1,0 +1,106 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>std::shared_ptr · changan's blog</title><meta name=description content="shared_ptr template< class T > class shared_ptr; (C++11 起) 多个shared_ptr管理同一个指针，仅当最后一个shared_ptr析构时，指针才被delete。这是怎么实现的呢？答案是：引用计数（reference counting）。引用计数指的 …"><link rel=canonical href=https://www.oneyearago.me/2020/12/16/shared_ptr/><meta property="og:title" content="std::shared_ptr"><meta property="og:url" content="https://www.oneyearago.me/2020/12/16/shared_ptr/"><meta property="og:description" content="shared_ptr template< class T > class shared_ptr; (C++11 起) 多个shared_ptr管理同一个指针，仅当最后一个shared_ptr析构时，指针才被delete。这是怎么实现的呢？答案是：引用计数（reference counting）。引用计数指的 …"><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><div class=post-meta><time datetime=2020-12-16>2020.12.16</time><span>2 分钟阅读</span></div><h1>std::shared_ptr</h1><div class=chips><a href=/categories/c++/>C++</a></div></header><div class=prose><h3 id=shared-ptr>shared_ptr</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>template&lt; class T &gt; class shared_ptr; (C++11 起)
+</span></span></code></pre></div><p>多个shared_ptr管理同一个指针，仅当最后一个shared_ptr析构时，指针才被delete。这是怎么实现的呢？答案是：引用计数（reference counting）。引用计数指的是，所有管理同一个裸指针（raw pointer）的shared_ptr，都共享一个引用计数器，每当一个shared_ptr被赋值（或拷贝构造）给其它shared_ptr时，这个共享的引用计数器就加1，当一个shared_ptr析构或者被用于管理其它裸指针时，这个引用计数器就减1，如果此时发现引用计数器为0，那么说明它是管理这个指针的最后一个shared_ptr了，于是我们释放指针指向的资源。</p><h4 id=shared-ptr的简单实现>shared_ptr的简单实现</h4><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>#include&lt;iostream&gt;
+</span></span><span class=line><span class=cl>#include&lt;mutex&gt;
+</span></span><span class=line><span class=cl>#include&lt;thread&gt;
+</span></span><span class=line><span class=cl>using namespace std;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>template&lt;class T&gt;
+</span></span><span class=line><span class=cl>class Shared_Ptr{
+</span></span><span class=line><span class=cl>public:
+</span></span><span class=line><span class=cl>	Shared_Ptr(T* ptr = nullptr)
+</span></span><span class=line><span class=cl>		:_pPtr(ptr)
+</span></span><span class=line><span class=cl>		, _pRefCount(new int(1))
+</span></span><span class=line><span class=cl>		, _pMutex(new mutex)
+</span></span><span class=line><span class=cl>	{}
+</span></span><span class=line><span class=cl>	~Shared_Ptr()
+</span></span><span class=line><span class=cl>	{
+</span></span><span class=line><span class=cl>		Release();
+</span></span><span class=line><span class=cl>	}
+</span></span><span class=line><span class=cl>	Shared_Ptr(const Shared_Ptr&lt;T&gt;&amp; sp)
+</span></span><span class=line><span class=cl>		:_pPtr(sp._pPtr)
+</span></span><span class=line><span class=cl>		, _pRefCount(sp._pRefCount)
+</span></span><span class=line><span class=cl>		, _pMutex(sp._pMutex)
+</span></span><span class=line><span class=cl>	{
+</span></span><span class=line><span class=cl>		AddRefCount();
+</span></span><span class=line><span class=cl>	}
+</span></span><span class=line><span class=cl>	Shared_Ptr&lt;T&gt;&amp; operator=(const Shared_Ptr&lt;T&gt;&amp; sp)
+</span></span><span class=line><span class=cl>	{
+</span></span><span class=line><span class=cl>		//if (this != &amp;sp)
+</span></span><span class=line><span class=cl>		if (_pPtr != sp._pPtr)
+</span></span><span class=line><span class=cl>		{
+</span></span><span class=line><span class=cl>			// 释放管理的旧资源
+</span></span><span class=line><span class=cl>			Release();
+</span></span><span class=line><span class=cl>			// 共享管理新对象的资源，并增加引用计数
+</span></span><span class=line><span class=cl>			_pPtr = sp._pPtr;
+</span></span><span class=line><span class=cl>			_pRefCount = sp._pRefCount;
+</span></span><span class=line><span class=cl>			_pMutex = sp._pMutex;
+</span></span><span class=line><span class=cl>			AddRefCount();
+</span></span><span class=line><span class=cl>		}
+</span></span><span class=line><span class=cl>		return *this;
+</span></span><span class=line><span class=cl>	}
+</span></span><span class=line><span class=cl>	T&amp; operator*(){
+</span></span><span class=line><span class=cl>		return *_pPtr;
+</span></span><span class=line><span class=cl>	}
+</span></span><span class=line><span class=cl>	T* operator-&gt;(){
+</span></span><span class=line><span class=cl>		return _pPtr;
+</span></span><span class=line><span class=cl>	}
+</span></span><span class=line><span class=cl>	int UseCount() { return *_pRefCount; }
+</span></span><span class=line><span class=cl>	T* Get() { return _pPtr; }
+</span></span><span class=line><span class=cl>	void AddRefCount()
+</span></span><span class=line><span class=cl>	{
+</span></span><span class=line><span class=cl>		_pMutex-&gt;lock();
+</span></span><span class=line><span class=cl>		++(*_pRefCount);
+</span></span><span class=line><span class=cl>		_pMutex-&gt;unlock();
+</span></span><span class=line><span class=cl>	}
+</span></span><span class=line><span class=cl>private:
+</span></span><span class=line><span class=cl>	void Release()
+</span></span><span class=line><span class=cl>	{
+</span></span><span class=line><span class=cl>		bool deleteflag = false;
+</span></span><span class=line><span class=cl>		_pMutex-&gt;lock();
+</span></span><span class=line><span class=cl>		if (--(*_pRefCount) == 0)
+</span></span><span class=line><span class=cl>		{
+</span></span><span class=line><span class=cl>			delete _pRefCount;
+</span></span><span class=line><span class=cl>			delete _pPtr;
+</span></span><span class=line><span class=cl>			deleteflag = true;
+</span></span><span class=line><span class=cl>		}
+</span></span><span class=line><span class=cl>		_pMutex-&gt;unlock();
+</span></span><span class=line><span class=cl>		if (deleteflag == true)
+</span></span><span class=line><span class=cl>			delete _pMutex;
+</span></span><span class=line><span class=cl>	}
+</span></span><span class=line><span class=cl>private:
+</span></span><span class=line><span class=cl>	int *_pRefCount;
+</span></span><span class=line><span class=cl>	T* _pPtr;
+</span></span><span class=line><span class=cl>	mutex* _pMutex;
+</span></span><span class=line><span class=cl>};
+</span></span></code></pre></div><h3 id=错误用法>错误用法</h3><h4 id=1-循环引用>1. 循环引用</h4><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>struct ListNode
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>	int _data;
+</span></span><span class=line><span class=cl>	shared_ptr&lt;ListNode&gt; _prev;
+</span></span><span class=line><span class=cl>	shared_ptr&lt;ListNode&gt; _next;
+</span></span><span class=line><span class=cl>	~ListNode(){ cout &lt;&lt; &#34;~ListNode()&#34; &lt;&lt; endl; }
+</span></span><span class=line><span class=cl>};
+</span></span><span class=line><span class=cl>int main()
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>	shared_ptr&lt;ListNode&gt; node1(new ListNode);
+</span></span><span class=line><span class=cl>	shared_ptr&lt;ListNode&gt; node2(new ListNode);
+</span></span><span class=line><span class=cl>	cout &lt;&lt; node1.use_count() &lt;&lt; endl;
+</span></span><span class=line><span class=cl>	cout &lt;&lt; node2.use_count() &lt;&lt; endl;
+</span></span><span class=line><span class=cl>	node1-&gt;_next = node2;
+</span></span><span class=line><span class=cl>	node2-&gt;_prev = node1;
+</span></span><span class=line><span class=cl>	cout &lt;&lt; node1.use_count() &lt;&lt; endl;
+</span></span><span class=line><span class=cl>	cout &lt;&lt; node2.use_count() &lt;&lt; endl;
+</span></span><span class=line><span class=cl>	system(&#34;pause&#34;);
+</span></span><span class=line><span class=cl>	return 0;
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><p>解决方案：在引用计数的场景下，把节点中的_prev和_next改成weak_ptr就可以了</p><h4 id=2-多个无关的shared-ptr管理同一裸指针>2. 多个无关的shared_ptr管理同一裸指针</h4><p>只能通过复制构造或复制赋值其值给另一 shared_ptr ，将对象所有权与另一 shared_ptr 共享。用另一 shared_ptr 所占有的底层指针创建新的 shared_ptr 导致未定义行为。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>int *a = new int;
+</span></span><span class=line><span class=cl>std::shared_ptr&lt;int&gt; p1(a);
+</span></span><span class=line><span class=cl>std::shared_ptr&lt;int&gt; p2(a);
+</span></span></code></pre></div><h4 id=3-直接用new构造多个shared-ptr作为实参>3. 直接用new构造多个shared_ptr作为实参</h4><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>// 声明
+</span></span><span class=line><span class=cl>void f(A *p1, B *p2);
+</span></span><span class=line><span class=cl>// 使用
+</span></span><span class=line><span class=cl>f(new A, new B);       &lt;--  ×
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>// 声明
+</span></span><span class=line><span class=cl>void f(shared_ptr&lt;A&gt; p1, shared_ptr&lt;B&gt; p2);
+</span></span><span class=line><span class=cl>// 使用
+</span></span><span class=line><span class=cl>f(shared_ptr&lt;A&gt;(new A), shared_ptr&lt;B&gt;(new B));              &lt;-- √
+</span></span></code></pre></div><h4 id=tips>tips</h4><ul><li>用shared_ptr，不用new</li><li>使用weak_ptr来打破循环引用</li><li>用make_shared来生成shared_ptr</li></ul><h3 id=ref>ref</h3><ul><li><a href=https://heleifz.github.io/14696398760857.html>https://heleifz.github.io/14696398760857.html</a></li><li><a href=https://zh.cppreference.com/w/cpp/memory/shared_ptr>https://zh.cppreference.com/w/cpp/memory/shared_ptr</a></li></ul><p>blog: <a href=http://www.oneyearago.me>http://www.oneyearago.me</a></p></div><div class="chips post-tags"><a href=/tags/c++/># C++</a></div><nav class=post-neighbors aria-label=相邻文章><a href=/2020/11/26/hook-complications-and-x64-instrcution-format/><small>上一篇</small>从hook的并发症理解x64指令格式</a><a href=/2020/12/22/cpp-class-model/><small>下一篇</small>c++虚函数表</a></nav><section class=comments aria-label=文章评论><script src=https://giscus.app/client.js data-repo=changan29/changan29.github.io data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category=Announcements data-category-id=DIC_kwDOC6bf5s4CSvAi data-mapping=url data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=preferred_color_scheme data-lang=zh-CN crossorigin=anonymous async></script></section></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>

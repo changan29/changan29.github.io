@@ -1,0 +1,75 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>一个Linux 动态库常见bug · changan's blog</title><meta name=description content="遇到的问题 对于正在运行的程序，当更新动态库尝试重新加载时，可能会导致程序 CoreDump 。
+case: 我们的一个开发环境中有多个进程依赖同一个动态库.so， 我更新这个so的时候，直接用
+cp new.so old.so 导致多个进程同时core,😮😮😮
+这里简单解释下其原因，以及规避方案。
+简介 在加载动态库 …"><link rel=canonical href=https://www.oneyearago.me/2021/01/13/a-linux-shared-lib-bug/><meta property="og:title" content="一个Linux 动态库常见bug"><meta property="og:url" content="https://www.oneyearago.me/2021/01/13/a-linux-shared-lib-bug/"><meta property="og:description" content="遇到的问题 对于正在运行的程序，当更新动态库尝试重新加载时，可能会导致程序 CoreDump 。
+case: 我们的一个开发环境中有多个进程依赖同一个动态库.so， 我更新这个so的时候，直接用
+cp new.so old.so 导致多个进程同时core,😮😮😮
+这里简单解释下其原因，以及规避方案。
+简介 在加载动态库 …"><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><div class=post-meta><time datetime=2021-01-13>2021.01.13</time><span>2 分钟阅读</span></div><h1>一个Linux 动态库常见bug</h1><div class=chips><a href=/categories/os/>Os</a></div></header><details class=toc><summary>本文目录</summary><nav id=TableOfContents><ul><li><ul><li><a href=#遇到的问题>遇到的问题</a></li><li><a href=#简介>简介</a></li><li><a href=#解决方案>解决方案</a></li></ul></li></ul></nav></details><div class=prose><h3 id=遇到的问题>遇到的问题</h3><p>对于正在运行的程序，当更新动态库尝试重新加载时，可能会导致程序 CoreDump 。</p><h5 id=case>case:</h5><p>我们的一个开发环境中有多个进程依赖同一个动态库.so， 我更新这个so的时候，直接用</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>cp new.so old.so
+</span></span></code></pre></div><p>导致多个进程同时core,😮😮😮</p><p><img src=https://blog21-1251969284.cos.ap-shanghai.myqcloud.com/os/linux-shared-lib.png alt=image></p><p>这里简单解释下其原因，以及规避方案。</p><h3 id=简介>简介</h3><p>在加载动态库时，主要通过如下方式进行测试。</p><ul><li>加载执行关闭，cp覆盖文件，加载执行，正常。</li><li>加载执行不关闭，cp覆盖文件，加载执行，CoreDump。</li><li>加载执行不关闭，install覆盖文件，关闭加载执行，正常。</li><li>加载执行不关闭，install覆盖文件，加载执行关闭关闭，第二次加载的是同一个文件。</li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>/* cat foobar.c */
+</span></span><span class=line><span class=cl>#include &lt;stdio.h&gt;
+</span></span><span class=line><span class=cl>#include &lt;dlfcn.h&gt;
+</span></span><span class=line><span class=cl>#include &lt;unistd.h&gt;
+</span></span><span class=line><span class=cl>#include &lt;stdlib.h&gt;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>typedef int (*CAC_FUNC)(int, int);
+</span></span><span class=line><span class=cl>int main(void)
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>        void *handle1, *handle2;
+</span></span><span class=line><span class=cl>        char *err;
+</span></span><span class=line><span class=cl>        CAC_FUNC func = NULL;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        if ((handle1 = dlopen(&#34;./libcaculate.so&#34;, RTLD_LAZY)) == NULL) {
+</span></span><span class=line><span class=cl>                fprintf(stderr, &#34;!!! %s\n&#34;, dlerror());
+</span></span><span class=line><span class=cl>                exit(EXIT_FAILURE);
+</span></span><span class=line><span class=cl>        }
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        func = (CAC_FUNC)dlsym(handle1, &#34;add&#34;);
+</span></span><span class=line><span class=cl>        if ((err = dlerror()) != NULL)  {
+</span></span><span class=line><span class=cl>                fprintf(stderr, &#34;!!! %s\n&#34;, err);
+</span></span><span class=line><span class=cl>                exit(EXIT_FAILURE);
+</span></span><span class=line><span class=cl>        }
+</span></span><span class=line><span class=cl>        printf(&#34;add: %d\n\n&#34;, (func)(2,7));
+</span></span><span class=line><span class=cl>        dlclose(handle1);
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        sleep(10);
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        if ((handle2 = dlopen(&#34;./libcaculate.so&#34;, RTLD_LAZY)) == NULL) {
+</span></span><span class=line><span class=cl>                fprintf(stderr, &#34;!!! %s\n&#34;, dlerror());
+</span></span><span class=line><span class=cl>                exit(EXIT_FAILURE);
+</span></span><span class=line><span class=cl>        }
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        func = (CAC_FUNC)dlsym(handle2, &#34;add&#34;);
+</span></span><span class=line><span class=cl>        if ((err = dlerror()) != NULL)  {
+</span></span><span class=line><span class=cl>                fprintf(stderr, &#34;!!! %s\n&#34;, err);
+</span></span><span class=line><span class=cl>                exit(EXIT_FAILURE);
+</span></span><span class=line><span class=cl>        }
+</span></span><span class=line><span class=cl>        printf(&#34;add: %d\n\n&#34;, (func)(2,7));
+</span></span><span class=line><span class=cl>        dlclose(handle2);
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        exit(EXIT_SUCCESS);
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>/* cat caculate.c */
+</span></span><span class=line><span class=cl>#include &lt;stdio.h&gt;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>static int gint = 0;
+</span></span><span class=line><span class=cl>int add(int a, int b)
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>        printf(&#34;static global member address is %p %p\n&#34;, &amp;gint, add);
+</span></span><span class=line><span class=cl>        return (a + b + 5);
+</span></span><span class=line><span class=cl>        return (a + b);
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl># Makefile
+</span></span><span class=line><span class=cl>all:
+</span></span><span class=line><span class=cl>        gcc -fPIC -shared caculate.c -o libcaculate.so
+</span></span><span class=line><span class=cl>        gcc -o foobar foobar.c -ldl
+</span></span></code></pre></div><h4 id=产生原因>产生原因</h4><p>直接复制文件过去，实际上对应的 inode 信息是不变的，可以简单通过 strace cp new old 核心内容如下：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>open(&#34;../libcaculate.so&#34;, O_RDONLY)     = 3
+</span></span><span class=line><span class=cl>fstat(3, {st_mode=S_IFREG|0700, st_size=8064, ...}) = 0
+</span></span><span class=line><span class=cl>open(&#34;libcaculate.so&#34;, O_WRONLY|O_TRUNC) = 4
+</span></span></code></pre></div><p>也即是说，老的动态库文件被 trunc 了，这个过程发生的具体的事情是：</p><ul><li>应用程序通过 dlopen 打开 so 的时候，kernel 通过 mmap 把 so 加载到进程地址空间，对应于 vma 里的几个 page；</li><li>在该过程中 loader 会把 so 里引用的外部符号，如 malloc printf 等解析成真正的虚存地址</li><li>当 so 被 cp 覆盖时，确切地说是被 trunc 时，kernel 会把 so 文件在虚拟内的页 purge 掉；</li><li>当运行到 so 里面的代码时，因为物理内存中不再有实际的数据，此时仅存在于虚存空间内，会产生一次缺页中断；</li><li>内核此时会从 so 文件中 copy 一份到内存中去，此时可能会出现：A) 全局符号表并没有经过解析，当调用到时就产生 segment fault；B) 如果需要的文件偏移大于新的 so 的地址范围，就会产生 bus error。</li></ul><p>所以，如果用相同的 so 去覆盖，那么 A) 如果 so 里面依赖了外部符号，直接导致 coredump；B) 如果 so 里面没有依赖外部符号，运气不错，不会 coredump 。</p><p>所有问题的产生都是因为 so 被 trunc 了一把，所以如果不用 turnc 的方式就避免这个问题。</p><h3 id=解决方案>解决方案</h3><p>可以使用 install 命令，可以通过 strace install new old 查看，核心内容如下：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>unlink(&#34;libcaculate.so&#34;)                = 0
+</span></span><span class=line><span class=cl>open(&#34;../libcaculate.so&#34;, O_RDONLY)     = 3
+</span></span><span class=line><span class=cl>fstat(3, {st_mode=S_IFREG|0700, st_size=8064, ...}) = 0
+</span></span><span class=line><span class=cl>open(&#34;libcaculate.so&#34;, O_WRONLY|O_CREAT|O_EXCL, 0600) = 4
+</span></span></code></pre></div><p>可以看到 install 的方式跟 cp 不同，先 unlink 再 creat，当 unlink 的时候，已经 map 的虚拟空间 vma 中的 inode 结点没有变，只有当 inode 结点的引用计数为 0 是，内核才会把它干掉。</p><p>也就是新的 so 和旧的 so 用的不是同一个 inode 结点，所以不会相互影响。</p><h4 id=引用相同文件>引用相同文件</h4><p>对于第四种情况，实际上通过 strace 查看时，不再加载新的动态库，而是直接引用之前的文件。<br>通过 dlclose() 关闭时，会减少动态库的引用计数，当为 0 的时候才会真正卸载该动态库；可以在执行前添加 LD_DEBUG=bindings 环境变量，并查看如下的信息：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>binding file &lt;some.so&gt; [0] to libdynamicTest.so.1 [0]: normal symbol `&lt;symbol&gt;&#39;
+</span></span></code></pre></div><p>实际上，第一次没有关闭，下次重新打开时直接使用上次结果，导致引用函数不变。</p><h4 id=结论>结论</h4><p>替换动态库文件时使用 install 命令而非 cp ，在重新加载动态库前先关闭所有的引用，确保动态库被正常卸载。</p></div><div class="chips post-tags"><a href=/tags/shared-lib/># Shared Lib</a><a href=/tags/os/># Os</a></div><nav class=post-neighbors aria-label=相邻文章><a href=/2020/12/22/cpp-class-model/><small>上一篇</small>c++虚函数表</a><a href=/2021/03/08/understand-r-reference/><small>下一篇</small>理解右值引用</a></nav><section class=comments aria-label=文章评论><script src=https://giscus.app/client.js data-repo=changan29/changan29.github.io data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category=Announcements data-category-id=DIC_kwDOC6bf5s4CSvAi data-mapping=url data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=preferred_color_scheme data-lang=zh-CN crossorigin=anonymous async></script></section></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>

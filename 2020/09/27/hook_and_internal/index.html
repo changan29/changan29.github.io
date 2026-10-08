@@ -1,0 +1,231 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>hook的几种方式及原理学习 · changan's blog</title><meta name=description content="概述 对于大型的工程项目，依赖许多人的配合，包含大量不同的代码库与服务，有的我们能够访问程序的源代码，有的可以访问程序的可重定位文件，有的可以访问到可执行文件及其环境，假如我们想在在不同的层面改变或者添加一些逻辑，操作系统、编译器以及程序语言、代码库等都提供了 一些机制使得 开发者可以 方便的 增加或替换代码逻辑，对于 …"><link rel=canonical href=https://www.oneyearago.me/2020/09/27/hook_and_internal/><meta property="og:title" content="hook的几种方式及原理学习"><meta property="og:url" content="https://www.oneyearago.me/2020/09/27/hook_and_internal/"><meta property="og:description" content="概述 对于大型的工程项目，依赖许多人的配合，包含大量不同的代码库与服务，有的我们能够访问程序的源代码，有的可以访问程序的可重定位文件，有的可以访问到可执行文件及其环境，假如我们想在在不同的层面改变或者添加一些逻辑，操作系统、编译器以及程序语言、代码库等都提供了 一些机制使得 开发者可以 方便的 增加或替换代码逻辑，对于 …"><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><div class=post-meta><time datetime=2020-09-27>2020.09.27</time><span>5 分钟阅读</span></div><h1>hook的几种方式及原理学习</h1><div class=chips><a href=/categories/hook/>Hook</a><a href=/categories/os/>Os</a></div></header><details class=toc><summary>本文目录</summary><nav id=TableOfContents><ul><li><ul><li><a href=#概述>概述</a></li><li><a href=#编译器支持>编译器支持</a></li><li><a href=#库打桩机制>库打桩机制</a></li><li><a href=#动态库加载特性-got-替换>动态库加载特性 - got 替换</a></li><li><a href=#内核调试接口>内核调试接口</a></li><li><a href=#跳转代码修改>跳转代码修改</a></li><li><a href=#其他>其他</a></li><li><a href=#引用>引用</a></li></ul></li></ul></nav></details><div class=prose><h3 id=概述>概述</h3><p>对于大型的工程项目，依赖许多人的配合，包含大量不同的代码库与服务，有的我们能够访问程序的源代码，有的可以访问程序的可重定位文件，有的可以访问到可执行文件及其环境，假如我们想在在不同的层面改变或者添加一些逻辑，操作系统、编译器以及程序语言、代码库等都提供了 一些机制使得 开发者可以 方便的 增加或替换代码逻辑，对于逻辑调试、测试、性能分析、版本兼容等都有比较好的效果。</p><h3 id=编译器支持>编译器支持</h3><h4 id=Function-Attribute>Function Attribute</h4><p>GNU C 使用attribute 可以设置函数属性（Function Attribute ）、变量属性（Variable Attribute ）和类型属性（Type Attribute ）。 <strong>attribute</strong>前后都有两个下划线，并且后面会紧跟一对原括弧，括弧里面是相应的<strong>attribute</strong>参数。</p><p><strong>attribute</strong>语法格式为：<strong>attribute</strong> ( ( attribute-list ) )</p><p>比如常用的constructor属性，则会使函数在main（）函数执行之前被自动的执行。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>#include &lt;stdio.h&gt;
+</span></span><span class=line><span class=cl>#include &lt;stdlib.h&gt;
+</span></span><span class=line><span class=cl>static int * g_count = NULL;
+</span></span><span class=line><span class=cl>__attribute__((constructor)) void load_file()
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    printf(&#34;Constructor is called.\n&#34;);
+</span></span><span class=line><span class=cl>    g_count = (int *)malloc(sizeof(int));
+</span></span><span class=line><span class=cl>    if (g_count == NULL)
+</span></span><span class=line><span class=cl>    {
+</span></span><span class=line><span class=cl>    fprintf(stderr, &#34;Failed to malloc memory.\n&#34;);
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>__attribute__((destructor)) void unload_file()
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    printf(&#34;destructor is called.\n&#34;);
+</span></span><span class=line><span class=cl>    if (g_count)
+</span></span><span class=line><span class=cl>    free(g_count);
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>int main()
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    return 0;
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><p>参考: <a href=https://gcc.gnu.org/onlinedocs/gcc-4.7.0/gcc/Function-Attributes.html>https://gcc.gnu.org/onlinedocs/gcc-4.7.0/gcc/Function-Attributes.html</a></p><h3 id=库打桩机制>库打桩机制</h3><p>linux 链接器支持一个很强大的技术，称为库打桩机制，它允许你截获对共享库函数的调用，取而代之执行自己的代码。使用打桩机制，你可以追踪对某个特殊库函数的调用次数、验证和追踪它的输入和输出，甚至可以把它替换成一个完全不同的实现。</p><h4 id=编译时>编译时</h4><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>/main.c/
+</span></span><span class=line><span class=cl>#include &lt;stdio.h&gt;
+</span></span><span class=line><span class=cl>#include &lt;malloc.h&gt;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>int main()
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    int*p = malloc(32);
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    free(p);
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    return 0;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>/*  malloc.h  */
+</span></span><span class=line><span class=cl>#define malloc(size) my_malloc(size)
+</span></span><span class=line><span class=cl>#define free(ptr)    my_free(ptr)
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>void * my_malloc(size_t size);
+</span></span><span class=line><span class=cl>void * my_free(void* ptr);
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>/*  my_malloc.c  */
+</span></span><span class=line><span class=cl>#ifdef COMPILE_TIME
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>#include &lt;stdio.h&gt;
+</span></span><span class=line><span class=cl>#include &lt;malloc.h&gt;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>void *my_malloc(size_t size)
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    printf(&#34;enter my_malloc \n&#34;);
+</span></span><span class=line><span class=cl>    void * ptr = malloc(size);
+</span></span><span class=line><span class=cl>    printf(&#34;malloc(%d) = %p \n&#34;, (int ) size , ptr);
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    return ptr;
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>void my_free( void* ptr )
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    printf(&#34;enter my_free \n&#34;);
+</span></span><span class=line><span class=cl>    free(ptr);
+</span></span><span class=line><span class=cl>    printf(&#34;free (%p) \n&#34; , ptr);
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>#endif
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>gcc -DCOMPILE_TIME -c my_malloc.c 
+</span></span><span class=line><span class=cl>gcc -I. -o a.out main.c my_malloc.o
+</span></span></code></pre></div><p>由于有 I. 参数，所以会进行打桩，它告诉C预处理器，在搜索通常的系统目录之前，现在当前的目录查找malloc.h</p><h4 id=链接时>链接时</h4><p>linux的静态链接器支持使用 –wrap f标志进行连接时打桩，这个标志告诉链接器，把对符号 f 的引用 解析成 <strong>wrap_f 还要把对符号</strong> real_f的 引用解析成 f 。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>/*  link.c  */
+</span></span><span class=line><span class=cl>#ifdef LINK_TIME
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>#include &lt;stdio.h&gt;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>void * __real_malloc(size_t size);
+</span></span><span class=line><span class=cl>void * __real_free(void * ptr);
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>void * __wrap_malloc(size_t size)
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    printf(&#34;enter __wrap_malloc\n&#34;);
+</span></span><span class=line><span class=cl>    void * ptr = __real_malloc(size);
+</span></span><span class=line><span class=cl>    printf(&#34;malloc(%d) = %p \n&#34;, (int ) size , ptr);
+</span></span><span class=line><span class=cl>    return ptr;
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>void __wrap_free(void *ptr)
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    printf(&#34;enter __wrap_free\n&#34;);
+</span></span><span class=line><span class=cl>    __real_free(ptr);
+</span></span><span class=line><span class=cl>    printf(&#34;free (%p) \n&#34; , ptr);
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>#endif
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>gcc -DLINK_TIME -c link.c
+</span></span><span class=line><span class=cl>gcc -c main.c 
+</span></span><span class=line><span class=cl>gcc -Wl,--wrap,malloc -Wl,--wrap,free -o a.out main.o  link.o
+</span></span></code></pre></div><h4 id=运行时>运行时</h4><p>编译时打桩需要能够访问程序的源代码，链接时打桩需要能够访问程序的可重定位文件。不过，有一种机制能够在运行时打桩，只需能够访问可执行目标文件。 运行时打桩基于动态链接器的 LD_PRELOAD 环境变量。</p><p>如果 LD_PRELOAD 环境变量 被设置成为 共享库路径名的列表,当执行和加载程序的时候，当需要解析未定义的引用时，动态链接器会先搜索 LD_PRELOAD 库，然后才搜索其他的库。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>/*random.c   */
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>#include &lt;stdio.h&gt;
+</span></span><span class=line><span class=cl>#include &lt;stdlib.h&gt;
+</span></span><span class=line><span class=cl>#include &lt;time.h&gt;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>int main(){
+</span></span><span class=line><span class=cl>  srand(time(NULL));
+</span></span><span class=line><span class=cl>  int i = 10;
+</span></span><span class=line><span class=cl>  while(i--) printf(&#34;%d\n&#34;,rand()%100);
+</span></span><span class=line><span class=cl>  return 0;
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>/*unrandom.c */
+</span></span><span class=line><span class=cl>int rand(){
+</span></span><span class=line><span class=cl>    return 42; //the most random number in the universe
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>gcc -shared -fPIC unrandom.c -o unrandom.so
+</span></span><span class=line><span class=cl>export LD_PRELOAD=your_path
+</span></span></code></pre></div><h3 id=动态库加载特性-got-替换>动态库加载特性 - got 替换</h3><h4 id=ELF文件格式>ELF文件格式</h4><p>ELF格式通常有linking view和execution view，即编译时和运行时，一般链接时统称 section , 运行时称segment，segment是运行时把权限相同的section合并了加载到内存，从视图上看，两个视图数据是一样的，只不过有两种形态。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>             +-----------------+
+</span></span><span class=line><span class=cl>        +----| ELF File Header |----+
+</span></span><span class=line><span class=cl>        |    +-----------------+    |
+</span></span><span class=line><span class=cl>        v                           v
+</span></span><span class=line><span class=cl>+-----------------+      +-----------------+
+</span></span><span class=line><span class=cl>| Program Headers |      | Section Headers |
+</span></span><span class=line><span class=cl>+-----------------+      +-----------------+
+</span></span><span class=line><span class=cl>     ||                               ||
+</span></span><span class=line><span class=cl>     ||                               ||
+</span></span><span class=line><span class=cl>     ||                               ||
+</span></span><span class=line><span class=cl>     ||   +------------------------+  ||
+</span></span><span class=line><span class=cl>     +--&gt; | Contents (Byte Stream) |&lt;--+
+</span></span><span class=line><span class=cl>          +------------------------+
+</span></span><span class=line><span class=cl>          
+</span></span><span class=line><span class=cl>       +-------------------------------+
+</span></span><span class=line><span class=cl>       | ELF File Header               |
+</span></span><span class=line><span class=cl>       +-------------------------------+
+</span></span><span class=line><span class=cl>       | Program Header for segment #1 |
+</span></span><span class=line><span class=cl>       +-------------------------------+
+</span></span><span class=line><span class=cl>       | Program Header for segment #2 |
+</span></span><span class=line><span class=cl>       +-------------------------------+
+</span></span><span class=line><span class=cl>       | ...                           |
+</span></span><span class=line><span class=cl>       +-------------------------------+
+</span></span><span class=line><span class=cl>       | Contents (Byte Stream)        |
+</span></span><span class=line><span class=cl>       | ...                           |
+</span></span><span class=line><span class=cl>       +-------------------------------+
+</span></span><span class=line><span class=cl>       | Section Header for section #1 |
+</span></span><span class=line><span class=cl>       +-------------------------------+
+</span></span><span class=line><span class=cl>       | Section Header for section #2 |
+</span></span><span class=line><span class=cl>       +-------------------------------+
+</span></span><span class=line><span class=cl>       | ...                           |
+</span></span><span class=line><span class=cl>       +-------------------------------+
+</span></span><span class=line><span class=cl>       | &#34;.shstrtab&#34; section           |
+</span></span><span class=line><span class=cl>       +-------------------------------+
+</span></span><span class=line><span class=cl>       | &#34;.symtab&#34;   section           |
+</span></span><span class=line><span class=cl>       +-------------------------------+
+</span></span><span class=line><span class=cl>       | &#34;.strtab&#34;   section           |
+</span></span><span class=line><span class=cl>       +-------------------------------+
+</span></span></code></pre></div><p>ELF文件是连接编译链接与运行的数据存在，其中里面的 .text （代码段）、 .rodata（只读数据段） 、 .data （数据段）、 .symtab（符号表） 我们都耳熟能详，我们这里关心的是 下面几个段：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl># 测试的 test 源码在下面
+</span></span><span class=line><span class=cl>[root@VM_8_16_centos ~/hook]# readelf -S test | grep -E &#34;plt|got|dyn&#34; --color
+</span></span><span class=line><span class=cl>  [ 5] .dynsym           DYNSYM           00000000004002b8  000002b8            // 动态符号表
+</span></span><span class=line><span class=cl>  [ 6] .dynstr           STRTAB           0000000000400498  00000498            // 动态字符串
+</span></span><span class=line><span class=cl>  [ 9] .rela.dyn         RELA             0000000000400598  00000598            // 数据有关的重定位表
+</span></span><span class=line><span class=cl>  [10] .rela.plt         RELA             00000000004005b0  000005b0            // 函数有关的重定位表
+</span></span><span class=line><span class=cl>  [12] .plt              PROGBITS         00000000004007a0  000007a0            // plt段
+</span></span><span class=line><span class=cl>  [21] .dynamic          DYNAMIC          0000000000601e28  00001e28            // 动态信息表
+</span></span><span class=line><span class=cl>  [22] .got              PROGBITS         0000000000601ff8  00001ff8            // 数据的全局偏移表
+</span></span><span class=line><span class=cl>  [23] .got.plt          PROGBITS         0000000000602000  00002000            // 函数的全局偏移表
+</span></span></code></pre></div><p>先直观的看一下有这几个表，他们基本都与重定位有关，需要看下重定位的概念。<br><img src=https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/dynlink.png alt=image></p><h4 id=重定位与动态链接>重定位与动态链接</h4><p>当多个 .o 文件链接或 运行时需要动态库的时候，都有重定位的概念，在链接的时候，多个.o之间 相互依赖的变量和函数 要找到实际的地址， 同样运行时依赖动态库中的函数，一般是记录在全局偏移表中，运行之前或运行时 找到实际地址，记录到偏移表，运行的时候通过 全局偏移表找到实际地址，从而执行。</p><h6 id=重定位表>重定位表:</h6><p>重定位表是”.rel.dyn”和”.rel.plt”，它们分别相当于静态链接中的”.rel.data”和”.rel.text”。”.rel.dyn”实际上是对数据引用的修正，它所修正的位置相当于”.got “以及数据段；而”.rel.plt”则是对函数引用的修正，所修正的位置位于”.got.plt”。使用”readelf -r”命令，查看重定位表</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>[root@VM_8_16_centos ~/hook]# readelf -r test
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Relocation section &#39;.rela.dyn&#39; at offset 0x598 contains 1 entries:
+</span></span><span class=line><span class=cl>  Offset          Info           Type           Sym. Value    Sym. Name + Addend
+</span></span><span class=line><span class=cl>000000601ff8  000c00000006 R_X86_64_GLOB_DAT 0000000000000000 __gmon_start__ + 0
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Relocation section &#39;.rela.plt&#39; at offset 0x5b0 contains 19 entries:
+</span></span><span class=line><span class=cl>  Offset          Info           Type           Sym. Value    Sym. Name + Addend
+</span></span><span class=line><span class=cl>000000602018  000100000007 R_X86_64_JUMP_SLO 0000000000000000 puts + 0
+</span></span><span class=line><span class=cl>000000602020  000200000007 R_X86_64_JUMP_SLO 0000000000000000 readlink + 0
+</span></span><span class=line><span class=cl>000000602028  000300000007 R_X86_64_JUMP_SLO 0000000000000000 getpid + 0
+</span></span><span class=line><span class=cl>000000602030  000400000007 R_X86_64_JUMP_SLO 0000000000000000 fclose + 0
+</span></span><span class=line><span class=cl>000000602038  000500000007 R_X86_64_JUMP_SLO 0000000000000000 printf + 0
+</span></span><span class=line><span class=cl>000000602040  000600000007 R_X86_64_JUMP_SLO 0000000000000000 snprintf + 0
+</span></span><span class=line><span class=cl>000000602048  000700000007 R_X86_64_JUMP_SLO 0000000000000000 __assert_fail + 0
+</span></span><span class=line><span class=cl>000000602050  000800000007 R_X86_64_JUMP_SLO 0000000000000000 __libc_start_main + 0
+</span></span><span class=line><span class=cl>000000602058  000900000007 R_X86_64_JUMP_SLO 0000000000000000 memcmp + 0
+</span></span><span class=line><span class=cl>000000602060  000a00000007 R_X86_64_JUMP_SLO 0000000000000000 fgets + 0
+</span></span><span class=line><span class=cl>000000602068  000b00000007 R_X86_64_JUMP_SLO 0000000000000000 strcmp + 0
+</span></span><span class=line><span class=cl>000000602070  000c00000007 R_X86_64_JUMP_SLO 0000000000000000 __gmon_start__ + 0
+</span></span><span class=line><span class=cl>000000602078  000d00000007 R_X86_64_JUMP_SLO 0000000000000000 mprotect + 0
+</span></span><span class=line><span class=cl>000000602080  000e00000007 R_X86_64_JUMP_SLO 0000000000000000 fopen + 0
+</span></span><span class=line><span class=cl>000000602088  000f00000007 R_X86_64_JUMP_SLO 0000000000000000 strtok + 0
+</span></span><span class=line><span class=cl>000000602090  001000000007 R_X86_64_JUMP_SLO 0000000000000000 strtoul + 0
+</span></span><span class=line><span class=cl>000000602098  001100000007 R_X86_64_JUMP_SLO 0000000000000000 getpagesize + 0
+</span></span><span class=line><span class=cl>0000006020a0  001200000007 R_X86_64_JUMP_SLO 0000000000000000 strstr + 0
+</span></span><span class=line><span class=cl>0000006020a8  001300000007 R_X86_64_JUMP_SLO 0000000000000000 rand + 0
+</span></span></code></pre></div><h6 id=GOT-及-PLT-表>GOT 及 PLT 表</h6><p>在Linux下，GOT被拆分成”.got”和”.got.plt”2个表。其中”.got”用来保存全局变量引用的地址，”.got.plt”用来保存函数引用的地址<br>GOT表项还保留了３个公共表项，也即got的前３项，分别保存：</p><p>got[0]: 本ELF动态段(.dynamic段）的装载地址<br>got[1]：本ELF的link_map数据结构描述符地址<br>got[2]：_dl_runtime_resolve函数的地址</p><p>操作系统设计了一段比较精巧的指令来实现延迟重定位，历史的版本应该是，进程运行的时候，如果依赖动态库，那么运行之前，需要把 程序依赖的动态库里面的每个变量和函数都 初始化 GOT表，这样的后果就是 如果依赖比较多，加载缓慢； 后来通过 PLT 设计了 延迟加载的功能， 主要思想是 第一次运行的时候，通过一段跳转指令， 转去动态链接器中的_dl_runtime_resolve 函数查找，查找后写入GOT， 第二次的时候便可以直接访问 GOT，直接地址访问。 下面有使用 gdb 动态调试的过程， 实际过程中，可能直接 <code>disas _dl_runtime_resolve</code> 发现没有效果或者找不到函数， 按照内存查 可知 最新的函数名字上有所改变。</p><p>查看plt的内容，实际就是代码：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>objdump -d test
+</span></span></code></pre></div><p><img src=https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/plt_code.png alt=image></p><p>gdb调试 plt懒加载过程：<br><img src=https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/pltgot1.png alt=image></p><p><img src=https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/pltgot2.png alt=image></p><h4 id=重定位类型及偏移表>重定位类型及偏移表</h4><p>我们如何计算GOT表应该偏移多少呢，又有哪些偏移的类型呢？ 参考： <a href=http://www.ucw.cz/~hubicka/papers/abi/node19.html>http://www.ucw.cz/~hubicka/papers/abi/node19.html</a></p><p><img src=https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/got_rel_type.png alt=image></p><p>比如rand , 我们直接用 rel表的地址</p><h4 id=GOT表项替换>GOT表项替换</h4><p>全局符号表(GOT表)hook实际是通过解析SO文件，将待hook函数在got表的地址替换为自己函数的入口地址，这样目标进程每次调用待hook函数时，实际上是执行了我们自己的函数。</p><p>导入表的hook有两种方法：</p><ul><li>方法一：</li></ul><p>　　通过解析elf格式，分析Section header table找出静态的.got表的位置，并在内存中找到相应的.got表位置，这个时候内存中.got表保存着导入函数的地址，读取目标函数地址，与.got表每一项函数入口地址进行匹配，找到的话就直接替换新的函数地址，这样就完成了一次导入表的Hook操作了。</p><ul><li>方法二</li></ul><p>　　通过分析program header table查找got表。导入表对应在动态链接段.got.plt（DT_PLTGOT）指向处，但是每项的信息是和GOT表中的表项对应的，因此，在解析动态链接段时，需要解析DT_JMPREL、DT_SYMTAB，前者指向了每一个导入表表项的偏移地址和相关信息，包括在GOT表中偏移，后者为GOT表。</p><p>方法二的测试：</p><p>详细代码: <a href=https://github.com/changan29/playcpp/tree/master/hook/got_hook>https://github.com/changan29/playcpp/tree/master/hook/got_hook</a></p><h3 id=内核调试接口>内核调试接口</h3><h4 id=ptrace-系统调用>ptrace 系统调用</h4><p>有很多大家所常用的工具都基于ptrace来实现，如strace和gdb。</p><p>ptrace系统调从名字上看是用于进程跟踪的，它提供了父进程可以观察和控制其子进程执行的能力，并允许父进程检查和替换子进程的内核镜像(包括寄存器)的值。其基本原理是: 当使用了ptrace跟踪后，所有发送给被跟踪的子进程的信号(除了SIGKILL)，都会被转发给父进程，而子进程则会被阻塞，这时子进程的状态就会被系统标注为TASK_TRACED。而父进程收到信号后，就可以对停止下来的子进程进行检查和修改，然后让子进程继续运行。</p><p>使用ptrace 可以动态调试进程，可以做到自定义gdb的某些功能，参考：<br><a href=https://www.cnblogs.com/tangr206/articles/3094358.html>https://www.cnblogs.com/tangr206/articles/3094358.html</a></p><h3 id=跳转代码修改>跳转代码修改</h3><h4 id=inline-hook>inline hook</h4><p>详细代码: <a href=https://github.com/changan29/playcpp/tree/master/hook/inline-hook>https://github.com/changan29/playcpp/tree/master/hook/inline-hook</a></p><p>inline-hook大致的原理：一般是在具体的代码函数头加一段跳转指令，跳转的地址在runtime的时候指定，然后执行该方法的时候，就跳到指定的函数，执行hook。</p><p><img src=https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/inlinehook_0.png alt=image></p><p>更直观的理解是 比如找个函数，从直观的字节上理解：<br><img src=https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/inlinehook_1.png alt=image></p><p>一般，我们使用jmp跳转来实现inline hook, 获取代码地址- 修改 函数内容 - 实现自定义跳转</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>void hooker::HookerX64::doHook(void *func,void *newAddr,void **origFunc) const {
+</span></span><span class=line><span class=cl>  
+</span></span><span class=line><span class=cl>      char *f = (char *)func;
+</span></span><span class=line><span class=cl>      if (origFunc) {
+</span></span><span class=line><span class=cl>          // find the return instruction retq: c3
+</span></span><span class=line><span class=cl>          int index = 0;
+</span></span><span class=line><span class=cl>          while (true) {
+</span></span><span class=line><span class=cl>              if (static_cast&lt;uint8_t&gt;(f[index++]) == 0xc3 || index &gt;= 1024) {
+</span></span><span class=line><span class=cl>                  break;
+</span></span><span class=line><span class=cl>              }
+</span></span><span class=line><span class=cl>          }
+</span></span><span class=line><span class=cl>  
+</span></span><span class=line><span class=cl>          void *old = malloc(index);
+</span></span><span class=line><span class=cl>         printf(&#34;HookerX64::doHookbackup : %p \n&#34;, old);
+</span></span><span class=line><span class=cl>         if (old != nullptr)
+</span></span><span class=line><span class=cl>         {
+</span></span><span class=line><span class=cl>              memcpy(old, func, index);
+</span></span><span class=line><span class=cl>              changeCodeAttrs(old, CODE_READ_ONLY);
+</span></span><span class=line><span class=cl>              *origFunc = old;
+</span></span><span class=line><span class=cl>          }
+</span></span><span class=line><span class=cl>      }
+</span></span><span class=line><span class=cl>  
+</span></span><span class=line><span class=cl>      /*
+</span></span><span class=line><span class=cl>      x64位下使用的跳转是
+</span></span><span class=line><span class=cl>  
+</span></span><span class=line><span class=cl>      jmp 或者 call模式。
+</span></span><span class=line><span class=cl>      jmp共使用14个字节，0xFF2500000000为6个字节，目标地址为00000000`00000000为8字节。
+</span></span><span class=line><span class=cl>  
+</span></span><span class=line><span class=cl>      call模式
+</span></span><span class=line><span class=cl>      0xff1500000002为6个字节，目标地址为00000000`00000000为8字节。
+</span></span><span class=line><span class=cl>      */
+</span></span><span class=line><span class=cl>  
+</span></span><span class=line><span class=cl>  
+</span></span><span class=line><span class=cl>      *(uint16_t *)&amp;f[0] = 0x25ff;
+</span></span><span class=line><span class=cl>      *(int *)&amp;f[2] = 0x00000000;
+</span></span><span class=line><span class=cl>      *(long *)&amp;f[6] = (long)newAddr;
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>      printf(&#34;HookerX64::doHook newAddr: %p\n &#34; ,  newAddr);
+</span></span><span class=line><span class=cl>  }
+</span></span></code></pre></div><h4 id=inline-hook的注意点>inline-hook的注意点</h4><p>具体代码见附件。<br>执行完inline hook , 保存了原函数，只不过，此时的原函数内容 被拷贝到了其他的地方，再次调用原函数的时候，有的时候会core</p><p><img src=https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/inline-hook-core.png alt=image></p><p>为什么在开头调用一个函数就会core呢？ gdb 打印拷贝后的函数与原函数 对比，发现 调整后的指令如果有 %rip relative的地址（offset），那么这个地址是需要对应调整的。</p><p><img src=https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/inlinehook_adjust.png alt=image></p><h3 id=其他>其他</h3><ul><li>基于虚拟机提供能力、Java语言特性、消息hook(特别操作系统支持)等机制，Windows及Android上常用的hook机制。</li><li>Android的 xposed 、 jni hook等</li></ul><p>这一部分最近没有使用，后面有用到再实践。</p><h3 id=引用>引用</h3><ul><li><a href=http://www.ucw.cz/~hubicka/papers/abi/node19.html>http://www.ucw.cz/~hubicka/papers/abi/node19.html</a></li><li><a href=http://www.wireghost.cn/2015/04/01/ELF%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84%E8%AF%A6%E8%A7%A3/>http://www.wireghost.cn/2015/04/01/ELF%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84%E8%AF%A6%E8%A7%A3/</a></li><li><a href=https://www.cnblogs.com/goodhacker/p/9306997.html>https://www.cnblogs.com/goodhacker/p/9306997.html</a></li><li><a href=https://stevens.netmeister.org/631/elf.html>https://stevens.netmeister.org/631/elf.html</a></li><li><a href=https://github.com/liuyx/inline-hook>https://github.com/liuyx/inline-hook</a></li><li><a href=https://github.com/zhougy0717/inject_got>https://github.com/zhougy0717/inject_got</a></li><li>《程序员的自我修养》</li><li>《CSAPP 第3、7章》</li></ul></div><div class="chips post-tags"><a href=/tags/os/># Os</a><a href=/tags/hook/># Hook</a></div><nav class=post-neighbors aria-label=相邻文章><a href=/2020/07/23/tianwen-1-wenchang/><small>上一篇</small>去看天问一号发射</a><a href=/2020/10/02/press_robots/><small>下一篇</small>多进程游戏压测工具</a></nav><section class=comments aria-label=文章评论><script src=https://giscus.app/client.js data-repo=changan29/changan29.github.io data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category=Announcements data-category-id=DIC_kwDOC6bf5s4CSvAi data-mapping=url data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=preferred_color_scheme data-lang=zh-CN crossorigin=anonymous async></script></section></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>

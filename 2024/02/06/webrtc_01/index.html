@@ -1,0 +1,170 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>webrtc-01 视频采集和录制 · changan's blog</title><meta name=description content="整体架构 https://webrtc.github.io/webrtc-org/architecture/
+整体设计图 示例 进行视频采集 解释放代码注释中, html5 和 webrtc 标准互通 确实让音视频的生态、开发者的处境变得更好，很好的思路，接触音视频有点晚少了很多有意思的尝试。
+<body> …"><link rel=canonical href=https://www.oneyearago.me/2024/02/06/webrtc_01/><meta property="og:title" content="webrtc-01 视频采集和录制"><meta property="og:url" content="https://www.oneyearago.me/2024/02/06/webrtc_01/"><meta property="og:description" content="整体架构 https://webrtc.github.io/webrtc-org/architecture/
+整体设计图 示例 进行视频采集 解释放代码注释中, html5 和 webrtc 标准互通 确实让音视频的生态、开发者的处境变得更好，很好的思路，接触音视频有点晚少了很多有意思的尝试。
+<body> …"><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><div class=post-meta><time datetime=2024-02-06>2024.02.06</time><span>2 分钟阅读</span></div><h1>webrtc-01 视频采集和录制</h1><div class=chips><a href=/categories/%E9%9F%B3%E8%A7%86%E9%A2%91/>音视频</a></div></header><details class=toc><summary>本文目录</summary><nav id=TableOfContents><ul><li><a href=#整体架构>整体架构</a><ul><li></li></ul></li><li><a href=#示例>示例</a><ul><li></li></ul></li></ul></nav></details><div class=prose><h2 id=整体架构>整体架构</h2><p><a href=https://webrtc.github.io/webrtc-org/architecture/#>https://webrtc.github.io/webrtc-org/architecture/</a></p><h4 id=整体设计图>整体设计图</h4><p><img src=https://webrtc.github.io/webrtc-org/assets/images/webrtc-public-diagram-for-website.png alt=image></p><h2 id=示例>示例</h2><h4 id=进行视频采集>进行视频采集</h4><p>解释放代码注释中, html5 和 webrtc 标准互通 确实让音视频的生态、开发者的处境变得更好，很好的思路，接触音视频有点晚少了很多有意思的尝试。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>   &lt;body&gt;
+</span></span><span class=line><span class=cl>    &lt;div&gt;
+</span></span><span class=line><span class=cl>           	&lt;video autoplay playsinline id=&#34;player&#34;&gt;&lt;/video&gt;
+</span></span><span class=line><span class=cl>    &lt;/div&gt;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    &lt;div&gt;
+</span></span><span class=line><span class=cl>           	&lt;button id=&#34;record&#34;&gt;Start Record&lt;/button&gt;
+</span></span><span class=line><span class=cl>           	&lt;button id=&#34;recplay&#34; disabled&gt;Play&lt;/button&gt;
+</span></span><span class=line><span class=cl>           	&lt;button id=&#34;download&#34; disabled&gt;Download&lt;/button&gt;
+</span></span><span class=line><span class=cl>    &lt;/div&gt;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    &lt;div&gt;
+</span></span><span class=line><span class=cl>           	&lt;video playsinline id=&#34;recplayer&#34;&gt;&lt;/video&gt;
+</span></span><span class=line><span class=cl>    &lt;/div&gt;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>           &lt;script src=&#34;https://webrtc.github.io/adapter/adapter-latest.js&#34;&gt;&lt;/script&gt;
+</span></span><span class=line><span class=cl>           &lt;script src=&#34;https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js&#34;&gt;&lt;/script&gt;
+</span></span><span class=line><span class=cl>           &lt;script src=&#34;./js/client.js&#34;&gt;&lt;/script&gt;
+</span></span><span class=line><span class=cl>&lt;/body&gt;
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>&#39;use strict&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>var videoplay = document.querySelector(&#39;video#player&#39;);
+</span></span><span class=line><span class=cl>//var audioplay = document.querySelector(&#39;audio#audioplayer&#39;);
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>//record
+</span></span><span class=line><span class=cl>var recvideo = document.querySelector(&#39;video#recplayer&#39;);
+</span></span><span class=line><span class=cl>var btnRecord = document.querySelector(&#39;button#record&#39;);
+</span></span><span class=line><span class=cl>var btnPlay = document.querySelector(&#39;button#recplay&#39;);
+</span></span><span class=line><span class=cl>var btnDownload = document.querySelector(&#39;button#download&#39;);
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>var buffer;
+</span></span><span class=line><span class=cl>var mediaRecorder;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>function gotMediaStream(stream){
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	window.stream = stream;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	/*
+</span></span><span class=line><span class=cl>	1. html5标准
+</span></span><span class=line><span class=cl>		 2008 年发布，正式包含了 &lt;video&gt; 和 &lt;audio&gt; 元素，这些标准在 2010 年代初得到了广泛的采纳和实施，同时逐渐增加了更多功能，如 srcObject 属性
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	2. WebRTC 标准
+</span></span><span class=line><span class=cl>		2013 年左右，WebRTC 开始在主流浏览器中得到实现
+</span></span><span class=line><span class=cl>	3. 互通性
+</span></span><span class=line><span class=cl>		MediaStream API 是连接 HTML5 媒体标准和 WebRTC 的桥梁。这个 API 允许将从摄像头和麦克风等设备获取的媒体流直接赋值给 &lt;video&gt; 或 &lt;audio&gt; 元素
+</span></span><span class=line><span class=cl>		srcObject 属性的引入（初步在 2013 年左右的草案中出现）
+</span></span><span class=line><span class=cl>	*/
+</span></span><span class=line><span class=cl>	videoplay.srcObject = stream;	
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>function handleError(err){
+</span></span><span class=line><span class=cl>	console.log(&#39;getUserMedia error:&#39;, err);
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>function start() {
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	if(!navigator.mediaDevices ||
+</span></span><span class=line><span class=cl>		!navigator.mediaDevices.getUserMedia){
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>		console.log(&#39;getUserMedia is not supported!&#39;);
+</span></span><span class=line><span class=cl>		return;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	}else{
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>		var constraints = {
+</span></span><span class=line><span class=cl>			video : {
+</span></span><span class=line><span class=cl>				width: 640,	
+</span></span><span class=line><span class=cl>				height: 480,
+</span></span><span class=line><span class=cl>				frameRate:15
+</span></span><span class=line><span class=cl>			}, 
+</span></span><span class=line><span class=cl>			audio : false 
+</span></span><span class=line><span class=cl>		}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>		// getUserMedia(constraints?: MediaStreamConstraints): Promise&lt;MediaStream&gt;;
+</span></span><span class=line><span class=cl>		navigator.mediaDevices.getUserMedia(constraints)
+</span></span><span class=line><span class=cl>			.then(gotMediaStream)
+</span></span><span class=line><span class=cl>			.catch(handleError);
+</span></span><span class=line><span class=cl>	}
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>start();
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>function handleDataAvailable(e){
+</span></span><span class=line><span class=cl>	if(e &amp;&amp; e.data &amp;&amp; e.data.size &gt; 0){
+</span></span><span class=line><span class=cl>	 	buffer.push(e.data);			
+</span></span><span class=line><span class=cl>	}
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>function startRecord(){
+</span></span><span class=line><span class=cl>	
+</span></span><span class=line><span class=cl>	buffer = [];
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	var options = {
+</span></span><span class=line><span class=cl>		mimeType: &#39;video/webm;codecs=vp8&#39;
+</span></span><span class=line><span class=cl>	}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	if(!MediaRecorder.isTypeSupported(options.mimeType)){
+</span></span><span class=line><span class=cl>		console.error(`${options.mimeType} is not supported!`);
+</span></span><span class=line><span class=cl>		return;	
+</span></span><span class=line><span class=cl>	}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	try{
+</span></span><span class=line><span class=cl>		// https://developer.mozilla.org/zh-CN/docs/Web/API/MediaRecorder/dataavailable_event
+</span></span><span class=line><span class=cl>		mediaRecorder = new MediaRecorder(window.stream, options);
+</span></span><span class=line><span class=cl>	}catch(e){
+</span></span><span class=line><span class=cl>		console.error(&#39;Failed to create MediaRecorder:&#39;, e);
+</span></span><span class=line><span class=cl>		return;	
+</span></span><span class=line><span class=cl>	}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	mediaRecorder.ondataavailable = handleDataAvailable;
+</span></span><span class=line><span class=cl>	mediaRecorder.start(10);
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>function stopRecord(){
+</span></span><span class=line><span class=cl>	mediaRecorder.stop();
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>btnRecord.onclick = ()=&gt;{
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	if(btnRecord.textContent === &#39;Start Record&#39;){
+</span></span><span class=line><span class=cl>		startRecord();	
+</span></span><span class=line><span class=cl>		btnRecord.textContent = &#39;Stop Record&#39;;
+</span></span><span class=line><span class=cl>		btnPlay.disabled = true;
+</span></span><span class=line><span class=cl>		btnDownload.disabled = true;
+</span></span><span class=line><span class=cl>	}else{
+</span></span><span class=line><span class=cl>	
+</span></span><span class=line><span class=cl>		stopRecord();
+</span></span><span class=line><span class=cl>		btnRecord.textContent = &#39;Start Record&#39;;
+</span></span><span class=line><span class=cl>		btnPlay.disabled = false;
+</span></span><span class=line><span class=cl>		btnDownload.disabled = false;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	}
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>btnPlay.onclick = ()=&gt; {
+</span></span><span class=line><span class=cl>	var blob = new Blob(buffer, {type: &#39;video/webm&#39;});	// webm 是一种开放的媒体文件格式，专门设计用于互联网上的视频和音频内容 
+</span></span><span class=line><span class=cl>	/*
+</span></span><span class=line><span class=cl>		WebP 和 WebM 都是由谷歌推动的开源项目，它们都旨在优化网络上的媒体内容传输，但分别用于不同的媒体类型：
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>		WebP：是一种主要针对图像的文件格式，支持无损和有损压缩。WebP 提供的压缩效率通常优于传统的 JPEG 和 PNG 格式，
+</span></span><span class=line><span class=cl>		并且支持动画和透明度（alpha transparency），这使得它成为一个非常适合网络使用的图像格式。WebP 的目标是减小图像文件的大小，
+</span></span><span class=line><span class=cl>		从而加快网页加载速度，并减少带宽使用。
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>		WebM：是一种视频容器格式，它主要用于包含视频和音频流，特别是在网络应用中。WebM 使用 VP8 或 VP9 作为视频编解码器，Vorbis 或 Opus 为音频编解码器。
+</span></span><span class=line><span class=cl>		WebM 格式因其开放性和高效的编解码性能，常被用于视频流和网页视频播放。
+</span></span><span class=line><span class=cl>	*/
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	recvideo.src = window.URL.createObjectURL(blob);
+</span></span><span class=line><span class=cl>	recvideo.srcObject = null;
+</span></span><span class=line><span class=cl>	recvideo.controls = true;
+</span></span><span class=line><span class=cl>	recvideo.play();
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>btnDownload.onclick = ()=&gt; {
+</span></span><span class=line><span class=cl>	var blob = new Blob(buffer, {type: &#39;video/webm&#39;});	// https://zh.wikipedia.org/wiki/%E4%BA%92%E8%81%94%E7%BD%91%E5%AA%92%E4%BD%93%E7%B1%BB%E5%9E%8B#Type_video
+</span></span><span class=line><span class=cl>	var url = window.URL.createObjectURL(blob);
+</span></span><span class=line><span class=cl>	var a = document.createElement(&#39;a&#39;);
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	a.href = url;
+</span></span><span class=line><span class=cl>	a.style.display = &#39;none&#39;;
+</span></span><span class=line><span class=cl>	a.download = &#39;aaa.webm&#39;;
+</span></span><span class=line><span class=cl>	a.click();
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><h4 id=demo部署>demo部署</h4><p>备注: 需要https证书</p><p><a href=https://www.oneyearago.me/webrtc_01.html>webrtc第一个实验</a></p></div><div class="chips post-tags"><a href=/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/># 音视频</a></div><nav class=post-neighbors aria-label=相邻文章><a href=/2023/06/06/vedio-basic-04/><small>上一篇</small>音视频基础- rtmp协议</a><a href=/2024/02/15/webrtc_02/><small>下一篇</small>webrtc 02 - NAT网络和P2P打洞</a></nav><section class=comments aria-label=文章评论><script src=https://giscus.app/client.js data-repo=changan29/changan29.github.io data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category=Announcements data-category-id=DIC_kwDOC6bf5s4CSvAi data-mapping=url data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=preferred_color_scheme data-lang=zh-CN crossorigin=anonymous async></script></section></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>

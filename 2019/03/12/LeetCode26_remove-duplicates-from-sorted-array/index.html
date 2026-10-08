@@ -1,0 +1,27 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>LeetCode_26 Remove Duplicates from Sorted Array · changan's blog</title><meta name=description content="Remove Duplicates from Sorted Array Given a sorted array nums, remove the duplicates in-place such that each element appear only once and return the new length. …"><link rel=canonical href=https://www.oneyearago.me/2019/03/12/LeetCode26_remove-duplicates-from-sorted-array/><meta property="og:title" content="LeetCode_26 Remove Duplicates from Sorted Array"><meta property="og:url" content="https://www.oneyearago.me/2019/03/12/LeetCode26_remove-duplicates-from-sorted-array/"><meta property="og:description" content="Remove Duplicates from Sorted Array Given a sorted array nums, remove the duplicates in-place such that each element appear only once and return the new length. …"><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><h1>LeetCode_26 Remove Duplicates from Sorted Array</h1></header><div class=prose><h3 id=Remove-Duplicates-from-Sorted-Array>Remove Duplicates from Sorted Array</h3><p>Given a sorted array nums, remove the duplicates in-place such that each element appear only once and return the new length.</p><p>Do not allocate extra space for another array, you must do this by modifying the input array in-place with O(1) extra memory.</p><p><strong>Example 1:</strong></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>Given nums = [1,1,2],
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Your function should return length = 2, 
+</span></span><span class=line><span class=cl>with the first two elements of nums being 1 and 2 respectively.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>It doesn&#39;t matter what you leave beyond the returned length.
+</span></span></code></pre></div><p>Example 2:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>Given nums = [0,0,1,1,1,2,2,3,3,4],
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Your function should return length = 5, 
+</span></span><span class=line><span class=cl>with the first five elements of nums being modified to
+</span></span><span class=line><span class=cl>0, 1, 2, 3, and 4 respectively.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>It doesn&#39;t matter what values are set beyond the returned length.
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>int removeDuplicates(vector&lt;int&gt;&amp; nums)
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    if(nums.size() == 0 || nums.size() == 1) return nums.size();
+</span></span><span class=line><span class=cl>    int i =0;
+</span></span><span class=line><span class=cl>    for (int j = 1; j &lt; nums.size(); ++j) {
+</span></span><span class=line><span class=cl>        if(nums[j] != nums[i])
+</span></span><span class=line><span class=cl>        {
+</span></span><span class=line><span class=cl>            i++;
+</span></span><span class=line><span class=cl>            nums[i] = nums[j];
+</span></span><span class=line><span class=cl>        }
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>    return i+1;
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div></div></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>

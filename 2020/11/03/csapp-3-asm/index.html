@@ -1,0 +1,118 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>程序的机器级表示 · changan's blog</title><meta name=description content="CSAPP 机器级表示 汇编 两个抽象
+硬件 指令集 ISA 的抽象 虚拟内存 大数组 汇编与高级语言的区别
+暴露的可操作
+程序计数器 rip
+条件寄存器
+整数寄存器
+ATT 汇编与 intel 汇编区别
+intel 省略了 指示大小的后缀 Intel省略了 寄存器前的 % Intel 有很多不同的方法 描述内存的位置 …"><link rel=canonical href=https://www.oneyearago.me/2020/11/03/csapp-3-asm/><meta property="og:title" content="程序的机器级表示"><meta property="og:url" content="https://www.oneyearago.me/2020/11/03/csapp-3-asm/"><meta property="og:description" content="CSAPP 机器级表示 汇编 两个抽象
+硬件 指令集 ISA 的抽象 虚拟内存 大数组 汇编与高级语言的区别
+暴露的可操作
+程序计数器 rip
+条件寄存器
+整数寄存器
+ATT 汇编与 intel 汇编区别
+intel 省略了 指示大小的后缀 Intel省略了 寄存器前的 % Intel 有很多不同的方法 描述内存的位置 …"><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><div class=post-meta><time datetime=2020-11-03>2020.11.03</time><span>4 分钟阅读</span></div><h1>程序的机器级表示</h1><div class=chips><a href=/categories/asm/>Asm</a><a href=/categories/os/>Os</a></div></header><details class=toc><summary>本文目录</summary><nav id=TableOfContents><ul><li><a href=#机器级表示>机器级表示</a><ul><li><a href=#汇编>汇编</a></li><li><a href=#访问信息>访问信息</a></li><li><a href=#控制>控制</a></li><li><a href=#过程>过程</a></li><li><a href=#结构与数组>结构与数组</a></li><li><a href=#过程的详细解释>过程的详细解释</a></li><li><a href=#栈描述>栈描述</a></li><li><a href=#gdb-调试>gdb 调试</a></li></ul></li></ul></nav></details><div class=prose><h1 id=CSAPP>CSAPP</h1><p><img src=https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/csapp-3-7.svg alt=image></p><h2 id=机器级表示>机器级表示</h2><h3 id=汇编>汇编</h3><ul><li><p>两个抽象</p><ul><li>硬件 指令集 ISA 的抽象</li><li>虚拟内存 大数组</li></ul></li><li><p>汇编与高级语言的区别</p><ul><li><p>暴露的可操作</p><ul><li><p>程序计数器 rip</p></li><li><p>条件寄存器</p></li><li><p>整数寄存器</p><p><img src=https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call_register alt></p></li></ul></li></ul></li><li><p>ATT 汇编与 intel 汇编区别</p><ul><li>intel 省略了 指示大小的后缀</li><li>Intel省略了 寄存器前的 %</li><li>Intel 有很多不同的方法 描述内存的位置</li><li>多个操作数 Intel 列出的操作数 是相反的</li></ul></li></ul><h3 id=访问信息>访问信息</h3><ul><li><p>不同类型操作数</p><ul><li><p>寄存器</p></li><li><p>立即数</p></li><li><p>内存引用</p></li><li><p>表</p><p><img src=https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call_op alt></p></li></ul></li><li><p>数据传送</p><ul><li>mov S , D</li></ul></li><li><p>入栈出栈</p><ul><li><p>push</p><ul><li>sub %rsp; mov xxx (%rsp)</li></ul></li><li><p>pop</p><ul><li>mov %rsp xxx , add %rsp</li></ul></li><li><p>pic</p><p><img src=https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call_stack alt></p></li></ul></li><li><p>lea</p><ul><li><p>load effective addr</p><ul><li>加载有效地址</li></ul></li><li><p>lea s , d -> d=&amp;s</p></li></ul></li></ul><h3 id=控制>控制</h3><ul><li><p>条件码寄存器</p><ul><li>CF 进位标志</li><li>ZF 零标志</li><li>SF 符号标志</li><li>OF 溢出标志</li></ul></li><li><p>访问条件码</p><ul><li><p>可以依据条件码的某种组合，将一个字节设置成0或1</p><ul><li><p>SET 指令</p><ul><li>setne D -> D=~ZF</li></ul></li></ul></li><li><p>可以条件跳转到程序的其他部分</p></li><li><p>可以有条件的传送数据</p></li></ul></li><li><p>跳转指令</p><ul><li><p>无条件跳转</p><ul><li><p>jmp</p><ul><li><p>直接跳转</p><ul><li>跳转目标是作为指令的一部分编码</li></ul></li><li><p>间接跳转</p><ul><li>跳转目标是从寄存器或内存位置读出</li></ul></li></ul></li></ul></li><li><p>有条件跳转</p><ul><li><p>例子</p><ul><li>jnz</li><li>jz</li><li>jne</li></ul></li><li><p>条件跳转只能 直接跳转</p></li></ul></li><li><p>跳转指令的编码</p><ul><li><p>跳转指令有几种不同的编码，最常用的是 PC相对的</p><ul><li><p>PC-relative</p><ul><li><p>地址偏移量编码为 1 2 4字节</p><ul><li>指令编码很简洁</li><li>目标代码可以不做改变就移到内存不同的位置</li></ul></li></ul></li></ul></li><li><p>绝对地址</p><ul><li>4个字节直接指定目标</li></ul></li></ul></li></ul></li><li><p>分支、循环、switch</p></li></ul><h3 id=过程>过程</h3><ul><li><p>概念</p><ul><li>用指定的一组参数和可选的返回值实现某种功能</li></ul></li><li><p>转移控制</p><ul><li><p>过程</p><ul><li><p>压栈，设置%rip ; 弹出地址，设置%rip</p><p><img src=https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call_ret alt></p></li></ul></li><li><p>跳转</p><ul><li>直接跳转</li><li>间接跳转</li></ul></li></ul></li><li><p>传递数据</p><ul><li><p>寄存器传参</p><ul><li>rdi rsi rdx rcx r8 r9</li></ul></li><li><p>超过6个参数</p><ul><li>栈上传参</li></ul></li></ul></li><li><p>分配和回收内存</p><ul><li><p>栈上的局部存储</p><ul><li>变量取地址</li><li>结构</li></ul></li><li><p>寄存器局部存储</p><ul><li><p>寄存器保存惯例</p><ul><li><p>被调用者保存寄存器</p><ul><li><p>rbp rbx r12~r15</p><ul><li>%rbp 是栈帧指针，用于标识当前栈帧的起始位置</li></ul></li><li><p>leave 指令来实现两条命令</p><ul><li>movq %rbp, %rsp</li><li>popq %rbp</li></ul></li></ul></li></ul></li></ul></li></ul></li><li><p>实现基础</p><ul><li><p>运行时栈</p><ul><li>过程需要的存储空间超出寄存器大小，在栈上分配的数据称栈帧</li></ul></li></ul></li></ul><h3 id=结构与数组>结构与数组</h3><ul><li><p>数组</p><ul><li>movl (%rdx , %rcx , 4) , %rax</li></ul></li><li><p>结构</p><ul><li>通过首地址的相对偏移</li></ul></li></ul><h3 id=过程的详细解释>过程的详细解释</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>void proc(long a1, long*a1p , int a2 , int* a2p, short a3, short* a3p , char a4, char* a4p  )
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    *a1p += a1;
+</span></span><span class=line><span class=cl>    *a2p += a2;
+</span></span><span class=line><span class=cl>    *a2p += a3;
+</span></span><span class=line><span class=cl>    *a4p += a4;
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>int main()
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    long a1 = 0x12345678; 
+</span></span><span class=line><span class=cl>    long*a1p = &amp;a1;
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    int a2 = 0x66666666; 
+</span></span><span class=line><span class=cl>    int* a2p = &amp;a2;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    short a3 = 0x3333; 
+</span></span><span class=line><span class=cl>    short* a3p = &amp;a3;
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    char a4 = 0xFE; 
+</span></span><span class=line><span class=cl>    char* a4p = &amp;a4;
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    proc( a1 ,a1p , a2, a2p, a3, a3p,a4 , a4p  );
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    a1 = 0x11112222;
+</span></span><span class=line><span class=cl>    a2 = 0x66669999;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    return 0;
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><h3 id=栈描述>栈描述</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>int main()
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>  400565:   55                      push   %rbp
+</span></span><span class=line><span class=cl>  400566:   48 89 e5                mov    %rsp,%rbp
+</span></span><span class=line><span class=cl>  400569:   48 83 ec 40             sub    $0x40,%rsp
+</span></span><span class=line><span class=cl>    long a1 = 0x12345678; 
+</span></span><span class=line><span class=cl>  40056d:   48 c7 45 d8 78 56 34    movq   $0x12345678,-0x28(%rbp)
+</span></span><span class=line><span class=cl>  400574:   12  
+</span></span><span class=line><span class=cl>    long*a1p = &amp;a1;
+</span></span><span class=line><span class=cl>  400575:   48 8d 45 d8             lea    -0x28(%rbp),%rax           // 先构造了一些 局部变量
+</span></span><span class=line><span class=cl>  400579:   48 89 45 f8             mov    %rax,-0x8(%rbp)
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    int a2 = 0x66666666; 
+</span></span><span class=line><span class=cl>  40057d:   c7 45 d4 66 66 66 66    movl   $0x66666666,-0x2c(%rbp)
+</span></span><span class=line><span class=cl>    int* a2p = &amp;a2;
+</span></span><span class=line><span class=cl>  400584:   48 8d 45 d4             lea    -0x2c(%rbp),%rax
+</span></span><span class=line><span class=cl>  400588:   48 89 45 f0             mov    %rax,-0x10(%rbp)
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    short a3 = 0x3333; 
+</span></span><span class=line><span class=cl>  40058c:   66 c7 45 d2 33 33       movw   $0x3333,-0x2e(%rbp)
+</span></span><span class=line><span class=cl>    short* a3p = &amp;a3;
+</span></span><span class=line><span class=cl>  400592:   48 8d 45 d2             lea    -0x2e(%rbp),%rax
+</span></span><span class=line><span class=cl>  400596:   48 89 45 e8             mov    %rax,-0x18(%rbp)
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    char a4 = 0xFE; 
+</span></span><span class=line><span class=cl>  40059a:   c6 45 d1 fe             movb   $0xfe,-0x2f(%rbp)
+</span></span><span class=line><span class=cl>    char* a4p = &amp;a4;
+</span></span><span class=line><span class=cl>  40059e:   48 8d 45 d1             lea    -0x2f(%rbp),%rax
+</span></span><span class=line><span class=cl>  4005a2:   48 89 45 e0             mov    %rax,-0x20(%rbp)
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    proc( a1 ,a1p , a2, a2p, a3, a3p,a4 , a4p  );  
+</span></span><span class=line><span class=cl>  4005a6:   0f b6 45 d1             movzbl -0x2f(%rbp),%eax       // 通过寄存器和栈 传参
+</span></span><span class=line><span class=cl>  4005aa:   0f be f8                movsbl %al,%edi
+</span></span><span class=line><span class=cl>  4005ad:   0f b7 45 d2             movzwl -0x2e(%rbp),%eax
+</span></span><span class=line><span class=cl>  4005b1:   44 0f bf d0             movswl %ax,%r10d
+</span></span><span class=line><span class=cl>  4005b5:   8b 55 d4                mov    -0x2c(%rbp),%edx
+</span></span><span class=line><span class=cl>  4005b8:   48 8b 45 d8             mov    -0x28(%rbp),%rax
+</span></span><span class=line><span class=cl>  4005bc:   4c 8b 4d e8             mov    -0x18(%rbp),%r9
+</span></span><span class=line><span class=cl>  4005c0:   48 8b 4d f0             mov    -0x10(%rbp),%rcx
+</span></span><span class=line><span class=cl>  4005c4:   48 8b 75 f8             mov    -0x8(%rbp),%rsi
+</span></span><span class=line><span class=cl>  4005c8:   4c 8b 45 e0             mov    -0x20(%rbp),%r8
+</span></span><span class=line><span class=cl>  4005cc:   4c 89 44 24 08          mov    %r8,0x8(%rsp)
+</span></span><span class=line><span class=cl>  4005d1:   89 3c 24                mov    %edi,(%rsp)
+</span></span><span class=line><span class=cl>  4005d4:   45 89 d0                mov    %r10d,%r8d
+</span></span><span class=line><span class=cl>  4005d7:   48 89 c7                mov    %rax,%rdi
+</span></span><span class=line><span class=cl>  4005da:   e8 11 ff ff ff          callq  4004f0 &lt;proc&gt;
+</span></span></code></pre></div><p><img src=https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call.png alt></p><h3 id=gdb-调试>gdb 调试</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>void proc(long a1, long*a1p , int a2 , int* a2p, short a3, short* a3p , char a4, char* a4p  )
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>  4004f0:   55                      push   %rbp
+</span></span><span class=line><span class=cl>  4004f1:   48 89 e5                mov    %rsp,%rbp
+</span></span><span class=line><span class=cl>  4004f4:   48 89 7d f8             mov    %rdi,-0x8(%rbp)
+</span></span><span class=line><span class=cl>  4004f8:   48 89 75 f0             mov    %rsi,-0x10(%rbp)
+</span></span><span class=line><span class=cl>  4004fc:   89 55 ec                mov    %edx,-0x14(%rbp)
+</span></span><span class=line><span class=cl>  4004ff:   48 89 4d e0             mov    %rcx,-0x20(%rbp)
+</span></span><span class=line><span class=cl>  400503:   44 89 c2                mov    %r8d,%edx
+</span></span><span class=line><span class=cl>  400506:   4c 89 4d d8             mov    %r9,-0x28(%rbp)
+</span></span><span class=line><span class=cl>  40050a:   8b 45 10                mov    0x10(%rbp),%eax
+</span></span><span class=line><span class=cl>  40050d:   66 89 55 e8             mov    %dx,-0x18(%rbp)
+</span></span><span class=line><span class=cl>  400511:   88 45 d4                mov    %al,-0x2c(%rbp)
+</span></span><span class=line><span class=cl>    *a1p += a1;
+</span></span><span class=line><span class=cl>  400514:   48 8b 45 f0             mov    -0x10(%rbp),%rax       // 寄存器 能传递6个参数
+</span></span><span class=line><span class=cl>  400518:   48 8b 10                mov    (%rax),%rdx
+</span></span><span class=line><span class=cl>  40051b:   48 8b 45 f8             mov    -0x8(%rbp),%rax        // 其余的参数可以相对 rbp 获取
+</span></span><span class=line><span class=cl>  40051f:   48 01 c2                add    %rax,%rdx
+</span></span><span class=line><span class=cl>  400522:   48 8b 45 f0             mov    -0x10(%rbp),%rax
+</span></span><span class=line><span class=cl>  400526:   48 89 10                mov    %rdx,(%rax)
+</span></span><span class=line><span class=cl>    *a2p += a2;
+</span></span><span class=line><span class=cl>  400529:   48 8b 45 e0             mov    -0x20(%rbp),%rax
+</span></span><span class=line><span class=cl>  40052d:   8b 10                   mov    (%rax),%edx
+</span></span><span class=line><span class=cl>  40052f:   8b 45 ec                mov    -0x14(%rbp),%eax
+</span></span><span class=line><span class=cl>  400532:   01 c2                   add    %eax,%edx
+</span></span><span class=line><span class=cl>  400534:   48 8b 45 e0             mov    -0x20(%rbp),%rax
+</span></span><span class=line><span class=cl>  400538:   89 10                   mov    %edx,(%rax)
+</span></span></code></pre></div><p>call proc后, 这个过程会push main的调用地址的下一处，在proc里面也会push rbp, 通过打印内存的值，可以看到 rsp上 存储的变量信息， 选用的数字比较有规则，比如 0x12345678 , 0x 66666666 如下图：</p><p><img src=https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/function_stack/function_call_gdb alt></p></div><div class="chips post-tags"><a href=/tags/os/># Os</a><a href=/tags/asm/># Asm</a></div><nav class=post-neighbors aria-label=相邻文章><a href=/2020/10/02/press_robots/><small>上一篇</small>多进程游戏压测工具</a><a href=/2020/11/11/painting/><small>下一篇</small>画画</a></nav><section class=comments aria-label=文章评论><script src=https://giscus.app/client.js data-repo=changan29/changan29.github.io data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category=Announcements data-category-id=DIC_kwDOC6bf5s4CSvAi data-mapping=url data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=preferred_color_scheme data-lang=zh-CN crossorigin=anonymous async></script></section></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>

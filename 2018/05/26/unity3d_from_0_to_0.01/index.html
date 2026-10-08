@@ -1,0 +1,64 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>unity3d 手游从0到0.01 · changan's blog</title><meta name=description content="why？ 为什么要写这个东西，本身对u3d没有特别大的兴趣，但是毕竟在游戏行业，对前端一无所知好尴尬，而且客户端除了图形部分，还有业务逻辑，想要拿到一个客户端的项目能做到下断点调试。
+两天时间不可能对整个引擎了解的特别深入，写了部分个人看法，属于个人理解，过一段时间可能就不这样认为了，涉及如下:
+王者荣耀里面的安其拉原 …"><link rel=canonical href=https://www.oneyearago.me/2018/05/26/unity3d_from_0_to_0.01/><meta property="og:title" content="unity3d 手游从0到0.01"><meta property="og:url" content="https://www.oneyearago.me/2018/05/26/unity3d_from_0_to_0.01/"><meta property="og:description" content="why？ 为什么要写这个东西，本身对u3d没有特别大的兴趣，但是毕竟在游戏行业，对前端一无所知好尴尬，而且客户端除了图形部分，还有业务逻辑，想要拿到一个客户端的项目能做到下断点调试。
+两天时间不可能对整个引擎了解的特别深入，写了部分个人看法，属于个人理解，过一段时间可能就不这样认为了，涉及如下:
+王者荣耀里面的安其拉原 …"><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><h1>unity3d 手游从0到0.01</h1></header><div class=prose><h3 id=why？>why？</h3><p>为什么要写这个东西，本身对u3d没有特别大的兴趣，但是毕竟在游戏行业，对前端一无所知好尴尬，而且客户端除了图形部分，还有业务逻辑，想要拿到一个客户端的项目能做到下断点调试。</p><p>两天时间不可能对整个引擎了解的特别深入，写了部分个人看法，属于个人理解，过一段时间可能就不这样认为了，涉及如下:</p><ul><li>王者荣耀里面的安其拉原型是怎么做出来的？</li><li>怎么通过 Unity 编写游戏客户端逻辑</li><li>游戏里面的人物 怎么控制其射击，放技能</li><li>一款游戏的代码断点调试</li></ul><h3 id=王者荣耀里面的安其拉原型是怎么做出来的>王者荣耀里面的安其拉原型是怎么做出来的</h3><p>首先，一款游戏是很多人合作完成的结果，其中有游戏策划，美术和程序，安琪拉这个英雄最开始肯定是策划想要做这个英雄，设计这个英雄的各个技能是怎么样的，设计的方式多种多样，最有效的策划方式是 抄一个 哈哈</p><p>安琪拉的人物确定下来，是这样的<br><img src=http://otc9g6h5k.bkt.clouddn.com/142-mobileskin-1.jpg alt=image></p><p>接下来就是美术制作模型，美术常用的工具是 3dmax maya等，u3d对绝大多数建模软件都支持，在建模软件中做好模型 这种建模工具，制作模型的过程大概是这样的:</p><p><a href=https://www.bilibili.com/video/av14785189/>暴走萝莉安琪拉</a></p><p>模型这部分主要是美术的工作，模型导出到 unity 然后由程序去驱动</p><h3 id=怎么通过-Unity-编写游戏客户端>怎么通过 Unity 编写游戏客户端</h3><p>unity 一般是由不同的场景构成的，一般拿到一个 unity工程可以去 scenes 文件下 打开以 .unity 结尾的文件，我们在 一个场景中加载 多个 game object, 我们把上文中 美术做好的模型导入到场景中，设置好 光源，摄像机位置和模型比例，看到的是这样的<br>(没有王者荣耀的资源，这是一个射击游戏的，<a href=https://github.com/changan29/SimpleSwat-Unity>https://github.com/changan29/SimpleSwat-Unity</a>)<br>对于场景中的物体，可以将 c# 脚本挂载到物体上，选定操作的对象，可以看到绑定到其上的脚本<br><img src=http://otc9g6h5k.bkt.clouddn.com/obj_code.png alt=image><br>unity 中挂载到游戏对象中的脚本都是以下这种形式，全都继承 MonoBehaviour<br>unity和mono的关联，分享很多，类似: <a href=https://blog.csdn.net/qitian67/article/details/18516503>unity3d中脚本生命周期</a></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>public class BasicController : MonoBehaviour {
+</span></span><span class=line><span class=cl>	void Start ()
+</span></span><span class=line><span class=cl>	{
+</span></span><span class=line><span class=cl>		// 一些初始化操作
+</span></span><span class=line><span class=cl>	}
+</span></span><span class=line><span class=cl>	void Update ()
+</span></span><span class=line><span class=cl>	{
+</span></span><span class=line><span class=cl>		/*
+</span></span><span class=line><span class=cl>		Update是在每次渲染新的一帧的时候才会调用，
+</span></span><span class=line><span class=cl>		也就是说，这个函数的更新频率和设备的性能有关以及被渲染的物体（可以认为是三角形的数量）。
+</span></span><span class=line><span class=cl>		在性能好的机器上可能fps 30，差的可能小些。
+</span></span><span class=line><span class=cl>		这会导致同一个游戏在不同的机器上效果不一致，有的快有的慢。因为Update的执行间隔不一样了。
+</span></span><span class=line><span class=cl>		*/
+</span></span><span class=line><span class=cl>	}
+</span></span><span class=line><span class=cl>	void FixedUpdate()
+</span></span><span class=line><span class=cl>	{
+</span></span><span class=line><span class=cl>		/*
+</span></span><span class=line><span class=cl>		FixedUpdate是在固定的时间间隔执行，不受游戏帧率的影响。
+</span></span><span class=line><span class=cl>		*/
+</span></span><span class=line><span class=cl>	}
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><p>这样 我们就能通过引擎注册的这几个特殊函数 Update FixedUpdate 写自己的逻辑</p><p>引擎能帮你做的事情很多，构建场景，各种控件，物理引擎，粒子系统都是具备的，继承他，拖几个控件，在继承的代码里多写几行，显得你也很牛逼。。</p><h3 id=游戏里面的人物-怎么控制其射击，放技能>游戏里面的人物 怎么控制其射击，放技能</h3><p>首先，我们看这个游戏怎么玩：</p><p>提到美术同学做模型，其实模型里面是可以加入动画的，以前的RPG游戏，很多动画是由程序切 一系列的图，达到操作人物的某些动作。</p><p>在实际的游戏中，用的最多的是骨骼动画、关节动画、关键帧动画三种基本的动画。<br>在关键帧动画中，模型在每个关键帧中都是一个固定的姿势，相当于一个“快照”，通过在不同的关键帧中进行插值平滑计算，可以得到一个较为流畅的动画表现。关键帧动画的一个优势是只需要做插值计算，相对于其他的动画计算量很小，但是劣势也比较明显，基于固定的“快照”进行插值计算，表现大大被限制，同时插值如果不够平滑容易出现尖刺等现象。</p><p>　　关节动画是早期出现的一种动画，在这种动画中，模型整体不是一个Mesh, 而是分为多个Mesh，通过父子的关系进行组织，这样父节点的Mesh就会带动子节点的Mesh进行变换，这样层层的变换关系，就可以得到各个子Mesh在不同关键帧中的位置。关节动画相比于关键帧动画，依赖于各个关键帧的动画数据，可以实时的计算出各个Mesh的位置，不再受限于固定的位置，但是由于是分散的各个Mesh，这样在不同Mesh的结合处容易出现裂缝。</p><p>　　骨骼动画是进一步的动画类型，原理构成极其简单，但是解决问题极其有优势。将模型分为骨骼Bone和蒙皮Mesh两个部分，其基本的原理可以阐述为：模型的骨骼可分为基本多层父子骨骼，在动画关键帧数据的驱动下，计算出各个父子骨骼的位置，基于骨骼的控制通过顶点混合动态计算出蒙皮网格的顶点。在骨骼动画中，通常包含的是骨骼层次数据，网格Mesh数据， 网格蒙皮数据Skin Info和骨骼的动画关键帧数据。<br>　　<br>　　<br>　　骨骼的本质，其实就是一个坐标空间，我们在做骨骼动画的时候，关键帧中包含的对骨骼的变换主要为旋转矩阵，所以对骨骼的变换就是对骨骼空间的旋转变换。说简单点，一个骨骼动画，带来的变换，首先作用在根骨骼上，影响根骨骼的坐标空间，然后递归的影响根骨的子骨骼，这样层层的递归影响，最后带来的就是整体骨骼变换。</p><p>我们在一个实际游戏中再看一下，还是上面那个射击游戏，定位到要射击的人物上，发现其绑定了Animator ，<br><img src=http://otc9g6h5k.bkt.clouddn.com/animator.png alt=image><br>Animator Controller在Unity中是作为一种单独的配置文件存在的文件类型，其后缀为controller，Animator Controller包含了以下几种功能：</p><pre tabindex=0><code>- 可以对多个动画进行整合
+- 使用状态机来实现动画的播放和切换
+- 可以实现动画融合和分层播放
+- 可以通过脚本来对动画播放进行深度控制
+</code></pre><p>在引擎中我们怎么使用这个组件呢？在Mecanim中，动画之间的播放不再是通过调用诸如“Play”之类的方法进行切换了，而是通过判断参数的变换来进行状态即动画的切换。<br>这些状态的变化，unity 通过一个 状态图表示：<br><img src=http://otc9g6h5k.bkt.clouddn.com/animator_img.png alt=image></p><p>当我们在代码中切换状态时，会控制不同的动画变化</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>/*
+</span></span><span class=line><span class=cl>部分代码，animator是绑定到人物对象上的 Animator 
+</span></span><span class=line><span class=cl>*/
+</span></span><span class=line><span class=cl>if(Input.GetKey(KeyCode.Q))
+</span></span><span class=line><span class=cl>        {
+</span></span><span class=line><span class=cl>			animator.SetBool(&#34;TurnLeft&#34;, true);
+</span></span><span class=line><span class=cl>			transform.Rotate(Vector3.up * (Time.deltaTime * -45.0f), Space.World);
+</span></span><span class=line><span class=cl>		}  else
+</span></span><span class=line><span class=cl>        {
+</span></span><span class=line><span class=cl>		    animator.SetBool(&#34;TurnLeft&#34;, false);	
+</span></span><span class=line><span class=cl>		}
+</span></span><span class=line><span class=cl>		if(Input.GetKey(KeyCode.E))
+</span></span><span class=line><span class=cl>		{
+</span></span><span class=line><span class=cl>			animator.SetBool(&#34;TurnRight&#34;, true);
+</span></span><span class=line><span class=cl>			transform.Rotate(Vector3.up * (Time.deltaTime * 45.0f), Space.World);
+</span></span><span class=line><span class=cl>				
+</span></span><span class=line><span class=cl>		}  else
+</span></span><span class=line><span class=cl>        {
+</span></span><span class=line><span class=cl>		    animator.SetBool(&#34;TurnRight&#34;, false);	
+</span></span><span class=line><span class=cl>		}
+</span></span><span class=line><span class=cl>		if(Input.GetKeyDown(KeyCode.F) &amp;&amp; animator.layerCount &gt;= 2)
+</span></span><span class=line><span class=cl>        {
+</span></span><span class=line><span class=cl>			animator.SetBool(&#34;Grenade&#34;, true);
+</span></span><span class=line><span class=cl>		} else
+</span></span><span class=line><span class=cl>        {
+</span></span><span class=line><span class=cl>			animator.SetBool(&#34;Grenade&#34;, false);
+</span></span><span class=line><span class=cl>		}
+</span></span><span class=line><span class=cl>		if(Input.GetButtonDown(&#34;Fire1&#34;) &amp;&amp; animator.layerCount &gt;= 2 &amp;&amp; Time.time&gt;nextFire)
+</span></span><span class=line><span class=cl>        {
+</span></span><span class=line><span class=cl>			animator.SetBool(&#34;Fire&#34;, true);
+</span></span><span class=line><span class=cl>            nextFire = Time.time + fireRate;
+</span></span><span class=line><span class=cl>            Instantiate(shot, Lo_Muzzle.position, Lo_Muzzle.rotation);
+</span></span><span class=line><span class=cl>            GetComponent&lt;AudioSource&gt;().Play();
+</span></span><span class=line><span class=cl>		}
+</span></span></code></pre></div><h3 id=一款游戏的代码断点调试>一款游戏的代码断点调试</h3><p>一般写 C# 在 VS中比较方便，unity和VS可以一起调试，在VS中看代码下断点,只要在安装VS的时候选择unity 选项就好了<br><img src=http://otc9g6h5k.bkt.clouddn.com/u3d_debug.png alt=image></p><p>然后去 unity 运行工程，达到断点条件，可见执行部分的堆栈<br><img src=http://otc9g6h5k.bkt.clouddn.com/u3d_debug2.png alt=image></p><h3 id=参考>参考</h3><ul><li><a href=https://www.cnblogs.com/SHOR/p/5735109.html>https://www.cnblogs.com/SHOR/p/5735109.html</a></li><li><a href=http://www.cnblogs.com/zblade/p/6986173.html>http://www.cnblogs.com/zblade/p/6986173.html</a></li><li><a href=http://www.cnblogs.com/zhanglitong/p/3196752.html>http://www.cnblogs.com/zhanglitong/p/3196752.html</a></li></ul><p>@Sat May 26 22:16:52 CST 2018</p></div></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>

@@ -1,0 +1,83 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>c++虚函数表 · changan's blog</title><meta name=description content="概述 首先,相较于C语言，C++语言并没有额外增加内存消耗(确切说，在没有虚函数情况下)。 对于一个C++类对象,每个对象有独立的数据成员(非static),但是内存中成员函数只有一份,该类的所有对象共享成员函数。
+编译器在编译阶段,进行函数的重构，即将成员函数进行非成员化。通过将this指针作为函数的第一个参数,通过 …"><link rel=canonical href=https://www.oneyearago.me/2020/12/22/cpp-class-model/><meta property="og:title" content="c++虚函数表"><meta property="og:url" content="https://www.oneyearago.me/2020/12/22/cpp-class-model/"><meta property="og:description" content="概述 首先,相较于C语言，C++语言并没有额外增加内存消耗(确切说，在没有虚函数情况下)。 对于一个C++类对象,每个对象有独立的数据成员(非static),但是内存中成员函数只有一份,该类的所有对象共享成员函数。
+编译器在编译阶段,进行函数的重构，即将成员函数进行非成员化。通过将this指针作为函数的第一个参数,通过 …"><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><div class=post-meta><time datetime=2020-12-22>2020.12.22</time><span>2 分钟阅读</span></div><h1>c++虚函数表</h1><div class=chips><a href=/categories/c++/>C++</a></div></header><div class=prose><h3 id=概述>概述</h3><p>首先,相较于C语言，C++语言并没有额外增加内存消耗(确切说，在没有虚函数情况下)。 对于一个C++类对象,每个对象有独立的数据成员(非static),但是内存中成员函数只有一份,该类的所有对象共享成员函数。</p><p>编译器在编译阶段,进行函数的重构，即将成员函数进行非成员化。通过将this指针作为函数的第一个参数,通过this指针即可以找到对象的数据成员</p><h3 id=使用GDB调试-C-虚函数>使用GDB调试 C++ 虚函数</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>class Base
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>public:
+</span></span><span class=line><span class=cl>        int a;
+</span></span><span class=line><span class=cl>        int b;
+</span></span><span class=line><span class=cl>        virtual void function(){}
+</span></span><span class=line><span class=cl>        virtual void function001(){}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        Base(){}
+</span></span><span class=line><span class=cl>        void NotVirtFunc(){}
+</span></span><span class=line><span class=cl>};
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>class Derive : public Base
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>public:
+</span></span><span class=line><span class=cl>    Derive(){}
+</span></span><span class=line><span class=cl>    int c;
+</span></span><span class=line><span class=cl>    virtual void function(){}
+</span></span><span class=line><span class=cl>    virtual void function006(){}
+</span></span><span class=line><span class=cl>};
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>class Test
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    public:
+</span></span><span class=line><span class=cl>    int vv;
+</span></span><span class=line><span class=cl>    virtual void bar(){}
+</span></span><span class=line><span class=cl>    virtual void foo(){}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    Test(){}
+</span></span><span class=line><span class=cl>};
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>class Derive2 : public Derive, public Test
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>public:
+</span></span><span class=line><span class=cl>    Derive2(){}
+</span></span><span class=line><span class=cl>    int d2;
+</span></span><span class=line><span class=cl>    virtual void function(){}
+</span></span><span class=line><span class=cl>    virtual void function006(){}
+</span></span><span class=line><span class=cl>    virtual void bar(){}
+</span></span><span class=line><span class=cl>};
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>int main()
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    Base b;                         // 没有继承
+</span></span><span class=line><span class=cl>    b.function();
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    Derive d;                       // 继承
+</span></span><span class=line><span class=cl>    d.function();
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    Derive2* d2 = new Derive2();    //多继承
+</span></span><span class=line><span class=cl>    d2-&gt;function();
+</span></span><span class=line><span class=cl>    delete d2;
+</span></span><span class=line><span class=cl>    return 0;
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>(gdb) p b
+</span></span><span class=line><span class=cl>$1 = {_vptr.Base = 0x400a90 &lt;vtable for Base+16&gt;, a = 0, b = 0}
+</span></span><span class=line><span class=cl>(gdb) info vtbl b
+</span></span><span class=line><span class=cl>vtable for &#39;Base&#39; @ 0x400a90 (subobject @ 0x7fffffffe2e0):
+</span></span><span class=line><span class=cl>[0]: 0x40081e &lt;Base::function()&gt;
+</span></span><span class=line><span class=cl>[1]: 0x400828 &lt;Base::function001()&gt;
+</span></span></code></pre></div><p><img src=https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/post-cpp-no-inherit.png alt=image></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>(gdb) p d
+</span></span><span class=line><span class=cl>$2 = {&lt;Base&gt; = {_vptr.Base = 0x400a50 &lt;vtable for Derive+16&gt;, a = 0, b = 0}, c = 1}
+</span></span><span class=line><span class=cl>(gdb) info vtbl d
+</span></span><span class=line><span class=cl>vtable for &#39;Derive&#39; @ 0x400a50 (subobject @ 0x7fffffffe2c0):
+</span></span><span class=line><span class=cl>[0]: 0x40086e &lt;Derive::function()&gt;
+</span></span><span class=line><span class=cl>[1]: 0x400828 &lt;Base::function001()&gt;
+</span></span><span class=line><span class=cl>[2]: 0x400878 &lt;Derive::function006()&gt;
+</span></span></code></pre></div><p><img src=https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/post-cpp-single-inherit.png alt=image></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>(gdb) p *d2        
+</span></span><span class=line><span class=cl>$5 = {&lt;Derive&gt; = {&lt;Base&gt; = {_vptr.Base = 0x4009d0 &lt;vtable for Derive2+16&gt;, a = 0, b = 0}, c = 0}, 
+</span></span><span class=line><span class=cl>        &lt;Test&gt; = {_vptr.Test = 0x400a00 &lt;vtable for Derive2+64&gt;, vv = 0}, d2 = 0}
+</span></span><span class=line><span class=cl>(gdb) info vtbl d2
+</span></span><span class=line><span class=cl>vtable for &#39;Derive2&#39; @ 0x4009d0 (subobject @ 0x603010):
+</span></span><span class=line><span class=cl>[0]: 0x4008ee &lt;Derive2::function()&gt;
+</span></span><span class=line><span class=cl>[1]: 0x400828 &lt;Base::function001()&gt;
+</span></span><span class=line><span class=cl>[2]: 0x4008f8 &lt;Derive2::function006()&gt;
+</span></span><span class=line><span class=cl>[3]: 0x400902 &lt;Derive2::bar()&gt;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>vtable for &#39;Test&#39; @ 0x400a00 (subobject @ 0x603028):
+</span></span><span class=line><span class=cl>[0]: 0x40090c &lt;non-virtual thunk to Derive2::bar()&gt;
+</span></span><span class=line><span class=cl>[1]: 0x40088c &lt;Test::foo()&gt;
+</span></span></code></pre></div><p><img src=https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/post-cpp-multi-inherit.png alt=image></p><h4 id=构造函数与虚函数表>构造函数与虚函数表</h4><p>虚函数表创建时机是在编译期间。 编译期间编译器就为每个类确定好了对应的虚函数表里的内容。 所以在程序运行时，编译器会把虚函数表的首地址赋值给虚函数表指针，所以，这个虚函数表指针就有值了。</p><p><img src=https://blog2020-1251969284.cos.ap-shanghai.myqcloud.com/intel/c%2B%2B_class_model.png alt=image></p><h3 id=ref>ref</h3><ul><li><a href=https://tangocc.github.io/2018/03/20/cpp-class-memory-struct/>https://tangocc.github.io/2018/03/20/cpp-class-memory-struct/</a></li></ul><h3 id=TODO>TODO</h3><p>菱形继承于虚继承这里没写，使用gdb也可以很快找到，编译器的规则而已，同理，后面这两种知道规则就可以了，在语言的框架下理解就可以了。</p></div><div class="chips post-tags"><a href=/tags/c++/># C++</a></div><nav class=post-neighbors aria-label=相邻文章><a href=/2020/12/16/shared_ptr/><small>上一篇</small>std::shared_ptr</a><a href=/2021/01/13/a-linux-shared-lib-bug/><small>下一篇</small>一个Linux 动态库常见bug</a></nav><section class=comments aria-label=文章评论><script src=https://giscus.app/client.js data-repo=changan29/changan29.github.io data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category=Announcements data-category-id=DIC_kwDOC6bf5s4CSvAi data-mapping=url data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=preferred_color_scheme data-lang=zh-CN crossorigin=anonymous async></script></section></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>

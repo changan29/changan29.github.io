@@ -1,0 +1,48 @@
+backend:
+  name: github
+  repo: changan29/changan29.github.io
+  branch: blog-source
+  base_url: https://www.oneyearago.me
+  auth_endpoint: cms-oauth/auth
+  squash_merges: true
+
+locale: zh_Hans
+site_url: https://www.oneyearago.me
+display_url: https://www.oneyearago.me
+logo_url: /images/avatar02.png
+publish_mode: simple
+media_folder: static/uploads
+public_folder: /uploads
+slug:
+  encoding: unicode
+  clean_accents: false
+  sanitize_replacement: '-'
+
+collections:
+  - name: posts
+    label: 文章
+    label_singular: 文章
+    folder: content/posts
+    create: true
+    slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
+    summary: '{{title}} · {{date}}'
+    sortable_fields: [date, title]
+    preview_path: '{{year}}/{{month}}/{{day}}/{{slug}}/'
+    fields:
+      - {label: 标题, name: title, widget: string}
+      - {label: 发布时间, name: date, widget: datetime, date_format: YYYY-MM-DD, time_format: HH:mm, format: 'YYYY-MM-DDTHH:mm:ssZ'}
+      - {label: 草稿, name: draft, widget: boolean, default: true, hint: '草稿保存后不会公开展示。准备上线时取消草稿，再点击发布。'}
+      - {label: 分类, name: categories, widget: list, required: false}
+      - {label: 标签, name: tags, widget: list, required: false}
+      - {label: 文章链接, name: url, widget: string, required: false, hint: '旧文章请保留此值。新文章留空会自动生成链接。'}
+      - {label: 正文, name: body, widget: markdown}
+  - name: pages
+    label: 页面
+    files:
+      - name: about
+        label: 关于
+        file: content/about/index.md
+        fields:
+          - {label: 标题, name: title, widget: string}
+          - {label: 链接, name: url, widget: hidden, default: /about/}
+          - {label: 正文, name: body, widget: markdown}

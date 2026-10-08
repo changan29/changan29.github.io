@@ -1,0 +1,30 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>写一个操作系统_14 C 链接与系统调用 · changan's blog</title><meta name=description content="用C语言写内核 无论什么语言，要编译成 ELF文件格式(或者定一个其他的标准)
+int main() { while(1){}; return 0; } 链接可以指定最终生成的可执行文件的起始虚拟地址，我们 指定 内核加载到 0x1500的地方，内核初始化的时候跳转内核要跳转到这个地方。
+ld …"><link rel=canonical href=https://www.oneyearago.me/2019/04/24/make_a_linux_14/><meta property="og:title" content="写一个操作系统_14 C 链接与系统调用"><meta property="og:url" content="https://www.oneyearago.me/2019/04/24/make_a_linux_14/"><meta property="og:description" content="用C语言写内核 无论什么语言，要编译成 ELF文件格式(或者定一个其他的标准)
+int main() { while(1){}; return 0; } 链接可以指定最终生成的可执行文件的起始虚拟地址，我们 指定 内核加载到 0x1500的地方，内核初始化的时候跳转内核要跳转到这个地方。
+ld …"><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><div class=post-meta><time datetime=2019-04-24>2019.04.24</time><span>1 分钟阅读</span></div><h1>写一个操作系统_14 C 链接与系统调用</h1><div class=chips><a href=/categories/kernel/>Kernel</a><a href=/categories/os/>Os</a></div></header><div class=prose><h3 id=用C语言写内核>用C语言写内核</h3><p>无论什么语言，要编译成 ELF文件格式(或者定一个其他的标准)</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>int main()
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>    while(1){};
+</span></span><span class=line><span class=cl>    return 0;
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><p>链接可以指定最终生成的可执行文件的起始虚拟地址，我们 指定 内核加载到 0x1500的地方，内核初始化的时候跳转内核要跳转到这个地方。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>ld kernel/main.o -Ttext Oxc0001500 -e main -o kernel/kernel.bin
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>$$ ~&gt;ld -help entry
+</span></span><span class=line><span class=cl>Usage: ld [options] file...
+</span></span><span class=line><span class=cl>Options:
+</span></span><span class=line><span class=cl>  -e ADDRESS, --entry ADDRESS Set start address
+</span></span></code></pre></div><h3 id=加载并执行-ELF-kernrl>加载并执行 ELF kernrl</h3><p>把编译完的内核代码加载到内存，分两步:</p><ul><li>加载 ELF文件到内存</li><li>根据 ELF 文件格式 初始化 kernel ，链接的时候指定了 入口点，loader初始化内核后跳转就可以了</li></ul><h3 id=调试>调试</h3><p>我们把 MBR , loader的代码 放到 虚拟硬盘的前两个扇区， 同样的，我们把 编译完的 kernel 的二进制写到 磁盘的第9扇区后的200个扇区，不超过100k, loader里面 先拷贝 磁盘内容到 内存，初始化内核后，调到 内核入口点</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>dd if=kernel.bin of=/your_path/hd60M.img bs=512 count=200 seek=9 conv=notrunc
+</span></span></code></pre></div><h3 id=函数调用约定-以-cdecl-为例>函数调用约定(以 cdecl 为例)</h3><p>cdecl(C declaration，即C声明)是源起C语言的一种调用约定，也是C语言的事实上的标准。在x86架构上，其内容包括：</p><ul><li>函数实参在线程栈上按照从右至左的顺序依次压栈。</li><li>函数结果保存在寄存器EAX/AX/AL中</li><li>浮点型结果存放在寄存器ST0中</li><li>编译后的函数名前缀以一个下划线字符</li><li>调用者负责从线程栈中弹出实参（即清栈）</li><li>8比特或者16比特长的整形实参提升为32比特长。</li><li>受到函数调用影响的寄存器（volatile registers）：EAX, ECX, EDX, ST0 - ST7, ES, GS</li><li>不受函数调用影响的寄存器： EBX, EBP, ESP, EDI, ESI, CS, DS</li><li>RET指令从函数被调用者返回到调用者（实质上是读取寄存器EBP所指的线程栈之处保存的函数返回地址并加载到IP寄存器）</li></ul><h3 id=系统调用>系统调用</h3><p>Linux 的系统调用通过 int 80h 实现，用系统调用号来区分入口函数。操作系统实现系统调用的基本过程是：</p><ul><li>应用程序调用库函数（API）；</li><li>API 将系统调用号存入 EAX，然后通过中断调用使系统进入内核态；</li><li>内核中的中断处理函数根据系统调用号，调用对应的内核函数（系统调用）；</li><li>系统调用完成相应功能，将返回值存入 EAX，返回到中断处理函数；<br>中断处理函数返回到 API 中；</li><li>API 将 EAX 返回给应用程序。</li></ul><p>应用程序调用系统调用的过程是：</p><ul><li>把系统调用的编号存入 EAX；</li><li>把函数参数存入其它通用寄存器；</li><li>触发 0x80 号中断（int 0x80）</li></ul><p>例子:</p><p>调用中断号，前提是这个中断函数已经写好了，系统已经提供，所以才称为 系统调用。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>char* str=”hello,world\n”;
+</span></span><span class=line><span class=cl>int count = 0;
+</span></span><span class=line><span class=cl>void main() {
+</span></span><span class=line><span class=cl>asm (”pusha; \
+</span></span><span class=line><span class=cl>	movl $4 ，%eax ; \
+</span></span><span class=line><span class=cl>	movl $1 ， %ebx; \
+</span></span><span class=line><span class=cl>	movl str ， %ecx;\
+</span></span><span class=line><span class=cl>	movl $12 ，%edx ; \
+</span></span><span class=line><span class=cl>	int $0x80; \
+</span></span><span class=line><span class=cl>	mov %eax,count;\
+</span></span><span class=line><span class=cl>	pop a \
+</span></span><span class=line><span class=cl>	”) ;
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div></div><div class="chips post-tags"><a href=/tags/os/># Os</a><a href=/tags/kernel/># Kernel</a></div><nav class=post-neighbors aria-label=相邻文章><a href=/2019/04/23/make_a_linux_13/><small>上一篇</small>写一个操作系统_13 内核的宏观视角</a><a href=/2019/04/27/make_a_linux_15/><small>下一篇</small>写一个操作系统_15 内存管理初步</a></nav><section class=comments aria-label=文章评论><script src=https://giscus.app/client.js data-repo=changan29/changan29.github.io data-repo-id="MDEwOlJlcG9zaXRvcnkxOTU0ODU2NzA=" data-category=Announcements data-category-id=DIC_kwDOC6bf5s4CSvAi data-mapping=url data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=preferred_color_scheme data-lang=zh-CN crossorigin=anonymous async></script></section></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>

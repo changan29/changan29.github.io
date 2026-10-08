@@ -1,0 +1,69 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><title>学习protobuf · changan's blog</title><meta name=description content="引用 一个golang 网友的思考(http://www.cnblogs.com/wolfred7464/p/4673908.html)：
+1、我用二进制传输消息意义在哪？ 当然就是字节少，传输成本小。 2、二进制不可读啊，怎么解码呢？ 调用Unmarshal函数，把对应类型的对象传入，会自动把二进制解码到传入的对象。 …"><link rel=canonical href=https://www.oneyearago.me/2018/06/04/protobuf_0.0.1/><meta property="og:title" content="学习protobuf"><meta property="og:url" content="https://www.oneyearago.me/2018/06/04/protobuf_0.0.1/"><meta property="og:description" content="引用 一个golang 网友的思考(http://www.cnblogs.com/wolfred7464/p/4673908.html)：
+1、我用二进制传输消息意义在哪？ 当然就是字节少，传输成本小。 2、二进制不可读啊，怎么解码呢？ 调用Unmarshal函数，把对应类型的对象传入，会自动把二进制解码到传入的对象。 …"><link rel=stylesheet href=/css/site.css><link rel=alternate type=application/rss+xml title="changan's blog" href=https://www.oneyearago.me/index.xml><script src=/js/site.js defer></script></head><body><a class=skip-link href=#main>跳到正文</a><header class=site-header><div class=header-inner><a class=brand href=/>changan's blog<span>思绪来的快去的也快，偶尔在这里停留</span></a><nav aria-label=主导航><a href=/>文章</a><a href=/archives/>归档</a><a href=/categories/>分类</a><a href=/tags/>标签</a><a href=/about/>关于</a><button id=theme-toggle aria-label=切换明暗主题 title=切换明暗主题>◐</button></nav></div></header><main id=main class=container><article class=post><header class=post-header><h1>学习protobuf</h1></header><div class=prose><h3 id=引用>引用</h3><blockquote><p>一个golang 网友的思考(<a href=http://www.cnblogs.com/wolfred7464/p/4673908.html)%EF%BC%9A>http://www.cnblogs.com/wolfred7464/p/4673908.html)：</a></p></blockquote><pre tabindex=0><code>1、我用二进制传输消息意义在哪？
+
+    当然就是字节少，传输成本小。
+
+2、二进制不可读啊，怎么解码呢？
+
+    调用Unmarshal函数，把对应类型的对象传入，会自动把二进制解码到传入的对象。
+
+3、拿到一大坨二进制数据，怎么知道能解码到哪个类呢？
+
+    我仍然认为数据头加上类型ID是比较好的做法。
+    官方C++版本中可以通过协议名称得到一个协议类型，
+    优势是不需要我们自己维护一份switch case的代码。但是类型名称一般不如ID字节少。
+    在网游使用可以把ID多级分类，例如按照背包、好友、帮派分类，
+    背包中再分为装备和物品，然后依次细分，这样每次增删协议对其他部分影响较少。
+</code></pre><p>我觉得他在使用的过程中是有自己的思考的，第三点我也是这么认为，如果两者通信，不可能只给二级制，也得给一些附加数据让对方解析这些二进制吧，带一个cmdId 给对方然后两方约定这个 id 对应的类型 应该是一种好的选择</p><h3 id=Standard-Message-Methods>Standard Message Methods</h3><p>每个消息类还包含许多其他方法，可以检查或处理整个消息。</p><ul><li>bool IsInitialized() const; 检查是否设置了所有必需的字段</li><li>string DebugString() const; 返回消息的人类可读表示，特别用于调试。</li><li>void CopyFrom(const Person& from); 用给定消息的值覆盖消息</li><li>void Clear(); 清除所有元素返回空状态</li></ul><h3 id=Parsing-and-Serialization>Parsing and Serialization</h3><p>每个协议缓冲类都有用于通过二进制形式编写和读取所选类型消息的方法</p><ul><li>bool SerializeToString(string* output) const; 该消息序列化和存储的字节在给定的字符串。</li><li>bool ParseFromString(const string& data);: parses a message from the given string.</li><li>bool SerializeToOstream(ostream* output) const; 将消息写入给定的C ++ ostream</li><li>bool ParseFromIstream(istream* input); parses a message from the given C++ istream</li></ul><h3 id=Advanced-Usage>Advanced Usage</h3><p>协议消息类提供的一个关键特性是反射。您可以迭代消息的字段并操作它们的值，而无需针对任何特定消息类型编写代码。<br>使用反射的一个非常有用的方法是将协议消息转换为其他编码（例如XML或JSON）以及从其他编码转换。更高级的反射使用可能是找到两个相同类型的消息之间的差异，或者开发一种“协议消息的正则表达式”，在其中可以编写匹配特定消息内容的表达式。如果您使用自己的想象力，可以将Protocol Buffers应用于比您最初期望的更广泛的问题！</p><h3 id=一个例子>一个例子</h3><p>官网的教程是 写和读，加了一个修改的操作</p><p>code: <a href=https://github.com/changan29/playcpp/tree/master/protobuf>https://github.com/changan29/playcpp/tree/master/protobuf</a></p><p>demo:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>[root@VM_80_251_centos pb]# g++ reader.cpp addressbook.pb.cc -o rr -lprotobuf
+</span></span><span class=line><span class=cl>[root@VM_80_251_centos pb]# ./rr test
+</span></span><span class=line><span class=cl>--- before modify
+</span></span><span class=line><span class=cl>Person ID: 1
+</span></span><span class=line><span class=cl>  Name: changan
+</span></span><span class=line><span class=cl>  E-mail address: 909@163.com
+</span></span><span class=line><span class=cl>  Mobile phone #: 186
+</span></span><span class=line><span class=cl>  Home phone #: 147
+</span></span><span class=line><span class=cl>Person ID: 2
+</span></span><span class=line><span class=cl>  Name: cc
+</span></span><span class=line><span class=cl>  E-mail address: 678
+</span></span><span class=line><span class=cl>  Home phone #: 123
+</span></span><span class=line><span class=cl>Person ID: 4
+</span></span><span class=line><span class=cl>  Name: 123
+</span></span><span class=line><span class=cl>  E-mail address: 123456
+</span></span><span class=line><span class=cl>  Work phone #: 123456
+</span></span><span class=line><span class=cl>--- after modify
+</span></span><span class=line><span class=cl>Person ID: 666
+</span></span><span class=line><span class=cl>  Name: changan
+</span></span><span class=line><span class=cl>  E-mail address: another.email
+</span></span><span class=line><span class=cl>  Home phone #: 987654321
+</span></span><span class=line><span class=cl>  Home phone #: 987654321
+</span></span><span class=line><span class=cl>Person ID: 666
+</span></span><span class=line><span class=cl>  Name: cc
+</span></span><span class=line><span class=cl>  E-mail address: another.email
+</span></span><span class=line><span class=cl>  Home phone #: 987654321
+</span></span><span class=line><span class=cl>Person ID: 666
+</span></span><span class=line><span class=cl>  Name: 123
+</span></span><span class=line><span class=cl>  E-mail address: another.email
+</span></span><span class=line><span class=cl>  Home phone #: 987654321
+</span></span></code></pre></div><h3 id=proto-2-3-的差别>proto 2/3 的差别</h3><ul><li>版本<br>proto文件中的第一行非空白非注释行</li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>syntax = &#34;proto3&#34;
+</span></span><span class=line><span class=cl>表示使用proto3的语法，否则默认使用proto2的语法
+</span></span></code></pre></div><ul><li>字段</li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>移除required，将optional改名为singular。
+</span></span><span class=line><span class=cl>如果不加repeated，默认就是singular的。
+</span></span></code></pre></div><ul><li>语言</li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>增加了Go,Ruby,JavaNano等的支持
+</span></span><span class=line><span class=cl>未来还计划支持PHP等
+</span></span></code></pre></div><ul><li>移除了default选项</li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>在proto2中，可使用default为field指定默认值。
+</span></span><span class=line><span class=cl>在proto3中，field的默认值只依赖于field的类型，不再能够被指定。
+</span></span><span class=line><span class=cl>当field的value为默认值时，该field不会被序列化，可节省空间。
+</span></span><span class=line><span class=cl>不要依赖于字段的默认值的行为，因为无法区分是指定为默认值，还是未定义值。
+</span></span></code></pre></div><ul><li>枚举类型的第一个枚举值必须是0</li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>proto3中必须提供一个枚举值为0作为枚举的默认值。
+</span></span><span class=line><span class=cl>为了和proto2兼容（proto2使用第一个枚举值作为默认值），因此规定一个枚举值为0。
+</span></span></code></pre></div><ul><li>不再支持Extension，新增Any关键字</li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>Any 类型是用来替代 proto2 中的扩展的。目前还在开发中。
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>proto2 中的扩展特性很像 Swift 语言中的扩展。
+</span></span><span class=line><span class=cl>理解起来有点困难，使用起来更是会带来不少混乱。
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>相比之下，proto3 中新增的 Any 类型有点像 C/C++ 中的 void*
+</span></span><span class=line><span class=cl>，好理解，使用起来逻辑也更清晰。
+</span></span></code></pre></div><ul><li>增加了 JSON 映射特性</li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>语言的活力来自于与时俱进。当前，JSON 的流行有其充分的理由。
+</span></span><span class=line><span class=cl>很多『现代化』的语言都内置了对 JSON 的支持，比如 Go、PHP 等。
+</span></span></code></pre></div><h3 id=Reflection>Reflection</h3><ul><li>TODO</li></ul><hr><p>@Mon Jun 4 01:10:30 CST 2018</p></div></article></main><footer class=site-footer><span>© 2026 changan</span><span><a href=/index.xml>RSS</a> · <a href=/admin/>写文章</a></span></footer></body></html>
