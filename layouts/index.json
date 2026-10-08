@@ -1,1 +1,1 @@
-{{- $posts := slice -}}{{- range where .Site.RegularPages "Section" "posts" -}}{{- $posts = $posts | append (dict "title" .Title "url" .RelPermalink "date" (.Date.Format "2006.01.02") "tags" .Params.tags "text" (.Plain | truncate 12000)) -}}{{- end -}}{{- $posts | jsonify -}}
+{{- $posts := slice -}}{{- range where .Site.RegularPages "Section" "posts" -}}{{- $posts = $posts | append (dict "title" .Title "url" .RelPermalink "date" (.Date.Format "2006.01.02") "tags" (.Params.tags | default slice) "text" (.Plain | truncate 12000)) -}}{{- end -}}{{- $posts | jsonify -}}
