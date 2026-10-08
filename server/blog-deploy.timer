@@ -1,0 +1,11 @@
+[Unit]
+Description=Check for a new blog release every minute
+
+[Timer]
+OnBootSec=30s
+OnUnitInactiveSec=60s
+AccuracySec=5s
+Unit=blog-deploy.service
+
+[Install]
+WantedBy=timers.target

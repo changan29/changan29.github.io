@@ -1,0 +1,15 @@
+[Unit]
+Description=Synchronize generated blog release
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=blog-deploy
+Group=blog-deploy
+ExecStart=/usr/local/bin/blog-deploy
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+UMask=0022

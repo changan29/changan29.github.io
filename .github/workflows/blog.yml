@@ -73,24 +73,21 @@ jobs:
       - name: Deploy and verify live site
         if: vars.BLOG_PUBLISH_ENABLED == 'true'
         env:
-          DEPLOY_KEY: ${{ secrets.BLOG_DEPLOY_KEY }}
-          KNOWN_HOSTS: ${{ secrets.BLOG_KNOWN_HOSTS }}
-          DEPLOY_HOST: ${{ vars.BLOG_DEPLOY_HOST }}
-          DEPLOY_USER: ${{ vars.BLOG_DEPLOY_USER }}
+          SOURCE_COMMIT: ${{ github.sha }}
         run: |
           set -euo pipefail
-          test -n "$DEPLOY_KEY"
-          test -n "$KNOWN_HOSTS"
-          test -n "$DEPLOY_HOST"
-          test -n "$DEPLOY_USER"
-          install -d -m 700 "$HOME/.ssh"
-          printf '%s\n' "$DEPLOY_KEY" > "$HOME/.ssh/blog-deploy"
-          chmod 600 "$HOME/.ssh/blog-deploy"
-          printf '%s\n' "$KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
-          ssh -i "$HOME/.ssh/blog-deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=15 "$DEPLOY_USER@$DEPLOY_HOST" "deploy $SITE_COMMIT"
-          SOURCE_COMMIT="$GITHUB_SHA" python3 - <<'PY'
-          import json, os, urllib.request
-          with urllib.request.urlopen('https://www.oneyearago.me/release.json', timeout=20) as response:
-              release=json.load(response)
-          assert release['source_commit'] == os.environ['SOURCE_COMMIT'], 'Live site is not the requested release'
+          python3 - <<'PY'
+          import json, os, time, urllib.request, urllib.error
+          for attempt in range(20):
+              try:
+                  with urllib.request.urlopen('https://www.oneyearago.me/release.json', timeout=10) as response:
+                      release=json.load(response)
+                  if release['source_commit'] == os.environ['SOURCE_COMMIT']:
+                      print('Live site matches the generated release')
+                      break
+              except (OSError, ValueError, KeyError):
+                  pass
+              time.sleep(15)
+          else:
+              raise SystemExit('Server did not deploy the requested release within five minutes')
           PY
