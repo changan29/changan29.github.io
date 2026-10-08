@@ -2,12 +2,19 @@
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>写文章 · changan's blog</title></head>
 <body>
 <script>window.CMS_MANUAL_INIT=true;</script>
-<script src="decap-cms.js"></script>
+<div id="editor-loading" role="status" style="font:16px system-ui;padding:48px;text-align:center">正在载入文章编辑器…<p style="font-size:14px;color:#666">首次访问需要下载编辑器，后续打开会使用本机缓存。</p></div>
+<script src="decap-cms.7c1efd6b616b4786.js"></script>
 <script>
 const demo = ['localhost','127.0.0.1'].includes(location.hostname) && new URLSearchParams(location.search).has('demo');
 if (demo) {
   const notice=document.createElement('div');notice.textContent='编辑器演示：内容不会上传，也不会发布到正式博客。刷新后演示内容会消失。';notice.style='padding:10px 20px;background:#fff0c7;text-align:center;font-size:13px';document.body.append(notice);
 }
+const ready = new MutationObserver(() => {
+  if (document.querySelector('#nc-root')?.textContent.trim()) {
+    document.querySelector('#editor-loading')?.remove(); ready.disconnect();
+  }
+});
+ready.observe(document.body,{childList:true,subtree:true});
 CMS.init(demo ? {config:{backend:{name:'test-repo'}}} : {});
 CMS.registerPreviewStyle('/css/site.css');
 const PostPreview = createClass({render: function () {
