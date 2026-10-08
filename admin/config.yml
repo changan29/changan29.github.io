@@ -2,7 +2,6 @@ backend:
   name: github
   repo: changan29/changan29.github.io
   branch: blog-source
-  use_graphql: true
   base_url: https://www.oneyearago.me
   auth_endpoint: cms-oauth/auth
   squash_merges: true
