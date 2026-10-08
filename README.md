@@ -37,7 +37,7 @@ Hugo 输出到 `public/`，该目录不提交到原稿分支。编辑器的发�
 1. 先备份服务器目录 `/data/oneyearago/changan29.github.io`、当前 Nginx 配置和相关服务配置。证书私钥只保存在服务器备份中，不上传 GitHub。
 2. 为编辑器创建 GitHub OAuth App：主页 `https://www.oneyearago.me/`，回调 `https://www.oneyearago.me/cms-oauth/callback`。登录密钥放在服务器 `/etc/blog-oauth.env`，权限 `600`，不得提交到 Git。
 3. 编译 `server/`，安装服务账号和 `blog-oauth.service`。将 Nginx 的 OAuth location 加入现有 HTTPS server，保留已更新的证书；检查配置后再 reload。
-4. 将现有站点作为初始 release，创建 `/data/oneyearago/current` 链接指向它。服务器独立演示文件单独备份，并按需保存在 `legacy-extra/`；不要复制旧版生成的文章。
+4. 将现有站点作为初始 release，创建 `/data/oneyearago/blog-v2/current` 链接指向它。服务器独立演示文件单独备份，并按需保存在 `legacy-extra/`；不要复制旧版生成的文章。部署账号只拥有 `blog-v2/` 目录，原站目录继续保留。
 5. 安装 `server/deploy-site.sh` 为 root 所有的 `/usr/local/bin/blog-deploy`。建立独立的 `blog-deploy` 系统账号，安装 `blog-deploy.service` 和 `blog-deploy.timer`，由服务器每分钟读取公开的 `blog-site` 分支并部署；GitHub 无需持有服务器 SSH 私钥。
 6. 完成备份、服务和 Nginx 验证后，在 GitHub 把 `BLOG_PUBLISH_ENABLED` variable 设为 `true`。工作流会保存生成结果并等待线上版本匹配，超时则报错。
 7. 发布一篇临时测试文章，核对生成、部署、线上正文和图片；再删除测试文章并检查归档同步。真实流程通过后才算上线完成。

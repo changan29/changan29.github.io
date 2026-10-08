@@ -3,7 +3,7 @@
 # A systemd timer invokes this script as an unprivileged deployment user.
 set -euo pipefail
 umask 022
-ROOT=/data/oneyearago
+ROOT=/data/oneyearago/blog-v2
 REPO=https://github.com/changan29/changan29.github.io.git
 exec 9>"$ROOT/.deploy.lock"
 flock -w 60 9
@@ -25,6 +25,7 @@ if [ ! -d "$release" ]; then
     test -s "$staging/release.json"
     # Retain pre-existing standalone demos outside the old generated repository.
     if [ -d "$ROOT/legacy-extra" ]; then cp -a "$ROOT/legacy-extra/." "$staging/"; fi
+    chmod 755 "$staging"
     mv "$staging" "$release"
     trap - EXIT
 fi
